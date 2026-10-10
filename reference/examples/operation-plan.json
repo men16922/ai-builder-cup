@@ -1,0 +1,81 @@
+{
+  "payload": {
+    "schemaVersion": 1,
+    "planId": "plan-demo-001",
+    "version": 1,
+    "dataMode": "synthetic",
+    "workspaceId": "workspace-demo",
+    "environmentId": "environment-demo",
+    "target": {
+      "provider": "gcp",
+      "projectId": "example-cloudops-demo",
+      "location": "asia-northeast3",
+      "resourceId": "service-demo",
+      "resourceName": "projects/example-cloudops-demo/locations/asia-northeast3/services/checkout-demo",
+      "resourceUid": "synthetic-service-uid",
+      "revision": "checkout-demo-00002"
+    },
+    "evidence": {
+      "snapshotId": "evidence-demo-001",
+      "digest": "681fdc76680937a72890faed0b4c9004a104207aa63e6f538b88dcd7ef908aa7",
+      "sourceIds": [
+        "ev-service",
+        "ev-metrics",
+        "ev-logs"
+      ],
+      "observedAt": "2026-10-09T10:00:00Z"
+    },
+    "analysis": {
+      "engine": "synthetic-fixture",
+      "summary": "The service is ready, but current request health is unknown. Collect a fresh bounded inspection before drawing a conclusion.",
+      "findings": [
+        {
+          "statement": "The reported traffic target is checkout-demo-00002.",
+          "evidenceIds": [
+            "ev-service"
+          ],
+          "kind": "observation"
+        },
+        {
+          "statement": "Two sampled error entries justify checking the service, but missing metrics prevent a current error-rate assessment.",
+          "evidenceIds": [
+            "ev-metrics",
+            "ev-logs"
+          ],
+          "kind": "hypothesis"
+        }
+      ],
+      "missingInformation": [
+        "Current request error rate and latency"
+      ],
+      "serviceAssessment": "unknown"
+    },
+    "action": {
+      "id": "gcp.cloudrun.inspect.v1",
+      "version": 1,
+      "effect": "read",
+      "inputs": {
+        "windowMinutes": 15,
+        "maxLogEntries": 20
+      },
+      "completionCriteria": [
+        "Verify the current service identity and revision.",
+        "Persist required service observations and a report.",
+        "Mark optional missing metrics or logs as partial, not healthy."
+      ]
+    },
+    "createdAt": "2026-10-09T10:00:00Z",
+    "expiresAt": "2026-10-09T10:10:00Z",
+    "owner": {
+      "kind": "organization",
+      "organizationId": "organization-demo"
+    }
+  },
+  "digest": "c638a48ccd59fb4e0e25c6343bb444a23c6335afbf67084af299a63c343f5cb0",
+  "lifecycle": "prepared",
+  "review": {
+    "id": "review-demo-001",
+    "status": "pending"
+  },
+  "execution": null
+}

@@ -1,0 +1,8 @@
+.gradle/
+.kotlin/
+**/build/
+local.properties
+*.jks
+*.keystore
+google-services.json
+app/src/main/assets/mobileops-agent.json

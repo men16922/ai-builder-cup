@@ -1,0 +1,62 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "erasableSyntaxOnly": true,
+    "allowJs": true,
+    "checkJs": false,
+    "types": [
+      "node",
+      "react",
+      "react-dom",
+      "vite/client"
+    ]
+  },
+  "files": [
+    "src/gcp-main.tsx",
+    "src/vite-env.d.ts",
+    "src/ui/elements.d.ts",
+    "server/gcp-hosted-index.ts",
+    "server/gcp-hosted-runtime.ts",
+    "server/cloud-firestore-store.test.ts",
+    "server/cloud-workflow.test.ts",
+    "server/gcp-agent-tasks.test.ts",
+    "server/gcp-analysis.test.ts",
+    "server/gcp-cloud-run.test.ts",
+    "server/gcp-configuration.test.ts",
+    "server/gcp-credentials.test.ts",
+    "server/gcp-evaluation.test.ts",
+    "server/gcp-hosted.test.ts",
+    "server/gcp-inspection.test.ts",
+    "server/gcp-mobile.test.ts",
+    "server/gcp-notification-delivery.test.ts",
+    "server/gcp-rehearsal.test.ts",
+    "server/gcp-notification-store.test.ts",
+    "server/gcp-observations.test.ts",
+    "server/gcp-overview.test.ts",
+    "server/gcp-telemetry.test.ts",
+    "server/gcp-web-client.test.ts",
+    "tests/fixtures/gcp-web.tsx",
+    "scripts/check-android-core.ts",
+    "scripts/generate-design-tokens.ts",
+    "scripts/generate-mobile-fixtures.ts",
+    "scripts/provision-gcp-membership.ts",
+    "scripts/prepare-gcp-evaluation.ts",
+    "scripts/check-gcp-web.mjs",
+    "scripts/check-gcp-hosted.mjs"
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "name": "mobileops-agent",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "dev": "vite",
+    "preview": "vite preview",
+    "start": "node dist-gcp/server.mjs",
+    "typecheck": "tsc -p tsconfig.json",
+    "check:boundary": "node scripts/check-source-boundary.mjs",
+    "build": "npm run typecheck && npm run check:boundary && vite build && node scripts/build-gcp-hosted.mjs",
+    "test:server": "MOBILEOPS_OFFLINE_TEST=1 node --import tsx --test server/*.test.ts",
+    "test:web": "MOBILEOPS_OFFLINE_TEST=1 node --import tsx scripts/check-gcp-web.mjs",
+    "test:agents": "MOBILEOPS_OFFLINE_TEST=1 node --import tsx scripts/check-gcp-agents.mjs",
+    "test:hosted": "MOBILEOPS_OFFLINE_TEST=1 node --import tsx scripts/check-gcp-hosted.mjs",
+    "generate:tokens": "node --import tsx scripts/generate-design-tokens.ts",
+    "check:publishable": "node scripts/check-publishable.mjs",
+    "check:tokens": "node --import tsx scripts/generate-design-tokens.ts --check",
+    "check:fixtures": "MOBILEOPS_OFFLINE_TEST=1 node --import tsx scripts/generate-mobile-fixtures.ts --check",
+    "test:android-core": "MOBILEOPS_OFFLINE_TEST=1 MOBILEOPS_ANDROID_GRADLE_OFFLINE=1 node --import tsx scripts/check-android-core.ts",
+    "prepare:evaluation": "MOBILEOPS_OFFLINE_TEST=1 node --import tsx scripts/prepare-gcp-evaluation.ts",
+    "check": "npm run build && npm run test:server && npm run check:tokens && npm run check:fixtures && npm run test:web && npm run test:agents && npm run test:hosted && npm run check:publishable"
+  },
+  "dependencies": {
+    "@google-cloud/firestore": "9.3.1",
+    "@material/web": "2.5.0",
+    "firebase": "13.0.0",
+    "firebase-admin": "14.5.0",
+    "google-auth-library": "11.2.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "zod": "4.6.5"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
+    "@material/material-color-utilities": "0.4.0",
+    "@playwright/test": "1.64.0",
+    "@types/node": "26.6.4",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitejs/plugin-react": "6.1.2",
+    "esbuild": "0.28.2",
+    "tsx": "4.23.15",
+    "typescript": "7.0.2",
+    "vite": "8.3.4"
+  }
+}

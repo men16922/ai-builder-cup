@@ -1,0 +1,3274 @@
+{
+  "version": 1,
+  "kind": "cloudops.gcp-source-extraction",
+  "createdAt": "2026-10-10T05:54:42.616Z",
+  "sourceRepository": "CloudOps-Automation",
+  "sourceBaseCommit": "b9e6fbdaf61994d6c6392665a776b5ac3cdaf3d1",
+  "sourceWorktreeDirty": true,
+  "originalLockSha256": "9d2ae84b0c8b59677a4b4c584fc686bccf52f3ea0b0550a97602c6499e3c04d1",
+  "files": [
+    {
+      "path": ".gitignore",
+      "source": "deploy/gcp-source/.gitignore",
+      "sourceSha256": "3c983130608cfc8a8cf503430943f8e1c66a751405a657b827c0c5a0b67061a6",
+      "sha256": "3c983130608cfc8a8cf503430943f8e1c66a751405a657b827c0c5a0b67061a6",
+      "includedBy": "gcp-repository-composition"
+    },
+    {
+      "path": "AGENTS.md",
+      "source": "deploy/gcp-source/AGENTS.md",
+      "sourceSha256": "33b2f74763569332b78ba6e15c69c3c7fd177bd2bb9f7db780c246a0d4427409",
+      "sha256": "33b2f74763569332b78ba6e15c69c3c7fd177bd2bb9f7db780c246a0d4427409",
+      "includedBy": "gcp-repository-composition"
+    },
+    {
+      "path": "Makefile",
+      "source": "deploy/gcp-source/Makefile",
+      "sourceSha256": "35bd9aa1af9e6e32a40d24cf9d2928d9d9fb54f27a35bb734c2c64132bfdfdbe",
+      "sha256": "35bd9aa1af9e6e32a40d24cf9d2928d9d9fb54f27a35bb734c2c64132bfdfdbe",
+      "includedBy": "gcp-repository-composition"
+    },
+    {
+      "path": "README.md",
+      "source": "deploy/gcp-source/README.md",
+      "sourceSha256": "56a665e33b7f9c384b1aa4ec3eba2c4106bee9b76233db1a36f777604811a492",
+      "sha256": "56a665e33b7f9c384b1aa4ec3eba2c4106bee9b76233db1a36f777604811a492",
+      "includedBy": "gcp-repository-composition"
+    },
+    {
+      "path": "deploy/android-mobile.example.json",
+      "source": "deploy/android-mobile.example.json",
+      "sourceSha256": "ea0e51adf92506e720891d9fbf9301aa19168571be542da885a50a81d0163a72",
+      "sha256": "ea0e51adf92506e720891d9fbf9301aa19168571be542da885a50a81d0163a72",
+      "includedBy": "explicit-support"
+    },
+    {
+      "path": "deploy/gcp-analysis.md",
+      "source": "deploy/gcp-analysis.md",
+      "sourceSha256": "6c5d0ccdb4a773be0dbfcb8096e71e3daaab014bee91efa2299a6add62a66281",
+      "sha256": "93987c05695eb94b923781731da25605528f19750df8f5288f26ad5ae69856f5",
+      "includedBy": "implementation-contract"
+    },
+    {
+      "path": "deploy/gcp-cloud-run.md",
+      "source": "deploy/gcp-cloud-run.md",
+      "sourceSha256": "a578eba1eef28fab2a8689f1ce1e3ba76dfe3c0289dfde534d3be6be95cf0a7f",
+      "sha256": "0cd51f721904081bd3f7b894f2ea935d5b3da3aedab6f611a9de5bd909ab1f60",
+      "includedBy": "implementation-contract"
+    },
+    {
+      "path": "deploy/gcp-evaluation.md",
+      "source": "deploy/gcp-evaluation.md",
+      "sourceSha256": "02a75e0fddf8cd0620c4be760d81f74a5ab60b5959d520f3c0e3404f00627822",
+      "sha256": "3d10fa545215f8f7ed26c87a32ee589e6e5b2721542140dff3001c0de0ad35fd",
+      "includedBy": "implementation-contract"
+    },
+    {
+      "path": "deploy/gcp-hosted/.dockerignore",
+      "source": "deploy/gcp-hosted/.dockerignore",
+      "sourceSha256": "f92aa3318a47b650368afd1d434311b7d5d7bf15703c3318e09865160ab38756",
+      "sha256": "f92aa3318a47b650368afd1d434311b7d5d7bf15703c3318e09865160ab38756",
+      "includedBy": "explicit-support"
+    },
+    {
+      "path": "deploy/gcp-hosted/Dockerfile",
+      "source": "deploy/gcp-hosted/Dockerfile",
+      "sourceSha256": "3e420fd2317ba829113d6763b81b28dfaf9fdefc399034236f2b3699885f9e86",
+      "sha256": "3e420fd2317ba829113d6763b81b28dfaf9fdefc399034236f2b3699885f9e86",
+      "includedBy": "explicit-support"
+    },
+    {
+      "path": "deploy/gcp-hosted/README.md",
+      "source": "deploy/gcp-hosted/README.md",
+      "sourceSha256": "a1f7a1b020a4f5f2e4edaaf5b053f4ece575ec63472ba8fa2e0e2ced124bd8c4",
+      "sha256": "a1f7a1b020a4f5f2e4edaaf5b053f4ece575ec63472ba8fa2e0e2ced124bd8c4",
+      "includedBy": "implementation-contract"
+    },
+    {
+      "path": "deploy/gcp-mobile.md",
+      "source": "deploy/gcp-mobile.md",
+      "sourceSha256": "2f99a7c4363617f47aa40f4194b374e343781d321728bc09b2b21fbf04ad92cb",
+      "sha256": "e1becd7a84982ab3b755039056c47a102ea45f3ecd8515267c524b886131f20c",
+      "includedBy": "implementation-contract"
+    },
+    {
+      "path": "deploy/gcp-notifications.md",
+      "source": "deploy/gcp-notifications.md",
+      "sourceSha256": "8b4cff6517b631fc6da22c96176e13ae8be2e573dd9a070d49f0cf4ebb6195ed",
+      "sha256": "6287a3ec93ac5be93e10f5c05838ce5665779d9fbc5b896cb854bfde1bc5e76d",
+      "includedBy": "implementation-contract"
+    },
+    {
+      "path": "deploy/gcp-server.example.json",
+      "source": "deploy/gcp-server.example.json",
+      "sourceSha256": "8240ab471e9cabe88acb0c43ef5da6855f4010c6b275d88996f0a46d0115dce7",
+      "sha256": "8240ab471e9cabe88acb0c43ef5da6855f4010c6b275d88996f0a46d0115dce7",
+      "includedBy": "explicit-support"
+    },
+    {
+      "path": "deploy/gcp-server.md",
+      "source": "deploy/gcp-server.md",
+      "sourceSha256": "d57351c165afd92be69bd1c9e560ca5aa09ca4c48d6c2ecc62d3c381f120bbbd",
+      "sha256": "29dadbbf591748063642216a3f9d2740e447de2ebb01160834b481a65d799278",
+      "includedBy": "implementation-contract",
+      "transformation": "Imported-note notice and GCP-only identity documentation link"
+    },
+    {
+      "path": "deploy/gcp-telemetry.md",
+      "source": "deploy/gcp-telemetry.md",
+      "sourceSha256": "fce2a0b8d475e794496c33e7a8b51e5cee671414bc3197b87970967cddd0b5b4",
+      "sha256": "5396a1ae2260680c4bd5005a263978035d6afba0d04ceb04ca19b7b401bb09ce",
+      "includedBy": "implementation-contract"
+    },
+    {
+      "path": "deploy/gcp-web.md",
+      "source": "deploy/gcp-web.md",
+      "sourceSha256": "d419b9560c754ab3981278a53c2f64e0b15a58d4dd2e05d788d847a9628d0bd5",
+      "sha256": "f92479ddc5ab05414690f7bdbb6599c008e5b490d632ffd2d26022c242216915",
+      "includedBy": "implementation-contract"
+    },
+    {
+      "path": "deploy/gcp-workflow.md",
+      "source": "deploy/gcp-workflow.md",
+      "sourceSha256": "799a19c50d61cf4635bada3b4efbe095f874b453f3868b6cc19f36f28e84eeb6",
+      "sha256": "0705ed12bdff395c912ba3797d94329503feae6939b6db1b184460f98fc8a74f",
+      "includedBy": "implementation-contract"
+    },
+    {
+      "path": "index.html",
+      "source": "index.html",
+      "sourceSha256": "8d3e267eb2ef14eb3d5a0f162d92b608eb01921158739c8be3e0d109fc373adb",
+      "sha256": "77fd9ddc80abdf95c15cb59bf4fd650d058ccd4c0136f6fa37ec13bf39bb2d28",
+      "includedBy": "gcp-entry"
+    },
+    {
+      "path": "mobile/android/.gitignore",
+      "source": "mobile/android/.gitignore",
+      "sourceSha256": "c4aa362408053fd4449b95b868fc92b2e4d7cd70ce001864f245ee99ec621e87",
+      "sha256": "c4aa362408053fd4449b95b868fc92b2e4d7cd70ce001864f245ee99ec621e87",
+      "includedBy": "android-source-and-synthetic-assets"
+    },
+    {
+      "path": "mobile/android/README.md",
+      "source": "mobile/android/README.md",
+      "sourceSha256": "a40edf2d8dd5b405a9dea3bf93cb911905a6d41e3b6920bd756e99762b586b10",
+      "sha256": "a40edf2d8dd5b405a9dea3bf93cb911905a6d41e3b6920bd756e99762b586b10",
+      "includedBy": "implementation-contract"
+    },
+    {
+      "path": "mobile/android/app/build.gradle.kts",
+      "source": "mobile/android/app/build.gradle.kts",
+      "sourceSha256": "a1e9328e9013eb479da102e51f0547c7c54906e10def5060ba80386e490ffe1d",
+      "sha256": "a1e9328e9013eb479da102e51f0547c7c54906e10def5060ba80386e490ffe1d",
+      "includedBy": "android-source-and-synthetic-assets"
+    },
+    {
+      "path": "mobile/android/app/src/androidTest/java/auto/cloudops/mobile/app/RehearsalTest.kt",
+      "source": "mobile/android/app/src/androidTest/java/auto/cloudops/mobile/app/RehearsalTest.kt",
+      "sourceSha256": "934915946452da66f524848e247ee6af3f6228c6728ed11df8b84bc648ea6553",
+      "sha256": "934915946452da66f524848e247ee6af3f6228c6728ed11df8b84bc648ea6553",
+      "includedBy": "android-source-and-synthetic-assets"
+    },
+    {
+      "path": "mobile/android/app/src/main/AndroidManifest.xml",
+      "source": "mobile/android/app/src/main/AndroidManifest.xml",
+      "sourceSha256": "740223a8ba7b0f41ecd881a4fcc372f8f10778586844fbeccd182615c6415cf2",
+      "sha256": "740223a8ba7b0f41ecd881a4fcc372f8f10778586844fbeccd182615c6415cf2",
+      "includedBy": "android-source-and-synthetic-assets"
+    },
+    {
+      "path": "mobile/android/app/src/main/java/auto/cloudops/mobile/app/AndroidFirebaseIdentity.kt",
+      "source": "mobile/android/app/src/main/java/auto/cloudops/mobile/app/AndroidFirebaseIdentity.kt",
+      "sourceSha256": "04f2b7fbcf59ca106a2fb7cce14c73f04bd509d02825990bef7e6fd3de92bb14",
+      "sha256": "04f2b7fbcf59ca106a2fb7cce14c73f04bd509d02825990bef7e6fd3de92bb14",
+      "includedBy": "android-source-and-synthetic-assets"
+    },
+    {
+      "path": "mobile/android/app/src/main/java/auto/cloudops/mobile/app/CloudOpsMobile.kt",
+      "source": "mobile/android/app/src/main/java/auto/cloudops/mobile/app/CloudOpsMobile.kt",
+      "sourceSha256": "300c5d05bdcd839fdbf01b4083eba334b2bd78392e4d6ed292a467ccc9ce8bbc",
+      "sha256": "300c5d05bdcd839fdbf01b4083eba334b2bd78392e4d6ed292a467ccc9ce8bbc",
+      "includedBy": "android-source-and-synthetic-assets"
+    },
+    {
+      "path": "mobile/android/app/src/main/java/auto/cloudops/mobile/app/EvidencePanel.kt",
+      "source": "mobile/android/app/src/main/java/auto/cloudops/mobile/app/EvidencePanel.kt",
+      "sourceSha256": "18402338f80b42a4658478448a4426dac19344449ea6e53e1930094c133de07f",
+      "sha256": "18402338f80b42a4658478448a4426dac19344449ea6e53e1930094c133de07f",
+      "includedBy": "android-source-and-synthetic-assets"
+    },
+    {
+      "path": "mobile/android/app/src/main/java/auto/cloudops/mobile/app/MainActivity.kt",
+      "source": "mobile/android/app/src/main/java/auto/cloudops/mobile/app/MainActivity.kt",
+      "sourceSha256": "5319c7032226ec4ad1fbd65b5ce9549d525f79d921e30c9a49156cd5112fe644",
+      "sha256": "5319c7032226ec4ad1fbd65b5ce9549d525f79d921e30c9a49156cd5112fe644",
+      "includedBy": "android-source-and-synthetic-assets"
+    },
+    {
+      "path": "mobile/android/app/src/main/res/drawable/google_cloud.png",
+      "source": "mobile/android/app/src/main/res/drawable/google_cloud.png",
+      "sourceSha256": "efc3363f4b4e4f0b508a998746e29510a2a94f4dc691b3a7d416c07508457bcc",
+      "sha256": "efc3363f4b4e4f0b508a998746e29510a2a94f4dc691b3a7d416c07508457bcc",
+      "includedBy": "android-source-and-synthetic-assets"
+    },
+    {
+      "path": "mobile/android/app/src/main/res/values/styles.xml",
+      "source": "mobile/android/app/src/main/res/values/styles.xml",
+      "sourceSha256": "45880bd165883a35f147cf459bb7681bbabf0226009f12d76a7421b1d184a0d6",
+      "sha256": "45880bd165883a35f147cf459bb7681bbabf0226009f12d76a7421b1d184a0d6",
+      "includedBy": "android-source-and-synthetic-assets"
+    },
+    {
+      "path": "mobile/android/build.gradle.kts",
+      "source": "mobile/android/build.gradle.kts",
+      "sourceSha256": "39a5f5236d837c2ac8ccbb8c385ca7548ed969a7a7339ca551cb4ffef0975a76",
+      "sha256": "39a5f5236d837c2ac8ccbb8c385ca7548ed969a7a7339ca551cb4ffef0975a76",
+      "includedBy": "android-source-and-synthetic-assets"
+    },
+    {
+      "path": "mobile/android/core/build.gradle.kts",
+      "source": "mobile/android/core/build.gradle.kts",
+      "sourceSha256": "38418621be774507620edee24919af898a65b433d626e011f6ea2ea314cafc9a",
+      "sha256": "38418621be774507620edee24919af898a65b433d626e011f6ea2ea314cafc9a",
+      "includedBy": "android-source-and-synthetic-assets"
+    },
+    {
+      "path": "mobile/android/core/src/main/kotlin/auto/cloudops/mobile/Client.kt",
+      "source": "mobile/android/core/src/main/kotlin/auto/cloudops/mobile/Client.kt",
+      "sourceSha256": "f64366c0691f3f0637d20a951793bb205f554333c3991b1a68c9b09f08a5e174",
+      "sha256": "f64366c0691f3f0637d20a951793bb205f554333c3991b1a68c9b09f08a5e174",
+      "includedBy": "android-source-and-synthetic-assets"
+    },
+    {
+      "path": "mobile/android/core/src/main/kotlin/auto/cloudops/mobile/Configuration.kt",
+      "source": "mobile/android/core/src/main/kotlin/auto/cloudops/mobile/Configuration.kt",
+      "sourceSha256": "97b5f7d15671553d9b841ace2cbb7bacb4d3a1b39478a9cb43dacd8818f01553",
+      "sha256": "97b5f7d15671553d9b841ace2cbb7bacb4d3a1b39478a9cb43dacd8818f01553",
+      "includedBy": "android-source-and-synthetic-assets"
+    },
+    {
+      "path": "mobile/android/core/src/main/kotlin/auto/cloudops/mobile/Contract.kt",
+      "source": "mobile/android/core/src/main/kotlin/auto/cloudops/mobile/Contract.kt",
+      "sourceSha256": "f381d346f7fdc1c3874092f66758a27f0adcc1e832b93846254053c8056177dc",
+      "sha256": "f381d346f7fdc1c3874092f66758a27f0adcc1e832b93846254053c8056177dc",
+      "includedBy": "android-source-and-synthetic-assets"
+    },
+    {
+      "path": "mobile/android/core/src/main/kotlin/auto/cloudops/mobile/Controller.kt",
+      "source": "mobile/android/core/src/main/kotlin/auto/cloudops/mobile/Controller.kt",
+      "sourceSha256": "58f31d362c3761652508e79cd616678991e33143ab2c1b07c2a7ad0a564c937b",
+      "sha256": "58f31d362c3761652508e79cd616678991e33143ab2c1b07c2a7ad0a564c937b",
+      "includedBy": "android-source-and-synthetic-assets"
+    },
+    {
+      "path": "mobile/android/core/src/main/kotlin/auto/cloudops/mobile/FirebaseIdentity.kt",
+      "source": "mobile/android/core/src/main/kotlin/auto/cloudops/mobile/FirebaseIdentity.kt",
+      "sourceSha256": "e7f883847b87bf766860d028d83d1f575dba4bd26bfcfbd90e4bd34cb22082f6",
+      "sha256": "e7f883847b87bf766860d028d83d1f575dba4bd26bfcfbd90e4bd34cb22082f6",
+      "includedBy": "android-source-and-synthetic-assets"
+    },
+    {
+      "path": "mobile/android/core/src/main/kotlin/auto/cloudops/mobile/FixtureApi.kt",
+      "source": "mobile/android/core/src/main/kotlin/auto/cloudops/mobile/FixtureApi.kt",
+      "sourceSha256": "6f86907ba984d8cb932b97ea6e7d1fbd1583f4d251c473f29c8e99955044cd48",
+      "sha256": "6f86907ba984d8cb932b97ea6e7d1fbd1583f4d251c473f29c8e99955044cd48",
+      "includedBy": "android-source-and-synthetic-assets"
+    },
+    {
+      "path": "mobile/android/core/src/main/kotlin/auto/cloudops/mobile/LiveAccess.kt",
+      "source": "mobile/android/core/src/main/kotlin/auto/cloudops/mobile/LiveAccess.kt",
+      "sourceSha256": "e347ced95ea62cfd896ff527cdaa33fef7d2c9dfd3f17ed3cc522754ab65c680",
+      "sha256": "e347ced95ea62cfd896ff527cdaa33fef7d2c9dfd3f17ed3cc522754ab65c680",
+      "includedBy": "android-source-and-synthetic-assets"
+    },
+    {
+      "path": "mobile/android/core/src/main/kotlin/auto/cloudops/mobile/NotificationLifecycle.kt",
+      "source": "mobile/android/core/src/main/kotlin/auto/cloudops/mobile/NotificationLifecycle.kt",
+      "sourceSha256": "8b0a83692a26d9c1291504c2254b0a6d3ba2168848bcf133e7afe0a21f4a71ae",
+      "sha256": "8b0a83692a26d9c1291504c2254b0a6d3ba2168848bcf133e7afe0a21f4a71ae",
+      "includedBy": "android-source-and-synthetic-assets"
+    },
+    {
+      "path": "mobile/android/core/src/main/kotlin/auto/cloudops/mobile/Notifications.kt",
+      "source": "mobile/android/core/src/main/kotlin/auto/cloudops/mobile/Notifications.kt",
+      "sourceSha256": "6312703afed6e6fb5c5d553a84050c1b93fed1c4ee9abebeca0c28953545d4da",
+      "sha256": "6312703afed6e6fb5c5d553a84050c1b93fed1c4ee9abebeca0c28953545d4da",
+      "includedBy": "android-source-and-synthetic-assets"
+    },
+    {
+      "path": "mobile/android/core/src/main/kotlin/auto/cloudops/mobile/OriginalEvidence.kt",
+      "source": "mobile/android/core/src/main/kotlin/auto/cloudops/mobile/OriginalEvidence.kt",
+      "sourceSha256": "caff6b2f4a6b848b971b44cc9fe1650aef03713f953315d14fb7ee7e82439249",
+      "sha256": "caff6b2f4a6b848b971b44cc9fe1650aef03713f953315d14fb7ee7e82439249",
+      "includedBy": "android-source-and-synthetic-assets"
+    },
+    {
+      "path": "mobile/android/core/src/main/resources/synthetic-organization.json",
+      "source": "mobile/android/core/src/main/resources/synthetic-organization.json",
+      "sourceSha256": "e2a60c586c6611631075bcc564d5475fc064682aa37acf765c08023cea7f4efe",
+      "sha256": "e2a60c586c6611631075bcc564d5475fc064682aa37acf765c08023cea7f4efe",
+      "includedBy": "android-source-and-synthetic-assets"
+    },
+    {
+      "path": "mobile/android/core/src/main/resources/synthetic-personal.json",
+      "source": "mobile/android/core/src/main/resources/synthetic-personal.json",
+      "sourceSha256": "6d4e57a8b898588e1f0746ba25d5a768e704cd552ae2509b7ebaf63085f44feb",
+      "sha256": "6d4e57a8b898588e1f0746ba25d5a768e704cd552ae2509b7ebaf63085f44feb",
+      "includedBy": "android-source-and-synthetic-assets"
+    },
+    {
+      "path": "mobile/android/core/src/test/kotlin/auto/cloudops/mobile/EvidenceTest.kt",
+      "source": "mobile/android/core/src/test/kotlin/auto/cloudops/mobile/EvidenceTest.kt",
+      "sourceSha256": "4911d0c2744a6c3908a5bf458464d18aa451ce7d5bdbe043a72e5f3f974bc103",
+      "sha256": "4911d0c2744a6c3908a5bf458464d18aa451ce7d5bdbe043a72e5f3f974bc103",
+      "includedBy": "android-source-and-synthetic-assets"
+    },
+    {
+      "path": "mobile/android/core/src/test/kotlin/auto/cloudops/mobile/IdentityTest.kt",
+      "source": "mobile/android/core/src/test/kotlin/auto/cloudops/mobile/IdentityTest.kt",
+      "sourceSha256": "0ab71c898d18834e2a9e47cb102f2b19d3caf5447abb6c13586ea9ac52fd2fdf",
+      "sha256": "0ab71c898d18834e2a9e47cb102f2b19d3caf5447abb6c13586ea9ac52fd2fdf",
+      "includedBy": "android-source-and-synthetic-assets"
+    },
+    {
+      "path": "mobile/android/core/src/test/kotlin/auto/cloudops/mobile/MobileTest.kt",
+      "source": "mobile/android/core/src/test/kotlin/auto/cloudops/mobile/MobileTest.kt",
+      "sourceSha256": "bde6ef603da5aea34a6bf0ae2de24e53378d2bb5ef9fb091095678dc8e3688df",
+      "sha256": "bde6ef603da5aea34a6bf0ae2de24e53378d2bb5ef9fb091095678dc8e3688df",
+      "includedBy": "android-source-and-synthetic-assets"
+    },
+    {
+      "path": "mobile/android/core/src/test/kotlin/auto/cloudops/mobile/NotificationLifecycleTest.kt",
+      "source": "mobile/android/core/src/test/kotlin/auto/cloudops/mobile/NotificationLifecycleTest.kt",
+      "sourceSha256": "93b241f39dc9136228fcc9f075bc62a510c6d299e9c699b05dbcbabbf5ac1c87",
+      "sha256": "93b241f39dc9136228fcc9f075bc62a510c6d299e9c699b05dbcbabbf5ac1c87",
+      "includedBy": "android-source-and-synthetic-assets"
+    },
+    {
+      "path": "mobile/android/core/src/test/kotlin/auto/cloudops/mobile/NotificationTest.kt",
+      "source": "mobile/android/core/src/test/kotlin/auto/cloudops/mobile/NotificationTest.kt",
+      "sourceSha256": "39e54556bea6fc956112a3989dd787b3b691c33ea8aac6efb3785054557b2818",
+      "sha256": "39e54556bea6fc956112a3989dd787b3b691c33ea8aac6efb3785054557b2818",
+      "includedBy": "android-source-and-synthetic-assets"
+    },
+    {
+      "path": "mobile/android/core/src/test/kotlin/auto/cloudops/mobile/ServerIntegrationTest.kt",
+      "source": "mobile/android/core/src/test/kotlin/auto/cloudops/mobile/ServerIntegrationTest.kt",
+      "sourceSha256": "93ab342282479721e221d866a992ba0d87532799c80d28802c11435d6f5a078b",
+      "sha256": "93ab342282479721e221d866a992ba0d87532799c80d28802c11435d6f5a078b",
+      "includedBy": "android-source-and-synthetic-assets"
+    },
+    {
+      "path": "mobile/android/core/src/test/resources/evidence-projections.json",
+      "source": "mobile/android/core/src/test/resources/evidence-projections.json",
+      "sourceSha256": "1b00f93ec09e563a437d1e4c60cf0782e2ba895446c442fa98fc53d249cb37bf",
+      "sha256": "1b00f93ec09e563a437d1e4c60cf0782e2ba895446c442fa98fc53d249cb37bf",
+      "includedBy": "android-source-and-synthetic-assets"
+    },
+    {
+      "path": "mobile/android/core/src/test/resources/firebase-actors.json",
+      "source": "mobile/android/core/src/test/resources/firebase-actors.json",
+      "sourceSha256": "978e119e9387f40284eee002e15be405c6642d5b38305250c7b15836dfc869a8",
+      "sha256": "978e119e9387f40284eee002e15be405c6642d5b38305250c7b15836dfc869a8",
+      "includedBy": "android-source-and-synthetic-assets"
+    },
+    {
+      "path": "mobile/android/gradle.properties",
+      "source": "mobile/android/gradle.properties",
+      "sourceSha256": "66eb28b6c7a2125fb66df726193b029c86133ecf3ae80d12c04da84ef5ff5785",
+      "sha256": "66eb28b6c7a2125fb66df726193b029c86133ecf3ae80d12c04da84ef5ff5785",
+      "includedBy": "android-source-and-synthetic-assets"
+    },
+    {
+      "path": "mobile/android/gradle/wrapper/gradle-wrapper.jar",
+      "source": "mobile/android/gradle/wrapper/gradle-wrapper.jar",
+      "sourceSha256": "81a82aaea5abcc8ff68b3dfcb58b3c3c429378efd98e7433460610fecd7ae45f",
+      "sha256": "81a82aaea5abcc8ff68b3dfcb58b3c3c429378efd98e7433460610fecd7ae45f",
+      "includedBy": "android-source-and-synthetic-assets"
+    },
+    {
+      "path": "mobile/android/gradle/wrapper/gradle-wrapper.properties",
+      "source": "mobile/android/gradle/wrapper/gradle-wrapper.properties",
+      "sourceSha256": "c040b6ef2fb893ff5beea5a281614f2848f1c3996a7886f650b713f8240656a2",
+      "sha256": "c040b6ef2fb893ff5beea5a281614f2848f1c3996a7886f650b713f8240656a2",
+      "includedBy": "android-source-and-synthetic-assets"
+    },
+    {
+      "path": "mobile/android/gradlew",
+      "source": "mobile/android/gradlew",
+      "sourceSha256": "734b3879d3501dce471cf0522d3bcbafe76873d9fc5129345b67fb43bd15e933",
+      "sha256": "734b3879d3501dce471cf0522d3bcbafe76873d9fc5129345b67fb43bd15e933",
+      "includedBy": "android-source-and-synthetic-assets"
+    },
+    {
+      "path": "mobile/android/gradlew.bat",
+      "source": "mobile/android/gradlew.bat",
+      "sourceSha256": "57931b17dd228e5c24dac90e815d0bf82477e831a4618dfab4136f5446b42a9f",
+      "sha256": "57931b17dd228e5c24dac90e815d0bf82477e831a4618dfab4136f5446b42a9f",
+      "includedBy": "android-source-and-synthetic-assets"
+    },
+    {
+      "path": "mobile/android/settings.gradle.kts",
+      "source": "mobile/android/settings.gradle.kts",
+      "sourceSha256": "38c4100a4a936581f9a87ee713a3d046a59172685048cb8477a65360de09efaa",
+      "sha256": "38c4100a4a936581f9a87ee713a3d046a59172685048cb8477a65360de09efaa",
+      "includedBy": "android-source-and-synthetic-assets"
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "a0d9d96514ec56092bf60aa61b31c1a1215446c92f9f08348c03d6ac3cda4988",
+      "includedBy": "gcp-repository-composition"
+    },
+    {
+      "path": "package.json",
+      "sha256": "00f84d58f7a8ad9e607ed0aa83d574d556f2014cd4a7d8e42ac7b49d45b95307",
+      "includedBy": "gcp-repository-composition"
+    },
+    {
+      "path": "public/cloudops-mark.svg",
+      "source": "public/cloudops-mark.svg",
+      "sourceSha256": "e2c6326836928de3b01cf5bb75704eb162cbe4696d0c60ca40bfbaf691f43e26",
+      "sha256": "e2c6326836928de3b01cf5bb75704eb162cbe4696d0c60ca40bfbaf691f43e26",
+      "includedBy": "explicit-support"
+    },
+    {
+      "path": "reference/examples/evidence-snapshot.json",
+      "source": "reference/examples/evidence-snapshot.json",
+      "sourceSha256": "efa336d734ba10b2ab9a3c098e89f70b8f21e44ad2788bc64ba5e45e948122a8",
+      "sha256": "efa336d734ba10b2ab9a3c098e89f70b8f21e44ad2788bc64ba5e45e948122a8",
+      "includedBy": "explicit-support"
+    },
+    {
+      "path": "reference/examples/operation-plan.json",
+      "source": "reference/examples/operation-plan.json",
+      "sourceSha256": "aa2c464ea9ef7c4510c0cef77d5f6a5edb2b5f73050ea6dc12f31ee9b55fde53",
+      "sha256": "aa2c464ea9ef7c4510c0cef77d5f6a5edb2b5f73050ea6dc12f31ee9b55fde53",
+      "includedBy": "explicit-support"
+    },
+    {
+      "path": "scripts/build-gcp-hosted.mjs",
+      "source": "scripts/build-gcp-hosted.mjs",
+      "sourceSha256": "fa1148e0c8041338baf37bfa20a34c62c20c7ce3a35da7a050ab0367b8fd0cc1",
+      "sha256": "fa1148e0c8041338baf37bfa20a34c62c20c7ce3a35da7a050ab0367b8fd0cc1",
+      "includedBy": "explicit-support"
+    },
+    {
+      "path": "scripts/check-android-core.ts",
+      "source": "scripts/check-android-core.ts",
+      "sourceSha256": "0e6f720a9094a0e4866d63327685611eeae6242609c58026ff89658d22037a12",
+      "sha256": "0e6f720a9094a0e4866d63327685611eeae6242609c58026ff89658d22037a12",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "scripts/check-gcp-hosted.mjs",
+      "source": "scripts/check-gcp-hosted.mjs",
+      "sourceSha256": "93ada6a083a811646d7d6bac3cb44ccc438d29b6b4a4e875ee29ca3b4e6f9111",
+      "sha256": "93ada6a083a811646d7d6bac3cb44ccc438d29b6b4a4e875ee29ca3b4e6f9111",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "scripts/check-gcp-web.mjs",
+      "source": "scripts/check-gcp-web.mjs",
+      "sourceSha256": "55b6d2746096702de9a69dbbe7a5889397a5fad7fd2d2cae10f4640303b48ced",
+      "sha256": "55b6d2746096702de9a69dbbe7a5889397a5fad7fd2d2cae10f4640303b48ced",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "scripts/check-source-boundary.mjs",
+      "source": "deploy/gcp-source/check-source-boundary.mjs",
+      "sourceSha256": "37f610c9e3589855e80552fa815387b10f7792dbbab3648741c65cd31b001881",
+      "sha256": "37f610c9e3589855e80552fa815387b10f7792dbbab3648741c65cd31b001881",
+      "includedBy": "gcp-repository-composition"
+    },
+    {
+      "path": "scripts/gcp-build-policy.mjs",
+      "source": "scripts/gcp-build-policy.mjs",
+      "sourceSha256": "5294a2723024f8a830b42581c3ccd79d4105003a49c403bb5835717209da96f7",
+      "sha256": "5294a2723024f8a830b42581c3ccd79d4105003a49c403bb5835717209da96f7",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "scripts/generate-mobile-fixtures.ts",
+      "source": "scripts/generate-mobile-fixtures.ts",
+      "sourceSha256": "dc7e9e7d05cc86035d6c74976991983b0a9cdc58634fee5ff6efe30989ddd40a",
+      "sha256": "dc7e9e7d05cc86035d6c74976991983b0a9cdc58634fee5ff6efe30989ddd40a",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "scripts/prepare-gcp-evaluation.ts",
+      "source": "scripts/prepare-gcp-evaluation.ts",
+      "sourceSha256": "3cfd2a719adb0f97d3cd787a020c4035f8dbcc5e96c07c19282968faa6c0530b",
+      "sha256": "3cfd2a719adb0f97d3cd787a020c4035f8dbcc5e96c07c19282968faa6c0530b",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "server/cloud-auth.ts",
+      "source": "server/cloud-auth.ts",
+      "sourceSha256": "4e0cd99773877d4e2e2823f9848db11ee7f9e0e5e75dbd147cc733dacb188799",
+      "sha256": "4e0cd99773877d4e2e2823f9848db11ee7f9e0e5e75dbd147cc733dacb188799",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "server/cloud-firestore-store.test.ts",
+      "source": "server/cloud-firestore-store.test.ts",
+      "sourceSha256": "1c12af26d52b8d338ef065362429f42d06344e45bbf42ea53caf1063adff7d1e",
+      "sha256": "1c12af26d52b8d338ef065362429f42d06344e45bbf42ea53caf1063adff7d1e",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "server/cloud-integrity.ts",
+      "source": "server/cloud-integrity.ts",
+      "sourceSha256": "3471c1d6f857d4ffd9dcc3eea8d3ac4ddb209a96930c125939fba96fe9e47375",
+      "sha256": "3471c1d6f857d4ffd9dcc3eea8d3ac4ddb209a96930c125939fba96fe9e47375",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "server/cloud-sqlite-store.ts",
+      "source": "server/cloud-sqlite-store.ts",
+      "sourceSha256": "9bf18e0a4070c97853b39ae7afd5347e61e82bf9262c8fc9d7fba06a76dd3ac9",
+      "sha256": "9bf18e0a4070c97853b39ae7afd5347e61e82bf9262c8fc9d7fba06a76dd3ac9",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "server/cloud-store.ts",
+      "source": "server/cloud-store.ts",
+      "sourceSha256": "5687201d81058532536137d7cf9bbff83fddbea9af6691e56eb8804550222c7c",
+      "sha256": "5687201d81058532536137d7cf9bbff83fddbea9af6691e56eb8804550222c7c",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "server/cloud-workflow.test.ts",
+      "source": "server/cloud-workflow.test.ts",
+      "sourceSha256": "b7651a874e1a8f5d9fbc2c99d60ab41967d1dee09856110bc0c6cd1f2760adc7",
+      "sha256": "b7651a874e1a8f5d9fbc2c99d60ab41967d1dee09856110bc0c6cd1f2760adc7",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "server/cloud-workflow.ts",
+      "source": "server/cloud-workflow.ts",
+      "sourceSha256": "be37c5d94f7796c17966a01c273e0e4819d7b773f379a6d8593323349c4707b9",
+      "sha256": "be37c5d94f7796c17966a01c273e0e4819d7b773f379a6d8593323349c4707b9",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "server/fixtures/gcp-hosted.ts",
+      "source": "server/fixtures/gcp-hosted.ts",
+      "sourceSha256": "1b35c212e865b8b3f71b2c267194e3097fd3c9a70085383cbb9a17d4b5b503b6",
+      "sha256": "1b35c212e865b8b3f71b2c267194e3097fd3c9a70085383cbb9a17d4b5b503b6",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "server/gcp-analysis.test.ts",
+      "source": "server/gcp-analysis.test.ts",
+      "sourceSha256": "9c708e812f0c8610e7c40e0de9484f6c610752512d1c515a9171a3e36fa250fd",
+      "sha256": "9c708e812f0c8610e7c40e0de9484f6c610752512d1c515a9171a3e36fa250fd",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "server/gcp-cloud-run.test.ts",
+      "source": "server/gcp-cloud-run.test.ts",
+      "sourceSha256": "880ce3ccf60a5eeb82cdfd6023d7de64e99de33c518c6c3ee7b7ff72d41679d4",
+      "sha256": "880ce3ccf60a5eeb82cdfd6023d7de64e99de33c518c6c3ee7b7ff72d41679d4",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "server/gcp-configuration.test.ts",
+      "source": "server/gcp-configuration.test.ts",
+      "sourceSha256": "ed93de5934ca66bd9b2468e8daa3c5856dabb19b33bc003c88bee2ecf23422b6",
+      "sha256": "ed93de5934ca66bd9b2468e8daa3c5856dabb19b33bc003c88bee2ecf23422b6",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "server/gcp-credentials.test.ts",
+      "source": "server/gcp-credentials.test.ts",
+      "sourceSha256": "0be214114c9c4a90d7a40e0ebab2b8ea56a52bcf8f7ac5b2ac7e8f7358aab7c7",
+      "sha256": "0be214114c9c4a90d7a40e0ebab2b8ea56a52bcf8f7ac5b2ac7e8f7358aab7c7",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "server/gcp-evaluation.test.ts",
+      "source": "server/gcp-evaluation.test.ts",
+      "sourceSha256": "193781cb07653027ef32f5368073cc61cb31902759fa4697ca541910055cd7a4",
+      "sha256": "193781cb07653027ef32f5368073cc61cb31902759fa4697ca541910055cd7a4",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "server/gcp-hosted-index.ts",
+      "source": "server/gcp-hosted-index.ts",
+      "sourceSha256": "27d75f46af626f006b67a0ef91f77a5786ee1508fbfe4a5414a4e73a737387ab",
+      "sha256": "27d75f46af626f006b67a0ef91f77a5786ee1508fbfe4a5414a4e73a737387ab",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "server/gcp-hosted-runtime.ts",
+      "source": "server/gcp-hosted-runtime.ts",
+      "sourceSha256": "66f6599a22c1adee647450241e3ec0b9fd23b46e7d3b870e573ed6305bb993f9",
+      "sha256": "66f6599a22c1adee647450241e3ec0b9fd23b46e7d3b870e573ed6305bb993f9",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "server/gcp-hosted.test.ts",
+      "source": "server/gcp-hosted.test.ts",
+      "sourceSha256": "7fcb7d5245dab9dd432460872d9c7eda3549e04957ce0c0cf7626e4a04e6cac6",
+      "sha256": "7fcb7d5245dab9dd432460872d9c7eda3549e04957ce0c0cf7626e4a04e6cac6",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "server/gcp-inspection.test.ts",
+      "source": "server/gcp-inspection.test.ts",
+      "sourceSha256": "e554f385e578e26d26eee79c8c48578bc7506846443162dc215e34b4c03c3dc3",
+      "sha256": "e554f385e578e26d26eee79c8c48578bc7506846443162dc215e34b4c03c3dc3",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "server/gcp-mobile.test.ts",
+      "source": "server/gcp-mobile.test.ts",
+      "sourceSha256": "705795f3d881abcc9b4fb99c7d92ba6cf1c05f61e3c9750769b323bb5a822de7",
+      "sha256": "705795f3d881abcc9b4fb99c7d92ba6cf1c05f61e3c9750769b323bb5a822de7",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "server/gcp-notification-store.test.ts",
+      "source": "server/gcp-notification-store.test.ts",
+      "sourceSha256": "64eda5f3dc0a48a157f0783a37a2f9b3e1c67ec1fc57e1aae1d1c101bc23bbb2",
+      "sha256": "64eda5f3dc0a48a157f0783a37a2f9b3e1c67ec1fc57e1aae1d1c101bc23bbb2",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "server/gcp-observations.test.ts",
+      "source": "server/gcp-observations.test.ts",
+      "sourceSha256": "ddb0d9f95325ab6b848eefd679fd8c24bbb658b61cfd2f0225dd88c03ee02664",
+      "sha256": "ddb0d9f95325ab6b848eefd679fd8c24bbb658b61cfd2f0225dd88c03ee02664",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "server/gcp-telemetry.test.ts",
+      "source": "server/gcp-telemetry.test.ts",
+      "sourceSha256": "0b2fc742ffebca701264c3947bd2f9f916207e1d66da6fd97e7f708672b642b5",
+      "sha256": "0b2fc742ffebca701264c3947bd2f9f916207e1d66da6fd97e7f708672b642b5",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "server/gcp-web-client.test.ts",
+      "source": "server/gcp-web-client.test.ts",
+      "sourceSha256": "209a9c6a33aeef9d33c8266473c2fe3fd5d617935155217617f520fa62e9483d",
+      "sha256": "209a9c6a33aeef9d33c8266473c2fe3fd5d617935155217617f520fa62e9483d",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "server/modules/gcp/analyses.ts",
+      "source": "server/modules/gcp/analyses.ts",
+      "sourceSha256": "05d31e3dc25ede2203bf9e7800b67d3daeaef15b528254ec13b96ffff84d1d6f",
+      "sha256": "05d31e3dc25ede2203bf9e7800b67d3daeaef15b528254ec13b96ffff84d1d6f",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "server/modules/gcp/api.ts",
+      "source": "server/modules/gcp/api.ts",
+      "sourceSha256": "1f73adab43176b722cc2ae4c2dbb229b69265ebeedd43719078fc4762d224b52",
+      "sha256": "1f73adab43176b722cc2ae4c2dbb229b69265ebeedd43719078fc4762d224b52",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "server/modules/gcp/cloud-run-collector.ts",
+      "source": "server/modules/gcp/cloud-run-collector.ts",
+      "sourceSha256": "6aa6890af1a64fdbece6f4b88ea6b0c6c85bf4b403c1ac191b563429060f6ec4",
+      "sha256": "6aa6890af1a64fdbece6f4b88ea6b0c6c85bf4b403c1ac191b563429060f6ec4",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "server/modules/gcp/cloud-run-transport.ts",
+      "source": "server/modules/gcp/cloud-run-transport.ts",
+      "sourceSha256": "5a4826a667608f15383cd9bba8d8f68b9794dc15bc660feed34bdbd37387417e",
+      "sha256": "5a4826a667608f15383cd9bba8d8f68b9794dc15bc660feed34bdbd37387417e",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "server/modules/gcp/composition.ts",
+      "source": "server/modules/gcp/composition.ts",
+      "sourceSha256": "ba8c9bf7506144db1614ae93fff69b600ee151abbe6f8cc23e4a14db007ead66",
+      "sha256": "ba8c9bf7506144db1614ae93fff69b600ee151abbe6f8cc23e4a14db007ead66",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "server/modules/gcp/configuration.ts",
+      "source": "server/modules/gcp/configuration.ts",
+      "sourceSha256": "ed5df022c3d51b9bc39a5ecf655d00fa2b0eeafcecb95276235770b9cb63e2cf",
+      "sha256": "ed5df022c3d51b9bc39a5ecf655d00fa2b0eeafcecb95276235770b9cb63e2cf",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "server/modules/gcp/evaluation/pack.ts",
+      "source": "server/modules/gcp/evaluation/pack.ts",
+      "sourceSha256": "c021405aa7b411e1516d1aaa89c058807c01ceaaea4e8c624b72f0667195d524",
+      "sha256": "c021405aa7b411e1516d1aaa89c058807c01ceaaea4e8c624b72f0667195d524",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "server/modules/gcp/evaluation/review.ts",
+      "source": "server/modules/gcp/evaluation/review.ts",
+      "sourceSha256": "e55982200b1bfceaeb7ef5927db68fef689b79c44b29702e58de38d4d87a3aa3",
+      "sha256": "e55982200b1bfceaeb7ef5927db68fef689b79c44b29702e58de38d4d87a3aa3",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "server/modules/gcp/evaluation/scenarios.ts",
+      "source": "server/modules/gcp/evaluation/scenarios.ts",
+      "sourceSha256": "612b6263b0efcc1ee18ebce59fdd6ea986f0e4b7abee251c505873f2b0c62ca7",
+      "sha256": "612b6263b0efcc1ee18ebce59fdd6ea986f0e4b7abee251c505873f2b0c62ca7",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "server/modules/gcp/gemini.ts",
+      "source": "server/modules/gcp/gemini.ts",
+      "sourceSha256": "a36dc9257b7af26aaea2a66f411a60f677fdaf32bef858af66b5b339d655122d",
+      "sha256": "a36dc9257b7af26aaea2a66f411a60f677fdaf32bef858af66b5b339d655122d",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "server/modules/gcp/hosted.ts",
+      "source": "server/modules/gcp/hosted.ts",
+      "sourceSha256": "684fe12b03ca425f6da9ee07eb494f1e6b9456759c29167e8c5e9cf22fe097c7",
+      "sha256": "684fe12b03ca425f6da9ee07eb494f1e6b9456759c29167e8c5e9cf22fe097c7",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "server/modules/gcp/inspection-adapter.ts",
+      "source": "server/modules/gcp/inspection-adapter.ts",
+      "sourceSha256": "2f38afd86c88d67a82bf35173a72c985db96513a1169f1852cc00974946361da",
+      "sha256": "2f38afd86c88d67a82bf35173a72c985db96513a1169f1852cc00974946361da",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "server/modules/gcp/metadata-adapter.ts",
+      "source": "server/modules/gcp/metadata-adapter.ts",
+      "sourceSha256": "393986b95475ec0164eccea47b5978a9933c0c3d240f140f46f3a6343e312daa",
+      "sha256": "393986b95475ec0164eccea47b5978a9933c0c3d240f140f46f3a6343e312daa",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "server/modules/gcp/notification-store.ts",
+      "source": "server/modules/gcp/notification-store.ts",
+      "sourceSha256": "b38653977faaf6abe10c0a625752f67a6d235df02538950e1ca14fd9a114942b",
+      "sha256": "b38653977faaf6abe10c0a625752f67a6d235df02538950e1ca14fd9a114942b",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "server/modules/gcp/notifications.ts",
+      "source": "server/modules/gcp/notifications.ts",
+      "sourceSha256": "0661f10806b9a6888cd19cfd1e1b4209fb2de54b7bed8cdb33e7a0b07c469acc",
+      "sha256": "0661f10806b9a6888cd19cfd1e1b4209fb2de54b7bed8cdb33e7a0b07c469acc",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "server/modules/gcp/observations.ts",
+      "source": "server/modules/gcp/observations.ts",
+      "sourceSha256": "0706b9b29d004b67587e46131eb9341abd461d215efd0e96fcac145e3e95e499",
+      "sha256": "0706b9b29d004b67587e46131eb9341abd461d215efd0e96fcac145e3e95e499",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "server/modules/gcp/operations.ts",
+      "source": "server/modules/gcp/operations.ts",
+      "sourceSha256": "a307b2cf161f0763a8561ef0705f6a4416a82dda2289c769757afd8fc449e01b",
+      "sha256": "a307b2cf161f0763a8561ef0705f6a4416a82dda2289c769757afd8fc449e01b",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "server/modules/gcp/telemetry-collector.ts",
+      "source": "server/modules/gcp/telemetry-collector.ts",
+      "sourceSha256": "117d8d8cfa39953bbbff11213f3260f82e69adbe6ff32acdd92817da273b731e",
+      "sha256": "117d8d8cfa39953bbbff11213f3260f82e69adbe6ff32acdd92817da273b731e",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "server/modules/gcp/telemetry-transport.ts",
+      "source": "server/modules/gcp/telemetry-transport.ts",
+      "sourceSha256": "8d725fb26b1ce408e258e800d7a58ce747d5e07aa462db4d322c8634363798a7",
+      "sha256": "8d725fb26b1ce408e258e800d7a58ce747d5e07aa462db4d322c8634363798a7",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "server/modules/gcp/web-access.ts",
+      "source": "server/modules/gcp/web-access.ts",
+      "sourceSha256": "85eb15cc6aed2dc8490e3499ff7ac95c55f97ce74d515b86d7ac76a86cb844bc",
+      "sha256": "85eb15cc6aed2dc8490e3499ff7ac95c55f97ce74d515b86d7ac76a86cb844bc",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "server/platform/firebase/cloud-firebase-auth.ts",
+      "source": "server/platform/firebase/cloud-firebase-auth.ts",
+      "sourceSha256": "f9c9b0b7e5a597c451bd07dca500f4da82ee81105e81d0eb872011bf4bd96ac8",
+      "sha256": "f9c9b0b7e5a597c451bd07dca500f4da82ee81105e81d0eb872011bf4bd96ac8",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "server/platform/firebase/cloud-firestore-store.ts",
+      "source": "server/platform/firebase/cloud-firestore-store.ts",
+      "sourceSha256": "c73289175b860327a01d3e7a8ace5e53fa475101fcabd920f6f0f5097473ad4f",
+      "sha256": "c73289175b860327a01d3e7a8ace5e53fa475101fcabd920f6f0f5097473ad4f",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "server/platform/firebase/gcp.ts",
+      "source": "server/platform/firebase/gcp.ts",
+      "sourceSha256": "8d1599487426b98d59accb55b88d11c3ba2b44d827782b52e0937b5f4d051aca",
+      "sha256": "8d1599487426b98d59accb55b88d11c3ba2b44d827782b52e0937b5f4d051aca",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "server/platform/firebase/load-gcp.ts",
+      "source": "server/platform/firebase/load-gcp.ts",
+      "sourceSha256": "e4b27132c5eb96ba2d526633cde8b6222b5277697e4a42d8bfe480547c7085ed",
+      "sha256": "e4b27132c5eb96ba2d526633cde8b6222b5277697e4a42d8bfe480547c7085ed",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "server/platform/google/credentials.ts",
+      "source": "server/platform/google/credentials.ts",
+      "sourceSha256": "3b1b13d0b20f7369946f27d2f08eecabe3fa8beccc70381232698b7ac4af955f",
+      "sha256": "3b1b13d0b20f7369946f27d2f08eecabe3fa8beccc70381232698b7ac4af955f",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "server/platform/google/sdk-auth.ts",
+      "source": "server/platform/google/sdk-auth.ts",
+      "sourceSha256": "7067ef592091fa6300eccbcf67c7383526d17bb6c2ca555dd0ec315260018c87",
+      "sha256": "7067ef592091fa6300eccbcf67c7383526d17bb6c2ca555dd0ec315260018c87",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "src/components/ConsoleHeader.tsx",
+      "source": "src/components/ConsoleHeader.tsx",
+      "sourceSha256": "ff67c6bf5c3ab14e2f7207df2b508c9fec122f4dd3dee0f62cdaa95304382550",
+      "sha256": "ff67c6bf5c3ab14e2f7207df2b508c9fec122f4dd3dee0f62cdaa95304382550",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "src/domain/cloud-operations.ts",
+      "source": "src/domain/cloud-operations.ts",
+      "sourceSha256": "79dc9b173822ca67072ccec616ed6fe2b2780071eae4a3da698dd221acca904f",
+      "sha256": "79dc9b173822ca67072ccec616ed6fe2b2780071eae4a3da698dd221acca904f",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "src/domain/cloud-workflow.ts",
+      "source": "src/domain/cloud-workflow.ts",
+      "sourceSha256": "19ecd2ec333557990f0839ccc77f3ebaf2f9bc7188878400b52fe7120061e9eb",
+      "sha256": "19ecd2ec333557990f0839ccc77f3ebaf2f9bc7188878400b52fe7120061e9eb",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "src/gcp-main.tsx",
+      "source": "src/gcp-main.tsx",
+      "sourceSha256": "30f0368f753f408e43dca62fe0ef77bd2f752d324cc7e76680b5785daf2d581a",
+      "sha256": "30f0368f753f408e43dca62fe0ef77bd2f752d324cc7e76680b5785daf2d581a",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "src/i18n.tsx",
+      "source": "src/i18n.tsx",
+      "sourceSha256": "aeaec985be744a5efb6c34f2604a871dd6bb66a7cc221821b0ffaa3ce29bbc39",
+      "sha256": "aeaec985be744a5efb6c34f2604a871dd6bb66a7cc221821b0ffaa3ce29bbc39",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "src/modules/contracts.ts",
+      "source": "src/modules/contracts.ts",
+      "sourceSha256": "47ec2ffa8e479917b02537d3dc04f7449d9cfd86382b8658a8e555afaa983c99",
+      "sha256": "47ec2ffa8e479917b02537d3dc04f7449d9cfd86382b8658a8e555afaa983c99",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "src/modules/gcp/Access.tsx",
+      "source": "src/modules/gcp/Access.tsx",
+      "sourceSha256": "aae1e1a809293498d3625b4a2f1056524b507e1557df95a1f9c4214c986544c5",
+      "sha256": "aae1e1a809293498d3625b4a2f1056524b507e1557df95a1f9c4214c986544c5",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "src/modules/gcp/AnalysisPanel.tsx",
+      "source": "src/modules/gcp/AnalysisPanel.tsx",
+      "sourceSha256": "024782c706af659e370bde3e151ca63ddba92d603f937f1f277a72fe2a9dd10d",
+      "sha256": "024782c706af659e370bde3e151ca63ddba92d603f937f1f277a72fe2a9dd10d",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "src/modules/gcp/App.tsx",
+      "source": "src/modules/gcp/App.tsx",
+      "sourceSha256": "2363fb7addb98e570af1b5fe96ca06b9ebb7d828f2731ac5f5f24d1d1e5a350d",
+      "sha256": "2363fb7addb98e570af1b5fe96ca06b9ebb7d828f2731ac5f5f24d1d1e5a350d",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "src/modules/gcp/ConnectedObservation.tsx",
+      "source": "src/modules/gcp/ConnectedObservation.tsx",
+      "sourceSha256": "926078b4a28b8097168a3797bcd0b73fa1e9856da50262e1ca6a6ce5b99bf1d5",
+      "sha256": "926078b4a28b8097168a3797bcd0b73fa1e9856da50262e1ca6a6ce5b99bf1d5",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "src/modules/gcp/HostedApp.tsx",
+      "source": "src/modules/gcp/HostedApp.tsx",
+      "sourceSha256": "780dc8ced92cfbf78271826f504ed2f726424cf0b02b9a0057f0179baa102a77",
+      "sha256": "780dc8ced92cfbf78271826f504ed2f726424cf0b02b9a0057f0179baa102a77",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "src/modules/gcp/InspectionResult.tsx",
+      "source": "src/modules/gcp/InspectionResult.tsx",
+      "sourceSha256": "1d4c2ef674df020545d56107842783b587b6f3d68fa1f518883690ab071fb4c2",
+      "sha256": "1d4c2ef674df020545d56107842783b587b6f3d68fa1f518883690ab071fb4c2",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "src/modules/gcp/ObservationPanel.tsx",
+      "source": "src/modules/gcp/ObservationPanel.tsx",
+      "sourceSha256": "c109eace23912cba4c132530378f26150420127c0edce958c68da8a001200247",
+      "sha256": "c109eace23912cba4c132530378f26150420127c0edce958c68da8a001200247",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "src/modules/gcp/OperationsOverview.tsx",
+      "source": "src/modules/gcp/OperationsOverview.tsx",
+      "sourceSha256": "fb556ae3b574c41f0829e10d53dbf348d4a1e7a3352bb0ed1a173447f2937afe",
+      "sha256": "fb556ae3b574c41f0829e10d53dbf348d4a1e7a3352bb0ed1a173447f2937afe",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "src/modules/gcp/PlanLibrary.tsx",
+      "source": "src/modules/gcp/PlanLibrary.tsx",
+      "sourceSha256": "22bf66494dbe8a0ea7a5eb47899df8fd7e77f0d234abab7bce3201b3a18fc359",
+      "sha256": "22bf66494dbe8a0ea7a5eb47899df8fd7e77f0d234abab7bce3201b3a18fc359",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "src/modules/gcp/SyntheticWorkflow.tsx",
+      "source": "src/modules/gcp/SyntheticWorkflow.tsx",
+      "sourceSha256": "763c35d14219a984cbaecd0e69d5d11d3b2b4fdef253ec0d2aedf63aad588830",
+      "sha256": "763c35d14219a984cbaecd0e69d5d11d3b2b4fdef253ec0d2aedf63aad588830",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "src/modules/gcp/TelemetryPanel.tsx",
+      "source": "src/modules/gcp/TelemetryPanel.tsx",
+      "sourceSha256": "08c465990765f33ed42af0cd67aac97e48660b5cdfbc5ffcc390479884c97645",
+      "sha256": "08c465990765f33ed42af0cd67aac97e48660b5cdfbc5ffcc390479884c97645",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "src/modules/gcp/WorkflowPanel.tsx",
+      "source": "src/modules/gcp/WorkflowPanel.tsx",
+      "sourceSha256": "a13dceae2935f67eada993ab8ecb5d8d32e7623aa03d794580bb66e826e4491b",
+      "sha256": "a13dceae2935f67eada993ab8ecb5d8d32e7623aa03d794580bb66e826e4491b",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "src/modules/gcp/assets/google-cloud.png",
+      "source": "src/modules/gcp/assets/google-cloud.png",
+      "sourceSha256": "efc3363f4b4e4f0b508a998746e29510a2a94f4dc691b3a7d416c07508457bcc",
+      "sha256": "efc3363f4b4e4f0b508a998746e29510a2a94f4dc691b3a7d416c07508457bcc",
+      "includedBy": "runtime-build"
+    },
+    {
+      "path": "src/modules/gcp/demo.ts",
+      "source": "src/modules/gcp/demo.ts",
+      "sourceSha256": "a715140c8aafa1e381fc8de8a089d31ded186a15cbbe58425d6edd5e83406278",
+      "sha256": "a715140c8aafa1e381fc8de8a089d31ded186a15cbbe58425d6edd5e83406278",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "src/modules/gcp/domain/analysis.ts",
+      "source": "src/modules/gcp/domain/analysis.ts",
+      "sourceSha256": "fda2c39f4188b807e5986b5db3cce362221499fe7709a4c947206e5e7141efa5",
+      "sha256": "fda2c39f4188b807e5986b5db3cce362221499fe7709a4c947206e5e7141efa5",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "src/modules/gcp/domain/cloud-run.ts",
+      "source": "src/modules/gcp/domain/cloud-run.ts",
+      "sourceSha256": "64a43666575eba4bc21195ee71020e52ac5bd4c91d05af650588f488ac0ce830",
+      "sha256": "64a43666575eba4bc21195ee71020e52ac5bd4c91d05af650588f488ac0ce830",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "src/modules/gcp/domain/inspection.ts",
+      "source": "src/modules/gcp/domain/inspection.ts",
+      "sourceSha256": "da6b8b6896bf29cc894dbdbae9cdf3f21e38d6135a9e1acd109505b6e864488c",
+      "sha256": "da6b8b6896bf29cc894dbdbae9cdf3f21e38d6135a9e1acd109505b6e864488c",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "src/modules/gcp/domain/mobile.ts",
+      "source": "src/modules/gcp/domain/mobile.ts",
+      "sourceSha256": "60a16ebe79a1ba6752b931090da24ec224b8935c62781dd20a9c322f5a633951",
+      "sha256": "60a16ebe79a1ba6752b931090da24ec224b8935c62781dd20a9c322f5a633951",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "src/modules/gcp/domain/notifications.ts",
+      "source": "src/modules/gcp/domain/notifications.ts",
+      "sourceSha256": "142a43797f5d3630a513fafbf80071c7ec6d77e14832e3349f7db2a72cc33913",
+      "sha256": "142a43797f5d3630a513fafbf80071c7ec6d77e14832e3349f7db2a72cc33913",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "src/modules/gcp/domain/observations.ts",
+      "source": "src/modules/gcp/domain/observations.ts",
+      "sourceSha256": "b3bcc2b49acc94a6cf6c33d9825d0410b19d68a8ff2147dd118b80fa9de816cf",
+      "sha256": "b3bcc2b49acc94a6cf6c33d9825d0410b19d68a8ff2147dd118b80fa9de816cf",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "src/modules/gcp/domain/telemetry-summary.ts",
+      "source": "src/modules/gcp/domain/telemetry-summary.ts",
+      "sourceSha256": "4c8092aa50421f478b96551a69e2a063ef1e21f233316333c536bd541c428cec",
+      "sha256": "4c8092aa50421f478b96551a69e2a063ef1e21f233316333c536bd541c428cec",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "src/modules/gcp/domain/telemetry.ts",
+      "source": "src/modules/gcp/domain/telemetry.ts",
+      "sourceSha256": "839389654bc0fd37deb9ec1e2c76c687ad625c2de2a1d6aa948fe422ee8c4f1e",
+      "sha256": "839389654bc0fd37deb9ec1e2c76c687ad625c2de2a1d6aa948fe422ee8c4f1e",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "src/modules/gcp/domain/workflow.ts",
+      "source": "src/modules/gcp/domain/workflow.ts",
+      "sourceSha256": "d2302202bb92528bbd8d2f2fa28b03086f7c6855c76b73b9b18845fab4bb14a0",
+      "sha256": "d2302202bb92528bbd8d2f2fa28b03086f7c6855c76b73b9b18845fab4bb14a0",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "src/modules/gcp/manifest.ts",
+      "source": "src/modules/gcp/manifest.ts",
+      "sourceSha256": "c4d58117c7947bdb54d73c611b741798d68d31dba28df2e7a68c1b035d308a01",
+      "sha256": "c4d58117c7947bdb54d73c611b741798d68d31dba28df2e7a68c1b035d308a01",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "src/modules/gcp/observation-client.ts",
+      "source": "src/modules/gcp/observation-client.ts",
+      "sourceSha256": "8027af64d97bf8b25c8197dab649f9ef080834eab1339ad2f1a935d96d134c75",
+      "sha256": "8027af64d97bf8b25c8197dab649f9ef080834eab1339ad2f1a935d96d134c75",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "src/modules/gcp/preview.ts",
+      "source": "src/modules/gcp/preview.ts",
+      "sourceSha256": "7cdd2951d15236fb218fd1482aefdc18d548b13f314e591905dfa8f0cb569b72",
+      "sha256": "7cdd2951d15236fb218fd1482aefdc18d548b13f314e591905dfa8f0cb569b72",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "src/modules/shared/ModuleShell.tsx",
+      "source": "src/modules/shared/ModuleShell.tsx",
+      "sourceSha256": "110454ae88acb1388012b72894920ed3a85efa7d5bf90459225d2d61812a6766",
+      "sha256": "110454ae88acb1388012b72894920ed3a85efa7d5bf90459225d2d61812a6766",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "src/platform/OrganizationAccess.tsx",
+      "source": "src/platform/OrganizationAccess.tsx",
+      "sourceSha256": "938ad894e55b703a50e132a1fd122153642019bd0b40a0a2a99f3ebd66eaa556",
+      "sha256": "938ad894e55b703a50e132a1fd122153642019bd0b40a0a2a99f3ebd66eaa556",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "src/platform/firebase/Factory.tsx",
+      "source": "src/platform/firebase/Factory.tsx",
+      "sourceSha256": "bfa10cd3a9bedb2aec302bb00d14d86a58d3d09a06adb7fd28b6100f10fb45b0",
+      "sha256": "bfa10cd3a9bedb2aec302bb00d14d86a58d3d09a06adb7fd28b6100f10fb45b0",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "src/platform/firebase/web-identity.ts",
+      "source": "src/platform/firebase/web-identity.ts",
+      "sourceSha256": "bb1003624f48290547391d9ffe794dec0c657f3f71932bb7b6ad310bcdd2960e",
+      "sha256": "bb1003624f48290547391d9ffe794dec0c657f3f71932bb7b6ad310bcdd2960e",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "src/platform/web-config.ts",
+      "source": "src/platform/web-config.ts",
+      "sourceSha256": "7e8521368f059fbd956ffb8415e6b0a5a5b4bbe698593228d25f560dd852787e",
+      "sha256": "7e8521368f059fbd956ffb8415e6b0a5a5b4bbe698593228d25f560dd852787e",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "src/platform/web-identity.ts",
+      "source": "src/platform/web-identity.ts",
+      "sourceSha256": "f627aa0b2295c6cdf7f2821944d32b62e78f5150126f6fd22d781467123278ff",
+      "sha256": "f627aa0b2295c6cdf7f2821944d32b62e78f5150126f6fd22d781467123278ff",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "src/styles.css",
+      "source": "src/styles.css",
+      "sourceSha256": "d5fc2c3913f12b7611772e17903c09345431715f3711f8d4541aa03d958092a4",
+      "sha256": "d5fc2c3913f12b7611772e17903c09345431715f3711f8d4541aa03d958092a4",
+      "includedBy": "runtime-build"
+    },
+    {
+      "path": "src/vite-env.d.ts",
+      "source": "src/vite-env.d.ts",
+      "sourceSha256": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5",
+      "sha256": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "tests/fixtures/gcp-telemetry.ts",
+      "source": "tests/fixtures/gcp-telemetry.ts",
+      "sourceSha256": "a4e2bf37b0b33044bf46946924705fa43b00f79af8e44d01513002440b6d8c0a",
+      "sha256": "a4e2bf37b0b33044bf46946924705fa43b00f79af8e44d01513002440b6d8c0a",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "tests/fixtures/gcp-web.tsx",
+      "source": "tests/fixtures/gcp-web.tsx",
+      "sourceSha256": "630091a3d4c0c83ea1e15b018075b8035ec8544b545f35374142b025a6caccb6",
+      "sha256": "630091a3d4c0c83ea1e15b018075b8035ec8544b545f35374142b025a6caccb6",
+      "includedBy": "type-and-test-closure"
+    },
+    {
+      "path": "tsconfig.json",
+      "sha256": "5b25281205842a67da4299f3920b7a6aa1defcd2520f8447c7d1e38b6fc9e19d",
+      "includedBy": "gcp-repository-composition"
+    },
+    {
+      "path": "vite.config.mjs",
+      "source": "deploy/gcp-source/vite.config.mjs",
+      "sourceSha256": "632c37b9dc32e7966bb17c695faf0284700da5ed9eb9943c68d22d1f432b247f",
+      "sha256": "632c37b9dc32e7966bb17c695faf0284700da5ed9eb9943c68d22d1f432b247f",
+      "includedBy": "gcp-repository-composition"
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "node_modules/@axe-core/playwright",
+      "version": "4.13.0",
+      "integrity": "sha512-6YLx+kxXu5GJceG4ozFg+33a2EMTdjYwWGloJ3sb9Kta5pp+ZNS53uxGVog5JetIY8s++P5UrtX+cri+u0VAVg==",
+      "license": "MPL-2.0"
+    },
+    {
+      "path": "node_modules/@babel/runtime",
+      "version": "7.29.10",
+      "integrity": "sha512-NpugTzbKgGrNe45Ui32cN8vCFFMxVtP/9rtfwv0nP5FRDAjvYBxJcLVpYA9mr1jxP6cnIT7x9LUzuDTbWYYNRA==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@cloudscape-design/collection-hooks",
+      "version": "1.0.110",
+      "integrity": "sha512-aCESwWMRwYKDZmUIUZZAdiFKLm7qnweqCNVfC1ONMlEmjcmTsoIPqdLDUxF5rwTzM3Pytx5FyKVEpg+h6sz5Gw==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@cloudscape-design/component-toolkit",
+      "version": "1.0.0-beta.189",
+      "integrity": "sha512-HBWHU6TgpVH2PN4YtLxDGez/rwv5UtMNl3NcEA3fwbAHo3Y0LfD+Y1hsnvRL+URWsNHZVJpNLHyNfE/536Oh3g==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@cloudscape-design/component-toolkit/node_modules/weekstart",
+      "version": "2.0.0",
+      "integrity": "sha512-HjYc14IQUwDcnGICuc8tVtqAd6EFpoAQMqgrqcNtWWZB+F1b7iTq44GzwM1qvnH4upFgbhJsaNHuK93NOFheSg==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@cloudscape-design/components",
+      "version": "3.0.1394",
+      "integrity": "sha512-xyVXBIK+qgE9txTQcONcdGwWSCJSScfLXgA/rnKFZqc0uiBTGz8Ycirm7K24qiH0wm6X+YosTEEQnOpyF35CGw==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@cloudscape-design/global-styles",
+      "version": "1.0.71",
+      "integrity": "sha512-dt9ECM4bp8MBoTmCremOX10rim1EKGufp4Tdu/BtScmzzgtjRQZ0fmgIv+JA9RiwIhSUv9qVCnb6Ji2i/gigAg==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@cloudscape-design/test-utils-core",
+      "version": "1.0.93",
+      "integrity": "sha512-RPVdlNQmCOaMu60nqbM+mISz5qAU5upHjKDOG6uDVoqQ3+J4chXQhTXPsWyw0JPrhmClUHBs1oWY5d0rcTqddA==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@cloudscape-design/theming-runtime",
+      "version": "1.0.135",
+      "integrity": "sha512-CiulkT2CO5py/2JND4BtvPdPSofiT9xdsriRahYudkPv9xh0pDSYWY+n7V2r9zwsVixCFslMQYI05HOiaW3ZMQ==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@dnd-kit/accessibility",
+      "version": "3.1.1",
+      "integrity": "sha512-2P+YgaXF+gRsIihwwY1gCsQSYnu9Zyj2py8kY5fFvUM1qm2WA2u639R6YNVfU4GWr+ZM5mqEsfHZZLoRONbemw==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@dnd-kit/core",
+      "version": "6.3.1",
+      "integrity": "sha512-xkGBRQQab4RLwgXxoqETICr6S5JlogafbhNsidmrkVv2YRs5MLwpjoF2qpiGjQt8S9AoxtIV603s0GIUpY5eYQ==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@dnd-kit/sortable",
+      "version": "7.0.2",
+      "integrity": "sha512-wDkBHHf9iCi1veM834Gbk1429bd4lHX4RpAwT0y2cHLf246GAvU2sVw/oxWNpPKQNQRQaeGXhAVgrOl1IT+iyA==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@dnd-kit/utilities",
+      "version": "3.2.2",
+      "integrity": "sha512-+MKAJEOfaBe5SmV6t34p80MMKhjvUz0vRrvVJbPT0WElzaOJ/1xs+D+KDv+tD/NE5ujfrChEcshd4fLn0wpiqg==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@esbuild/aix-ppc64",
+      "version": "0.28.2",
+      "integrity": "sha512-XExcO+dvLKvVtNTibSTBej1NCAbaGhWn9Ww1ZPx80qsahhPFe/8jgWP0IchNe0F3HwkU7n8ejhH8bjonqht8mQ==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@esbuild/android-arm",
+      "version": "0.28.2",
+      "integrity": "sha512-kXXoiPVVGQcnIYGOeaovwOURpniDBpSq4A03qkQ+BMQqtGG6HYap3xne9C1O1yo4TR3qxlCX5IqqmX6fFo2Lqg==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@esbuild/android-arm64",
+      "version": "0.28.2",
+      "integrity": "sha512-5YfKeeI8qWfBZIX+u2xZC3Zlb3Os/gLS2sbEKM+I4ZOcsWmHS2WLysCcQZDAFRslDUU5Oiq44gf6PYN1vGwG5A==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@esbuild/android-x64",
+      "version": "0.28.2",
+      "integrity": "sha512-O387ite7SzUyCcy3JQX4P4bLtEA7bLLkx+esve5JHnyYfNTxcVpXZo9jhdB0lTKN44gztELTdU7nS8Nr16Fs1Q==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@esbuild/darwin-arm64",
+      "version": "0.28.2",
+      "integrity": "sha512-n4KqkOQrraxHJcgjM1RvwbigfQKIKJVpM7xp+KsxiyUSrRdIXnt73VhrPAx0fV44hgfmIVKjxMN9J1t5jySVkw==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@esbuild/darwin-x64",
+      "version": "0.28.2",
+      "integrity": "sha512-uq6suIWYP37qzGddBKPw5QEQPi6HiLGsO7UmkpfyaYNQ3D+rN6w6WfwH+nuqcGXWvawGwxOEroO4YGnFh95azw==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@esbuild/freebsd-arm64",
+      "version": "0.28.2",
+      "integrity": "sha512-n+I0BTSRIoy+d6RPKnEVwql5UwBJolytvY4mAOIEJorKlqgPII8ix6slVVrfZ5Tnj7glIZvloylbB/EJPMWEXw==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@esbuild/freebsd-x64",
+      "version": "0.28.2",
+      "integrity": "sha512-78XJTJkvPs0kz2w61301PJjXl4g7q3JqiYMZ/M/yVI73EHBrCRTgkhu9oqG7vPqq+a/yadEW8aD+agKlk5xrmg==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@esbuild/linux-arm",
+      "version": "0.28.2",
+      "integrity": "sha512-XlDnu2q5yoqems+xay6wSAcg9DDD7K9RLKZEBOMZm3ckNpJBvOX20tSfby8KfrrhINDyv9V2YVZKY/SpoGJI8w==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@esbuild/linux-arm64",
+      "version": "0.28.2",
+      "integrity": "sha512-pW4AC0P3it8c7do9MVM4p51FzHzdM/TZrerurgRcHJ2WTa1VQ1CIq18xncfpBJw4ojkiZZrKW2yIBWBP92j6Ug==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@esbuild/linux-ia32",
+      "version": "0.28.2",
+      "integrity": "sha512-CYbnj78HsIeA+DhgUKgFCfvNsTHFhMMrinUrMZpDXJXKN8T3XViTZ/+wtHeVxEWY8ewSzTFN+nRmSwO2tZaLUQ==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@esbuild/linux-loong64",
+      "version": "0.28.2",
+      "integrity": "sha512-buwkd8nsph4R+ajRvw0qM5Hja/TXQow3ptzWO2EbG/cqcIkHloRrdlBtQlshyYGTNFvfkfJ5tpPLVkY4DtsPfQ==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@esbuild/linux-mips64el",
+      "version": "0.28.2",
+      "integrity": "sha512-ZVykbDyk7519VwiNb9Lcj9m8XM6v5V9uKPvrEMkkEedVewf+0itkhahp4HDpgERXhwLRpWFypsGbG/J8s0QjJA==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@esbuild/linux-ppc64",
+      "version": "0.28.2",
+      "integrity": "sha512-CAXl+Dtd9UUuJd8pKKdwh6MLm3MUMiqMPmhZ3tTSXPqfyQ3vDl6R5hZdZ/kYojK4ofXtdfSv1tFq8XzWx3heNQ==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@esbuild/linux-riscv64",
+      "version": "0.28.2",
+      "integrity": "sha512-GeXCej4IQtU1B+QlDV8W/RRvbzI3O/Stss+/bCXv4lZls5WGRtu2a+3JkA3i4qIUlMXpcHebWpF8AkJhATowuA==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@esbuild/linux-s390x",
+      "version": "0.28.2",
+      "integrity": "sha512-3H1weTYZPxt/WOhByszQZybS9w5lKzUn1FDMsgEChbHWQwHYQQRfBxgCcZvPhjHfKyJjIievvMmEUawJrdY9Dg==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@esbuild/linux-x64",
+      "version": "0.28.2",
+      "integrity": "sha512-4xTZr1FUmSoQW4XIWmit3tzQrUTZM+N3P0XV8xROKYF50XfI7xeO90+1bZvNwxIufQ9hDQVRJH5YhgPVF8A/HQ==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@esbuild/netbsd-arm64",
+      "version": "0.28.2",
+      "integrity": "sha512-sSATRjPeDBg3pdgHoQfoYBob11Kk1FGa9lui5RIHZCoCkJa9QKlvl3/vKz2usCmYYjs7ymJR/2Nnsqe+Hjt5nw==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@esbuild/netbsd-x64",
+      "version": "0.28.2",
+      "integrity": "sha512-lqnzCV+mM0gIADaKihiCg6ifgfU2L3h5E33rNQBN1Y4MaVGnzryzmvvf7UHxprpQdE8hpqLolJ9Rl+SkIRDpyw==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@esbuild/openbsd-arm64",
+      "version": "0.28.2",
+      "integrity": "sha512-AL2qJILH7lNjrDmCQDvdxMfAUIv8KMNZOvrwAQ8i8//ntL9FflhOyMJ8OZSMBb8/AWXe3/5v5S20y3zCoZWKoQ==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@esbuild/openbsd-x64",
+      "version": "0.28.2",
+      "integrity": "sha512-QtiuPytchRyC4rwUKhexJdQKvDuZ6hWloi3igqPQNUJCS1/v9EiO3UTOXR6A3FoMo4fnAKbWJdqaIwhOzh8qEw==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@esbuild/openharmony-arm64",
+      "version": "0.28.2",
+      "integrity": "sha512-WkhYDmpTjLvGlScA1rwjRUmhl4k8oXR3cIbtqWmELgU/dFeHHlEllxDvdWcNJV9rbzCexB5vz8gtNewWLgCT7Q==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@esbuild/sunos-x64",
+      "version": "0.28.2",
+      "integrity": "sha512-GPMSkTOtMnv2U2F8gxe4Io6qmVs+YKyp832Etqqxr0hFngmXQ3rzwytelm3GIn7T4VviRUlf3sOgBOiTdvaf7g==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@esbuild/win32-arm64",
+      "version": "0.28.2",
+      "integrity": "sha512-PIhhEkE9uPBleRBrQEJpUn7MBnibZzbGzYWPmY3x+YoVg/95zbjB4CxPPOQ8l5tYYM4mMaCthF8/1DIfBQQyWQ==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@esbuild/win32-ia32",
+      "version": "0.28.2",
+      "integrity": "sha512-YmJbfTlvU7Sdn9BB+4PRES4oB6pxgS37MAONj+hBr/cpXS1aBPKXxNnDbu+QCWPj0o9dgyxeq79g6c5P8KeuYA==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@esbuild/win32-x64",
+      "version": "0.28.2",
+      "integrity": "sha512-5ebpxr3nWMzrL/rnUI755Jkuee0bHL/Gq0WTF9lvcpv73wAp5eu8MfBUgWK9bhWvZjj7yX8etf/8tI8Ney695g==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@fastify/busboy",
+      "version": "3.2.2",
+      "integrity": "sha512-yXSS27qPExaXeuLvMRMXOLtpipzfQYNjG3FkunDWKGfMYjKuhFXko9CVzqxm8jcF+lmtS9Fd89QNdh9XDjnbNg==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@firebase/ai",
+      "version": "3.0.0",
+      "integrity": "sha512-66jJAi6JUmyXna89xaDONmfvupO1wNc3f2BegPwUImagbbpKdVeycE3kMqbU4jiDLL14N5PHzadovvxpaqD2hw==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@firebase/analytics",
+      "version": "0.10.25",
+      "integrity": "sha512-oDagV3PHeNXBdxemksZCdj+GmUT19eCnTOcLdQePIIovFXlm3zWy3Gjeaokt9Nqx24kc4ljK8lU0XGcGmmKZ1A==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@firebase/analytics-compat",
+      "version": "0.2.31",
+      "integrity": "sha512-msTlG9REujk5rjtOHNLngiuPmvaWGQte8ugL4/F6ZCMb+92Ue7SgjSEpNxINkM8ZtTrbGS83j5SZkt0r+M1Tjw==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@firebase/analytics-types",
+      "version": "0.8.5",
+      "integrity": "sha512-kdnooE7Bis2jEnsqcerRwn/UQpH5D3uvHpku7OdUM9TJN3omlu6iYtbyAQ6XkAJRgJtO0aNf9OOkW8J6D59oCA==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@firebase/app",
+      "version": "0.16.3",
+      "integrity": "sha512-L2mYqVV2ilnek+W4JG7yasA97TsXCwx+f7/abweX5uSp3dkPa5Luiglt3s9YWfh1fBR3SWH/AkRgAwUpDGyCjg==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@firebase/app-check",
+      "version": "0.13.1",
+      "integrity": "sha512-l8y3dmnhodXks/APAwx4tWqRl3tk8b9874KF1FJyKg1DIU+kMD0l52iz7S9/MW+eK8k6cjJg0G0iJ5KQAsQpow==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@firebase/app-check-compat",
+      "version": "0.4.7",
+      "integrity": "sha512-fBb/xSMyIKv1nDmccfzz3IAGBzx/cQOxmZai66rJzifb1hMMkztf824Xx7LhpTUe7HNUbXwY90IvJ66fi8q6yg==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@firebase/app-check-interop-types",
+      "version": "0.3.5",
+      "integrity": "sha512-qId34pVZ2CXTmtu4ofW5leiI93DvnOvIcr/5GT7MZPw5WXAi6nZoU+g9cNRgl7K90UJSbK0cXxten4meYMPyZg==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@firebase/app-check-types",
+      "version": "0.5.5",
+      "integrity": "sha512-+DF4gzFrlwGFyky38o4T/YN/r51l70yCtJ2HTkwmRj8FCMwPjm4hLH4fQbj6BUvzkiFqliBkitFsRpf1/YZkWA==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@firebase/app-compat",
+      "version": "0.5.19",
+      "integrity": "sha512-pdT+THcv3h43LcawVJ+MUTzofL7umBaCvCgdbr01fnTXrbQU2RSHb0Po/YsF7w+tgjCycg84zCgZbd51NmoIaA==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@firebase/app-types",
+      "version": "0.9.6",
+      "integrity": "sha512-yPLahy7Esfu2w/yme3msVK4xTkDXQqq6szfQn8yVOQpCKiT5GVFjqNpLbuz6NkX0WuTwUidkmPewW3r4xkvpeg==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@firebase/auth",
+      "version": "1.13.7",
+      "integrity": "sha512-00wn8cMrh1ZyEPF6RO5G081Xq1b57FN0QxChiAda0hy/D3Q5TrMk30qhWszRWCgXPRipw6yM6qtqUew3u3qEjA==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@firebase/auth-compat",
+      "version": "0.6.12",
+      "integrity": "sha512-Vspo2zx1RR6LB7zuM7TduD1clMLT/x3Wr97u2jf9s2JrhYArJAFKeEu8bRWF1DoX54z6W9N77SdPRbPAiLKPpg==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@firebase/auth-interop-types",
+      "version": "0.2.6",
+      "integrity": "sha512-FgwZqDrBqgK0BHI70QTv1v/5wmuDF9f8fsJFvKSxoRlK2PPfSQtZAk2jhXu4pe9BZzFi/e4UYusU/bEQHdf6Qg==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@firebase/auth-types",
+      "version": "0.13.2",
+      "integrity": "sha512-OU+miuoSxIWYN7GT291d2ylVJBL3k/OePo7/JDSoQtkFQoEiGBc4AHuMjj/seqFIsHrqnjrAfRCk4pfufoJolQ==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@firebase/component",
+      "version": "0.7.5",
+      "integrity": "sha512-vuFDcL91Q+2ZuBJkyOh86T4q0B4ffNTDjc/A38tybO56odQABxRTFLTIowCWqAKeIcgo37GowWMVgFF73gD8Qw==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@firebase/data-connect",
+      "version": "0.7.4",
+      "integrity": "sha512-su1aGWlzhxb+xtggCUSsufJn1FDa06SBDK71y+fpQ+g2zMhMExik6FUv/odkKzOF/xfWVjabCbWBcjJY3MceDA==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@firebase/database",
+      "version": "1.1.5",
+      "integrity": "sha512-/JGpvszLoNXNgzilRXocigGfFF4hbcPA9wN1i1kjJx6oKkXgkHteZYl3lQs1lJX3ETDf6bv7zI15lPMVUp4sAQ==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@firebase/database-compat",
+      "version": "2.1.7",
+      "integrity": "sha512-lBq9sJm8MnJINKJnkAKSOj2MbC66xGoSVCcGkPtstl+lkoKEBtD46qHLbuDgW/WbLPoKVm17RIN8BxHj+Z2F2w==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@firebase/database-types",
+      "version": "1.0.22",
+      "integrity": "sha512-YAZNXsjY9EQQ+pKw/3ax8n5FgolHC7Qew7EY5RceYdl0R2ZP+kCv1O0DkKlcceue8uQCOreHCNN7PWVFpY1Nug==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@firebase/firestore",
+      "version": "4.18.0",
+      "integrity": "sha512-28aKMUeM+L4fuxx5hurvQK31KLh/KRutaP1544avVWuR4mNTAC0FQoHg8gbkN5NoJj3yN9/ZFGSFSVPR8/x/BQ==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@firebase/firestore-compat",
+      "version": "0.4.15",
+      "integrity": "sha512-/hWibRTNFsWkZZi1dbDS1hiJIMezYUMPrRjMmBXevel5b368XWY+NvfOaSxgy3+fDb6I+uZ7SKGFyL06gW3vTA==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@firebase/firestore-types",
+      "version": "3.0.5",
+      "integrity": "sha512-dbdMAQkMd5dwWc48eupz/Y6/E9ruat3+gY5lhVKscvvT/HnDBEEMzJW38zdKhgdnglZHGk2vUsJMOHAphMHGMA==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@firebase/firestore/node_modules/@grpc/grpc-js",
+      "version": "1.9.16",
+      "integrity": "sha512-wE4Ut/olIzfKqp631XrG+wbF0v1vWFN4YL9FyXC2LJiG33DsV7PLzURjrCvY/6je2ntdRkeLpPDluzSRGaVltQ==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@firebase/firestore/node_modules/@grpc/proto-loader",
+      "version": "0.7.15",
+      "integrity": "sha512-tMXdRCfYVixjuFK+Hk0Q1s38gV9zDiDJfWL3h1rv4Qc39oILCu1TRTDt7+fGUI8K4G1Fj125Hx/ru3azECWTyQ==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@firebase/functions",
+      "version": "0.14.0",
+      "integrity": "sha512-DhuYFr0eMhp+s/PNEk6SiMsYkc00+XVOUeKbrl8MOzQNZI3SKQpqoDR1d+keNDAutwmHRWTUAdXBoVPD+xxVUw==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@firebase/functions-compat",
+      "version": "0.5.0",
+      "integrity": "sha512-T3BDIToESZUHt7438wyKYMkRjKg3m1xAIux5fVpNvTRQlDOFLukWniQWBDhJ2znpU9kxMTR6+e31TVo8P15PZw==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@firebase/functions-types",
+      "version": "0.6.5",
+      "integrity": "sha512-Zc0pURjthHXzSj54ZivCkzKDSV1r/wIpnmHdhq82q2yFFPVoncG/ZJjnVMiANvQfeww/QnElhzODpfwUucVwdA==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@firebase/installations",
+      "version": "0.6.24",
+      "integrity": "sha512-Ui52ey8wHoWqkBbXRKJEKYWylI0JZogZmoLS+o8Anh1bxWtK27ZYjLla1UJAAdC5DCKLJ2qAp0VpJOjg8VOX1g==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@firebase/installations-compat",
+      "version": "0.2.24",
+      "integrity": "sha512-8M5nlcWwYt881x83COP2odq5vgf+NgwJh+RMd4LRSv8JI1pxwDfgrDJOERrjTgfC9J5Z0vnQX4b1pdN914e0Zw==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@firebase/installations-types",
+      "version": "0.5.5",
+      "integrity": "sha512-e9UYcju3puDl1vdrcKIi5dExzHLameOT/Tc61Q48PYwxtsM1NzZh/ikGbdBQTsbRgg0EMZqdPr0/m5ODUBobrg==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@firebase/logger",
+      "version": "0.5.2",
+      "integrity": "sha512-J2VO4NFTc0xQFrxV1B/lm5balicm9cwuX2acR9Yn41fN8KgUeQFo+VJV222IqW2FPSXKDu9uo5WdQFWf9TPbYg==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@firebase/messaging",
+      "version": "0.13.3",
+      "integrity": "sha512-nRXPAp+z0kA3KziJtRY9kktHECvRwaaONzHvislFgllhCwJMscW7icWNQA5IjyP8Uc2+GS/4px8Uz6rx6ftTag==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@firebase/messaging-compat",
+      "version": "0.2.30",
+      "integrity": "sha512-m1DPT2ET5x0qYqXLoHwKMAyf1mgZZOhuoE6H6/H4OPsp8zSxMIDEFPaW7MaffPJsCA5J7kHzo+BHVNXK4ZoV+w==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@firebase/messaging-interop-types",
+      "version": "0.2.6",
+      "integrity": "sha512-MVzvkKe2V4H2dHu5oOxRfeKQcfTwWmCgnzsC4V1q3ixun5iiL8riCZ2qI35rDhCL4glPGiu0jHxDbpVNuTKfow==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@firebase/performance",
+      "version": "0.7.14",
+      "integrity": "sha512-9PH1XEZVHErxGdbXluvGz4Uyjw4W955H8v7Mv9rHIybRrg5F2Ac2tvf5+mSf5EtnxWNmxrD2WLnvMFaZP4sMrQ==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@firebase/performance-compat",
+      "version": "0.2.27",
+      "integrity": "sha512-O/ozTf/EbChN94Pk7bd1eUC0PAC36726AwsaiJyC0bZzSBWfLGSWASGPH5pebUWXQPJtGxIJYRkkbX5l0Qa+Hw==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@firebase/performance-types",
+      "version": "0.2.5",
+      "integrity": "sha512-PRzOgB+/M+6AKlEkY8a9xy5Ff5SfZPIh4iShXhn2WAcL/euSbK7bdLqWysHduunNJhGFsXa22Ag3ixqL6rQtYg==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@firebase/remote-config",
+      "version": "0.9.3",
+      "integrity": "sha512-9DbuFNAFeUbVJQZmwLZfdoLRNFWV43V4UqaRpDkaSIdTmVWhzctPeISGkWe4sKTsqpoyldRumquS0gqWZg05fQ==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@firebase/remote-config-compat",
+      "version": "0.2.30",
+      "integrity": "sha512-Q4sQKhQ8TPEMOcCUvUBfGeAP1DfcG7FGBfA9yFUn/XRr4vSToY0DTmK28Nh7lgLQYzs6D5Ng6knSoXH+aGn1Tg==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@firebase/remote-config-types",
+      "version": "0.5.2",
+      "integrity": "sha512-i8k1omVfoAnaT1ZPv2FFjxMZrATYsO/GnFgHEj5+7fAJLzi8wLnGGv1WK06oEAD6ltrWXSO1HzeNyajn/NjMWw==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@firebase/storage",
+      "version": "0.14.6",
+      "integrity": "sha512-9WjohxpjbfcySjCp8kIbd1ZhtmCQFQLqPtDQ+wmZ5PVXimTDjDsSx/RZjwwK89MjCTXB9fCdmvZkJxplZn4W1A==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@firebase/storage-compat",
+      "version": "0.4.6",
+      "integrity": "sha512-te0IsqX1bM+OZCJF7jNSKXcMqCA2yYmpshRHjX4axy0lI/P9ZP9GLjEZMVL8wrjUWF4e3cZxMZTbck3Zd5E1hA==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@firebase/storage-types",
+      "version": "0.8.5",
+      "integrity": "sha512-GEDs5P+rNUfNcS+wxIdOLAHficife2YXtvTJnyi3ssrX11AAtBg+nDUdbYh8vuBzWehVQZPmztGUUnud4L+4yg==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@firebase/util",
+      "version": "1.15.3",
+      "integrity": "sha512-c/z/gaIlaaLZEuGbE6sLUuJ61tskg1JghvhcNQzW948ASBinbVBBRnZTC4b4yt4LaEtJQkYlyzqLHcutFwEIvA==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@firebase/webchannel-wrapper",
+      "version": "1.0.7",
+      "integrity": "sha512-phBFwieDLvkZGYN9CE9ZFNEIoBVksprzsnCzQejCmCHtgwCXReeuRpoEGN9C4EbhONztv8NRV1tau6Rb9pONwQ==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@formatjs/ecma402-abstract",
+      "version": "2.3.6",
+      "integrity": "sha512-HJnTFeRM2kVFVr5gr5kH1XP6K0JcJtE7Lzvtr3FS/so5f1kpsqqqxy5JF+FRaO6H2qmcMfAUIox7AJteieRtVw==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@formatjs/fast-memoize",
+      "version": "2.2.7",
+      "integrity": "sha512-Yabmi9nSvyOMrlSeGGWDiH7rf3a7sIwplbvo/dlz9WCIjzIQAfy1RMf4S0X3yG724n5Ghu2GmEl5NJIV6O9sZQ==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@formatjs/icu-messageformat-parser",
+      "version": "2.11.4",
+      "integrity": "sha512-7kR78cRrPNB4fjGFZg3Rmj5aah8rQj9KPzuLsmcSn4ipLXQvC04keycTI1F7kJYDwIXtT2+7IDEto842CfZBtw==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@formatjs/icu-skeleton-parser",
+      "version": "1.8.16",
+      "integrity": "sha512-H13E9Xl+PxBd8D5/6TVUluSpxGNvFSlN/b3coUp0e0JpuWXXnQDiavIpY3NnvSp4xhEMoXyyBvVfdFX8jglOHQ==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@formatjs/intl-localematcher",
+      "version": "0.6.2",
+      "integrity": "sha512-XOMO2Hupl0wdd172Y06h6kLpBz6Dv+J4okPLl4LPtzbr8f66WbIoy4ev98EBuZ6ZK4h5ydTN6XneT4QVpD7cdA==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@google-cloud/firestore",
+      "version": "9.3.1",
+      "integrity": "sha512-ofGTiSpfXrHrrS3KaDOmsupSzCHr4WVl1+s6Ke0F8rPBRyb/OuZSC8u1NjCKtt/fO7A1GvqASQGhdAwVsnGpQA==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@google-cloud/firestore-api",
+      "version": "0.2.0",
+      "integrity": "sha512-wfHJPZmLqzpy6FN6U+7HkkP/AKhGsbHSpEy/qL2TyI3/pKRAvpamQxZ2qvps5hMRgAjfuHCim+oeJj9RveCaqg==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@google-cloud/firestore-api/node_modules/gaxios",
+      "version": "7.1.3",
+      "integrity": "sha512-YGGyuEdVIjqxkxVH1pUTMY/XtmmsApXrCVv5EU25iX6inEPbV+VakJfLealkBtJN69AQmh1eGOdCl9Sm1UP6XQ==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@google-cloud/firestore-api/node_modules/gcp-metadata",
+      "version": "8.1.4",
+      "integrity": "sha512-iJ9KMsiu+xKtNRX0PmGLSaIU3bUBAyzWTyqKemKPzNPsmmsBCQYmlNg+brEbES7IHSXtdVwzBPzx1vz3FAaipw==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@google-cloud/firestore-api/node_modules/google-auth-library",
+      "version": "10.5.0",
+      "integrity": "sha512-7ABviyMOlX5hIVD60YOfHw4/CxOfBhyduaYB+wbFWCWoni4N7SLcV46hrVRktuBbZjFC9ONyqamZITN7q3n32w==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@google-cloud/firestore-api/node_modules/google-gax",
+      "version": "5.0.8",
+      "integrity": "sha512-M4vpZcXQIC1gqIVGQ7eaU3jXQA6zecStyTXu514TYfThlgSurYJOxHZo9fzU6hAgwPWvuEynAVHWyaIk80VeEA==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@google-cloud/firestore-api/node_modules/google-logging-utils",
+      "version": "1.1.3",
+      "integrity": "sha512-eAmLkjDjAFCVXg7A1unxHsLf961m6y17QFqXqAXGj/gVkKFrEICfStRfwUlGNfeCEjNRa32JEWOUTlYXPyyKvA==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@google-cloud/firestore-api/node_modules/proto3-json-serializer",
+      "version": "3.0.4",
+      "integrity": "sha512-E1sbAYg3aEbXrq0n1ojJkRHQJGE1kaE/O6GLA94y8rnJBfgvOPTOd1b9hOceQK1FFZI9qMh1vBERCyO2ifubcw==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@google-cloud/firestore-api/node_modules/retry-request",
+      "version": "8.0.4",
+      "integrity": "sha512-pI6/7eabUYkZxamkOq0g0uMxKLLGnjzhefY+vL8bVXag5rto4OU2YBTPytWLuHH7aEKD6fn7kJycQfid0Mwnkw==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@google-cloud/firestore-api/node_modules/teeny-request",
+      "version": "10.1.4",
+      "integrity": "sha512-R1Cg4Vu0UULeDfHL/kjABLaTW++9yD/B6n2g48y5dJ04hsEaxcfmAqbNDzNsbqAYJyIpZafjklLG9YxRu9uzOg==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@google-cloud/paginator",
+      "version": "7.1.0",
+      "integrity": "sha512-PNCXdAQgNoQODZuqyhmkN2nUpB2q9UFzawZ1oyCDyEyhcheRoCKJJhSKhEIeKpM/NCLnC6Q4We4HEkGCwNDnCA==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@google-cloud/projectify",
+      "version": "6.1.0",
+      "integrity": "sha512-tKAx9q6vTtbgZcqCojKWK8k6Dy2XBsE7BkNrrBsblxNXrKImYnljqeGfYh9qnTrlTjC9F19pTyCkGcl3pFMW/w==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@google-cloud/promisify",
+      "version": "6.1.0",
+      "integrity": "sha512-H+Rytzi5zYMyoAmU/zgYLgq7fJ9FY4QQEg4k6gfFx/RY1COJ2xxyIfe8bZ62lqEbWM1DJH7IYETqTFmqNtuUhQ==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@google-cloud/storage",
+      "version": "8.4.0",
+      "integrity": "sha512-M3kA6UA2Tjp5aznCrgKcm9CzOjiQyRMnquqalqXAeS5wvkqqZxN8wpNjjHafOSYs6lQ82U7f2i8we4eTfIrpkA==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@grpc/grpc-js",
+      "version": "1.14.6",
+      "integrity": "sha512-SgC/B3/VZ8lTyOZ4Cwk6f1skWhmkNAaVfiX90qd5u1rRXGKk1//8FTUEN9GvOUq7rfWIqAYkA3CoyumYVpOS6g==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@grpc/proto-loader",
+      "version": "0.8.1",
+      "integrity": "sha512-wtF6h+DY6M3YaDBPAmvuuA6jV8Sif9MjtOI5euKFWRgCDl5PeDpPsHR9u2l6St5ceY8AZgoNDww5+HvEsXFsGg==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@isaacs/cliui",
+      "version": "8.0.2",
+      "integrity": "sha512-O8jcjabXaleOG9DQ0+ARXWZBTfnP4WNAqzuiJK7ll44AmxGKv/J2M4TPjxjY3znBCfvBXFzucm1twdyFybFqEA==",
+      "license": "ISC"
+    },
+    {
+      "path": "node_modules/@isaacs/cliui/node_modules/ansi-regex",
+      "version": "6.4.0",
+      "integrity": "sha512-KzTVk2tCWAHtYrvvvaP8bJKJq2pVinhLcGEQdtLIYPbmNGNyYe8QwNaTUYQp2J7/vIsUKt5QCqAfUkYyG9DkOw==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@isaacs/cliui/node_modules/ansi-styles",
+      "version": "6.2.3",
+      "integrity": "sha512-4Dj6M28JB+oAH8kFkTLUo+a2jwOFkuqb3yucU0CANcRRUbxS0cP0nZYCGjcc3BNXwRIsUVmDGgzawme7zvJHvg==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@isaacs/cliui/node_modules/emoji-regex",
+      "version": "9.2.2",
+      "integrity": "sha512-L18DaJsXSUk2+42pv8mLs5jJT2hqFkFE4j21wOmgbUqsZ2hL72NsUU785g9RXgo3s0ZNgVl42TiHp3ZtOv/Vyg==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@isaacs/cliui/node_modules/string-width",
+      "version": "5.1.2",
+      "integrity": "sha512-HnLOCR3vjcY8beoNLtcjZ5/nxn2afmME6lhrDrebokqMap+XbeW8n9TXpPDOqdGK5qcI3oT0GKTW6wC7EMiVqA==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@isaacs/cliui/node_modules/strip-ansi",
+      "version": "7.2.0",
+      "integrity": "sha512-yDPMNjp4WyfYBkHnjIRLfca1i6KMyGCtsVgoKe/z1+6vukgaENdgGBZt+ZmKPc4gavvEZ5OgHfHdrazhgNyG7w==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@isaacs/cliui/node_modules/wrap-ansi",
+      "version": "8.1.0",
+      "integrity": "sha512-si7QWI6zUMq56bESFvagtmzMdGOtoxfR+Sez11Mobfc7tm+VkUckk9bW2UeffTGVUbOksxmSw0AA2gs8g71NCQ==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@js-sdsl/ordered-map",
+      "version": "4.4.2",
+      "integrity": "sha512-iUKgm52T8HOE/makSxjqoWhe95ZJA1/G1sYsGev2JDKUSS14KAgg1LHb+Ba+IPow0xflbnSkOsZcO08C7w1gYw==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@material/material-color-utilities",
+      "version": "0.3.0",
+      "integrity": "sha512-ztmtTd6xwnuh2/xu+Vb01btgV8SQWYCaK56CkRK8gEkWe5TuDyBcYJ0wgkMRn+2VcE9KUmhvkz+N9GHrqw/C0g==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@nodable/entities",
+      "version": "3.1.0",
+      "integrity": "sha512-LsS/DjHr+uDM647Gru/cA8+J3a3HfhttwCKLyuoyN7yXTFCxKBtSgMQBvrW9yNPa2/zDRUNuGPaH5QUFoa4arQ==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@opentelemetry/api",
+      "version": "1.9.1",
+      "integrity": "sha512-gLyJlPHPZYdAk1JENA9LeHejZe1Ti77/pTeFm/nMXmQH/HFZlcS/O2XJB+L8fkbrNSqhdtlvjBVjxwUYanNH5Q==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@oxc-project/types",
+      "version": "0.153.0",
+      "integrity": "sha512-jSNrRIyvPVLL5E1z/tS5zLAprosGz/FuI1PWwEOz59j3E4TTTzSpqKb/RDGqJhhW0QHYISGXxq582wGx6T11Tw==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@pkgjs/parseargs",
+      "version": "0.11.0",
+      "integrity": "sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@playwright/test",
+      "version": "1.64.0",
+      "integrity": "sha512-oTN9FNYuN6bqQMwiho6jJKLCG2/QOYCixGXuCjRmzOq23eODeukuY2XiAVoVpAECbuezMt1MHQjAiQxK8F+Y+g==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@protobufjs/aspromise",
+      "version": "1.1.2",
+      "integrity": "sha512-j+gKExEuLmKwvz3OgROXtrJ2UG2x8Ch2YZUxahh+s1F2HZ+wAceUNLkvy6zKCPVRkU++ZWQrdxsUeQXmcg4uoQ==",
+      "license": "BSD-3-Clause"
+    },
+    {
+      "path": "node_modules/@protobufjs/base64",
+      "version": "1.1.2",
+      "integrity": "sha512-AZkcAA5vnN/v4PDqKyMR5lx7hZttPDgClv83E//FMNhR2TMcLUhfRUBHCmSl0oi9zMgDDqRUJkSxO3wm85+XLg==",
+      "license": "BSD-3-Clause"
+    },
+    {
+      "path": "node_modules/@protobufjs/codegen",
+      "version": "2.0.5",
+      "integrity": "sha512-zgXFLzW3Ap33e6d0Wlj4MGIm6Ce8O89n/apUaGNB/jx+hw+ruWEp7EwGUshdLKVRCxZW12fp9r40E1mQrf/34g==",
+      "license": "BSD-3-Clause"
+    },
+    {
+      "path": "node_modules/@protobufjs/eventemitter",
+      "version": "1.1.1",
+      "integrity": "sha512-vW1GmwMZNnL+gMRaovlh9yZX74kc+TTU3FObkkurpMaRtBfLP3ldjS9KQWlwZgraRE0+dheEEoAxdzcJQ8eXZg==",
+      "license": "BSD-3-Clause"
+    },
+    {
+      "path": "node_modules/@protobufjs/fetch",
+      "version": "1.1.1",
+      "integrity": "sha512-GpptLrs57adMSuHi3VNj0mAF8dwh36LMaYF6XyJ6JMWlVsc+t42tm1HSEDmOs3A8fC9yyeisgLhsTVQokOZ0zw==",
+      "license": "BSD-3-Clause"
+    },
+    {
+      "path": "node_modules/@protobufjs/float",
+      "version": "1.0.2",
+      "integrity": "sha512-Ddb+kVXlXst9d+R9PfTIxh1EdNkgoRe5tOX6t01f1lYWOvJnSPDBlG241QLzcyPdoNTsblLUdujGSE4RzrTZGQ==",
+      "license": "BSD-3-Clause"
+    },
+    {
+      "path": "node_modules/@protobufjs/path",
+      "version": "1.1.2",
+      "integrity": "sha512-6JOcJ5Tm08dOHAbdR3GrvP+yUUfkjG5ePsHYczMFLq3ZmMkAD98cDgcT2iA1lJ9NVwFd4tH/iSSoe44YWkltEA==",
+      "license": "BSD-3-Clause"
+    },
+    {
+      "path": "node_modules/@protobufjs/pool",
+      "version": "1.1.0",
+      "integrity": "sha512-0kELaGSIDBKvcgS4zkjz1PeddatrjYcmMWOlAuAPwAeccUrPHdUqo/J6LiymHHEiJT5NrF1UVwxY14f+fy4WQw==",
+      "license": "BSD-3-Clause"
+    },
+    {
+      "path": "node_modules/@protobufjs/utf8",
+      "version": "1.1.2",
+      "integrity": "sha512-b1UQwcEZ4yCnMCD8DAL1VlbvBJE9/IX4FTIp7BG1xYpf29SLazLSrqUkj4w7Y5y7cCVP6E5tcqqcI0xemPkHug==",
+      "license": "BSD-3-Clause"
+    },
+    {
+      "path": "node_modules/@rolldown/binding-android-arm-eabi",
+      "version": "1.2.13",
+      "integrity": "sha512-Vu/NICrgdRvUOeaJZIyB2FP63s6fO/4ud5l8dXmxDx9yDyn+mN0y+gsvsVviSli+T361Aqo0h46EuMoobrwawA==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@rolldown/binding-android-arm64",
+      "version": "1.2.13",
+      "integrity": "sha512-6LEoIrGy5vvCd2boNnv2soPSUZj/PRvhp8R/t9KlX+mIZxThIE/ZqxrGXxmuNX0FuvQFvLdZr7S4HrYpYBVhEQ==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@rolldown/binding-darwin-arm64",
+      "version": "1.2.13",
+      "integrity": "sha512-CaJSRzlQ6Q+zkDMVA9OkVxBjVoPRCDEE3v0FSJ9kIQBgRjFApA3Si4ijhbNVUji7ZJt+PfO0e46qy4nPInHUPA==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@rolldown/binding-darwin-x64",
+      "version": "1.2.13",
+      "integrity": "sha512-e4r340I5hxSzJkD3YJBxgzq/rJ3wwxwdLLb2FPt1Zpyem20nrQPT11DDEEkazwxaHumH8wpglsp/Ozgj/wT6mw==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@rolldown/binding-freebsd-x64",
+      "version": "1.2.13",
+      "integrity": "sha512-hoBWDZ4/K/mJKVMbsgUd1jfpA2DiOrJ54mpegObU9TBHBBrtX4FLIXJJQRDPZ/2Dn91GvPob+Z2hwKJzf4E5SQ==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@rolldown/binding-linux-arm-gnueabihf",
+      "version": "1.2.13",
+      "integrity": "sha512-oF9fZu3vTWnTiVAkDFxU9PJLt1nh20K9RRpuHsR7ZnE2L7XookBbDBVLojCVSLGbvtSlxeUNnjAj6DbNsKyzbg==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@rolldown/binding-linux-arm64-gnu",
+      "version": "1.2.13",
+      "integrity": "sha512-DTpb/+jMiqWMPgphn4ksW1zW+XLJ6dJJ9FMvnIk9I291LhCctMPhMYJrP5t9p6C9qa3KXadDdUEZHBaPh3kNxQ==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@rolldown/binding-linux-arm64-musl",
+      "version": "1.2.13",
+      "integrity": "sha512-xU+Kvv9N2A3SY35zFh1FWWNjxbadE/BKeqnkXe7vScU4GZsw757BlVmDLITZEq8DPpk6m7uoDYkK7P+x/uU5Ow==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@rolldown/binding-linux-ppc64-gnu",
+      "version": "1.2.13",
+      "integrity": "sha512-XMk/hnhh25oQ756Lclb1Q11h4ll0xC0Esa5w4Vzp+mAE2S3AGJgeM0SonrIgY8fHhjarb6hcoTuwoFG0VVP2ig==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@rolldown/binding-linux-s390x-gnu",
+      "version": "1.2.13",
+      "integrity": "sha512-U1BoTHYmlywE2n3HUWjzZ+8EQsKr+OwpxYuDWaubx42tUL8QSL7nOqRz/NVHanibbFP3M1Rxuprz/wNcbMKjqw==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@rolldown/binding-linux-x64-gnu",
+      "version": "1.2.13",
+      "integrity": "sha512-J4cm80Pc6wEwV5AZ42o62sIQgDk+Y7R2s646jIwuvO+4V46QB58N4vVuMPWCBaNgursXLpmUWJV//WQAkPvHBQ==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@rolldown/binding-linux-x64-musl",
+      "version": "1.2.13",
+      "integrity": "sha512-W0euZS40U4V6JkmEnVCIX9mcsL6cbXQ4X8c2w+MMOIjFg68TXUW+u3RT+2e1t1pv9mg/EP3pDtK3POXdQ7Rxyw==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@rolldown/binding-openharmony-arm64",
+      "version": "1.2.13",
+      "integrity": "sha512-do/AF/4n9MRshia3a5aXoy8xM2c6mgfT6D7H/dY6my5z+hfCIR4ab7mk4IRj++nsEQpKy39kd0DQnDq+r692tw==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@rolldown/binding-win32-arm64-msvc",
+      "version": "1.2.13",
+      "integrity": "sha512-6FtUf2cJZobutJdxnGYX8z0vtbgqU0b2v8vfBhkXb9wp2MppMFtkunE+IaOntyi01rkIQoPW2GHABtfzsC0BRQ==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@rolldown/binding-win32-x64-msvc",
+      "version": "1.2.13",
+      "integrity": "sha512-UKhFaZTeTcbKrb3iU82m17jVcPEAoqDkCN5MBqgPyZSwp/cQmib21crTS0DdH7T1B7wZRWEI89YQAOJMet5yhg==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@rolldown/pluginutils",
+      "version": "1.0.1",
+      "integrity": "sha512-2j9bGt5Jh8hj+vPtgzPtl72j0yRxHAyumoo6TNfAjsLB04UtpSvPbPcDcBMxz7n+9CYB0c1GxQFxYRg2jimqGw==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@types/jsonwebtoken",
+      "version": "9.0.10",
+      "integrity": "sha512-asx5hIG9Qmf/1oStypjanR7iKTv0gXQ1Ov/jfrX6kS/EO0OFni8orbmGCn0672NHR3kXHwpAwR+B368ZGN/2rA==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@types/ms",
+      "version": "2.1.0",
+      "integrity": "sha512-GsCCIZDE/p3i96vtEqx+7dBUGXrc7zeSK3wwPHIaRThS+9OhWIXRqzs4d6k1SVU8g91DrNRWxWUGhp5KXQb2VA==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@types/node",
+      "version": "26.6.4",
+      "integrity": "sha512-ldVPDCzj7fsaGZrLB0NuHuTvJcsNasysBAqMolr/cgxrLd1xbqxIr3XJiPnHHJUCxj5sNF1vnRj9aWnrVh5Jcg==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@types/react",
+      "version": "19.3.0",
+      "integrity": "sha512-N0rFCuH9YoxG9/m61l9MfpJKfmLOVU0em7ipIz6TRgSSkvReLB9vL85GB+yr8Bs5leqpvg96JSwF4ZS1s4viQg==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@types/react-dom",
+      "version": "19.3.0",
+      "integrity": "sha512-ZI7bU42mZXXKHn/qNLEw2IrbiINU7X5+vfgdixBHkCNpYWXjKgfQ/P+uyGb5CjOLB9UcnTeg3rylQtV2hym44Q==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/@typescript/typescript-aix-ppc64",
+      "version": "7.0.2",
+      "integrity": "sha512-MTKKkWB7p/0E9xi1d1tHtZ5PiLkGEMIq88pK2CubZjOsLtYTLqhgIgi6zepFa+9GHZ6h05NMCkQxGKiPXMxXtQ==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@typescript/typescript-darwin-arm64",
+      "version": "7.0.2",
+      "integrity": "sha512-gowzar9MwS/aRWp6f3a4KUqzRjAZjOsmGNCM6LcTgXum+dBfgsBVMN+AgvOCCbguXyick6LJhpBszxMebJ8syA==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@typescript/typescript-darwin-x64",
+      "version": "7.0.2",
+      "integrity": "sha512-SZ9xZInqApNlNGc9s0W1VSsktYSOe9cFqNOIqmN1Gs8SmkjKZYFt017G4VwPxASInODuAdbTW7sXiFUf893RgA==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@typescript/typescript-freebsd-arm64",
+      "version": "7.0.2",
+      "integrity": "sha512-W5NH4y/J0plIIS5b2xvTEkU7JFxyqdMAOgf+Ilhl0vHQXKO5dZoxd+C/jEtq56c4F3wk71RB4BMRQ2XdI+bwYQ==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@typescript/typescript-freebsd-x64",
+      "version": "7.0.2",
+      "integrity": "sha512-UMGDx5sTpzNw3WiPebH7l90IWfJggEd+egHt/q6p7/Cm3zqoV7VxkGXt+3DxPIw8CcmvAB0j3sVVfbhX+M4Tpw==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@typescript/typescript-linux-arm",
+      "version": "7.0.2",
+      "integrity": "sha512-gffT3xPz9sR7j/YJExkyPntrI0P2EP9XbOyWzth2/Gs0RstK+90RBcO0ncXoXy/beYll1SXw846Nf2zdnEz0QQ==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@typescript/typescript-linux-arm64",
+      "version": "7.0.2",
+      "integrity": "sha512-Qh4eU4/y3yDjnfjjyPYihMj5/ODIlmt+Bzu17OI+fiSRDW57QmU5SiN63exPRNJPKUzcc1INa1NXdrJ+MqHjUQ==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@typescript/typescript-linux-loong64",
+      "version": "7.0.2",
+      "integrity": "sha512-uEHck9i8hoAzXPiYRib1O7miOnz23SxIeVl6F4LXox+qov1K35jHcEW6VHKvZI+pyvl7fZEP4MCU5LYvIq1GuQ==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@typescript/typescript-linux-mips64el",
+      "version": "7.0.2",
+      "integrity": "sha512-R4KvAMnE43W5Qeqb0Ly56O3mWMWIAgsMyz36DCaycd5nbg/9kzm0liw3JocfRqyJY0KPmzFjbswozXyW0DnIYA==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@typescript/typescript-linux-ppc64",
+      "version": "7.0.2",
+      "integrity": "sha512-DORx5b3sd/4S7eayxm4FQv+A7CrkUIGRaHiwI8oiHTAI1fAPWhF4J0vAlkC8biAlHSVVwxMQ3tjZ2/DVbnQiiA==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@typescript/typescript-linux-riscv64",
+      "version": "7.0.2",
+      "integrity": "sha512-wf0jqEDOjrPRnKwYRyyJDRo11KMbvMFrU+q4zqKyChODBzvlkbhNQfKvLxQCcwTpdDaXSHZTVuh0JoCrKCUMHQ==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@typescript/typescript-linux-s390x",
+      "version": "7.0.2",
+      "integrity": "sha512-IkwJc3L7yhytWd/ewjyxNDfOmswCm9GWMJT/ue/dU4aZNbwZeYAetq42VyLmsmSjvoX7z74X6ZaYCtzAr0EuGw==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@typescript/typescript-linux-x64",
+      "version": "7.0.2",
+      "integrity": "sha512-EYdf2cNg7rgCWJnxCdJ+F3V39O8ihb37eHAu1LK8oAFizgTQbPOK7zHHXbPt8rX24COqODXeI3sIf0fCXG7H/A==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@typescript/typescript-netbsd-arm64",
+      "version": "7.0.2",
+      "integrity": "sha512-+polYF4MF04aPpO5FTkHran9yUQDSXqy5GiSDKpsll5jy3l3+g9QLhpf39T+ePtefhXLOGrLl0QIjkQP6VnelA==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@typescript/typescript-netbsd-x64",
+      "version": "7.0.2",
+      "integrity": "sha512-8YIT0EHM/3dq10ZOVF/A7pc/YSMtbcecct4rWtexrnSCHOPcpC2KTLXfTCR6vDpnSiY12heNb1GiN/wu+T/FyA==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@typescript/typescript-openbsd-arm64",
+      "version": "7.0.2",
+      "integrity": "sha512-APT8+ClYnuYm1u9+kgGXoMj2VzWzcymwh2gNSQVySHfkRDGOTVkoWLjCmOQSaO+PoqQ57B0flRp9SA+7GnnkzQ==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@typescript/typescript-openbsd-x64",
+      "version": "7.0.2",
+      "integrity": "sha512-yX7s+Q0Dln0Dt9tEzZsAjXXR/+ytBM7AlglaqyeMPxQszJ1JhlJdZ6jLA+IzldHtflX81em7lDao1xXu+aRRkg==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@typescript/typescript-sunos-x64",
+      "version": "7.0.2",
+      "integrity": "sha512-dLJDGaLZ1D4HPQn62u1n8mBDkJREwMsAkCdkwd4Ieqw+x3TUyTsqY0YiBCtE6H6OzzgGk3iuZ3vFWRS+E8/d1g==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@typescript/typescript-win32-arm64",
+      "version": "7.0.2",
+      "integrity": "sha512-Gyl1Vy6OsWesLzmq+EP0Fb7b4Nid5232AvcA2SFcdYreldpNtYFFofPjnt62y9hQy7VTaZp65ICJjuAQRaVcIQ==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@typescript/typescript-win32-x64",
+      "version": "7.0.2",
+      "integrity": "sha512-0BQ3HkAHHlKLSp1qRvf3SUhGpGsDuhB/jgFw75guyqbxJqEaS0Cw/VFO8i2nHglJUzQCRtMMR/IBAKE3ETMC4g==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/@vitejs/plugin-react",
+      "version": "6.1.2",
+      "integrity": "sha512-fhJNGUdscQa4HkI0xFxwonWyhnVReCPDbXI7FH7jmzpnVCrFQI7PRrhWecO263610vOrs9tr2Y4xcf8uAdFxbw==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/abort-controller",
+      "version": "3.0.0",
+      "integrity": "sha512-h8lQ8tacZYnR3vNQTgibj+tODHI5/+l06Au2Pcriv/Gmet0eaj4TwWH41sO9wnHDiQsEj19q0drzdWdeAHtweg==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/ace-builds",
+      "version": "1.44.0",
+      "integrity": "sha512-PFNMSYqFdEUkul2Ntud0HvA09AgY+F1ag0UYdpMH60wNI/qOA8cB8tlTgoALMEwIdUPJK2CjrIQ7OnbiSS/ugQ==",
+      "license": "BSD-3-Clause"
+    },
+    {
+      "path": "node_modules/agent-base",
+      "version": "7.1.4",
+      "integrity": "sha512-MnA+YT8fwfJPgBx3m60MNqakm30XOkyIoH1y6huTQvC0PwZG7ki8NacLBcrPbNoo8vEZy7Jpuk7+jMO+CUovTQ==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/ansi-regex",
+      "version": "5.0.1",
+      "integrity": "sha512-quJQXlTSUGL2LH9SUXo8VwsY4soanhgo6LNSm84E1LBcE8s3O0wpdiRzyR9z/ZZJMlMWv37qOOb9pdJlMUEKFQ==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/ansi-styles",
+      "version": "4.3.0",
+      "integrity": "sha512-zbB9rCJAT1rbjiVDb2hqKFHNYLxgtk8NURxZ3IZwD3F6NtxbXZQCnnSi1Lkx+IDohdPlFp222wVALIheZJQSEg==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/anynum",
+      "version": "1.0.1",
+      "integrity": "sha512-N6//FLET/tXYNM/F6ABca1oH6fWB+KlTt909Le28WMDBk8oaT4vY17DCrwg2MvmuqUKt3Ni4N5dGJ/EoBgcO6A==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/async-retry",
+      "version": "1.3.3",
+      "integrity": "sha512-wfr/jstw9xNi/0teMHrRW7dsz3Lt5ARhYNZ2ewpadnhaIp5mbALhOAP+EAdsC7t4Z6wqsDVv9+W6gm1Dk9mEyw==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/axe-core",
+      "version": "4.13.0",
+      "integrity": "sha512-UzGt8zg7Ny8djbYMhxl2zuEevVa7r2gJjYY5Lwr1xM7+XU2nd6CkIWFTVcCIbAP63vSz71NaVyyuSk9lHKcy0A==",
+      "license": "MPL-2.0"
+    },
+    {
+      "path": "node_modules/balanced-match",
+      "version": "1.0.2",
+      "integrity": "sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/base64-js",
+      "version": "1.5.1",
+      "integrity": "sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/bignumber.js",
+      "version": "9.3.1",
+      "integrity": "sha512-Ko0uX15oIUS7wJ3Rb30Fs6SkVbLmPBAKdlm7q9+ak9bbIeFf0MwuBsQV6z7+X768/cHsfg+WlysDWJcmthjsjQ==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/brace-expansion",
+      "version": "2.1.7",
+      "integrity": "sha512-uZbew1NqdmPDTMJ8ah1y+b+9QEJrfkXFk3RcTQw3X0jW/xRUvFKsg1CfQdSYGdTbXZWExtU3J3ccxtnfw1Fi0g==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/buffer-equal-constant-time",
+      "version": "1.0.1",
+      "integrity": "sha512-zRpUiDwd/xk6ADqPMATG8vc9VPrkck7T07OIx0gnjmJAnHnTVXNQG3vfvWNuiZIkwu9KrKdA1iJKfsfTVxE6NA==",
+      "license": "BSD-3-Clause"
+    },
+    {
+      "path": "node_modules/cliui",
+      "version": "8.0.1",
+      "integrity": "sha512-BSeNnyus75C4//NQ9gQt1/csTXyo/8Sb+afLAkzAptFuMsod9HFokGNudZpi/oQV73hnVK+sR+5PVRMd+Dr7YQ==",
+      "license": "ISC"
+    },
+    {
+      "path": "node_modules/clsx",
+      "version": "1.2.1",
+      "integrity": "sha512-EcR6r5a8bj6pu3ycsa/E/cKVGuTgZJZdsyUYHOksG/UHIiKfjxzRxYJpyVBwYaQeOvghal9fcc4PidlgzugAQg==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/color-convert",
+      "version": "2.0.1",
+      "integrity": "sha512-RRECPsj7iu/xb5oKYcsFHSppFNnsj/52OVTRKb4zP5onXwVF3zVmmToNcOfGC+CRDpfK/U584fMg38ZHCaElKQ==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/color-name",
+      "version": "1.1.4",
+      "integrity": "sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/cross-spawn",
+      "version": "7.0.6",
+      "integrity": "sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/css-selector-tokenizer",
+      "version": "0.8.0",
+      "integrity": "sha512-Jd6Ig3/pe62/qe5SBPTN8h8LeUg/pT4lLgtavPf7updwwHpvFzxvOQBHYj2LZDMjUnBzgvIUSjRcf6oT5HzHFg==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/css.escape",
+      "version": "1.5.1",
+      "integrity": "sha512-YUifsXXuknHlUsmlgyY0PKzgPOr7/FjCePfHNt0jxm83wHZi44VDMQ7/fGNkjY3/jV1MC+1CmZbaHzugyeRtpg==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/cssesc",
+      "version": "3.0.0",
+      "integrity": "sha512-/Tb/JcjK111nNScGob5MNtsntNM1aCNUDipB/TkwZFhyDrrE47SOx/18wF2bbjgc3ZzCSKW1T5nt5EbFoAz/Vg==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/csstype",
+      "version": "3.2.3",
+      "integrity": "sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/d3-path",
+      "version": "1.0.9",
+      "integrity": "sha512-VLaYcn81dtHVTjEHd8B+pbe9yHWpXKZUC87PzoFmsFrJqgFwDe/qxfp5MlfsfM1V5E/iVt0MmEbWQ7FVIXh/bg==",
+      "license": "BSD-3-Clause"
+    },
+    {
+      "path": "node_modules/d3-shape",
+      "version": "1.3.7",
+      "integrity": "sha512-EUkvKjqPFUAZyOlhY5gzCxCeI0Aep04LwIRpsZ/mLFelJiUfnK56jo5JMDSE7yyP2kLSb6LtF+S5chMk7uqPqw==",
+      "license": "BSD-3-Clause"
+    },
+    {
+      "path": "node_modules/data-uri-to-buffer",
+      "version": "4.0.1",
+      "integrity": "sha512-0R9ikRb668HB7QDxT1vkpuUBtqc53YyAwMwGeUFKRojY/NWKvdZ+9UYtRfGmhqNbRkTSVpMbmyhXipFFv2cb/A==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/date-fns",
+      "version": "2.30.0",
+      "integrity": "sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/debug",
+      "version": "4.4.3",
+      "integrity": "sha512-RGwwWnwQvkVfavKVt22FGLw+xYSdzARwm0ru6DhTVA3umU5hZc28V3kO4stgYryrTlLpuvgI9GiijltAjNbcqA==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/decimal.js",
+      "version": "10.6.0",
+      "integrity": "sha512-YpgQiITW3JXGntzdUmyUR1V812Hn8T1YVXhCu+wO3OpS4eU9l4YdD3qjyiKdV6mvV29zapkMeD390UVEf2lkUg==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/detect-libc",
+      "version": "2.1.2",
+      "integrity": "sha512-Btj2BOOO83o3WyH59e8MgXsxEQVcarkUOpEYrubB0urwnN10yQ364rsiByU11nZlqWYZm05i/of7io4mzihBtQ==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/dom-helpers",
+      "version": "5.2.1",
+      "integrity": "sha512-nRCa7CK3VTrM2NmGkIy4cbK7IZlgBE/PYMn55rrXefr5xXDP0LdtfPnblFDoVdcAfslJ7or6iqAUnx0CCGIWQA==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/duplexify",
+      "version": "4.1.3",
+      "integrity": "sha512-M3BmBhwJRZsSx38lZyhE53Csddgzl5R7xGJNk7CVddZD6CcmwMCH8J+7AprIrQKH7TonKxaCjcv27Qmf+sQ+oA==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/eastasianwidth",
+      "version": "0.2.0",
+      "integrity": "sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/ecdsa-sig-formatter",
+      "version": "1.0.11",
+      "integrity": "sha512-nagl3RYrbNv6kQkeJIpt6NJZy8twLB/2vtz6yN9Z4vRKHN4/QZJIEbqohALSgwKdnksuY3k5Addp5lg8sVoVcQ==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/emoji-regex",
+      "version": "8.0.0",
+      "integrity": "sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/end-of-stream",
+      "version": "1.4.5",
+      "integrity": "sha512-ooEGc6HP26xXq/N+GCGOT0JKCLDGrq2bQUZrQ7gyrJiZANJ/8YDTxTpQBXGMn+WbIQXNVpyWymm7KYVICQnyOg==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/esbuild",
+      "version": "0.28.2",
+      "integrity": "sha512-HKVLS8dvII+xoKW9kmqxbRKrnWEXfJJr/FZhhJmiqIB0e053QNYFqOBouTMO/k5sID4MvCiUCvv8b9M4h32wIA==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/escalade",
+      "version": "3.2.0",
+      "integrity": "sha512-WUj2qlxaQtO4g6Pq5c29GTcWGDyd8itL8zTlipgECz3JesAiiOKotd8JU6otB3PACgG6xkJUyVhboMS+bje/jA==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/event-target-shim",
+      "version": "5.0.1",
+      "integrity": "sha512-i/2XbnSz/uxRCU6+NdVJgKWDTM427+MqYbkQzD321DuCQJUqOuJKIA0IM2+W2xtYHdKOmZ4dR6fExsd4SXL+WQ==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/extend",
+      "version": "3.0.2",
+      "integrity": "sha512-fjquC59cD7CyW6urNXK0FBufkZcoiGG80wTuPujX590cB5Ttln20E2UB4S/WARVqhXffZl2LNgS+gQdPIIim/g==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/fast-deep-equal",
+      "version": "3.1.3",
+      "integrity": "sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/fast-xml-builder",
+      "version": "1.3.1",
+      "integrity": "sha512-pIM/1n3ntFXKYrUZwW7QCK0gAW7XY+wzj1YMIV3tLDvPj/V+zTGJK5e3/4WJfwj0qWw2ElNXiTixda/R+3YSug==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/fast-xml-parser",
+      "version": "5.11.2",
+      "integrity": "sha512-R9iDuNrQYeQut46cn2r2wHKn4HYzVDvDm5J1wW+koZewykv0yuO2HChTYeZtrULyHIDM9cj9TUXloCsueCQUog==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/fastparse",
+      "version": "1.1.2",
+      "integrity": "sha512-483XLLxTVIwWK3QTrMGRqUfUpoOs/0hbQrl2oz4J0pAcm3A3bu84wxTFqGqkJzewCLdME38xJLJAxBABfQT8sQ==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/faye-websocket",
+      "version": "0.11.4",
+      "integrity": "sha512-CzbClwlXAuiRQAlUyfqPgvPoNKTckTPGfwZV4ZdAhVcP2lh9KUxJg2b5GkE7XbjKQ3YJnQ9z6D9ntLAlB+tP8g==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/fdir",
+      "version": "6.5.0",
+      "integrity": "sha512-tIbYtZbucOs0BRGqPJkshJUYdL+SDH7dVM8gjy+ERp3WAUjLEFJE+02kanyHtwjWOnwrKYBiwAmM0p4kLJAnXg==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/fetch-blob",
+      "version": "3.2.0",
+      "integrity": "sha512-7yAQpD2UMJzLi1Dqv7qFYnPbaPx7ZfFK6PiIxQ4PfkGPyNyl2Ugx+a/umUonmKqjhM4DnfbMvdX6otXq83soQQ==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/firebase",
+      "version": "13.0.0",
+      "integrity": "sha512-4cChZajVtuOijT/t7Vw1GZRTuohCxw+aoc8DAwhF+CSbS+zhqHE+i5PzEVttIySw7oKerBDRZRyDt4FynrWecg==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/firebase-admin",
+      "version": "14.5.0",
+      "integrity": "sha512-DElmgmaH9aPXu2dWXGQiDoan33UfTnbfAAKaue4fwEZxmpdaNrTk5DmuFn+vVDki2KZ6TiaC0IHRWcEzcDxB3Q==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/foreground-child",
+      "version": "3.3.1",
+      "integrity": "sha512-gIXjKqtFuWEgzFRJA9WCQeSJLZDjgJUOMCMzxtvFq/37KojM1BFGufqsCy0r4qSQmYLsZYMeyRqzIWOMup03sw==",
+      "license": "ISC"
+    },
+    {
+      "path": "node_modules/formdata-polyfill",
+      "version": "4.0.10",
+      "integrity": "sha512-buewHzMvYL29jdeQTVILecSaZKnt/RJWjoZCF5OW60Z67/GmSLBkOFM7qh1PI3zFNtJbaZL5eQu1vLfazOwj4g==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/fsevents",
+      "version": "2.3.3",
+      "integrity": "sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/functional-red-black-tree",
+      "version": "1.0.1",
+      "integrity": "sha512-dsKNQNdj6xA3T+QlADDA7mOSlX0qiMINjn0cgr+eGHGsbSHzTabcIogz2+p/iqP1Xs6EP/sS2SbqH+brGTbq0g==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/gaxios",
+      "version": "7.3.1",
+      "integrity": "sha512-kB3rzJV7d9juLZh8/56QTXCwQfxyhdOMdyYk1HdQKFtF8TJTDTZQJtixWIwXdE9Jji91mC41DUNpjleo4L4eAQ==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/gcp-metadata",
+      "version": "9.1.0",
+      "integrity": "sha512-hV4Abmis9XY9ch/HK8t4oGy/Ho4WNzd6QAj/7PHKF5Ae25LUDviZET0s7DD3i+mG1QpGCqnDji/R/jBiuux4jw==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/get-caller-file",
+      "version": "2.0.5",
+      "integrity": "sha512-DyFP3BM/3YHTQOCUL/w0OZHR0lpKeGrxotcHWcqNEdnltqFwXVfhEBQ94eIo34AfQpo0rGki4cyIiftY06h2Fg==",
+      "license": "ISC"
+    },
+    {
+      "path": "node_modules/glob",
+      "version": "10.5.0",
+      "integrity": "sha512-DfXN8DfhJ7NH3Oe7cFmu3NCu1wKbkReJ8TorzSAFbSKrlNaQSKfIzqYqVY8zlbs2NLBbWpRiU52GX2PbaBVNkg==",
+      "license": "ISC"
+    },
+    {
+      "path": "node_modules/google-auth-library",
+      "version": "11.2.0",
+      "integrity": "sha512-R9/Dwc3swSur04RnizQ6EBUmmcno2cC5cAKtrG/C+pY+W7c5l6rSnFWgMkR7NSYj1n6XWmb/KhcjxGslWm4yIA==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/google-gax",
+      "version": "6.12.1",
+      "integrity": "sha512-U/OUrt4+aUiELB8sgaPJAdVfPzFOPjo1ngXVOwbR1NcCHV7ZcPOW0Ecwdbp8J86NmxBwLMJUOj8AgRSOZm5iJQ==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/google-logging-utils",
+      "version": "2.0.1",
+      "integrity": "sha512-HMhaQghlOTvbcb3c4T5jmmOMtG3JUF1iOQMezaJXL86CDS+Tm2vHd0IeLFRAx3+ewd+bo9E1HFHoy17X5aJa9A==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/gtoken",
+      "version": "8.0.0",
+      "integrity": "sha512-+CqsMbHPiSTdtSO14O51eMNlrp9N79gmeqmXeouJOhfucAedHw9noVe/n5uJk3tbKE6a+6ZCQg3RPhVhHByAIw==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/html-entities",
+      "version": "2.6.0",
+      "integrity": "sha512-kig+rMn/QOVRvr7c86gQ8lWXq+Hkv6CbAH1hLu+RG338StTpE8Z0b44SDVaqVu7HGKf27frdmUYEs9hTUX/cLQ==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/http-parser-js",
+      "version": "0.5.10",
+      "integrity": "sha512-Pysuw9XpUq5dVc/2SMHpuTY01RFl8fttgcyunjL7eEMhGM3cI4eOmiCycJDVCo/7O7ClfQD3SaI6ftDzqOXYMA==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/http-proxy-agent",
+      "version": "7.0.2",
+      "integrity": "sha512-T1gkAiYYDWYx3V5Bmyu7HcfcvL7mUrTWiM6yOfa3PIphViJ/gFPbvidQ+veqSOHci/PxBcDabeUNCzpOODJZig==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/https-proxy-agent",
+      "version": "7.0.6",
+      "integrity": "sha512-vK9P5/iUfdl95AI+JVyUuIcVtd4ofvtrOr3HNtM2yxC9bnMbEdp3x01OhQNnjb8IJYi38VlTE3mBXwcfvywuSw==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/idb",
+      "version": "7.1.1",
+      "integrity": "sha512-gchesWBzyvGHRO9W8tzUWFDycow5gwjvFKfyV9FF32Y7F50yZMp7mP+T2mJIWFx49zicqyC4uefHM17o6xKIVQ==",
+      "license": "ISC"
+    },
+    {
+      "path": "node_modules/inherits",
+      "version": "2.0.4",
+      "integrity": "sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==",
+      "license": "ISC"
+    },
+    {
+      "path": "node_modules/intl-messageformat",
+      "version": "10.7.18",
+      "integrity": "sha512-m3Ofv/X/tV8Y3tHXLohcuVuhWKo7BBq62cqY15etqmLxg2DZ34AGGgQDeR+SCta2+zICb1NX83af0GJmbQ1++g==",
+      "license": "BSD-3-Clause"
+    },
+    {
+      "path": "node_modules/is-fullwidth-code-point",
+      "version": "3.0.0",
+      "integrity": "sha512-zymm5+u+sCsSWyD9qNaejV3DFvhCKclKdizYaJUuHA83RLjb7nSuGnddCHGv0hk+KY7BMAlsWeK4Ueg6EV6XQg==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/is-unsafe",
+      "version": "2.0.2",
+      "integrity": "sha512-HgbIHPBH0KHHCcjLfGsCvhtPTVxjaAZlXjwdz7/GQC40SjSe4sfQsar8J5VFo8JOSbarkpV0OLG95bbaNd9aAQ==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/isexe",
+      "version": "2.0.0",
+      "integrity": "sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==",
+      "license": "ISC"
+    },
+    {
+      "path": "node_modules/jackspeak",
+      "version": "3.4.3",
+      "integrity": "sha512-OGlZQpz2yfahA/Rd1Y8Cd9SIEsqvXkLVoSw/cgwhnhFMDbsQFeZYoJJ7bIZBS9BcamUW96asq/npPWugM+RQBw==",
+      "license": "BlueOak-1.0.0"
+    },
+    {
+      "path": "node_modules/jose",
+      "version": "6.2.12",
+      "integrity": "sha512-9NiFmJEex0sy2Dk58j2UGBSHgUs2ypF9eZSu4L6vjOX3Dp96Sw1F3uL+H+D1sx02jZZdzUT0HgvCy59CuvXcWw==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/js-tokens",
+      "version": "4.0.0",
+      "integrity": "sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/json-bigint",
+      "version": "1.0.0",
+      "integrity": "sha512-SiPv/8VpZuWbvLSMtTDU8hEfrZWg/mH/nV/b4o0CYbSxu1UIQPLdwKOCIyLQX+VIPO5vrLX3i8qtqFyhdPSUSQ==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/jsonwebtoken",
+      "version": "9.0.3",
+      "integrity": "sha512-MT/xP0CrubFRNLNKvxJ2BYfy53Zkm++5bX9dtuPbqAeQpTVe0MQTFhao8+Cp//EmJp244xt6Drw/GVEGCUj40g==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/jwa",
+      "version": "2.0.1",
+      "integrity": "sha512-hRF04fqJIP8Abbkq5NKGN0Bbr3JxlQ+qhZufXVr0DvujKy93ZCbXZMHDL4EOtodSbCWxOqR8MS1tXA5hwqCXDg==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/jwks-rsa",
+      "version": "4.1.0",
+      "integrity": "sha512-sbkByqyATKYJP5F4RXj03N5TUNC0QLTjCAZvwTzC4BwJZ8e0/cWxN8YROnyUth2g1/ONWi4eSFHeu6oYalrc3Q==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/jws",
+      "version": "4.0.1",
+      "integrity": "sha512-EKI/M/yqPncGUUh44xz0PxSidXFr/+r0pA70+gIYhjv+et7yxM+s29Y+VGDkovRofQem0fs7Uvf4+YmAdyRduA==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/lightningcss",
+      "version": "1.33.0",
+      "integrity": "sha512-WkUDrojuJs0xkgGf2udWxa3yGBRxPtxUkB79i6aCZLRgc7PM8fZe9TosfPDcvEpQZbuFASnHYmRLBLUbmLOIIA==",
+      "license": "MPL-2.0"
+    },
+    {
+      "path": "node_modules/lightningcss-android-arm64",
+      "version": "1.33.0",
+      "integrity": "sha512-gEpRTalKdosp4Bb8qWtc2iOgE5SeIHlpS1up9bFq2wAyYhl1UdTObYiHe98zEM9SQvSoqQZ1IQD0JNpg3Ml5pg==",
+      "license": "MPL-2.0"
+    },
+    {
+      "path": "node_modules/lightningcss-darwin-arm64",
+      "version": "1.33.0",
+      "integrity": "sha512-Sciaz8eenNTKn9b3t7+xr0ipTp9YxKQY4npwQ3mrRuL0BAVHBLyZxofhaKBAVtzmtRZ/zTyo0/to4B1uWG/Djg==",
+      "license": "MPL-2.0"
+    },
+    {
+      "path": "node_modules/lightningcss-darwin-x64",
+      "version": "1.33.0",
+      "integrity": "sha512-Z5UPAxzrjlWNNyGy6i65cJzzvgJ5D3T6wMvs+gWpY9d7qRhANrxqAp6LhxIgZhWEw18RfJTGcRxjuLIBr+m8XQ==",
+      "license": "MPL-2.0"
+    },
+    {
+      "path": "node_modules/lightningcss-freebsd-x64",
+      "version": "1.33.0",
+      "integrity": "sha512-QQM/Ti/hQajJwCY+RiWuCZ9sdtI/XQk7nDK5vC8kkdwixezOlDgvDx7+RT+QjK6FcFT4MpsuoBnHIo/O3StRRg==",
+      "license": "MPL-2.0"
+    },
+    {
+      "path": "node_modules/lightningcss-linux-arm-gnueabihf",
+      "version": "1.33.0",
+      "integrity": "sha512-N7FVBe6iS24MlM6R/4RBTxGhQheZGs7tiQ9U32UtF75NzP5Q7xWPRqLBCKxlRQRk3rY1jCIPLzx7WzOhuUIRLQ==",
+      "license": "MPL-2.0"
+    },
+    {
+      "path": "node_modules/lightningcss-linux-arm64-gnu",
+      "version": "1.33.0",
+      "integrity": "sha512-j2v/itmy4HlNxlc6voKXYgBqNi0Ng2LShg4z7GufpEgs05P+2suBVyi9I6YHq5uoVFx9ETin3eCEhLVyXGQnKg==",
+      "license": "MPL-2.0"
+    },
+    {
+      "path": "node_modules/lightningcss-linux-arm64-musl",
+      "version": "1.33.0",
+      "integrity": "sha512-yiO5ROMuYQgXbC60yjZU5CYSFZGKXL0HFATXt9mHJn1+zW55oCtMI9NfcVhYLMFDL7gV7oBPon/EmMMGg2OvtQ==",
+      "license": "MPL-2.0"
+    },
+    {
+      "path": "node_modules/lightningcss-linux-x64-gnu",
+      "version": "1.33.0",
+      "integrity": "sha512-ar+Ju7LmcN0Jo4FpL4hpFybwNG9/3A/Br5KW2n2jyODg3MEZXaDYADdemoNS+BDNfMgKvylJLj4S5tyRActuAg==",
+      "license": "MPL-2.0"
+    },
+    {
+      "path": "node_modules/lightningcss-linux-x64-musl",
+      "version": "1.33.0",
+      "integrity": "sha512-RYiYbkokw0trfKqqzfF55lginwEPrD3OJDfTuJzFs1MK6iFnDenaz1fqLLtX4ITG3OktJQXOeTaw1awrBAlZPw==",
+      "license": "MPL-2.0"
+    },
+    {
+      "path": "node_modules/lightningcss-win32-arm64-msvc",
+      "version": "1.33.0",
+      "integrity": "sha512-1K+MPfLSFVpphzpdbfkhlWk6wBrTObBzS2T6db10PNOZgR9GoVsAWzwNyuhUYYbTp23j+4RrncfujZ4uAzXvwA==",
+      "license": "MPL-2.0"
+    },
+    {
+      "path": "node_modules/lightningcss-win32-x64-msvc",
+      "version": "1.33.0",
+      "integrity": "sha512-OlEICDx/Xl0FqSp4bry8zFnCvGpig3Gl4gCquvYwHuqJKEC1+n9NgDniFvqHGmMv1ZkqDJrDqKKSykTDX+ehuA==",
+      "license": "MPL-2.0"
+    },
+    {
+      "path": "node_modules/limiter",
+      "version": "1.1.5",
+      "integrity": "sha512-FWWMIEOxz3GwUI4Ts/IvgVy6LPvoMPgjMdQ185nN6psJyBJ4yOpzqm695/h5umdLJg2vW3GR5iG11MAkR2AzJA==",
+      "license": "UNSPECIFIED"
+    },
+    {
+      "path": "node_modules/lodash.camelcase",
+      "version": "4.3.0",
+      "integrity": "sha512-TwuEnCnxbc3rAvhf/LbG7tJUDzhqXyFnv3dtzLOPgCG/hODL7WFnsbwktkD7yUV0RrreP/l1PALq/YSg6VvjlA==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/lodash.clonedeep",
+      "version": "4.5.0",
+      "integrity": "sha512-H5ZhCF25riFd9uB5UCkVKo61m3S/xZk1x4wA6yp/L3RFP6Z/eHH1ymQcGLo7J3GMPfm0V/7m1tryHuGVxpqEBQ==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/lodash.includes",
+      "version": "4.3.0",
+      "integrity": "sha512-W3Bx6mdkRTGtlJISOvVD/lbqjTlPPUDTMnlXZFnVwi9NKJ6tiAk6LVdlhZMm17VZisqhKcgzpO5Wz91PCt5b0w==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/lodash.isboolean",
+      "version": "3.0.3",
+      "integrity": "sha512-Bz5mupy2SVbPHURB98VAcw+aHh4vRV5IPNhILUCsOzRmsTmSQ17jIuqopAentWoehktxGd9e/hbIXq980/1QJg==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/lodash.isinteger",
+      "version": "4.0.4",
+      "integrity": "sha512-DBwtEWN2caHQ9/imiNeEA5ys1JoRtRfY3d7V9wkqtbycnAmTvRRmbHKDV4a0EYc678/dia0jrte4tjYwVBaZUA==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/lodash.isnumber",
+      "version": "3.0.3",
+      "integrity": "sha512-QYqzpfwO3/CWf3XP+Z+tkQsfaLL/EnUlXWVkIk5FUPc4sBdTehEqZONuyRt2P67PXAk+NXmTBcc97zw9t1FQrw==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/lodash.isplainobject",
+      "version": "4.0.6",
+      "integrity": "sha512-oSXzaWypCMHkPC3NvBEaPHf0KsA5mvPrOPgQWDsbg8n7orZ290M0BmC/jgRZ4vcJ6DTAhjrsSYgdsW/F+MFOBA==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/lodash.isstring",
+      "version": "4.0.1",
+      "integrity": "sha512-0wJxfxH1wgO3GrbuP+dTTk7op+6L41QCXbGINEmD+ny/G/eCqGzxyCsh7159S+mgDDcoarnBw6PC1PS5+wUGgw==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/lodash.once",
+      "version": "4.1.1",
+      "integrity": "sha512-Sb487aTOCr9drQVL8pIxOzVhafOjZN9UU54hiN8PU3uAiSV7lx1yYNpbNmex2PK6dSJoNTSJUUswT651yww3Mg==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/long",
+      "version": "5.3.2",
+      "integrity": "sha512-mNAgZ1GmyNhD7AuqnTG3/VQ26o760+ZYBPKjPvugO8+nLbYfX6TVpJPseBvopbdY+qpZ/lKUnmEc1LeZYS3QAA==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/loose-envify",
+      "version": "1.4.0",
+      "integrity": "sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/lru-cache",
+      "version": "11.5.3",
+      "integrity": "sha512-U4N8FgzmWxc8k1VH8Kr6lQg18U7Fjvby6wXHVRX/ZZ7IwWbRMgrRbP0Wrb5q5NVinryp4SQampHKdvtecItxUg==",
+      "license": "BlueOak-1.0.0"
+    },
+    {
+      "path": "node_modules/lru-memoizer",
+      "version": "3.0.0",
+      "integrity": "sha512-m83w/cYXLdUIboKSPxzPAGfYnk+vqeDYXuoSrQRw1q+yVEd8IXhvMufN8Q5TIPe7e2jyX4SRNrDJI2Skw1yznQ==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/mime",
+      "version": "3.0.0",
+      "integrity": "sha512-jSCU7/VB1loIWBZe14aEYHU/+1UMEHoaO7qxCOVJOw9GgH72VAWppxNcjU+x9a2k3GSIBXNKxXQFqRvvZ7vr3A==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/minimatch",
+      "version": "9.0.9",
+      "integrity": "sha512-OBwBN9AL4dqmETlpS2zasx+vTeWclWzkblfZk7KTA5j3jeOONz/tRCnZomUyvNg83wL5Zv9Ss6HMJXAgL8R2Yg==",
+      "license": "ISC"
+    },
+    {
+      "path": "node_modules/minipass",
+      "version": "7.1.3",
+      "integrity": "sha512-tEBHqDnIoM/1rXME1zgka9g6Q2lcoCkxHLuc7ODJ5BxbP5d4c2Z5cGgtXAku59200Cx7diuHTOYfSBD8n6mm8A==",
+      "license": "BlueOak-1.0.0"
+    },
+    {
+      "path": "node_modules/mnth",
+      "version": "2.0.0",
+      "integrity": "sha512-3ZH4UWBGpAwCKdfjynLQpUDVZWMe6vRHwarIpMdGLUp89CVR9hjzgyWERtMyqx+fPEqQ/PsAxFwvwPxLFxW40A==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/ms",
+      "version": "2.1.3",
+      "integrity": "sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/nanoid",
+      "version": "3.3.20",
+      "integrity": "sha512-uKdg2G3GNCKQn9byYOpxbGqrT2fGO5KRt5J/8b3pok8rT6qxGWF6hxMyJiEYtAf+FVyYuD9hRaDqX5uPFYJ4ZQ==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/node-domexception",
+      "version": "1.0.0",
+      "integrity": "sha512-/jKZoMpw0F8GRwl4/eLROPA3cfcXtLApP0QzLmUT/HuPCZWyB7IY9ZrMeKw2O/nFIqPQB3PVM9aYm0F312AXDQ==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/node-fetch",
+      "version": "3.3.2",
+      "integrity": "sha512-dRB78srN/l6gqWulah9SrxeYnxeddIG30+GOqK/9OlLVyLg3HPnr6SqOWTWOXKRwC2eGYCkZ59NNuSgvSrpgOA==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/object-assign",
+      "version": "4.1.1",
+      "integrity": "sha512-rJgTQnkUnH1sFw8yT6VSU3zD3sWmu6sZhIseY8VX+GRu3P6F7Fu+JNDoXfklElbLJSnc3FUQHVe4cU5hj+BcUg==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/object-hash",
+      "version": "3.0.0",
+      "integrity": "sha512-RSn9F68PjH9HqtltsSnqYC1XXoWe9Bju5+213R98cNGttag9q9yAOTzdbsqvIa7aNm5WffBZFpWYr2aWrklWAw==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/once",
+      "version": "1.4.0",
+      "integrity": "sha512-lNaJgI+2Q5URQBkccEKHTQOPaXdUxnZZElQTZY0MFUAuaEqe1E+Nyvgdz/aIyNi6Z9MzO5dv1H8n58/GELp3+w==",
+      "license": "ISC"
+    },
+    {
+      "path": "node_modules/p-limit",
+      "version": "3.1.0",
+      "integrity": "sha512-TYOanM3wGwNGsZN2cVTYPArw454xnXj5qmWF1bEoAc4+cU/ol7GVh7odevjp1FNHduHc3KZMcFduxU5Xc6uJRQ==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/package-json-from-dist",
+      "version": "1.0.1",
+      "integrity": "sha512-UEZIS3/by4OC8vL3P2dTXRETpebLI2NiI5vIrjaD/5UtrkFX/tNbwjTSRAGC/+7CAo2pIcBaRgWmcBBHcsaCIw==",
+      "license": "BlueOak-1.0.0"
+    },
+    {
+      "path": "node_modules/path-expression-matcher",
+      "version": "1.6.2",
+      "integrity": "sha512-enSlaiat05iasnzmgNxRj8reFdj3puY2QpNgP1aPIaVfT6nn9ICuPoFlKHk8EN22HcwewshO+mN2DGbkCEOtqQ==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/path-key",
+      "version": "3.1.1",
+      "integrity": "sha512-ojmeN0qd+y0jszEtoY48r0Peq5dwMEkIlCOu6Q5f41lfkswXuKtYrhgoTpLnyIcHm24Uhqx+5Tqm2InSwLhE6Q==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/path-scurry",
+      "version": "1.11.1",
+      "integrity": "sha512-Xa4Nw17FS9ApQFJ9umLiJS4orGjm7ZzwUrwamcGQuHSzDyth9boKDaycYdDcZDuqYATXw4HFXgaqWTctW/v1HA==",
+      "license": "BlueOak-1.0.0"
+    },
+    {
+      "path": "node_modules/path-scurry/node_modules/lru-cache",
+      "version": "10.4.3",
+      "integrity": "sha512-JNAzZcXrCt42VGLuYz0zfAzDfAvJWW6AfYlDBQyDV5DClI2m5sAmK+OIO7s59XfsRsWHp02jAJrRadPRGTt6SQ==",
+      "license": "ISC"
+    },
+    {
+      "path": "node_modules/picocolors",
+      "version": "1.1.1",
+      "integrity": "sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==",
+      "license": "ISC"
+    },
+    {
+      "path": "node_modules/picomatch",
+      "version": "4.0.7",
+      "integrity": "sha512-qcJu88Q2IWqJsDD529JKMdwGm/dvInW4HvQnRwiH9JtihJvzGOscDtHE3x1pBKeUOTysQ8kVmLnJ2kJu7yhcGA==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/playwright",
+      "version": "1.64.0",
+      "integrity": "sha512-kVzTnYFYEyQ9RGzBjNCd2+yEqWmVbxl3AHPynv3qQ6JTjv4a+kwRcnqQwIpuP3NnrnIrE/Q6wWAIAvMfIE2/Yg==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/playwright-core",
+      "version": "1.64.0",
+      "integrity": "sha512-T9r+MZkTECl2+oUcZ26YgZzTrYidTsIhYYkJix+6iDOymOb1FB2RLLSOxRGnZGv5DStt+aduIVbt+E8WygXYpg==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/postcss",
+      "version": "8.5.29",
+      "integrity": "sha512-49cGhUbXj8Qenv0iTMxA1cFBzxXoctpC9Ujd77t1WcbJIr6nF/eI7g/8MgxrYldFRuAXvja7xQRwavoW7kgrxQ==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/prop-types",
+      "version": "15.8.1",
+      "integrity": "sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/prop-types/node_modules/react-is",
+      "version": "16.13.1",
+      "integrity": "sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/proto3-json-serializer",
+      "version": "4.0.2",
+      "integrity": "sha512-VUQlb/J2WjOG8BKhdLwJUz+MKxSMtBGYh+TaNmRtiYVhlIzXjzeAGIx7gtc3lXlA2iURzfF2+cXaQvC2ofwzpg==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/protobufjs",
+      "version": "7.6.6",
+      "integrity": "sha512-dYDWdjSl5RNb7SgPxGQcRU+GtvP7s2fpkrY0r432PcOIaZ0/rBcxEZnQN67iJhFuQiVw754JDoPruPCNdGsbjg==",
+      "license": "BSD-3-Clause"
+    },
+    {
+      "path": "node_modules/re2js",
+      "version": "2.8.6",
+      "integrity": "sha512-xLgQil4kIUCrAzVk9fRSkxkFNwmygLFjVxXrLc65aE1F0+Zsb8rxumFBy4XKyvgMCTL6kilDq3EZ0piE2dP/Dg==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/react",
+      "version": "19.3.0",
+      "integrity": "sha512-E8LUcbtBWt20bbl2YoHfx4ZDBdxVTfOKtCZn9cDSJ4l6/nuoApcpIBcj47t2wZoVX8g2ZHuMHbiShgCR1T5Sog==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/react-dom",
+      "version": "19.3.0",
+      "integrity": "sha512-JDk8dgif51OjFoDE70+OT9ICyYr+69HlmihNwp1+Nsfbna3t5sIiCa9ZJktDmQ4/1b/rn26hIAR2uYXDMr5r0Q==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/react-is",
+      "version": "18.3.1",
+      "integrity": "sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/react-transition-group",
+      "version": "4.4.5",
+      "integrity": "sha512-pZcd1MCJoiKiBR2NRxeCRg13uCXbydPnmB4EOeRrY7480qNWO8IIgQG6zlDkm6uRMsURXPuKq0GWtiM59a5Q6g==",
+      "license": "BSD-3-Clause"
+    },
+    {
+      "path": "node_modules/readable-stream",
+      "version": "3.6.2",
+      "integrity": "sha512-9u/sniCrY3D5WdsERHzHE4G2YCXqoG5FTHUiCC4SIbr6XcLZBY05ya9EKjYek9O5xOAwjGq+1JdGBAS7Q9ScoA==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/require-directory",
+      "version": "2.1.1",
+      "integrity": "sha512-fGxEI7+wsG9xrvdjsrlmL22OMTTiHRwAMroiEeMgq8gzoLC/PQr7RsRDSTLUg/bZAZtF+TVIkHc6/4RIKrui+Q==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/retry",
+      "version": "0.13.1",
+      "integrity": "sha512-XQBQ3I8W1Cge0Seh+6gjj03LbmRFWuoszgK9ooCpwYIrhhoO80pfq4cUkU5DkknwfOfFteRwlZ56PYOGYyFWdg==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/retry-request",
+      "version": "9.0.2",
+      "integrity": "sha512-S73r2yk09DSWx7K4mTZG7v5wSOrCK5okQbYLlkgpDjzVsxkUkhKrUR2VpUp69e3iA06Btn0bDXa27gxfnCqZMw==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/rimraf",
+      "version": "5.0.10",
+      "integrity": "sha512-l0OE8wL34P4nJH/H2ffoaniAokM2qSmrtXHmlpvYr5AVVX8msAyW0l8NVJFDxlSK4u3Uh/f41cQheDVdnYijwQ==",
+      "license": "ISC"
+    },
+    {
+      "path": "node_modules/rolldown",
+      "version": "1.2.13",
+      "integrity": "sha512-/5apOkwWxtACcQtZ5WlrAsKS4JwXVThQPJZ3RqIruRY9UG9M8e0VlXN068xum/JRKA4aIUoJ13ghe/kGCvidiQ==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/safe-buffer",
+      "version": "5.2.1",
+      "integrity": "sha512-rp3So07KcdmmKbGvgaNxQSJr7bGVSVk5S9Eq1F+ppbRo70+YeaDxkw5Dd8NPN+GD6bjnYm2VuPuCXmpuYvmCXQ==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/scheduler",
+      "version": "0.28.0",
+      "integrity": "sha512-juorfCmIkIw8tT+p5BXSm6PJjQF/ycEYmKyzURCIt/RaZIhL+PulbQ9Yu2z1HdOJDdqDTlxA1+xKBmHXJsczAw==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/semver",
+      "version": "7.8.5",
+      "integrity": "sha512-Y7/KDsb8LjooZpwaqGyulO6DQlksgCncchHGk+sZIY4SBvUocMBEFH5Ur1fI4dV+Jvl0w6cjvucaIi40puRioA==",
+      "license": "ISC"
+    },
+    {
+      "path": "node_modules/shebang-command",
+      "version": "2.0.0",
+      "integrity": "sha512-kHxr2zZpYtdmrN1qDjrrX/Z1rR1kG8Dx+gkpK1G4eXmvXswmcE1hTWBWYUzlraYw1/yZp6YuDY77YtvbN0dmDA==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/shebang-regex",
+      "version": "3.0.0",
+      "integrity": "sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/signal-exit",
+      "version": "4.1.0",
+      "integrity": "sha512-bzyZ1e88w9O1iNJbKnOlvYTrWPDl46O1bG0D3XInv+9tkPrxrN8jUUTiFlDkkmKWgn1M6CfIA13SuGqOa9Korw==",
+      "license": "ISC"
+    },
+    {
+      "path": "node_modules/source-map-js",
+      "version": "1.2.2",
+      "integrity": "sha512-KGj/8Y43x35aZVDtt+J4mK1hoLGHULMYfSkODJNQjNDC3oW1PqPoxMwo0pLUsWM/UEGzON/NxeHywEfNXNP3Vw==",
+      "license": "BSD-3-Clause"
+    },
+    {
+      "path": "node_modules/stream-events",
+      "version": "1.0.5",
+      "integrity": "sha512-E1GUzBSgvct8Jsb3v2X15pjzN1tYebtbLaMg+eBOUOAxgbLoSbT2NS91ckc5lJD1KfLjId+jXJRgo0qnV5Nerg==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/stream-shift",
+      "version": "1.0.3",
+      "integrity": "sha512-76ORR0DO1o1hlKwTbi/DM3EXWGf3ZJYO8cXX5RJwnul2DEg2oyoZyjLNoQM8WsvZiFKCRfC1O0J7iCvie3RZmQ==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/string-width",
+      "version": "4.2.3",
+      "integrity": "sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/string-width-cjs",
+      "version": "4.2.3",
+      "integrity": "sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/string_decoder",
+      "version": "1.3.0",
+      "integrity": "sha512-hkRX8U1WjJFd8LsDJ2yQ/wWWxaopEsABU1XfkM8A+j0+85JAGppt16cr1Whg6KIbb4okU6Mql6BOj+uup/wKeA==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/strip-ansi",
+      "version": "6.0.1",
+      "integrity": "sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/strip-ansi-cjs",
+      "version": "6.0.1",
+      "integrity": "sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/strnum",
+      "version": "2.4.2",
+      "integrity": "sha512-rDG3Ah4TV0k1hWvLSzkZtMmLN9+eS+h3knq4MP6A42Y3Yh5qGNnOUs1jJkoSr8FG5dsL28c7KgkIBzSEykqtuw==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/stubs",
+      "version": "3.0.0",
+      "integrity": "sha512-PdHt7hHUJKxvTCgbKX9C1V/ftOcjJQgz8BZwNfV5c4B6dcGqlpelTbJ999jBGZ2jYiPAwcX5dP6oBwVlBlUbxw==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/teeny-request",
+      "version": "11.0.1",
+      "integrity": "sha512-bNr5j2YjSdajgCVsp+8JVjRf1uHIbpNISLeKp/7V1NnVMX3Gh6H/kECNGlm2Q3I68ACODQ0iv6aZ3Rvm8WgLGA==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/tinyglobby",
+      "version": "0.2.17",
+      "integrity": "sha512-wXR/dYpcqKmfWpEdZjiKJOwCNFndD0DMnrW/cYjVGttEkBfVgcLFHoNrlj47mjOVic9yyNu65alsgF4NQyTa2g==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/tslib",
+      "version": "2.8.1",
+      "integrity": "sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==",
+      "license": "0BSD"
+    },
+    {
+      "path": "node_modules/tsx",
+      "version": "4.23.15",
+      "integrity": "sha512-Yiex1Ovn8z2xPpOWckIiysV1SSyRMY9BkLF++q0yKiDxCqRhosKfMg3janKkiLBwZ5c/YryloKwGZcrEmtwxKw==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/typescript",
+      "version": "7.0.2",
+      "integrity": "sha512-8FYau96o3NKOhbjKi/qNvG/W5jhzxkbdm5sj9AbZ/5T5sWqn3hJgLfGx27sRKZWTvyzCP8dLRBTf5tBTSRVUNA==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/undici-types",
+      "version": "8.9.0",
+      "integrity": "sha512-KTDyRTYX8sWmKXAikPHHSyc63CRPETMctyjKFupcC6OBLXT3xsN0e9aF7m+mIXutFWpUXuedtowG7iLOzp0kQg==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/util-deprecate",
+      "version": "1.0.2",
+      "integrity": "sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/vite",
+      "version": "8.3.4",
+      "integrity": "sha512-IftLE8phJhdNRIGNEV4JCCvfNScoZQVfcXaN8TQropWGJtOHcu+iAB9pHcuGvmEb/kddw0LBe/jS8ztdC6xdiQ==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/web-streams-polyfill",
+      "version": "3.3.3",
+      "integrity": "sha512-d2JWLCivmZYTSIoge9MsgFCZrt571BikcWGYkjC1khllbTeDlGqZ2D8vD8E/lJa8WGWbb7Plm8/XJYV7IJHZZw==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/web-vitals",
+      "version": "4.2.4",
+      "integrity": "sha512-r4DIlprAGwJ7YM11VZp4R884m0Vmgr6EAKe3P+kO0PPj3Unqyvv59rczf6UiGcb9Z8QxZVcqKNwv/g0WNdWwsw==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/websocket-driver",
+      "version": "0.7.5",
+      "integrity": "sha512-ZL2+3c7kMBdIRCMz6l8jQMHyGVxj+UL+xVk74Ombiciboca8rHa15L86B19E5oh1pL9Ii/uj54gtsIrZGMo6zA==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/websocket-extensions",
+      "version": "0.1.4",
+      "integrity": "sha512-OqedPIGOfsDlo31UNwYbCFMSaO9m9G/0faIHj5/dZFDMFqPTcx6UwqyOy3COEaEOg/9VsGIpdqn62W5KhoKSpg==",
+      "license": "Apache-2.0"
+    },
+    {
+      "path": "node_modules/weekstart",
+      "version": "1.1.0",
+      "integrity": "sha512-ZO3I7c7J9nwGN1PZKZeBYAsuwWEsCOZi5T68cQoVNYrzrpp5Br0Bgi0OF4l8kH/Ez7nKfxa5mSsXjsgris3+qg==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/which",
+      "version": "2.0.2",
+      "integrity": "sha512-BLI3Tl1TW3Pvl70l3yq3Y64i+awpwXqsGBYWkkqMtnbXgrMD+yj7rhW0kuEDxzJaYXGjEW5ogapKNMEKNMjibA==",
+      "license": "ISC"
+    },
+    {
+      "path": "node_modules/wrap-ansi",
+      "version": "7.0.0",
+      "integrity": "sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/wrap-ansi-cjs",
+      "version": "7.0.0",
+      "integrity": "sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/wrappy",
+      "version": "1.0.2",
+      "integrity": "sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==",
+      "license": "ISC"
+    },
+    {
+      "path": "node_modules/xml-naming",
+      "version": "0.3.0",
+      "integrity": "sha512-ghig2TBE/H11aOVgmahA3MhimvkBr6JIYknH/Dhdk10nXwdbIqBJsbfMxpvFPG8bAw77gN29aQWvKpmVoPlvPQ==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/y18n",
+      "version": "5.0.8",
+      "integrity": "sha512-0pfFzegeDWJHJIAmTLRP2DwHjdF5s7jo9tuztdQxAhINCdvS+3nGINqPd00AphqJR/0LhANUS6/+7SCb98YOfA==",
+      "license": "ISC"
+    },
+    {
+      "path": "node_modules/yargs",
+      "version": "17.7.3",
+      "integrity": "sha512-GZtjxm/J/4TSxuL3FNYjCmLktBTnIw/rVmKSIyKeYAZpmJB2ig9VauCC5xsa82GNKVKDAqpOn3KVzNt0zmrU0g==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/yargs-parser",
+      "version": "21.1.1",
+      "integrity": "sha512-tVpsJW7DdjecAiFpbIB1e3qxIQsE6NoPc5/eTdrbbIC4h0LVsWhnoa3g+m2HclBIujHzsxZ4VJVA+GUuc2/LBw==",
+      "license": "ISC"
+    },
+    {
+      "path": "node_modules/yocto-queue",
+      "version": "0.1.0",
+      "integrity": "sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==",
+      "license": "MIT"
+    },
+    {
+      "path": "node_modules/zod",
+      "version": "4.6.5",
+      "integrity": "sha512-v5l/aFXZQeai4awLbOpSoHecE9UiMrnfx75tEXLjNonXVARxQ5mOeipTjROUchszUNCqnE+hqAMujRsRHsut2Q==",
+      "license": "MIT"
+    }
+  ],
+  "exclusions": [
+    "AWS/On-Prem/Azure implementations and SDKs",
+    "company workers and SSO",
+    "original Git database/remotes",
+    "runtime data, credentials, machine configuration, tools and dependency directories"
+  ],
+  "limitations": [
+    "Extraction is not proof of a new project or competition eligibility.",
+    "Base commit alone does not identify mixed worktree contents; per-file hashes do.",
+    "Live Firebase/GCP/Gemini/FCM, APK/device, Docker and deployment remain unverified.",
+    "No license or redistribution approval is granted by this manifest."
+  ],
+  "migrationGoal": "Move GCP submission sources to the separate local ai-builder-cup repository; stop after independent verification."
+}

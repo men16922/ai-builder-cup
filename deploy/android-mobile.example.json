@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "configured": true,
+  "origin": "https://mobileops.example.invalid",
+  "firebase": {
+    "projectId": "example-mobileops-demo",
+    "apiKey": "synthetic-public-android-key-1234567890",
+    "appId": "1:000000000000:android:0000000000000000",
+    "webClientId": "000000000000-synthetic.apps.googleusercontent.com"
+  },
+  "workspaces": [
+    { "key": "personal", "edition": "personal", "workspaceId": "synthetic-workspace", "label": "My GCP workspace" },
+    { "key": "organization", "edition": "organization", "organizationId": "synthetic-org", "workspaceId": "synthetic-workspace", "label": "Team GCP workspace" }
+  ]
+}

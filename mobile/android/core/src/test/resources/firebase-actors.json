@@ -1,0 +1,26 @@
+[
+  {
+    "projectId": "example-mobileops-demo",
+    "tenantId": null,
+    "uid": "synthetic-user",
+    "actorId": "34b40285e13af0037d51f07a1f464e3e0781e3e53cf3f21159fb6f8556f534d1"
+  },
+  {
+    "projectId": "example-mobileops-demo",
+    "tenantId": "tenant-a",
+    "uid": "synthetic-user",
+    "actorId": "d767360cbc0111efe635e4a5f758f1a34e4c6950c219d14140608e9738c0ae75"
+  },
+  {
+    "projectId": "example-another-demo",
+    "tenantId": null,
+    "uid": "synthetic-user",
+    "actorId": "e0c3e7e2b99243ec7822fa9b7b007c41e14f5d775683d7da2de1f491507b4ade"
+  },
+  {
+    "projectId": "example-mobileops-demo",
+    "tenantId": "tenant-a",
+    "uid": "user/한글\"\\\n",
+    "actorId": "8615e6f9172a507853b2c783bb6dd8c156aa2ebca4bb90a25a7bc6ea2f261f57"
+  }
+]

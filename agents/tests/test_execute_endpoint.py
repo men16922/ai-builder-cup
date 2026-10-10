@@ -1,0 +1,86 @@
+"""The Ops service's /execute endpoint, attacked over HTTP. Whatever the caller sends, Cloud Run must not change unless a valid signed approval covers exactly this action."""
+import time
+
+import pytest
+from starlette.applications import Starlette
+from starlette.testclient import TestClient
+
+from mobileops_agents.approval import sign_approval
+from mobileops_agents.config import RegisteredService, Settings
+from mobileops_agents.serve import execute_route
+from mobileops_agents.tools import OpsTools, canonical_action
+
+from conftest import SERVICE
+
+KEY = b"approval-key-for-tests-0123456789"
+SETTINGS = Settings(project="example-project", services=(RegisteredService("shop-api", "example-project", "asia-northeast3"),), approval_key=KEY)
+BASE = f"/v2/{SERVICE.resource}"
+
+
+@pytest.fixture
+def endpoint(api):
+    recorder, client = api
+    recorder.add("GET", BASE + "/revisions", {"json": {"revisions": [{"name": f"{SERVICE.resource}/revisions/shop-api-good"}, {"name": f"{SERVICE.resource}/revisions/shop-api-bad"}]}})
+    recorder.add("PATCH", BASE, {"json": {"name": "projects/p/locations/l/operations/o", "done": True, "response": {}}})
+    return TestClient(Starlette(routes=[execute_route(OpsTools(SETTINGS, client))])), recorder
+
+
+def approval(service="shop-api", revision="shop-api-good", actor="reviewer-1", **kwargs):
+    return sign_approval(KEY, canonical_action("rollback_traffic", service, revision), actor, **kwargs).to_dict()
+
+
+def body(approval_value, service="shop-api", revision="shop-api-good", action="rollback_traffic"):
+    return {"action": action, "service": service, "revision": revision, "approval": approval_value}
+
+
+def changes(recorder):
+    return [call for call in recorder.calls if call[0] in ("PATCH", "POST", "PUT", "DELETE")]
+
+
+def test_a_valid_approval_applies_exactly_one_rollback_and_names_the_approver(endpoint):
+    client, recorder = endpoint
+    reply = client.post("/execute", json=body(approval()))
+    assert reply.status_code == 200 and reply.json()["executed"] is True and reply.json()["approved_by"] == "reviewer-1"
+    assert len(changes(recorder)) == 1
+
+
+@pytest.mark.parametrize("payload", [b"not json", b"[]", b'{"action":"rollback_traffic"}', b'{"service":"shop-api","revision":"shop-api-good"}'])
+def test_malformed_requests_are_rejected_without_touching_cloud_run(endpoint, payload):
+    client, recorder = endpoint
+    assert client.post("/execute", content=payload, headers={"content-type": "application/json"}).status_code == 400
+    assert recorder.calls == []
+
+
+@pytest.mark.parametrize("action", ["delete_service", "set_iam_policy", "update_service", "ROLLBACK_TRAFFIC", ""])
+def test_any_other_action_is_unsupported_even_with_a_valid_signature_for_it(endpoint, action):
+    client, recorder = endpoint
+    assert client.post("/execute", json=body(approval(), action=action)).status_code == 400
+    assert recorder.calls == []
+
+
+def test_missing_forged_expired_and_borrowed_approvals_change_nothing(endpoint):
+    client, recorder = endpoint
+    good = approval()
+    cases = {
+        "none": None, "empty": {}, "string": "approved", "wrong key": sign_approval(b"x" * 32, canonical_action("rollback_traffic", "shop-api", "shop-api-good"), "attacker").to_dict(),
+        "tampered actor": {**good, "actor": "someone-else"}, "tampered expiry": {**good, "expires_at": good["expires_at"] + 86400},
+        "expired": approval(now=time.time() - 3600), "for another revision": approval(revision="shop-api-bad"), "for another service": approval(service="payments-prod"),
+        "missing signature": {key: value for key, value in good.items() if key != "signature"},
+    }
+    for name, value in cases.items():
+        reply = client.post("/execute", json=body(value))
+        assert reply.status_code == 403 and reply.json()["executed"] is False, name
+    assert changes(recorder) == []
+
+
+def test_an_unregistered_service_is_refused_even_with_a_signature_for_it(endpoint):
+    client, recorder = endpoint
+    reply = client.post("/execute", json=body(approval(service="payments-prod"), service="payments-prod"))
+    assert reply.status_code == 403 and reply.json()["executed"] is False
+    assert changes(recorder) == []
+
+
+def test_refusals_use_fixed_reasons_and_never_echo_the_caller_or_upstream(endpoint):
+    client, _ = endpoint
+    reply = client.post("/execute", json=body(None, revision="shop-api-good'; DROP TABLE x;--"))
+    assert reply.status_code == 403 and "DROP" not in reply.text

@@ -1,0 +1,2949 @@
+[
+  {
+    "name": "personal-signals",
+    "scope": {
+      "actorId": "synthetic-operator",
+      "owner": {
+        "kind": "personal",
+        "userId": "synthetic-operator"
+      },
+      "workspaceId": "synthetic-preview"
+    },
+    "plan": {
+      "schemaVersion": 1,
+      "planId": "00000000-0000-4000-8000-000000000020",
+      "version": 1,
+      "dataMode": "synthetic",
+      "owner": {
+        "kind": "personal",
+        "userId": "synthetic-operator"
+      },
+      "workspaceId": "synthetic-preview",
+      "environmentId": "synthetic-demo",
+      "target": {
+        "provider": "gcp",
+        "projectId": "example-mobileops-demo",
+        "location": "asia-northeast3",
+        "resourceId": "example",
+        "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+        "resourceUid": "synthetic-service-uid",
+        "revision": "checkout-demo-00003"
+      },
+      "evidence": {
+        "snapshotId": "00000000-0000-4000-8000-000000000500",
+        "digest": "bf4e3c02ff2534c5474b999d9f41de10126062df101d0de91d97f2ba990e91d0",
+        "sourceIds": [
+          "gcp-run-service",
+          "gcp-run-revision",
+          "gcp-run-recheck",
+          "gcp-run-consistency",
+          "gcp-run-logs",
+          "gcp-run-requests",
+          "gcp-run-latency",
+          "gcp-run-missing-signals"
+        ],
+        "observedAt": "2026-10-10T01:00:00.000Z"
+      },
+      "analysis": {
+        "engine": "synthetic-fixture",
+        "summary": "503 request samples need follow-up; bounded samples do not establish service health.",
+        "findings": [
+          {
+            "statement": "Only the configured service and revision are included.",
+            "evidenceIds": [
+              "gcp-run-service"
+            ],
+            "kind": "observation"
+          }
+        ],
+        "missingInformation": [
+          "Historical revision UID and complete signal coverage are unavailable."
+        ],
+        "serviceAssessment": "unknown"
+      },
+      "action": {
+        "id": "gcp.cloudrun.inspect.v1",
+        "version": 1,
+        "effect": "read",
+        "completionCriteria": [
+          "Read service, revision, logs, request count, latency and recheck the service.",
+          "Report each query outcome independently from service health."
+        ],
+        "inputs": {
+          "windowMinutes": 15,
+          "maxLogEntries": 50
+        }
+      },
+      "createdAt": "2026-10-10T01:00:00.000Z",
+      "expiresAt": "2026-10-10T01:05:00.000Z"
+    },
+    "original": {
+      "resourceId": "synthetic-vector",
+      "configurationDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "snapshot": {
+        "schemaVersion": 1,
+        "id": "00000000-0000-4000-8000-000000000500",
+        "dataMode": "synthetic",
+        "binding": {
+          "owner": {
+            "kind": "personal",
+            "userId": "synthetic-operator"
+          },
+          "workspaceId": "synthetic-preview",
+          "environmentId": "synthetic-demo",
+          "target": {
+            "provider": "gcp",
+            "projectId": "example-mobileops-demo",
+            "location": "asia-northeast3",
+            "resourceId": "example",
+            "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+            "resourceUid": "synthetic-service-uid",
+            "revision": "checkout-demo-00003"
+          }
+        },
+        "startedAt": "2026-10-10T01:00:00.000Z",
+        "observedAt": "2026-10-10T01:00:00.000Z",
+        "service": {
+          "status": "collected",
+          "source": "run.googleapis.com/v2/projects.locations.services.get",
+          "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+          "observedAt": "2026-10-10T01:00:00.000Z",
+          "value": {
+            "name": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+            "uid": "synthetic-service-uid",
+            "generation": "3",
+            "observedGeneration": "3",
+            "updateTime": "2026-10-10T01:00:00.000Z",
+            "reconciling": false,
+            "readiness": "succeeded",
+            "missingFields": [],
+            "latestCreatedRevision": "checkout-demo-00003",
+            "latestReadyRevision": "checkout-demo-00002",
+            "traffic": [
+              {
+                "revision": "checkout-demo-00002",
+                "percent": 100
+              }
+            ]
+          }
+        },
+        "revision": {
+          "status": "collected",
+          "source": "run.googleapis.com/v2/projects.locations.services.revisions.get",
+          "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo/revisions/checkout-demo-00003",
+          "observedAt": "2026-10-10T01:00:00.000Z",
+          "value": {
+            "name": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo/revisions/checkout-demo-00003",
+            "uid": "synthetic-revision",
+            "generation": "1",
+            "observedGeneration": "1",
+            "updateTime": "2026-10-10T01:00:00.000Z",
+            "reconciling": false,
+            "readiness": "succeeded",
+            "missingFields": [],
+            "service": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo"
+          }
+        },
+        "recheck": {
+          "status": "collected",
+          "source": "run.googleapis.com/v2/projects.locations.services.get",
+          "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+          "observedAt": "2026-10-10T01:00:00.000Z",
+          "value": {
+            "name": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+            "uid": "synthetic-service-uid",
+            "generation": "3",
+            "observedGeneration": "3",
+            "updateTime": "2026-10-10T01:00:00.000Z",
+            "reconciling": false,
+            "readiness": "succeeded",
+            "missingFields": [],
+            "latestCreatedRevision": "checkout-demo-00003",
+            "latestReadyRevision": "checkout-demo-00002",
+            "traffic": [
+              {
+                "revision": "checkout-demo-00002",
+                "percent": 100
+              }
+            ]
+          }
+        },
+        "consistency": "stable",
+        "serviceAssessment": "unknown",
+        "telemetry": {
+          "window": {
+            "start": "2026-10-10T00:43:00.000Z",
+            "end": "2026-10-10T00:58:00.000Z"
+          },
+          "logs": {
+            "status": "collected",
+            "source": "logging.googleapis.com/v2/entries.list",
+            "observedAt": "2026-10-10T01:00:00.000Z",
+            "truncated": true,
+            "value": [
+              {
+                "timestamp": "2026-10-10T00:57:00.000Z",
+                "severity": "ERROR",
+                "stream": "requests",
+                "responseCode": 503,
+                "latencyMs": 1250
+              }
+            ]
+          },
+          "requests": {
+            "status": "collected",
+            "source": "monitoring.googleapis.com/v3/projects.timeSeries.list",
+            "observedAt": "2026-10-10T01:00:00.000Z",
+            "truncated": false,
+            "value": [
+              {
+                "responseCode": "200",
+                "responseClass": "2xx",
+                "points": [
+                  {
+                    "start": "2026-10-10T00:56:00.000Z",
+                    "end": "2026-10-10T00:57:00.000Z",
+                    "count": 88
+                  }
+                ]
+              },
+              {
+                "responseCode": "503",
+                "responseClass": "5xx",
+                "points": [
+                  {
+                    "start": "2026-10-10T00:56:00.000Z",
+                    "end": "2026-10-10T00:57:00.000Z",
+                    "count": 12
+                  }
+                ]
+              }
+            ]
+          },
+          "latency": {
+            "status": "collected",
+            "source": "monitoring.googleapis.com/v3/projects.timeSeries.list",
+            "observedAt": "2026-10-10T01:00:00.000Z",
+            "truncated": false,
+            "value": [
+              {
+                "responseCode": "503",
+                "responseClass": "5xx",
+                "points": [
+                  {
+                    "start": "2026-10-10T00:56:00.000Z",
+                    "end": "2026-10-10T00:57:00.000Z",
+                    "p95Ms": 1250
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "evidenceDigest": "bf4e3c02ff2534c5474b999d9f41de10126062df101d0de91d97f2ba990e91d0"
+    },
+    "expected": {
+      "consistency": "stable",
+      "service": {
+        "name": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+        "uid": "synthetic-service-uid",
+        "generation": "3",
+        "observedGeneration": "3",
+        "updateTime": "2026-10-10T01:00:00.000Z",
+        "reconciling": false,
+        "readiness": "succeeded",
+        "missingFields": [],
+        "latestCreatedRevision": "checkout-demo-00003",
+        "latestReadyRevision": "checkout-demo-00002",
+        "traffic": [
+          {
+            "revision": "checkout-demo-00002",
+            "percent": 100
+          }
+        ]
+      },
+      "revision": {
+        "name": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo/revisions/checkout-demo-00003",
+        "uid": "synthetic-revision",
+        "generation": "1",
+        "observedGeneration": "1",
+        "updateTime": "2026-10-10T01:00:00.000Z",
+        "reconciling": false,
+        "readiness": "succeeded",
+        "missingFields": [],
+        "service": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo"
+      },
+      "summary": {
+        "counts": [
+          {
+            "code": "200",
+            "count": 88
+          },
+          {
+            "code": "503",
+            "count": 12
+          }
+        ],
+        "total": 100,
+        "errorCount": 12,
+        "highestP95Ms": 1250,
+        "logs": [
+          {
+            "timestamp": "2026-10-10T00:57:00.000Z",
+            "severity": "ERROR",
+            "stream": "requests",
+            "responseCode": 503,
+            "latencyMs": 1250
+          }
+        ]
+      },
+      "statuses": [
+        "collected",
+        "collected",
+        "collected",
+        "collected",
+        "collected",
+        "collected"
+      ]
+    }
+  },
+  {
+    "name": "personal-empty",
+    "scope": {
+      "actorId": "synthetic-operator",
+      "owner": {
+        "kind": "personal",
+        "userId": "synthetic-operator"
+      },
+      "workspaceId": "synthetic-preview"
+    },
+    "plan": {
+      "schemaVersion": 1,
+      "planId": "00000000-0000-4000-8000-000000000020",
+      "version": 1,
+      "dataMode": "synthetic",
+      "owner": {
+        "kind": "personal",
+        "userId": "synthetic-operator"
+      },
+      "workspaceId": "synthetic-preview",
+      "environmentId": "synthetic-demo",
+      "target": {
+        "provider": "gcp",
+        "projectId": "example-mobileops-demo",
+        "location": "asia-northeast3",
+        "resourceId": "example",
+        "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+        "resourceUid": "synthetic-service-uid",
+        "revision": "checkout-demo-00003"
+      },
+      "evidence": {
+        "snapshotId": "00000000-0000-4000-8000-000000000501",
+        "digest": "83d659ddcd47ccaa5b96f979a66bddbdc733d30034daf97d161e3838defab85b",
+        "sourceIds": [
+          "gcp-run-service",
+          "gcp-run-revision",
+          "gcp-run-recheck",
+          "gcp-run-consistency",
+          "gcp-run-logs",
+          "gcp-run-requests",
+          "gcp-run-latency",
+          "gcp-run-missing-signals"
+        ],
+        "observedAt": "2026-10-10T01:00:00.000Z"
+      },
+      "analysis": {
+        "engine": "synthetic-fixture",
+        "summary": "503 request samples need follow-up; bounded samples do not establish service health.",
+        "findings": [
+          {
+            "statement": "Only the configured service and revision are included.",
+            "evidenceIds": [
+              "gcp-run-service"
+            ],
+            "kind": "observation"
+          }
+        ],
+        "missingInformation": [
+          "Historical revision UID and complete signal coverage are unavailable."
+        ],
+        "serviceAssessment": "unknown"
+      },
+      "action": {
+        "id": "gcp.cloudrun.inspect.v1",
+        "version": 1,
+        "effect": "read",
+        "completionCriteria": [
+          "Read service, revision, logs, request count, latency and recheck the service.",
+          "Report each query outcome independently from service health."
+        ],
+        "inputs": {
+          "windowMinutes": 15,
+          "maxLogEntries": 50
+        }
+      },
+      "createdAt": "2026-10-10T01:00:00.000Z",
+      "expiresAt": "2026-10-10T01:05:00.000Z"
+    },
+    "original": {
+      "resourceId": "synthetic-vector",
+      "configurationDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "snapshot": {
+        "schemaVersion": 1,
+        "id": "00000000-0000-4000-8000-000000000501",
+        "dataMode": "synthetic",
+        "binding": {
+          "owner": {
+            "kind": "personal",
+            "userId": "synthetic-operator"
+          },
+          "workspaceId": "synthetic-preview",
+          "environmentId": "synthetic-demo",
+          "target": {
+            "provider": "gcp",
+            "projectId": "example-mobileops-demo",
+            "location": "asia-northeast3",
+            "resourceId": "example",
+            "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+            "resourceUid": "synthetic-service-uid",
+            "revision": "checkout-demo-00003"
+          }
+        },
+        "startedAt": "2026-10-10T01:00:00.000Z",
+        "observedAt": "2026-10-10T01:00:00.000Z",
+        "service": {
+          "status": "collected",
+          "source": "run.googleapis.com/v2/projects.locations.services.get",
+          "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+          "observedAt": "2026-10-10T01:00:00.000Z",
+          "value": {
+            "name": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+            "uid": "synthetic-service-uid",
+            "generation": "3",
+            "observedGeneration": "3",
+            "updateTime": "2026-10-10T01:00:00.000Z",
+            "reconciling": false,
+            "readiness": "succeeded",
+            "missingFields": [],
+            "latestCreatedRevision": "checkout-demo-00003",
+            "latestReadyRevision": "checkout-demo-00002",
+            "traffic": [
+              {
+                "revision": "checkout-demo-00002",
+                "percent": 100
+              }
+            ]
+          }
+        },
+        "revision": {
+          "status": "collected",
+          "source": "run.googleapis.com/v2/projects.locations.services.revisions.get",
+          "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo/revisions/checkout-demo-00003",
+          "observedAt": "2026-10-10T01:00:00.000Z",
+          "value": {
+            "name": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo/revisions/checkout-demo-00003",
+            "uid": "synthetic-revision",
+            "generation": "1",
+            "observedGeneration": "1",
+            "updateTime": "2026-10-10T01:00:00.000Z",
+            "reconciling": false,
+            "readiness": "succeeded",
+            "missingFields": [],
+            "service": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo"
+          }
+        },
+        "recheck": {
+          "status": "collected",
+          "source": "run.googleapis.com/v2/projects.locations.services.get",
+          "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+          "observedAt": "2026-10-10T01:00:00.000Z",
+          "value": {
+            "name": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+            "uid": "synthetic-service-uid",
+            "generation": "3",
+            "observedGeneration": "3",
+            "updateTime": "2026-10-10T01:00:00.000Z",
+            "reconciling": false,
+            "readiness": "succeeded",
+            "missingFields": [],
+            "latestCreatedRevision": "checkout-demo-00003",
+            "latestReadyRevision": "checkout-demo-00002",
+            "traffic": [
+              {
+                "revision": "checkout-demo-00002",
+                "percent": 100
+              }
+            ]
+          }
+        },
+        "consistency": "stable",
+        "serviceAssessment": "unknown",
+        "telemetry": {
+          "window": {
+            "start": "2026-10-10T00:43:00.000Z",
+            "end": "2026-10-10T00:58:00.000Z"
+          },
+          "logs": {
+            "status": "no_data",
+            "source": "logging.googleapis.com/v2/entries.list",
+            "observedAt": "2026-10-10T01:00:00.000Z",
+            "code": "no_matching_data"
+          },
+          "requests": {
+            "status": "no_data",
+            "source": "monitoring.googleapis.com/v3/projects.timeSeries.list",
+            "observedAt": "2026-10-10T01:00:00.000Z",
+            "code": "no_matching_data"
+          },
+          "latency": {
+            "status": "no_data",
+            "source": "monitoring.googleapis.com/v3/projects.timeSeries.list",
+            "observedAt": "2026-10-10T01:00:00.000Z",
+            "code": "no_matching_data"
+          }
+        }
+      },
+      "evidenceDigest": "83d659ddcd47ccaa5b96f979a66bddbdc733d30034daf97d161e3838defab85b"
+    },
+    "expected": {
+      "consistency": "stable",
+      "service": {
+        "name": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+        "uid": "synthetic-service-uid",
+        "generation": "3",
+        "observedGeneration": "3",
+        "updateTime": "2026-10-10T01:00:00.000Z",
+        "reconciling": false,
+        "readiness": "succeeded",
+        "missingFields": [],
+        "latestCreatedRevision": "checkout-demo-00003",
+        "latestReadyRevision": "checkout-demo-00002",
+        "traffic": [
+          {
+            "revision": "checkout-demo-00002",
+            "percent": 100
+          }
+        ]
+      },
+      "revision": {
+        "name": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo/revisions/checkout-demo-00003",
+        "uid": "synthetic-revision",
+        "generation": "1",
+        "observedGeneration": "1",
+        "updateTime": "2026-10-10T01:00:00.000Z",
+        "reconciling": false,
+        "readiness": "succeeded",
+        "missingFields": [],
+        "service": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo"
+      },
+      "summary": {
+        "counts": [],
+        "total": null,
+        "errorCount": null,
+        "highestP95Ms": null,
+        "logs": []
+      },
+      "statuses": [
+        "collected",
+        "collected",
+        "collected",
+        "no_data",
+        "no_data",
+        "no_data"
+      ]
+    }
+  },
+  {
+    "name": "personal-denied",
+    "scope": {
+      "actorId": "synthetic-operator",
+      "owner": {
+        "kind": "personal",
+        "userId": "synthetic-operator"
+      },
+      "workspaceId": "synthetic-preview"
+    },
+    "plan": {
+      "schemaVersion": 1,
+      "planId": "00000000-0000-4000-8000-000000000020",
+      "version": 1,
+      "dataMode": "synthetic",
+      "owner": {
+        "kind": "personal",
+        "userId": "synthetic-operator"
+      },
+      "workspaceId": "synthetic-preview",
+      "environmentId": "synthetic-demo",
+      "target": {
+        "provider": "gcp",
+        "projectId": "example-mobileops-demo",
+        "location": "asia-northeast3",
+        "resourceId": "example",
+        "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+        "resourceUid": "synthetic-service-uid",
+        "revision": "checkout-demo-00003"
+      },
+      "evidence": {
+        "snapshotId": "00000000-0000-4000-8000-000000000502",
+        "digest": "39f6e2c947c61fa0c834f983e5c55fe1e211e23051ce18652260855878cc7bdb",
+        "sourceIds": [
+          "gcp-run-service",
+          "gcp-run-revision",
+          "gcp-run-recheck",
+          "gcp-run-consistency",
+          "gcp-run-logs",
+          "gcp-run-requests",
+          "gcp-run-latency",
+          "gcp-run-missing-signals"
+        ],
+        "observedAt": "2026-10-10T01:00:00.000Z"
+      },
+      "analysis": {
+        "engine": "synthetic-fixture",
+        "summary": "503 request samples need follow-up; bounded samples do not establish service health.",
+        "findings": [
+          {
+            "statement": "Only the configured service and revision are included.",
+            "evidenceIds": [
+              "gcp-run-service"
+            ],
+            "kind": "observation"
+          }
+        ],
+        "missingInformation": [
+          "Historical revision UID and complete signal coverage are unavailable."
+        ],
+        "serviceAssessment": "unknown"
+      },
+      "action": {
+        "id": "gcp.cloudrun.inspect.v1",
+        "version": 1,
+        "effect": "read",
+        "completionCriteria": [
+          "Read service, revision, logs, request count, latency and recheck the service.",
+          "Report each query outcome independently from service health."
+        ],
+        "inputs": {
+          "windowMinutes": 15,
+          "maxLogEntries": 50
+        }
+      },
+      "createdAt": "2026-10-10T01:00:00.000Z",
+      "expiresAt": "2026-10-10T01:05:00.000Z"
+    },
+    "original": {
+      "resourceId": "synthetic-vector",
+      "configurationDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "snapshot": {
+        "schemaVersion": 1,
+        "id": "00000000-0000-4000-8000-000000000502",
+        "dataMode": "synthetic",
+        "binding": {
+          "owner": {
+            "kind": "personal",
+            "userId": "synthetic-operator"
+          },
+          "workspaceId": "synthetic-preview",
+          "environmentId": "synthetic-demo",
+          "target": {
+            "provider": "gcp",
+            "projectId": "example-mobileops-demo",
+            "location": "asia-northeast3",
+            "resourceId": "example",
+            "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+            "resourceUid": "synthetic-service-uid",
+            "revision": "checkout-demo-00003"
+          }
+        },
+        "startedAt": "2026-10-10T01:00:00.000Z",
+        "observedAt": "2026-10-10T01:00:00.000Z",
+        "service": {
+          "status": "collected",
+          "source": "run.googleapis.com/v2/projects.locations.services.get",
+          "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+          "observedAt": "2026-10-10T01:00:00.000Z",
+          "value": {
+            "name": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+            "uid": "synthetic-service-uid",
+            "generation": "3",
+            "observedGeneration": "3",
+            "updateTime": "2026-10-10T01:00:00.000Z",
+            "reconciling": false,
+            "readiness": "succeeded",
+            "missingFields": [],
+            "latestCreatedRevision": "checkout-demo-00003",
+            "latestReadyRevision": "checkout-demo-00002",
+            "traffic": [
+              {
+                "revision": "checkout-demo-00002",
+                "percent": 100
+              }
+            ]
+          }
+        },
+        "revision": {
+          "status": "collected",
+          "source": "run.googleapis.com/v2/projects.locations.services.revisions.get",
+          "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo/revisions/checkout-demo-00003",
+          "observedAt": "2026-10-10T01:00:00.000Z",
+          "value": {
+            "name": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo/revisions/checkout-demo-00003",
+            "uid": "synthetic-revision",
+            "generation": "1",
+            "observedGeneration": "1",
+            "updateTime": "2026-10-10T01:00:00.000Z",
+            "reconciling": false,
+            "readiness": "succeeded",
+            "missingFields": [],
+            "service": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo"
+          }
+        },
+        "recheck": {
+          "status": "collected",
+          "source": "run.googleapis.com/v2/projects.locations.services.get",
+          "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+          "observedAt": "2026-10-10T01:00:00.000Z",
+          "value": {
+            "name": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+            "uid": "synthetic-service-uid",
+            "generation": "3",
+            "observedGeneration": "3",
+            "updateTime": "2026-10-10T01:00:00.000Z",
+            "reconciling": false,
+            "readiness": "succeeded",
+            "missingFields": [],
+            "latestCreatedRevision": "checkout-demo-00003",
+            "latestReadyRevision": "checkout-demo-00002",
+            "traffic": [
+              {
+                "revision": "checkout-demo-00002",
+                "percent": 100
+              }
+            ]
+          }
+        },
+        "consistency": "stable",
+        "serviceAssessment": "unknown",
+        "telemetry": {
+          "window": {
+            "start": "2026-10-10T00:43:00.000Z",
+            "end": "2026-10-10T00:58:00.000Z"
+          },
+          "logs": {
+            "status": "collected",
+            "source": "logging.googleapis.com/v2/entries.list",
+            "observedAt": "2026-10-10T01:00:00.000Z",
+            "truncated": true,
+            "value": [
+              {
+                "timestamp": "2026-10-10T00:57:00.000Z",
+                "severity": "ERROR",
+                "stream": "requests",
+                "responseCode": 503,
+                "latencyMs": 1250
+              }
+            ]
+          },
+          "requests": {
+            "status": "collected",
+            "source": "monitoring.googleapis.com/v3/projects.timeSeries.list",
+            "observedAt": "2026-10-10T01:00:00.000Z",
+            "truncated": false,
+            "value": [
+              {
+                "responseCode": "200",
+                "responseClass": "2xx",
+                "points": [
+                  {
+                    "start": "2026-10-10T00:56:00.000Z",
+                    "end": "2026-10-10T00:57:00.000Z",
+                    "count": 88
+                  }
+                ]
+              },
+              {
+                "responseCode": "503",
+                "responseClass": "5xx",
+                "points": [
+                  {
+                    "start": "2026-10-10T00:56:00.000Z",
+                    "end": "2026-10-10T00:57:00.000Z",
+                    "count": 12
+                  }
+                ]
+              }
+            ]
+          },
+          "latency": {
+            "status": "denied",
+            "source": "monitoring.googleapis.com/v3/projects.timeSeries.list",
+            "observedAt": "2026-10-10T01:00:00.000Z",
+            "code": "access_denied"
+          }
+        }
+      },
+      "evidenceDigest": "39f6e2c947c61fa0c834f983e5c55fe1e211e23051ce18652260855878cc7bdb"
+    },
+    "expected": {
+      "consistency": "stable",
+      "service": {
+        "name": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+        "uid": "synthetic-service-uid",
+        "generation": "3",
+        "observedGeneration": "3",
+        "updateTime": "2026-10-10T01:00:00.000Z",
+        "reconciling": false,
+        "readiness": "succeeded",
+        "missingFields": [],
+        "latestCreatedRevision": "checkout-demo-00003",
+        "latestReadyRevision": "checkout-demo-00002",
+        "traffic": [
+          {
+            "revision": "checkout-demo-00002",
+            "percent": 100
+          }
+        ]
+      },
+      "revision": {
+        "name": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo/revisions/checkout-demo-00003",
+        "uid": "synthetic-revision",
+        "generation": "1",
+        "observedGeneration": "1",
+        "updateTime": "2026-10-10T01:00:00.000Z",
+        "reconciling": false,
+        "readiness": "succeeded",
+        "missingFields": [],
+        "service": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo"
+      },
+      "summary": {
+        "counts": [
+          {
+            "code": "200",
+            "count": 88
+          },
+          {
+            "code": "503",
+            "count": 12
+          }
+        ],
+        "total": 100,
+        "errorCount": 12,
+        "highestP95Ms": null,
+        "logs": [
+          {
+            "timestamp": "2026-10-10T00:57:00.000Z",
+            "severity": "ERROR",
+            "stream": "requests",
+            "responseCode": 503,
+            "latencyMs": 1250
+          }
+        ]
+      },
+      "statuses": [
+        "collected",
+        "collected",
+        "collected",
+        "collected",
+        "collected",
+        "denied"
+      ]
+    }
+  },
+  {
+    "name": "personal-explicit-zero-without-5xx",
+    "scope": {
+      "actorId": "synthetic-operator",
+      "owner": {
+        "kind": "personal",
+        "userId": "synthetic-operator"
+      },
+      "workspaceId": "synthetic-preview"
+    },
+    "plan": {
+      "schemaVersion": 1,
+      "planId": "00000000-0000-4000-8000-000000000020",
+      "version": 1,
+      "dataMode": "synthetic",
+      "owner": {
+        "kind": "personal",
+        "userId": "synthetic-operator"
+      },
+      "workspaceId": "synthetic-preview",
+      "environmentId": "synthetic-demo",
+      "target": {
+        "provider": "gcp",
+        "projectId": "example-mobileops-demo",
+        "location": "asia-northeast3",
+        "resourceId": "example",
+        "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+        "resourceUid": "synthetic-service-uid",
+        "revision": "checkout-demo-00003"
+      },
+      "evidence": {
+        "snapshotId": "00000000-0000-4000-8000-000000000503",
+        "digest": "d10ce4607aa878296dbc0d917c296b500e2effd9af76c2d4ff8f1ccc681d41a2",
+        "sourceIds": [
+          "gcp-run-service",
+          "gcp-run-revision",
+          "gcp-run-recheck",
+          "gcp-run-consistency",
+          "gcp-run-logs",
+          "gcp-run-requests",
+          "gcp-run-latency",
+          "gcp-run-missing-signals"
+        ],
+        "observedAt": "2026-10-10T01:00:00.000Z"
+      },
+      "analysis": {
+        "engine": "synthetic-fixture",
+        "summary": "503 request samples need follow-up; bounded samples do not establish service health.",
+        "findings": [
+          {
+            "statement": "Only the configured service and revision are included.",
+            "evidenceIds": [
+              "gcp-run-service"
+            ],
+            "kind": "observation"
+          }
+        ],
+        "missingInformation": [
+          "Historical revision UID and complete signal coverage are unavailable."
+        ],
+        "serviceAssessment": "unknown"
+      },
+      "action": {
+        "id": "gcp.cloudrun.inspect.v1",
+        "version": 1,
+        "effect": "read",
+        "completionCriteria": [
+          "Read service, revision, logs, request count, latency and recheck the service.",
+          "Report each query outcome independently from service health."
+        ],
+        "inputs": {
+          "windowMinutes": 15,
+          "maxLogEntries": 50
+        }
+      },
+      "createdAt": "2026-10-10T01:00:00.000Z",
+      "expiresAt": "2026-10-10T01:05:00.000Z"
+    },
+    "original": {
+      "resourceId": "synthetic-vector",
+      "configurationDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "snapshot": {
+        "schemaVersion": 1,
+        "id": "00000000-0000-4000-8000-000000000503",
+        "dataMode": "synthetic",
+        "binding": {
+          "owner": {
+            "kind": "personal",
+            "userId": "synthetic-operator"
+          },
+          "workspaceId": "synthetic-preview",
+          "environmentId": "synthetic-demo",
+          "target": {
+            "provider": "gcp",
+            "projectId": "example-mobileops-demo",
+            "location": "asia-northeast3",
+            "resourceId": "example",
+            "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+            "resourceUid": "synthetic-service-uid",
+            "revision": "checkout-demo-00003"
+          }
+        },
+        "startedAt": "2026-10-10T01:00:00.000Z",
+        "observedAt": "2026-10-10T01:00:00.000Z",
+        "service": {
+          "status": "collected",
+          "source": "run.googleapis.com/v2/projects.locations.services.get",
+          "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+          "observedAt": "2026-10-10T01:00:00.000Z",
+          "value": {
+            "name": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+            "uid": "synthetic-service-uid",
+            "generation": "3",
+            "observedGeneration": "3",
+            "updateTime": "2026-10-10T01:00:00.000Z",
+            "reconciling": false,
+            "readiness": "succeeded",
+            "missingFields": [],
+            "latestCreatedRevision": "checkout-demo-00003",
+            "latestReadyRevision": "checkout-demo-00002",
+            "traffic": [
+              {
+                "revision": "checkout-demo-00002",
+                "percent": 100
+              }
+            ]
+          }
+        },
+        "revision": {
+          "status": "collected",
+          "source": "run.googleapis.com/v2/projects.locations.services.revisions.get",
+          "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo/revisions/checkout-demo-00003",
+          "observedAt": "2026-10-10T01:00:00.000Z",
+          "value": {
+            "name": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo/revisions/checkout-demo-00003",
+            "uid": "synthetic-revision",
+            "generation": "1",
+            "observedGeneration": "1",
+            "updateTime": "2026-10-10T01:00:00.000Z",
+            "reconciling": false,
+            "readiness": "succeeded",
+            "missingFields": [],
+            "service": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo"
+          }
+        },
+        "recheck": {
+          "status": "collected",
+          "source": "run.googleapis.com/v2/projects.locations.services.get",
+          "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+          "observedAt": "2026-10-10T01:00:00.000Z",
+          "value": {
+            "name": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+            "uid": "synthetic-service-uid",
+            "generation": "3",
+            "observedGeneration": "3",
+            "updateTime": "2026-10-10T01:00:00.000Z",
+            "reconciling": false,
+            "readiness": "succeeded",
+            "missingFields": [],
+            "latestCreatedRevision": "checkout-demo-00003",
+            "latestReadyRevision": "checkout-demo-00002",
+            "traffic": [
+              {
+                "revision": "checkout-demo-00002",
+                "percent": 100
+              }
+            ]
+          }
+        },
+        "consistency": "stable",
+        "serviceAssessment": "unknown",
+        "telemetry": {
+          "window": {
+            "start": "2026-10-10T00:43:00.000Z",
+            "end": "2026-10-10T00:58:00.000Z"
+          },
+          "logs": {
+            "status": "collected",
+            "source": "logging.googleapis.com/v2/entries.list",
+            "observedAt": "2026-10-10T01:00:00.000Z",
+            "truncated": true,
+            "value": [
+              {
+                "timestamp": "2026-10-10T00:57:00.000Z",
+                "severity": "ERROR",
+                "stream": "requests",
+                "responseCode": 503,
+                "latencyMs": 0
+              }
+            ]
+          },
+          "requests": {
+            "status": "collected",
+            "source": "monitoring.googleapis.com/v3/projects.timeSeries.list",
+            "observedAt": "2026-10-10T01:00:00.000Z",
+            "truncated": false,
+            "value": [
+              {
+                "responseCode": "200",
+                "responseClass": "2xx",
+                "points": [
+                  {
+                    "start": "2026-10-10T00:56:00.000Z",
+                    "end": "2026-10-10T00:57:00.000Z",
+                    "count": 0
+                  }
+                ]
+              }
+            ]
+          },
+          "latency": {
+            "status": "collected",
+            "source": "monitoring.googleapis.com/v3/projects.timeSeries.list",
+            "observedAt": "2026-10-10T01:00:00.000Z",
+            "truncated": false,
+            "value": [
+              {
+                "responseCode": "503",
+                "responseClass": "5xx",
+                "points": [
+                  {
+                    "start": "2026-10-10T00:56:00.000Z",
+                    "end": "2026-10-10T00:57:00.000Z",
+                    "p95Ms": 0
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "evidenceDigest": "d10ce4607aa878296dbc0d917c296b500e2effd9af76c2d4ff8f1ccc681d41a2"
+    },
+    "expected": {
+      "consistency": "stable",
+      "service": {
+        "name": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+        "uid": "synthetic-service-uid",
+        "generation": "3",
+        "observedGeneration": "3",
+        "updateTime": "2026-10-10T01:00:00.000Z",
+        "reconciling": false,
+        "readiness": "succeeded",
+        "missingFields": [],
+        "latestCreatedRevision": "checkout-demo-00003",
+        "latestReadyRevision": "checkout-demo-00002",
+        "traffic": [
+          {
+            "revision": "checkout-demo-00002",
+            "percent": 100
+          }
+        ]
+      },
+      "revision": {
+        "name": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo/revisions/checkout-demo-00003",
+        "uid": "synthetic-revision",
+        "generation": "1",
+        "observedGeneration": "1",
+        "updateTime": "2026-10-10T01:00:00.000Z",
+        "reconciling": false,
+        "readiness": "succeeded",
+        "missingFields": [],
+        "service": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo"
+      },
+      "summary": {
+        "counts": [
+          {
+            "code": "200",
+            "count": 0
+          }
+        ],
+        "total": 0,
+        "errorCount": null,
+        "highestP95Ms": 0,
+        "logs": [
+          {
+            "timestamp": "2026-10-10T00:57:00.000Z",
+            "severity": "ERROR",
+            "stream": "requests",
+            "responseCode": 503,
+            "latencyMs": 0
+          }
+        ]
+      },
+      "statuses": [
+        "collected",
+        "collected",
+        "collected",
+        "collected",
+        "collected",
+        "collected"
+      ]
+    }
+  },
+  {
+    "name": "personal-truncated-empty-page",
+    "scope": {
+      "actorId": "synthetic-operator",
+      "owner": {
+        "kind": "personal",
+        "userId": "synthetic-operator"
+      },
+      "workspaceId": "synthetic-preview"
+    },
+    "plan": {
+      "schemaVersion": 1,
+      "planId": "00000000-0000-4000-8000-000000000020",
+      "version": 1,
+      "dataMode": "synthetic",
+      "owner": {
+        "kind": "personal",
+        "userId": "synthetic-operator"
+      },
+      "workspaceId": "synthetic-preview",
+      "environmentId": "synthetic-demo",
+      "target": {
+        "provider": "gcp",
+        "projectId": "example-mobileops-demo",
+        "location": "asia-northeast3",
+        "resourceId": "example",
+        "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+        "resourceUid": "synthetic-service-uid",
+        "revision": "checkout-demo-00003"
+      },
+      "evidence": {
+        "snapshotId": "00000000-0000-4000-8000-000000000504",
+        "digest": "383f07e49fa3ec045e97a9d0b3fd4951e656fcd8b1e08e70465bfb521388a631",
+        "sourceIds": [
+          "gcp-run-service",
+          "gcp-run-revision",
+          "gcp-run-recheck",
+          "gcp-run-consistency",
+          "gcp-run-logs",
+          "gcp-run-requests",
+          "gcp-run-latency",
+          "gcp-run-missing-signals"
+        ],
+        "observedAt": "2026-10-10T01:00:00.000Z"
+      },
+      "analysis": {
+        "engine": "synthetic-fixture",
+        "summary": "503 request samples need follow-up; bounded samples do not establish service health.",
+        "findings": [
+          {
+            "statement": "Only the configured service and revision are included.",
+            "evidenceIds": [
+              "gcp-run-service"
+            ],
+            "kind": "observation"
+          }
+        ],
+        "missingInformation": [
+          "Historical revision UID and complete signal coverage are unavailable."
+        ],
+        "serviceAssessment": "unknown"
+      },
+      "action": {
+        "id": "gcp.cloudrun.inspect.v1",
+        "version": 1,
+        "effect": "read",
+        "completionCriteria": [
+          "Read service, revision, logs, request count, latency and recheck the service.",
+          "Report each query outcome independently from service health."
+        ],
+        "inputs": {
+          "windowMinutes": 15,
+          "maxLogEntries": 50
+        }
+      },
+      "createdAt": "2026-10-10T01:00:00.000Z",
+      "expiresAt": "2026-10-10T01:05:00.000Z"
+    },
+    "original": {
+      "resourceId": "synthetic-vector",
+      "configurationDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "snapshot": {
+        "schemaVersion": 1,
+        "id": "00000000-0000-4000-8000-000000000504",
+        "dataMode": "synthetic",
+        "binding": {
+          "owner": {
+            "kind": "personal",
+            "userId": "synthetic-operator"
+          },
+          "workspaceId": "synthetic-preview",
+          "environmentId": "synthetic-demo",
+          "target": {
+            "provider": "gcp",
+            "projectId": "example-mobileops-demo",
+            "location": "asia-northeast3",
+            "resourceId": "example",
+            "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+            "resourceUid": "synthetic-service-uid",
+            "revision": "checkout-demo-00003"
+          }
+        },
+        "startedAt": "2026-10-10T01:00:00.000Z",
+        "observedAt": "2026-10-10T01:00:00.000Z",
+        "service": {
+          "status": "collected",
+          "source": "run.googleapis.com/v2/projects.locations.services.get",
+          "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+          "observedAt": "2026-10-10T01:00:00.000Z",
+          "value": {
+            "name": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+            "uid": "synthetic-service-uid",
+            "generation": "3",
+            "observedGeneration": "3",
+            "updateTime": "2026-10-10T01:00:00.000Z",
+            "reconciling": false,
+            "readiness": "succeeded",
+            "missingFields": [],
+            "latestCreatedRevision": "checkout-demo-00003",
+            "latestReadyRevision": "checkout-demo-00002",
+            "traffic": [
+              {
+                "revision": "checkout-demo-00002",
+                "percent": 100
+              }
+            ]
+          }
+        },
+        "revision": {
+          "status": "collected",
+          "source": "run.googleapis.com/v2/projects.locations.services.revisions.get",
+          "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo/revisions/checkout-demo-00003",
+          "observedAt": "2026-10-10T01:00:00.000Z",
+          "value": {
+            "name": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo/revisions/checkout-demo-00003",
+            "uid": "synthetic-revision",
+            "generation": "1",
+            "observedGeneration": "1",
+            "updateTime": "2026-10-10T01:00:00.000Z",
+            "reconciling": false,
+            "readiness": "succeeded",
+            "missingFields": [],
+            "service": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo"
+          }
+        },
+        "recheck": {
+          "status": "collected",
+          "source": "run.googleapis.com/v2/projects.locations.services.get",
+          "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+          "observedAt": "2026-10-10T01:00:00.000Z",
+          "value": {
+            "name": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+            "uid": "synthetic-service-uid",
+            "generation": "3",
+            "observedGeneration": "3",
+            "updateTime": "2026-10-10T01:00:00.000Z",
+            "reconciling": false,
+            "readiness": "succeeded",
+            "missingFields": [],
+            "latestCreatedRevision": "checkout-demo-00003",
+            "latestReadyRevision": "checkout-demo-00002",
+            "traffic": [
+              {
+                "revision": "checkout-demo-00002",
+                "percent": 100
+              }
+            ]
+          }
+        },
+        "consistency": "stable",
+        "serviceAssessment": "unknown",
+        "telemetry": {
+          "window": {
+            "start": "2026-10-10T00:43:00.000Z",
+            "end": "2026-10-10T00:58:00.000Z"
+          },
+          "logs": {
+            "status": "collected",
+            "source": "logging.googleapis.com/v2/entries.list",
+            "observedAt": "2026-10-10T01:00:00.000Z",
+            "truncated": true,
+            "value": []
+          },
+          "requests": {
+            "status": "collected",
+            "source": "monitoring.googleapis.com/v3/projects.timeSeries.list",
+            "observedAt": "2026-10-10T01:00:00.000Z",
+            "truncated": true,
+            "value": []
+          },
+          "latency": {
+            "status": "collected",
+            "source": "monitoring.googleapis.com/v3/projects.timeSeries.list",
+            "observedAt": "2026-10-10T01:00:00.000Z",
+            "truncated": true,
+            "value": []
+          }
+        }
+      },
+      "evidenceDigest": "383f07e49fa3ec045e97a9d0b3fd4951e656fcd8b1e08e70465bfb521388a631"
+    },
+    "expected": {
+      "consistency": "stable",
+      "service": {
+        "name": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+        "uid": "synthetic-service-uid",
+        "generation": "3",
+        "observedGeneration": "3",
+        "updateTime": "2026-10-10T01:00:00.000Z",
+        "reconciling": false,
+        "readiness": "succeeded",
+        "missingFields": [],
+        "latestCreatedRevision": "checkout-demo-00003",
+        "latestReadyRevision": "checkout-demo-00002",
+        "traffic": [
+          {
+            "revision": "checkout-demo-00002",
+            "percent": 100
+          }
+        ]
+      },
+      "revision": {
+        "name": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo/revisions/checkout-demo-00003",
+        "uid": "synthetic-revision",
+        "generation": "1",
+        "observedGeneration": "1",
+        "updateTime": "2026-10-10T01:00:00.000Z",
+        "reconciling": false,
+        "readiness": "succeeded",
+        "missingFields": [],
+        "service": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo"
+      },
+      "summary": {
+        "counts": [],
+        "total": null,
+        "errorCount": null,
+        "highestP95Ms": null,
+        "logs": []
+      },
+      "statuses": [
+        "collected",
+        "collected",
+        "collected",
+        "collected",
+        "collected",
+        "collected"
+      ]
+    }
+  },
+  {
+    "name": "personal-metadata-only",
+    "scope": {
+      "actorId": "synthetic-operator",
+      "owner": {
+        "kind": "personal",
+        "userId": "synthetic-operator"
+      },
+      "workspaceId": "synthetic-preview"
+    },
+    "plan": {
+      "schemaVersion": 1,
+      "planId": "00000000-0000-4000-8000-000000000020",
+      "version": 1,
+      "dataMode": "synthetic",
+      "owner": {
+        "kind": "personal",
+        "userId": "synthetic-operator"
+      },
+      "workspaceId": "synthetic-preview",
+      "environmentId": "synthetic-demo",
+      "target": {
+        "provider": "gcp",
+        "projectId": "example-mobileops-demo",
+        "location": "asia-northeast3",
+        "resourceId": "example",
+        "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+        "resourceUid": "synthetic-service-uid",
+        "revision": "checkout-demo-00003"
+      },
+      "evidence": {
+        "snapshotId": "00000000-0000-4000-8000-000000000505",
+        "digest": "3b47663671f5865a24870e5b334e52f73768db4baea86637ade62bd8cbc0f7ee",
+        "sourceIds": [
+          "gcp-run-service",
+          "gcp-run-revision",
+          "gcp-run-recheck",
+          "gcp-run-consistency",
+          "gcp-run-missing-signals"
+        ],
+        "observedAt": "2026-10-10T01:00:00.000Z"
+      },
+      "analysis": {
+        "engine": "synthetic-fixture",
+        "summary": "503 request samples need follow-up; bounded samples do not establish service health.",
+        "findings": [
+          {
+            "statement": "Only the configured service and revision are included.",
+            "evidenceIds": [
+              "gcp-run-service"
+            ],
+            "kind": "observation"
+          }
+        ],
+        "missingInformation": [
+          "Historical revision UID and complete signal coverage are unavailable."
+        ],
+        "serviceAssessment": "unknown"
+      },
+      "action": {
+        "id": "gcp.cloudrun.metadata.inspect.v1",
+        "version": 1,
+        "effect": "read",
+        "inputs": {},
+        "completionCriteria": [
+          "Read service, pinned revision, and recheck service metadata."
+        ]
+      },
+      "createdAt": "2026-10-10T01:00:00.000Z",
+      "expiresAt": "2026-10-10T01:05:00.000Z"
+    },
+    "original": {
+      "resourceId": "synthetic-vector",
+      "configurationDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "snapshot": {
+        "schemaVersion": 1,
+        "id": "00000000-0000-4000-8000-000000000505",
+        "dataMode": "synthetic",
+        "binding": {
+          "owner": {
+            "kind": "personal",
+            "userId": "synthetic-operator"
+          },
+          "workspaceId": "synthetic-preview",
+          "environmentId": "synthetic-demo",
+          "target": {
+            "provider": "gcp",
+            "projectId": "example-mobileops-demo",
+            "location": "asia-northeast3",
+            "resourceId": "example",
+            "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+            "resourceUid": "synthetic-service-uid",
+            "revision": "checkout-demo-00003"
+          }
+        },
+        "startedAt": "2026-10-10T01:00:00.000Z",
+        "observedAt": "2026-10-10T01:00:00.000Z",
+        "service": {
+          "status": "collected",
+          "source": "run.googleapis.com/v2/projects.locations.services.get",
+          "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+          "observedAt": "2026-10-10T01:00:00.000Z",
+          "value": {
+            "name": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+            "uid": "synthetic-service-uid",
+            "generation": "3",
+            "observedGeneration": "3",
+            "updateTime": "2026-10-10T01:00:00.000Z",
+            "reconciling": false,
+            "readiness": "succeeded",
+            "missingFields": [],
+            "latestCreatedRevision": "checkout-demo-00003",
+            "latestReadyRevision": "checkout-demo-00002",
+            "traffic": [
+              {
+                "revision": "checkout-demo-00002",
+                "percent": 100
+              }
+            ]
+          }
+        },
+        "revision": {
+          "status": "collected",
+          "source": "run.googleapis.com/v2/projects.locations.services.revisions.get",
+          "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo/revisions/checkout-demo-00003",
+          "observedAt": "2026-10-10T01:00:00.000Z",
+          "value": {
+            "name": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo/revisions/checkout-demo-00003",
+            "uid": "synthetic-revision",
+            "generation": "1",
+            "observedGeneration": "1",
+            "updateTime": "2026-10-10T01:00:00.000Z",
+            "reconciling": false,
+            "readiness": "succeeded",
+            "missingFields": [],
+            "service": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo"
+          }
+        },
+        "recheck": {
+          "status": "collected",
+          "source": "run.googleapis.com/v2/projects.locations.services.get",
+          "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+          "observedAt": "2026-10-10T01:00:00.000Z",
+          "value": {
+            "name": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+            "uid": "synthetic-service-uid",
+            "generation": "3",
+            "observedGeneration": "3",
+            "updateTime": "2026-10-10T01:00:00.000Z",
+            "reconciling": false,
+            "readiness": "succeeded",
+            "missingFields": [],
+            "latestCreatedRevision": "checkout-demo-00003",
+            "latestReadyRevision": "checkout-demo-00002",
+            "traffic": [
+              {
+                "revision": "checkout-demo-00002",
+                "percent": 100
+              }
+            ]
+          }
+        },
+        "consistency": "stable",
+        "serviceAssessment": "unknown"
+      },
+      "evidenceDigest": "3b47663671f5865a24870e5b334e52f73768db4baea86637ade62bd8cbc0f7ee"
+    },
+    "expected": {
+      "consistency": "stable",
+      "service": {
+        "name": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+        "uid": "synthetic-service-uid",
+        "generation": "3",
+        "observedGeneration": "3",
+        "updateTime": "2026-10-10T01:00:00.000Z",
+        "reconciling": false,
+        "readiness": "succeeded",
+        "missingFields": [],
+        "latestCreatedRevision": "checkout-demo-00003",
+        "latestReadyRevision": "checkout-demo-00002",
+        "traffic": [
+          {
+            "revision": "checkout-demo-00002",
+            "percent": 100
+          }
+        ]
+      },
+      "revision": {
+        "name": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo/revisions/checkout-demo-00003",
+        "uid": "synthetic-revision",
+        "generation": "1",
+        "observedGeneration": "1",
+        "updateTime": "2026-10-10T01:00:00.000Z",
+        "reconciling": false,
+        "readiness": "succeeded",
+        "missingFields": [],
+        "service": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo"
+      },
+      "summary": null,
+      "statuses": [
+        "collected",
+        "collected",
+        "collected"
+      ]
+    }
+  },
+  {
+    "name": "personal-changed-and-incomplete",
+    "scope": {
+      "actorId": "synthetic-operator",
+      "owner": {
+        "kind": "personal",
+        "userId": "synthetic-operator"
+      },
+      "workspaceId": "synthetic-preview"
+    },
+    "plan": {
+      "schemaVersion": 1,
+      "planId": "00000000-0000-4000-8000-000000000020",
+      "version": 1,
+      "dataMode": "synthetic",
+      "owner": {
+        "kind": "personal",
+        "userId": "synthetic-operator"
+      },
+      "workspaceId": "synthetic-preview",
+      "environmentId": "synthetic-demo",
+      "target": {
+        "provider": "gcp",
+        "projectId": "example-mobileops-demo",
+        "location": "asia-northeast3",
+        "resourceId": "example",
+        "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+        "resourceUid": "synthetic-service-uid",
+        "revision": "checkout-demo-00003"
+      },
+      "evidence": {
+        "snapshotId": "00000000-0000-4000-8000-000000000506",
+        "digest": "f03a93592ac722fc1cf59db51843556d7d49bb3dba56c3ab125fc6b982e2766b",
+        "sourceIds": [
+          "gcp-run-service",
+          "gcp-run-revision",
+          "gcp-run-recheck",
+          "gcp-run-consistency",
+          "gcp-run-logs",
+          "gcp-run-requests",
+          "gcp-run-latency",
+          "gcp-run-missing-signals"
+        ],
+        "observedAt": "2026-10-10T01:00:00.000Z"
+      },
+      "analysis": {
+        "engine": "synthetic-fixture",
+        "summary": "503 request samples need follow-up; bounded samples do not establish service health.",
+        "findings": [
+          {
+            "statement": "Only the configured service and revision are included.",
+            "evidenceIds": [
+              "gcp-run-service"
+            ],
+            "kind": "observation"
+          }
+        ],
+        "missingInformation": [
+          "Historical revision UID and complete signal coverage are unavailable."
+        ],
+        "serviceAssessment": "unknown"
+      },
+      "action": {
+        "id": "gcp.cloudrun.inspect.v1",
+        "version": 1,
+        "effect": "read",
+        "completionCriteria": [
+          "Read service, revision, logs, request count, latency and recheck the service.",
+          "Report each query outcome independently from service health."
+        ],
+        "inputs": {
+          "windowMinutes": 15,
+          "maxLogEntries": 50
+        }
+      },
+      "createdAt": "2026-10-10T01:00:00.000Z",
+      "expiresAt": "2026-10-10T01:05:00.000Z"
+    },
+    "original": {
+      "resourceId": "synthetic-vector",
+      "configurationDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "snapshot": {
+        "schemaVersion": 1,
+        "id": "00000000-0000-4000-8000-000000000506",
+        "dataMode": "synthetic",
+        "binding": {
+          "owner": {
+            "kind": "personal",
+            "userId": "synthetic-operator"
+          },
+          "workspaceId": "synthetic-preview",
+          "environmentId": "synthetic-demo",
+          "target": {
+            "provider": "gcp",
+            "projectId": "example-mobileops-demo",
+            "location": "asia-northeast3",
+            "resourceId": "example",
+            "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+            "resourceUid": "synthetic-service-uid",
+            "revision": "checkout-demo-00003"
+          }
+        },
+        "startedAt": "2026-10-10T01:00:00.000Z",
+        "observedAt": "2026-10-10T01:00:00.000Z",
+        "service": {
+          "status": "collected",
+          "source": "run.googleapis.com/v2/projects.locations.services.get",
+          "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+          "observedAt": "2026-10-10T01:00:00.000Z",
+          "value": {
+            "name": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+            "uid": "synthetic-service-uid",
+            "generation": "3",
+            "observedGeneration": null,
+            "updateTime": "2026-10-10T01:00:00.000Z",
+            "reconciling": false,
+            "readiness": "succeeded",
+            "missingFields": [
+              "observedGeneration",
+              "latestReadyRevision",
+              "trafficAllocationIncomplete"
+            ],
+            "latestCreatedRevision": "checkout-demo-00003",
+            "latestReadyRevision": null,
+            "traffic": [
+              {
+                "revision": null,
+                "percent": null
+              }
+            ]
+          }
+        },
+        "revision": {
+          "status": "collected",
+          "source": "run.googleapis.com/v2/projects.locations.services.revisions.get",
+          "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo/revisions/checkout-demo-00003",
+          "observedAt": "2026-10-10T01:00:00.000Z",
+          "value": {
+            "name": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo/revisions/checkout-demo-00003",
+            "uid": "synthetic-revision",
+            "generation": "1",
+            "observedGeneration": "1",
+            "updateTime": "2026-10-10T01:00:00.000Z",
+            "reconciling": false,
+            "readiness": "unknown",
+            "missingFields": [
+              "readiness"
+            ],
+            "service": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo"
+          }
+        },
+        "recheck": {
+          "status": "collected",
+          "source": "run.googleapis.com/v2/projects.locations.services.get",
+          "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+          "observedAt": "2026-10-10T01:00:00.000Z",
+          "value": {
+            "name": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+            "uid": "synthetic-service-uid",
+            "generation": "3",
+            "observedGeneration": "3",
+            "updateTime": "2026-10-10T01:00:00.000Z",
+            "reconciling": false,
+            "readiness": "succeeded",
+            "missingFields": [],
+            "latestCreatedRevision": "checkout-demo-00003",
+            "latestReadyRevision": "checkout-demo-00002",
+            "traffic": [
+              {
+                "revision": "checkout-demo-00002",
+                "percent": 100
+              }
+            ]
+          }
+        },
+        "consistency": "changed",
+        "serviceAssessment": "unknown",
+        "telemetry": {
+          "window": {
+            "start": "2026-10-10T00:43:00.000Z",
+            "end": "2026-10-10T00:58:00.000Z"
+          },
+          "logs": {
+            "status": "collected",
+            "source": "logging.googleapis.com/v2/entries.list",
+            "observedAt": "2026-10-10T01:00:00.000Z",
+            "truncated": true,
+            "value": [
+              {
+                "timestamp": "2026-10-10T00:57:00.000Z",
+                "severity": "ERROR",
+                "stream": "requests",
+                "responseCode": 503,
+                "latencyMs": 1250
+              }
+            ]
+          },
+          "requests": {
+            "status": "collected",
+            "source": "monitoring.googleapis.com/v3/projects.timeSeries.list",
+            "observedAt": "2026-10-10T01:00:00.000Z",
+            "truncated": false,
+            "value": [
+              {
+                "responseCode": "200",
+                "responseClass": "2xx",
+                "points": [
+                  {
+                    "start": "2026-10-10T00:56:00.000Z",
+                    "end": "2026-10-10T00:57:00.000Z",
+                    "count": 88
+                  }
+                ]
+              },
+              {
+                "responseCode": "503",
+                "responseClass": "5xx",
+                "points": [
+                  {
+                    "start": "2026-10-10T00:56:00.000Z",
+                    "end": "2026-10-10T00:57:00.000Z",
+                    "count": 12
+                  }
+                ]
+              }
+            ]
+          },
+          "latency": {
+            "status": "collected",
+            "source": "monitoring.googleapis.com/v3/projects.timeSeries.list",
+            "observedAt": "2026-10-10T01:00:00.000Z",
+            "truncated": false,
+            "value": [
+              {
+                "responseCode": "503",
+                "responseClass": "5xx",
+                "points": [
+                  {
+                    "start": "2026-10-10T00:56:00.000Z",
+                    "end": "2026-10-10T00:57:00.000Z",
+                    "p95Ms": 1250
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "evidenceDigest": "f03a93592ac722fc1cf59db51843556d7d49bb3dba56c3ab125fc6b982e2766b"
+    },
+    "expected": {
+      "consistency": "changed",
+      "service": {
+        "name": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+        "uid": "synthetic-service-uid",
+        "generation": "3",
+        "observedGeneration": null,
+        "updateTime": "2026-10-10T01:00:00.000Z",
+        "reconciling": false,
+        "readiness": "succeeded",
+        "missingFields": [
+          "observedGeneration",
+          "latestReadyRevision",
+          "trafficAllocationIncomplete"
+        ],
+        "latestCreatedRevision": "checkout-demo-00003",
+        "latestReadyRevision": null,
+        "traffic": [
+          {
+            "revision": null,
+            "percent": null
+          }
+        ]
+      },
+      "revision": {
+        "name": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo/revisions/checkout-demo-00003",
+        "uid": "synthetic-revision",
+        "generation": "1",
+        "observedGeneration": "1",
+        "updateTime": "2026-10-10T01:00:00.000Z",
+        "reconciling": false,
+        "readiness": "unknown",
+        "missingFields": [
+          "readiness"
+        ],
+        "service": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo"
+      },
+      "summary": {
+        "counts": [
+          {
+            "code": "200",
+            "count": 88
+          },
+          {
+            "code": "503",
+            "count": 12
+          }
+        ],
+        "total": 100,
+        "errorCount": 12,
+        "highestP95Ms": 1250,
+        "logs": [
+          {
+            "timestamp": "2026-10-10T00:57:00.000Z",
+            "severity": "ERROR",
+            "stream": "requests",
+            "responseCode": 503,
+            "latencyMs": 1250
+          }
+        ]
+      },
+      "statuses": [
+        "collected",
+        "collected",
+        "collected",
+        "collected",
+        "collected",
+        "collected"
+      ]
+    }
+  },
+  {
+    "name": "personal-metadata-denied",
+    "scope": {
+      "actorId": "synthetic-operator",
+      "owner": {
+        "kind": "personal",
+        "userId": "synthetic-operator"
+      },
+      "workspaceId": "synthetic-preview"
+    },
+    "plan": {
+      "schemaVersion": 1,
+      "planId": "00000000-0000-4000-8000-000000000020",
+      "version": 1,
+      "dataMode": "synthetic",
+      "owner": {
+        "kind": "personal",
+        "userId": "synthetic-operator"
+      },
+      "workspaceId": "synthetic-preview",
+      "environmentId": "synthetic-demo",
+      "target": {
+        "provider": "gcp",
+        "projectId": "example-mobileops-demo",
+        "location": "asia-northeast3",
+        "resourceId": "example",
+        "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+        "resourceUid": "synthetic-service-uid",
+        "revision": "checkout-demo-00003"
+      },
+      "evidence": {
+        "snapshotId": "00000000-0000-4000-8000-000000000507",
+        "digest": "163b20b504dfd5858a7e8011a83197b7e8dfa2eb37c8c34ca65c1dc12cb97cb9",
+        "sourceIds": [
+          "gcp-run-service",
+          "gcp-run-revision",
+          "gcp-run-recheck",
+          "gcp-run-consistency",
+          "gcp-run-logs",
+          "gcp-run-requests",
+          "gcp-run-latency",
+          "gcp-run-missing-signals"
+        ],
+        "observedAt": "2026-10-10T01:00:00.000Z"
+      },
+      "analysis": {
+        "engine": "synthetic-fixture",
+        "summary": "503 request samples need follow-up; bounded samples do not establish service health.",
+        "findings": [
+          {
+            "statement": "Only the configured service and revision are included.",
+            "evidenceIds": [
+              "gcp-run-service"
+            ],
+            "kind": "observation"
+          }
+        ],
+        "missingInformation": [
+          "Historical revision UID and complete signal coverage are unavailable."
+        ],
+        "serviceAssessment": "unknown"
+      },
+      "action": {
+        "id": "gcp.cloudrun.inspect.v1",
+        "version": 1,
+        "effect": "read",
+        "completionCriteria": [
+          "Read service, revision, logs, request count, latency and recheck the service.",
+          "Report each query outcome independently from service health."
+        ],
+        "inputs": {
+          "windowMinutes": 15,
+          "maxLogEntries": 50
+        }
+      },
+      "createdAt": "2026-10-10T01:00:00.000Z",
+      "expiresAt": "2026-10-10T01:05:00.000Z"
+    },
+    "original": {
+      "resourceId": "synthetic-vector",
+      "configurationDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "snapshot": {
+        "schemaVersion": 1,
+        "id": "00000000-0000-4000-8000-000000000507",
+        "dataMode": "synthetic",
+        "binding": {
+          "owner": {
+            "kind": "personal",
+            "userId": "synthetic-operator"
+          },
+          "workspaceId": "synthetic-preview",
+          "environmentId": "synthetic-demo",
+          "target": {
+            "provider": "gcp",
+            "projectId": "example-mobileops-demo",
+            "location": "asia-northeast3",
+            "resourceId": "example",
+            "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+            "resourceUid": "synthetic-service-uid",
+            "revision": "checkout-demo-00003"
+          }
+        },
+        "startedAt": "2026-10-10T01:00:00.000Z",
+        "observedAt": "2026-10-10T01:00:00.000Z",
+        "service": {
+          "status": "denied",
+          "source": "run.googleapis.com/v2/projects.locations.services.get",
+          "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+          "observedAt": "2026-10-10T01:00:00.000Z",
+          "code": "access_denied"
+        },
+        "revision": {
+          "status": "skipped",
+          "source": "run.googleapis.com/v2/projects.locations.services.revisions.get",
+          "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo/revisions/checkout-demo-00003",
+          "observedAt": "2026-10-10T01:00:00.000Z",
+          "code": "service_unverified"
+        },
+        "recheck": {
+          "status": "skipped",
+          "source": "run.googleapis.com/v2/projects.locations.services.get",
+          "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+          "observedAt": "2026-10-10T01:00:00.000Z",
+          "code": "service_unverified"
+        },
+        "consistency": "unverified",
+        "serviceAssessment": "unknown",
+        "telemetry": {
+          "window": {
+            "start": "2026-10-10T00:43:00.000Z",
+            "end": "2026-10-10T00:58:00.000Z"
+          },
+          "logs": {
+            "status": "skipped",
+            "source": "logging.googleapis.com/v2/entries.list",
+            "observedAt": "2026-10-10T01:00:00.000Z",
+            "code": "service_unverified"
+          },
+          "requests": {
+            "status": "skipped",
+            "source": "monitoring.googleapis.com/v3/projects.timeSeries.list",
+            "observedAt": "2026-10-10T01:00:00.000Z",
+            "code": "service_unverified"
+          },
+          "latency": {
+            "status": "skipped",
+            "source": "monitoring.googleapis.com/v3/projects.timeSeries.list",
+            "observedAt": "2026-10-10T01:00:00.000Z",
+            "code": "service_unverified"
+          }
+        }
+      },
+      "evidenceDigest": "163b20b504dfd5858a7e8011a83197b7e8dfa2eb37c8c34ca65c1dc12cb97cb9"
+    },
+    "expected": {
+      "consistency": "unverified",
+      "service": null,
+      "revision": null,
+      "summary": {
+        "counts": [],
+        "total": null,
+        "errorCount": null,
+        "highestP95Ms": null,
+        "logs": []
+      },
+      "statuses": [
+        "denied",
+        "skipped",
+        "skipped",
+        "skipped",
+        "skipped",
+        "skipped"
+      ]
+    }
+  },
+  {
+    "name": "organization-signals",
+    "scope": {
+      "actorId": "synthetic-operator",
+      "owner": {
+        "kind": "organization",
+        "organizationId": "synthetic-example"
+      },
+      "workspaceId": "synthetic-preview"
+    },
+    "plan": {
+      "schemaVersion": 1,
+      "planId": "00000000-0000-4000-8000-000000000020",
+      "version": 1,
+      "dataMode": "synthetic",
+      "owner": {
+        "kind": "organization",
+        "organizationId": "synthetic-example"
+      },
+      "workspaceId": "synthetic-preview",
+      "environmentId": "synthetic-demo",
+      "target": {
+        "provider": "gcp",
+        "projectId": "example-mobileops-demo",
+        "location": "asia-northeast3",
+        "resourceId": "example",
+        "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+        "resourceUid": "synthetic-service-uid",
+        "revision": "checkout-demo-00003"
+      },
+      "evidence": {
+        "snapshotId": "00000000-0000-4000-8000-000000000508",
+        "digest": "2bd8cde428cfc01199e411ba9b2aa7402ef5c2a945b32c31ece3c75c0523b6e9",
+        "sourceIds": [
+          "gcp-run-service",
+          "gcp-run-revision",
+          "gcp-run-recheck",
+          "gcp-run-consistency",
+          "gcp-run-logs",
+          "gcp-run-requests",
+          "gcp-run-latency",
+          "gcp-run-missing-signals"
+        ],
+        "observedAt": "2026-10-10T01:00:00.000Z"
+      },
+      "analysis": {
+        "engine": "synthetic-fixture",
+        "summary": "503 request samples need follow-up; bounded samples do not establish service health.",
+        "findings": [
+          {
+            "statement": "Only the configured service and revision are included.",
+            "evidenceIds": [
+              "gcp-run-service"
+            ],
+            "kind": "observation"
+          }
+        ],
+        "missingInformation": [
+          "Historical revision UID and complete signal coverage are unavailable."
+        ],
+        "serviceAssessment": "unknown"
+      },
+      "action": {
+        "id": "gcp.cloudrun.inspect.v1",
+        "version": 1,
+        "effect": "read",
+        "completionCriteria": [
+          "Read service, revision, logs, request count, latency and recheck the service.",
+          "Report each query outcome independently from service health."
+        ],
+        "inputs": {
+          "windowMinutes": 15,
+          "maxLogEntries": 50
+        }
+      },
+      "createdAt": "2026-10-10T01:00:00.000Z",
+      "expiresAt": "2026-10-10T01:05:00.000Z"
+    },
+    "original": {
+      "resourceId": "synthetic-vector",
+      "configurationDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "snapshot": {
+        "schemaVersion": 1,
+        "id": "00000000-0000-4000-8000-000000000508",
+        "dataMode": "synthetic",
+        "binding": {
+          "owner": {
+            "kind": "organization",
+            "organizationId": "synthetic-example"
+          },
+          "workspaceId": "synthetic-preview",
+          "environmentId": "synthetic-demo",
+          "target": {
+            "provider": "gcp",
+            "projectId": "example-mobileops-demo",
+            "location": "asia-northeast3",
+            "resourceId": "example",
+            "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+            "resourceUid": "synthetic-service-uid",
+            "revision": "checkout-demo-00003"
+          }
+        },
+        "startedAt": "2026-10-10T01:00:00.000Z",
+        "observedAt": "2026-10-10T01:00:00.000Z",
+        "service": {
+          "status": "collected",
+          "source": "run.googleapis.com/v2/projects.locations.services.get",
+          "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+          "observedAt": "2026-10-10T01:00:00.000Z",
+          "value": {
+            "name": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+            "uid": "synthetic-service-uid",
+            "generation": "3",
+            "observedGeneration": "3",
+            "updateTime": "2026-10-10T01:00:00.000Z",
+            "reconciling": false,
+            "readiness": "succeeded",
+            "missingFields": [],
+            "latestCreatedRevision": "checkout-demo-00003",
+            "latestReadyRevision": "checkout-demo-00002",
+            "traffic": [
+              {
+                "revision": "checkout-demo-00002",
+                "percent": 100
+              }
+            ]
+          }
+        },
+        "revision": {
+          "status": "collected",
+          "source": "run.googleapis.com/v2/projects.locations.services.revisions.get",
+          "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo/revisions/checkout-demo-00003",
+          "observedAt": "2026-10-10T01:00:00.000Z",
+          "value": {
+            "name": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo/revisions/checkout-demo-00003",
+            "uid": "synthetic-revision",
+            "generation": "1",
+            "observedGeneration": "1",
+            "updateTime": "2026-10-10T01:00:00.000Z",
+            "reconciling": false,
+            "readiness": "succeeded",
+            "missingFields": [],
+            "service": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo"
+          }
+        },
+        "recheck": {
+          "status": "collected",
+          "source": "run.googleapis.com/v2/projects.locations.services.get",
+          "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+          "observedAt": "2026-10-10T01:00:00.000Z",
+          "value": {
+            "name": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+            "uid": "synthetic-service-uid",
+            "generation": "3",
+            "observedGeneration": "3",
+            "updateTime": "2026-10-10T01:00:00.000Z",
+            "reconciling": false,
+            "readiness": "succeeded",
+            "missingFields": [],
+            "latestCreatedRevision": "checkout-demo-00003",
+            "latestReadyRevision": "checkout-demo-00002",
+            "traffic": [
+              {
+                "revision": "checkout-demo-00002",
+                "percent": 100
+              }
+            ]
+          }
+        },
+        "consistency": "stable",
+        "serviceAssessment": "unknown",
+        "telemetry": {
+          "window": {
+            "start": "2026-10-10T00:43:00.000Z",
+            "end": "2026-10-10T00:58:00.000Z"
+          },
+          "logs": {
+            "status": "collected",
+            "source": "logging.googleapis.com/v2/entries.list",
+            "observedAt": "2026-10-10T01:00:00.000Z",
+            "truncated": true,
+            "value": [
+              {
+                "timestamp": "2026-10-10T00:57:00.000Z",
+                "severity": "ERROR",
+                "stream": "requests",
+                "responseCode": 503,
+                "latencyMs": 1250
+              }
+            ]
+          },
+          "requests": {
+            "status": "collected",
+            "source": "monitoring.googleapis.com/v3/projects.timeSeries.list",
+            "observedAt": "2026-10-10T01:00:00.000Z",
+            "truncated": false,
+            "value": [
+              {
+                "responseCode": "200",
+                "responseClass": "2xx",
+                "points": [
+                  {
+                    "start": "2026-10-10T00:56:00.000Z",
+                    "end": "2026-10-10T00:57:00.000Z",
+                    "count": 88
+                  }
+                ]
+              },
+              {
+                "responseCode": "503",
+                "responseClass": "5xx",
+                "points": [
+                  {
+                    "start": "2026-10-10T00:56:00.000Z",
+                    "end": "2026-10-10T00:57:00.000Z",
+                    "count": 12
+                  }
+                ]
+              }
+            ]
+          },
+          "latency": {
+            "status": "collected",
+            "source": "monitoring.googleapis.com/v3/projects.timeSeries.list",
+            "observedAt": "2026-10-10T01:00:00.000Z",
+            "truncated": false,
+            "value": [
+              {
+                "responseCode": "503",
+                "responseClass": "5xx",
+                "points": [
+                  {
+                    "start": "2026-10-10T00:56:00.000Z",
+                    "end": "2026-10-10T00:57:00.000Z",
+                    "p95Ms": 1250
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "evidenceDigest": "2bd8cde428cfc01199e411ba9b2aa7402ef5c2a945b32c31ece3c75c0523b6e9"
+    },
+    "expected": {
+      "consistency": "stable",
+      "service": {
+        "name": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+        "uid": "synthetic-service-uid",
+        "generation": "3",
+        "observedGeneration": "3",
+        "updateTime": "2026-10-10T01:00:00.000Z",
+        "reconciling": false,
+        "readiness": "succeeded",
+        "missingFields": [],
+        "latestCreatedRevision": "checkout-demo-00003",
+        "latestReadyRevision": "checkout-demo-00002",
+        "traffic": [
+          {
+            "revision": "checkout-demo-00002",
+            "percent": 100
+          }
+        ]
+      },
+      "revision": {
+        "name": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo/revisions/checkout-demo-00003",
+        "uid": "synthetic-revision",
+        "generation": "1",
+        "observedGeneration": "1",
+        "updateTime": "2026-10-10T01:00:00.000Z",
+        "reconciling": false,
+        "readiness": "succeeded",
+        "missingFields": [],
+        "service": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo"
+      },
+      "summary": {
+        "counts": [
+          {
+            "code": "200",
+            "count": 88
+          },
+          {
+            "code": "503",
+            "count": 12
+          }
+        ],
+        "total": 100,
+        "errorCount": 12,
+        "highestP95Ms": 1250,
+        "logs": [
+          {
+            "timestamp": "2026-10-10T00:57:00.000Z",
+            "severity": "ERROR",
+            "stream": "requests",
+            "responseCode": 503,
+            "latencyMs": 1250
+          }
+        ]
+      },
+      "statuses": [
+        "collected",
+        "collected",
+        "collected",
+        "collected",
+        "collected",
+        "collected"
+      ]
+    }
+  },
+  {
+    "name": "organization-empty",
+    "scope": {
+      "actorId": "synthetic-operator",
+      "owner": {
+        "kind": "organization",
+        "organizationId": "synthetic-example"
+      },
+      "workspaceId": "synthetic-preview"
+    },
+    "plan": {
+      "schemaVersion": 1,
+      "planId": "00000000-0000-4000-8000-000000000020",
+      "version": 1,
+      "dataMode": "synthetic",
+      "owner": {
+        "kind": "organization",
+        "organizationId": "synthetic-example"
+      },
+      "workspaceId": "synthetic-preview",
+      "environmentId": "synthetic-demo",
+      "target": {
+        "provider": "gcp",
+        "projectId": "example-mobileops-demo",
+        "location": "asia-northeast3",
+        "resourceId": "example",
+        "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+        "resourceUid": "synthetic-service-uid",
+        "revision": "checkout-demo-00003"
+      },
+      "evidence": {
+        "snapshotId": "00000000-0000-4000-8000-000000000509",
+        "digest": "b057f015142cc258af669dd329ef347ff5d223c1bcd02a23133e4dcba2fdc325",
+        "sourceIds": [
+          "gcp-run-service",
+          "gcp-run-revision",
+          "gcp-run-recheck",
+          "gcp-run-consistency",
+          "gcp-run-logs",
+          "gcp-run-requests",
+          "gcp-run-latency",
+          "gcp-run-missing-signals"
+        ],
+        "observedAt": "2026-10-10T01:00:00.000Z"
+      },
+      "analysis": {
+        "engine": "synthetic-fixture",
+        "summary": "503 request samples need follow-up; bounded samples do not establish service health.",
+        "findings": [
+          {
+            "statement": "Only the configured service and revision are included.",
+            "evidenceIds": [
+              "gcp-run-service"
+            ],
+            "kind": "observation"
+          }
+        ],
+        "missingInformation": [
+          "Historical revision UID and complete signal coverage are unavailable."
+        ],
+        "serviceAssessment": "unknown"
+      },
+      "action": {
+        "id": "gcp.cloudrun.inspect.v1",
+        "version": 1,
+        "effect": "read",
+        "completionCriteria": [
+          "Read service, revision, logs, request count, latency and recheck the service.",
+          "Report each query outcome independently from service health."
+        ],
+        "inputs": {
+          "windowMinutes": 15,
+          "maxLogEntries": 50
+        }
+      },
+      "createdAt": "2026-10-10T01:00:00.000Z",
+      "expiresAt": "2026-10-10T01:05:00.000Z"
+    },
+    "original": {
+      "resourceId": "synthetic-vector",
+      "configurationDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "snapshot": {
+        "schemaVersion": 1,
+        "id": "00000000-0000-4000-8000-000000000509",
+        "dataMode": "synthetic",
+        "binding": {
+          "owner": {
+            "kind": "organization",
+            "organizationId": "synthetic-example"
+          },
+          "workspaceId": "synthetic-preview",
+          "environmentId": "synthetic-demo",
+          "target": {
+            "provider": "gcp",
+            "projectId": "example-mobileops-demo",
+            "location": "asia-northeast3",
+            "resourceId": "example",
+            "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+            "resourceUid": "synthetic-service-uid",
+            "revision": "checkout-demo-00003"
+          }
+        },
+        "startedAt": "2026-10-10T01:00:00.000Z",
+        "observedAt": "2026-10-10T01:00:00.000Z",
+        "service": {
+          "status": "collected",
+          "source": "run.googleapis.com/v2/projects.locations.services.get",
+          "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+          "observedAt": "2026-10-10T01:00:00.000Z",
+          "value": {
+            "name": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+            "uid": "synthetic-service-uid",
+            "generation": "3",
+            "observedGeneration": "3",
+            "updateTime": "2026-10-10T01:00:00.000Z",
+            "reconciling": false,
+            "readiness": "succeeded",
+            "missingFields": [],
+            "latestCreatedRevision": "checkout-demo-00003",
+            "latestReadyRevision": "checkout-demo-00002",
+            "traffic": [
+              {
+                "revision": "checkout-demo-00002",
+                "percent": 100
+              }
+            ]
+          }
+        },
+        "revision": {
+          "status": "collected",
+          "source": "run.googleapis.com/v2/projects.locations.services.revisions.get",
+          "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo/revisions/checkout-demo-00003",
+          "observedAt": "2026-10-10T01:00:00.000Z",
+          "value": {
+            "name": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo/revisions/checkout-demo-00003",
+            "uid": "synthetic-revision",
+            "generation": "1",
+            "observedGeneration": "1",
+            "updateTime": "2026-10-10T01:00:00.000Z",
+            "reconciling": false,
+            "readiness": "succeeded",
+            "missingFields": [],
+            "service": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo"
+          }
+        },
+        "recheck": {
+          "status": "collected",
+          "source": "run.googleapis.com/v2/projects.locations.services.get",
+          "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+          "observedAt": "2026-10-10T01:00:00.000Z",
+          "value": {
+            "name": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+            "uid": "synthetic-service-uid",
+            "generation": "3",
+            "observedGeneration": "3",
+            "updateTime": "2026-10-10T01:00:00.000Z",
+            "reconciling": false,
+            "readiness": "succeeded",
+            "missingFields": [],
+            "latestCreatedRevision": "checkout-demo-00003",
+            "latestReadyRevision": "checkout-demo-00002",
+            "traffic": [
+              {
+                "revision": "checkout-demo-00002",
+                "percent": 100
+              }
+            ]
+          }
+        },
+        "consistency": "stable",
+        "serviceAssessment": "unknown",
+        "telemetry": {
+          "window": {
+            "start": "2026-10-10T00:43:00.000Z",
+            "end": "2026-10-10T00:58:00.000Z"
+          },
+          "logs": {
+            "status": "no_data",
+            "source": "logging.googleapis.com/v2/entries.list",
+            "observedAt": "2026-10-10T01:00:00.000Z",
+            "code": "no_matching_data"
+          },
+          "requests": {
+            "status": "no_data",
+            "source": "monitoring.googleapis.com/v3/projects.timeSeries.list",
+            "observedAt": "2026-10-10T01:00:00.000Z",
+            "code": "no_matching_data"
+          },
+          "latency": {
+            "status": "no_data",
+            "source": "monitoring.googleapis.com/v3/projects.timeSeries.list",
+            "observedAt": "2026-10-10T01:00:00.000Z",
+            "code": "no_matching_data"
+          }
+        }
+      },
+      "evidenceDigest": "b057f015142cc258af669dd329ef347ff5d223c1bcd02a23133e4dcba2fdc325"
+    },
+    "expected": {
+      "consistency": "stable",
+      "service": {
+        "name": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+        "uid": "synthetic-service-uid",
+        "generation": "3",
+        "observedGeneration": "3",
+        "updateTime": "2026-10-10T01:00:00.000Z",
+        "reconciling": false,
+        "readiness": "succeeded",
+        "missingFields": [],
+        "latestCreatedRevision": "checkout-demo-00003",
+        "latestReadyRevision": "checkout-demo-00002",
+        "traffic": [
+          {
+            "revision": "checkout-demo-00002",
+            "percent": 100
+          }
+        ]
+      },
+      "revision": {
+        "name": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo/revisions/checkout-demo-00003",
+        "uid": "synthetic-revision",
+        "generation": "1",
+        "observedGeneration": "1",
+        "updateTime": "2026-10-10T01:00:00.000Z",
+        "reconciling": false,
+        "readiness": "succeeded",
+        "missingFields": [],
+        "service": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo"
+      },
+      "summary": {
+        "counts": [],
+        "total": null,
+        "errorCount": null,
+        "highestP95Ms": null,
+        "logs": []
+      },
+      "statuses": [
+        "collected",
+        "collected",
+        "collected",
+        "no_data",
+        "no_data",
+        "no_data"
+      ]
+    }
+  },
+  {
+    "name": "organization-denied",
+    "scope": {
+      "actorId": "synthetic-operator",
+      "owner": {
+        "kind": "organization",
+        "organizationId": "synthetic-example"
+      },
+      "workspaceId": "synthetic-preview"
+    },
+    "plan": {
+      "schemaVersion": 1,
+      "planId": "00000000-0000-4000-8000-000000000020",
+      "version": 1,
+      "dataMode": "synthetic",
+      "owner": {
+        "kind": "organization",
+        "organizationId": "synthetic-example"
+      },
+      "workspaceId": "synthetic-preview",
+      "environmentId": "synthetic-demo",
+      "target": {
+        "provider": "gcp",
+        "projectId": "example-mobileops-demo",
+        "location": "asia-northeast3",
+        "resourceId": "example",
+        "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+        "resourceUid": "synthetic-service-uid",
+        "revision": "checkout-demo-00003"
+      },
+      "evidence": {
+        "snapshotId": "00000000-0000-4000-8000-000000000510",
+        "digest": "88df9bd8f6eec10bc5b824c5a6f25ad03445e92f35f83876f4df78e546d4275f",
+        "sourceIds": [
+          "gcp-run-service",
+          "gcp-run-revision",
+          "gcp-run-recheck",
+          "gcp-run-consistency",
+          "gcp-run-logs",
+          "gcp-run-requests",
+          "gcp-run-latency",
+          "gcp-run-missing-signals"
+        ],
+        "observedAt": "2026-10-10T01:00:00.000Z"
+      },
+      "analysis": {
+        "engine": "synthetic-fixture",
+        "summary": "503 request samples need follow-up; bounded samples do not establish service health.",
+        "findings": [
+          {
+            "statement": "Only the configured service and revision are included.",
+            "evidenceIds": [
+              "gcp-run-service"
+            ],
+            "kind": "observation"
+          }
+        ],
+        "missingInformation": [
+          "Historical revision UID and complete signal coverage are unavailable."
+        ],
+        "serviceAssessment": "unknown"
+      },
+      "action": {
+        "id": "gcp.cloudrun.inspect.v1",
+        "version": 1,
+        "effect": "read",
+        "completionCriteria": [
+          "Read service, revision, logs, request count, latency and recheck the service.",
+          "Report each query outcome independently from service health."
+        ],
+        "inputs": {
+          "windowMinutes": 15,
+          "maxLogEntries": 50
+        }
+      },
+      "createdAt": "2026-10-10T01:00:00.000Z",
+      "expiresAt": "2026-10-10T01:05:00.000Z"
+    },
+    "original": {
+      "resourceId": "synthetic-vector",
+      "configurationDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "snapshot": {
+        "schemaVersion": 1,
+        "id": "00000000-0000-4000-8000-000000000510",
+        "dataMode": "synthetic",
+        "binding": {
+          "owner": {
+            "kind": "organization",
+            "organizationId": "synthetic-example"
+          },
+          "workspaceId": "synthetic-preview",
+          "environmentId": "synthetic-demo",
+          "target": {
+            "provider": "gcp",
+            "projectId": "example-mobileops-demo",
+            "location": "asia-northeast3",
+            "resourceId": "example",
+            "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+            "resourceUid": "synthetic-service-uid",
+            "revision": "checkout-demo-00003"
+          }
+        },
+        "startedAt": "2026-10-10T01:00:00.000Z",
+        "observedAt": "2026-10-10T01:00:00.000Z",
+        "service": {
+          "status": "collected",
+          "source": "run.googleapis.com/v2/projects.locations.services.get",
+          "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+          "observedAt": "2026-10-10T01:00:00.000Z",
+          "value": {
+            "name": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+            "uid": "synthetic-service-uid",
+            "generation": "3",
+            "observedGeneration": "3",
+            "updateTime": "2026-10-10T01:00:00.000Z",
+            "reconciling": false,
+            "readiness": "succeeded",
+            "missingFields": [],
+            "latestCreatedRevision": "checkout-demo-00003",
+            "latestReadyRevision": "checkout-demo-00002",
+            "traffic": [
+              {
+                "revision": "checkout-demo-00002",
+                "percent": 100
+              }
+            ]
+          }
+        },
+        "revision": {
+          "status": "collected",
+          "source": "run.googleapis.com/v2/projects.locations.services.revisions.get",
+          "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo/revisions/checkout-demo-00003",
+          "observedAt": "2026-10-10T01:00:00.000Z",
+          "value": {
+            "name": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo/revisions/checkout-demo-00003",
+            "uid": "synthetic-revision",
+            "generation": "1",
+            "observedGeneration": "1",
+            "updateTime": "2026-10-10T01:00:00.000Z",
+            "reconciling": false,
+            "readiness": "succeeded",
+            "missingFields": [],
+            "service": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo"
+          }
+        },
+        "recheck": {
+          "status": "collected",
+          "source": "run.googleapis.com/v2/projects.locations.services.get",
+          "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+          "observedAt": "2026-10-10T01:00:00.000Z",
+          "value": {
+            "name": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+            "uid": "synthetic-service-uid",
+            "generation": "3",
+            "observedGeneration": "3",
+            "updateTime": "2026-10-10T01:00:00.000Z",
+            "reconciling": false,
+            "readiness": "succeeded",
+            "missingFields": [],
+            "latestCreatedRevision": "checkout-demo-00003",
+            "latestReadyRevision": "checkout-demo-00002",
+            "traffic": [
+              {
+                "revision": "checkout-demo-00002",
+                "percent": 100
+              }
+            ]
+          }
+        },
+        "consistency": "stable",
+        "serviceAssessment": "unknown",
+        "telemetry": {
+          "window": {
+            "start": "2026-10-10T00:43:00.000Z",
+            "end": "2026-10-10T00:58:00.000Z"
+          },
+          "logs": {
+            "status": "collected",
+            "source": "logging.googleapis.com/v2/entries.list",
+            "observedAt": "2026-10-10T01:00:00.000Z",
+            "truncated": true,
+            "value": [
+              {
+                "timestamp": "2026-10-10T00:57:00.000Z",
+                "severity": "ERROR",
+                "stream": "requests",
+                "responseCode": 503,
+                "latencyMs": 1250
+              }
+            ]
+          },
+          "requests": {
+            "status": "collected",
+            "source": "monitoring.googleapis.com/v3/projects.timeSeries.list",
+            "observedAt": "2026-10-10T01:00:00.000Z",
+            "truncated": false,
+            "value": [
+              {
+                "responseCode": "200",
+                "responseClass": "2xx",
+                "points": [
+                  {
+                    "start": "2026-10-10T00:56:00.000Z",
+                    "end": "2026-10-10T00:57:00.000Z",
+                    "count": 88
+                  }
+                ]
+              },
+              {
+                "responseCode": "503",
+                "responseClass": "5xx",
+                "points": [
+                  {
+                    "start": "2026-10-10T00:56:00.000Z",
+                    "end": "2026-10-10T00:57:00.000Z",
+                    "count": 12
+                  }
+                ]
+              }
+            ]
+          },
+          "latency": {
+            "status": "denied",
+            "source": "monitoring.googleapis.com/v3/projects.timeSeries.list",
+            "observedAt": "2026-10-10T01:00:00.000Z",
+            "code": "access_denied"
+          }
+        }
+      },
+      "evidenceDigest": "88df9bd8f6eec10bc5b824c5a6f25ad03445e92f35f83876f4df78e546d4275f"
+    },
+    "expected": {
+      "consistency": "stable",
+      "service": {
+        "name": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+        "uid": "synthetic-service-uid",
+        "generation": "3",
+        "observedGeneration": "3",
+        "updateTime": "2026-10-10T01:00:00.000Z",
+        "reconciling": false,
+        "readiness": "succeeded",
+        "missingFields": [],
+        "latestCreatedRevision": "checkout-demo-00003",
+        "latestReadyRevision": "checkout-demo-00002",
+        "traffic": [
+          {
+            "revision": "checkout-demo-00002",
+            "percent": 100
+          }
+        ]
+      },
+      "revision": {
+        "name": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo/revisions/checkout-demo-00003",
+        "uid": "synthetic-revision",
+        "generation": "1",
+        "observedGeneration": "1",
+        "updateTime": "2026-10-10T01:00:00.000Z",
+        "reconciling": false,
+        "readiness": "succeeded",
+        "missingFields": [],
+        "service": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo"
+      },
+      "summary": {
+        "counts": [
+          {
+            "code": "200",
+            "count": 88
+          },
+          {
+            "code": "503",
+            "count": 12
+          }
+        ],
+        "total": 100,
+        "errorCount": 12,
+        "highestP95Ms": null,
+        "logs": [
+          {
+            "timestamp": "2026-10-10T00:57:00.000Z",
+            "severity": "ERROR",
+            "stream": "requests",
+            "responseCode": 503,
+            "latencyMs": 1250
+          }
+        ]
+      },
+      "statuses": [
+        "collected",
+        "collected",
+        "collected",
+        "collected",
+        "collected",
+        "denied"
+      ]
+    }
+  }
+]

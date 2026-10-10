@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "id": "evidence-demo-001",
+  "dataMode": "synthetic",
+  "workspaceId": "workspace-demo",
+  "environmentId": "environment-demo",
+  "target": {
+    "provider": "gcp",
+    "projectId": "example-cloudops-demo",
+    "location": "asia-northeast3",
+    "resourceId": "service-demo",
+    "resourceName": "projects/example-cloudops-demo/locations/asia-northeast3/services/checkout-demo",
+    "resourceUid": "synthetic-service-uid",
+    "revision": "checkout-demo-00002"
+  },
+  "observedAt": "2026-10-09T10:00:00Z",
+  "window": {
+    "start": "2026-10-09T09:45:00Z",
+    "end": "2026-10-09T10:00:00Z"
+  },
+  "observations": [
+    {
+      "id": "ev-service",
+      "source": "synthetic-cloud-run-service",
+      "quality": "complete",
+      "value": {
+        "ready": true,
+        "trafficRevision": "checkout-demo-00002"
+      }
+    },
+    {
+      "id": "ev-metrics",
+      "source": "synthetic-cloud-monitoring",
+      "quality": "missing",
+      "value": null,
+      "limitation": "No points returned for the selected window; health cannot be inferred."
+    },
+    {
+      "id": "ev-logs",
+      "source": "synthetic-cloud-logging",
+      "quality": "partial",
+      "value": {
+        "errorEntries": 2,
+        "limit": 20
+      },
+      "limitation": "A bounded sample is not a full log history or proof of the current cause."
+    }
+  ],
+  "owner": {
+    "kind": "organization",
+    "organizationId": "organization-demo"
+  }
+}

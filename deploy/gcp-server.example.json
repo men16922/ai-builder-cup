@@ -1,0 +1,45 @@
+{
+  "publicOrigin": "https://mobileops.example.invalid",
+  "projectId": "example-mobileops-demo",
+  "firebase": {
+    "apiKey": "synthetic-public-web-key-1234567890",
+    "projectId": "example-mobileops-demo",
+    "authDomain": "example-mobileops-demo.firebaseapp.com",
+    "appId": "1:000000000000:web:synthetic"
+  },
+  "store": {
+    "projectId": "example-mobileops-demo",
+    "databaseId": "(default)",
+    "collection": "mobileops_v1"
+  },
+  "credentials": {
+    "method": "metadata",
+    "runtimeProjectId": "example-mobileops-demo",
+    "serviceAccountEmail": "mobileops-runtime@example-mobileops-demo.iam.gserviceaccount.com"
+  },
+  "telemetry": { "enabled": false },
+  "scopes": [
+    { "edition": "organization", "organizationId": "synthetic-org", "workspaceId": "synthetic-workspace", "label": "Synthetic GCP workspace" }
+  ],
+  "resources": [
+    {
+      "id": "checkout-demo",
+      "label": "Synthetic checkout service",
+      "binding": {
+        "owner": { "kind": "organization", "organizationId": "synthetic-org" },
+        "workspaceId": "synthetic-workspace",
+        "environmentId": "synthetic-environment",
+        "target": {
+          "provider": "gcp",
+          "projectId": "example-mobileops-demo",
+          "location": "asia-northeast3",
+          "resourceId": "checkout-demo",
+          "resourceName": "projects/example-mobileops-demo/locations/asia-northeast3/services/checkout-demo",
+          "resourceUid": "synthetic-service-uid",
+          "revision": "checkout-demo-00001"
+        }
+      }
+    }
+  ],
+  "model": { "enabled": false, "location": "global", "modelId": "gemini-2.5-flash" }
+}
