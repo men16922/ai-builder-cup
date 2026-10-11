@@ -13,9 +13,9 @@ Record on a phone-width browser window or the Android emulator plus the web cons
 | 1:30 | Tap Approve and apply | "I approve this exact action." |
 | 1:40 | Timeline: Guardian policy check, Ops re-verifies the signature, traffic shifts, crew re-reads | "My approval is signed over this exact action. Only the Ops service can apply it, and it checks the policy and the signature again before touching Cloud Run." |
 | 2:00 | Final report; dashboard error rate recovering | "The report says what changed and, honestly, what the metrics cannot show yet." |
-| 2:10 | Evaluation slide: scores per scenario, including prompt injection in logs and a destructive request refused | "We measured the crew on six scenarios, including instructions hidden in logs and a request to delete a service. Every unsafe request was refused." |
-| 2:25 | Architecture slide | "Built on Gemini, ADK, A2A and Cloud Run, five private services, each with least privilege." |
-| 2:40 | Closing card with the product name and repo link | "Be the boss. Make the big decisions from anywhere." |
+| 2:10 | Evaluation slide: scores per scenario, including prompt injection in logs and a destructive request refused | "We measured the crew on six scenarios, including instructions hidden in logs and a request to delete a service. In our final run it refused every unsafe request." |
+| 2:25 | Architecture slide | "Built on Gemini, ADK, A2A and Cloud Run: four private agent services behind one gateway, each with least privilege." |
+| 2:40 | Closing card with the product name and repo link | "Be the boss. Make the big decisions from anywhere. This is Aide." |
 
 ## Before recording
 

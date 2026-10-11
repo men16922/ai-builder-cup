@@ -38,6 +38,10 @@ gcloud builds submit apps/crew --project <project> --region <region> --tag <regi
 
 Deploy four private Cloud Run services from that image with `AGENT=chief|ops|diagnosis|guardian`, each with its own service account (see `apps/crew/README.md` for the settings each role needs). The signing key for approvals lives in Secret Manager: the gateway signs, only Ops verifies.
 
+## Android sign-in
+
+The app signs in with Google through Credential Manager. Google only issues a token if the app's **package name and signing certificate (SHA-1)** are registered as an Android app in the project's Firebase settings. Register `app.mobileops.agent` with the SHA-1 of the build you install (for a debug build: `apksigner verify --print-certs app-debug.apk`), put that Firebase app's ID and API key and the web client ID into the app's private configuration file (`apps/android/app/src/main/assets/mobileops-agent.json`, ignored by Git), and rebuild. If the package or fingerprint does not match, Google answers "This android application is not registered to use OAuth2.0" and the app shows "Sign in again to continue".
+
 ## 4. The demo target and traffic
 
 ```sh
