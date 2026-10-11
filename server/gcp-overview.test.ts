@@ -9,14 +9,14 @@ const target = { name: 'shop-api', project: 'example-project', region: 'asia-nor
 const resource = 'projects/example-project/locations/asia-northeast3/services/shop-api';
 const ts = (revision: string, extra: object) => ({ resource: { labels: { revision_name: revision } }, ...extra });
 
-async function setup(routes: (url: string, init?: RequestInit) => unknown) {
+async function setup(routes: (url: string, init?: RequestInit) => unknown, entitled = () => true) {
   const store = new SqliteCloudStore(':memory:'); let clock = Date.parse('2026-10-10T01:00:00.000Z'); const urls: string[] = [];
   const access = new GcpWebAccess({ async verify(token) { if (token !== 'user-a') throw Error(); return { actorId: token, expiresAt: clock + 3600000 }; } }, store, () => clock);
   const fetcher = (async (input: string | URL | Request, init?: RequestInit) => {
     const url = String(input); urls.push(url); const body = routes(url, init);
     return body instanceof Response ? body : new Response(JSON.stringify(body), { status: 200 });
   }) as typeof fetch;
-  const overview = new GcpOverview(access, [target], { token: async () => 'synthetic-token', fetcher, now: () => clock });
+  const overview = new GcpOverview(access, [target], { token: async () => 'synthetic-token', fetcher, now: () => clock }, entitled);
   const session = await access.authenticate('Bearer user-a', { edition: 'personal', workspaceId: 'ws', label: 'p' }, 'mobile');
   return { overview, session, store, urls, advance: (ms: number) => { clock += ms; } };
 }
@@ -56,4 +56,10 @@ test('results are cached briefly and a failed read is not cached', async () => {
 test('only a signed-in person with a current session can read the overview', async () => {
   const { overview, session, advance } = await setup(good);
   advance(2 * 3600_000); await assert.rejects(overview.read(session));
+});
+
+test('a signed-in person who owns no registered service gets no overview and causes no Google read', async () => {
+  const { overview, session, urls } = await setup(good, () => false);
+  await assert.rejects(overview.read(session), { status: 403, code: 'crew_not_entitled' });
+  assert.equal(urls.length, 0);
 });

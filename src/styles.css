@@ -174,8 +174,6 @@ a.ops-utility { color: var(--md-sys-color-primary); }
 .ops-icon-button[aria-pressed='true'] { background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container); }
 .ops-badge { position: absolute; top: 2px; right: 2px; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: var(--md-sys-color-error); color: var(--md-sys-color-on-error); font-size: 11px; font-weight: 700; line-height: 18px; text-align: center; }
 .ops-badge-inline { position: static; margin-left: auto; }
-.ops-workspace-chip { display: inline-flex; align-items: center; gap: 8px; max-width: 260px; padding: 4px 12px 4px 6px; border: 1px solid var(--md-sys-color-outline-variant); border-radius: 20px; font-size: 14px; white-space: nowrap; }
-.ops-workspace-chip img { width: 22px; height: 22px; object-fit: contain; } .ops-workspace-chip span { overflow: hidden; text-overflow: ellipsis; }
 .ops-askbar { flex: 1 1 320px; max-width: 640px; margin: 0 auto; display: flex; align-items: center; gap: 10px; height: 40px; padding: 0 14px; border: 1px solid transparent; border-radius: 24px; background: var(--md-sys-color-surface-container); color: var(--md-sys-color-on-surface-variant); }
 .ops-askbar:focus-within { background: var(--md-sys-color-surface); border-color: var(--md-sys-color-primary); box-shadow: 0 1px 6px color-mix(in srgb, var(--md-sys-color-on-surface) 18%, transparent); }
 .ops-askbar input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; font: inherit; color: var(--md-sys-color-on-surface); }
@@ -191,24 +189,39 @@ a.ops-utility { color: var(--md-sys-color-primary); }
 .ops-account-menu p { margin: 0 0 8px; font-size: 14px; overflow-wrap: anywhere; } .ops-account-menu button { width: 100%; padding: 10px; border: 0; border-radius: 8px; background: transparent; font: inherit; text-align: left; cursor: pointer; color: var(--md-sys-color-primary); }
 .ops-account-menu button:hover { background: var(--md-sys-color-surface-container-highest); }
 .ops-body { flex: 1; display: flex; min-height: 0; }
-.ops-sidebar { flex: 0 0 248px; position: sticky; top: 56px; align-self: flex-start; height: calc(100vh - 56px); overflow-y: auto; padding: 12px 10px; }
-.ops-rail-on .ops-sidebar { flex-basis: 76px; }
-.ops-nav { display: flex; flex-direction: column; gap: 4px; }
-.ops-nav-link { display: flex; align-items: center; gap: 16px; width: 100%; height: 48px; padding: 0 16px; border: 0; border-radius: 28px; background: transparent; color: var(--md-sys-color-on-surface-variant); font: inherit; font-weight: 500; text-align: left; text-decoration: none; cursor: pointer; }
+.ops-sidebar { flex: 0 0 272px; position: sticky; top: 56px; align-self: flex-start; height: calc(100vh - 56px); overflow-y: auto; padding: 8px 0 24px; border-right: 1px solid var(--md-sys-color-outline-variant); background: var(--md-sys-color-surface); }
+.ops-rail-on .ops-sidebar { flex-basis: 72px; }
+.ops-nav { display: flex; flex-direction: column; }
+.ops-nav-group { display: flex; flex-direction: column; padding: 4px 0; }
+.ops-nav-heading { padding: 14px 24px 6px; font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--md-sys-color-on-surface-variant); }
+.ops-nav-divider { height: 1px; margin: 8px 12px; background: var(--md-sys-color-outline-variant); }
+.ops-nav-row { display: flex; align-items: center; margin-right: 12px; }
+.ops-nav-link { flex: 1; min-width: 0; display: flex; align-items: center; gap: 16px; height: 40px; padding: 0 16px 0 24px; border: 0; border-radius: 0 20px 20px 0; background: transparent; color: var(--md-sys-color-on-surface); font: inherit; font-size: 14px; font-weight: 500; text-align: left; text-decoration: none; cursor: pointer; }
+.ops-nav-link .ops-nav-label { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ops-nav-link:hover { background: color-mix(in srgb, var(--md-sys-color-on-surface) 8%, transparent); }
 .ops-nav-link[aria-current='page'] { background: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container); }
-.ops-nav-divider { height: 1px; margin: 8px 12px; background: var(--md-sys-color-outline-variant); }
-.ops-rail .ops-nav-label, .ops-rail .ops-badge-inline { display: none; } .ops-rail .ops-nav-link { justify-content: center; padding: 0; }
+.ops-nav-link[data-inside] { color: var(--md-sys-color-primary); }
+.ops-nav-sub .ops-nav-link { height: 36px; padding-left: 58px; font-weight: 400; }
+.ops-nav-toggle { flex: 0 0 auto; display: grid; place-items: center; width: 28px; height: 28px; margin-left: -34px; border: 0; border-radius: 50%; background: transparent; color: var(--md-sys-color-on-surface-variant); cursor: pointer; }
+.ops-nav-toggle:hover { background: color-mix(in srgb, var(--md-sys-color-on-surface) 12%, transparent); }
+.ops-nav-toggle[aria-expanded='false'] .ops-icon { transform: rotate(-90deg); }
+.ops-rail .ops-nav-label, .ops-rail .ops-badge-inline { display: none; } .ops-rail .ops-nav-link { justify-content: center; padding: 0; margin: 2px 12px; border-radius: 20px; flex: 1; }
+.ops-rail .ops-nav-row { margin-right: 0; }
+.ops-side-rail { flex: 0 0 56px; position: sticky; top: 56px; align-self: flex-start; display: flex; flex-direction: column; align-items: center; gap: 8px; height: calc(100vh - 56px); padding-top: 12px; border-left: 1px solid var(--md-sys-color-outline-variant); background: var(--md-sys-color-surface); }
+.ops-side-button { position: relative; display: grid; place-items: center; width: 40px; height: 40px; border: 1px solid transparent; border-radius: 50%; color: var(--md-sys-color-primary); cursor: pointer;
+  background: linear-gradient(var(--md-sys-color-surface), var(--md-sys-color-surface)) padding-box, linear-gradient(100deg, var(--md-sys-color-primary), var(--md-sys-color-tertiary) 55%, var(--md-sys-color-warning)) border-box; }
+.ops-side-button:hover, .ops-side-button[aria-pressed='true'] { background: linear-gradient(var(--md-sys-color-secondary-container), var(--md-sys-color-secondary-container)) padding-box, linear-gradient(100deg, var(--md-sys-color-primary), var(--md-sys-color-tertiary) 55%, var(--md-sys-color-warning)) border-box; color: var(--md-sys-color-on-secondary-container); }
+.ops-side-button .ops-badge { position: absolute; top: -4px; right: -4px; margin: 0; }
 .ops-main { flex: 1; min-width: 0; padding: 20px 28px 56px; }
 .ops-main .module-content { max-width: 1400px; margin: 0 auto; }
 .ops-flex { flex: 1; }
 .ops-assistant { flex: 0 0 400px; position: sticky; top: 56px; align-self: flex-start; display: flex; flex-direction: column; height: calc(100vh - 56px); border-left: 1px solid var(--md-sys-color-outline-variant); background: var(--md-sys-color-surface); }
 .ops-assistant-head { display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 0 8px 0 18px; border-bottom: 1px solid var(--md-sys-color-outline-variant); font-family: var(--md-ref-typeface-brand); font-size: 18px; color: var(--md-sys-color-primary); }
 .ops-assistant-body { flex: 1; min-height: 0; display: flex; }
-@media (max-width: 1179px) { .ops-assistant { position: fixed; z-index: 30; top: 56px; right: 0; width: min(440px, 100vw); flex: none; box-shadow: -4px 0 24px color-mix(in srgb, var(--md-sys-color-on-surface) 22%, transparent); } }
-@media (max-width: 1000px) { .ops-workspace-chip { display: none; } }
+@media (max-width: 1179px) { .ops-assistant { position: fixed; z-index: 30; top: 56px; right: 56px; width: min(440px, calc(100vw - 56px)); flex: none; box-shadow: -4px 0 24px color-mix(in srgb, var(--md-sys-color-on-surface) 22%, transparent); } }
 @media (max-width: 760px) { .ops-askbar { display: none; } .ops-sidebar { display: none; } .ops-main { padding: 14px 14px 48px; } .ops-gemini-button span:not(.ops-badge) { display: none; } .ops-gemini-button { padding: 0 10px; } }
-@media (max-width: 688px) { .ops-assistant { width: 100vw; } .ops-brand { font-size: 17px; gap: 8px; } .ops-brand img { width: 26px; height: 26px; } .ops-language .language-selector { max-width: 84px; } }
+@media (max-width: 760px) { .ops-assistant { right: 0; width: 100vw; } }
+@media (max-width: 688px) { .ops-brand { font-size: 17px; gap: 8px; } .ops-brand img { width: 26px; height: 26px; } .ops-language .language-selector { max-width: 84px; } }
 
 /* ===== Assistant (right-hand panel) ===== */
 .ops-chat { flex: 1; min-width: 0; display: flex; flex-direction: column; min-height: 0; }

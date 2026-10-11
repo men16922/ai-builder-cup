@@ -11,6 +11,8 @@ import PlanLibrary from './PlanLibrary';
 import Assistant from './Assistant';
 import Dashboard from './Dashboard';
 import { AgentClient } from './agent-client';
+import { consoleNav, SERVICE_PREFIX } from './console-nav';
+import RehearsalConsole from './RehearsalConsole';
 export default function ConnectedObservation({ client, label }: { client: GcpObservationClient; label: string }) {
   const state = useSyncExternalStore(client.subscribe, client.getSnapshot), { t, language } = useLanguage();
   const selected = state.items.find(item => item.id === state.selectedId);
@@ -22,11 +24,16 @@ export default function ConnectedObservation({ client, label }: { client: GcpObs
   useEffect(() => { if (!consoleMode) return; agents.open(); void agents.load(); return () => agents.close(); }, [agents, consoleMode]);
   const pending = board.items.filter(item => item.state === 'awaiting_approval' && item.approval && Date.parse(item.approval.expiresAt) > Date.now()).length;
   const tab = chosenTab || (consoleMode ? 'overview' : 'evidence');
+  const services = state.items.map(item => ({ id: item.id, label: item.label }));
+  const active = tab === 'evidence' && selected ? `${SERVICE_PREFIX}${selected.id}` : tab;
+  const open = (id: string) => { if (id.startsWith(SERVICE_PREFIX)) { setTab('evidence'); client.select(id.slice(SERVICE_PREFIX.length)); } else setTab(id); };
   useConsoleSlots(consoleMode ? { assistant: <Assistant agents={agents} />, assistantLabel: 'Gemini', user: state.identity?.label, onSignOut: () => void client.signOut(), pendingDecisions: pending,
-    nav: { active: tab, onSelect: setTab, items: [{ id: 'overview', label: t('개요', 'Overview'), icon: 'dashboard' }, { id: 'evidence', label: t('서비스·근거', 'Services & evidence'), icon: 'services' }, { id: 'workflow', label: t('계획', 'Plans'), icon: 'approvals', badge: pending || undefined },
-      ...(state.workflowAvailable ? [{ id: 'saved', label: t('저장', 'Saved'), icon: 'history' as const }] : [])] } } : undefined, `${consoleMode}|${tab}|${pending}|${state.identity?.key}|${state.workflowAvailable}|${language}`);
+    nav: { active, onSelect: open, groups: consoleNav(t, { pending, plans: !!state.workflowAvailable, services }) } } : undefined,
+    `${consoleMode}|${active}|${pending}|${state.identity?.key}|${state.workflowAvailable}|${language}|${services.map(item => item.id).join(',')}`);
   async function analyze() { await client.analyze(language); if (client.getSnapshot().operation) setTab('workflow'); }
   function openPlan(id: string) { setTab('workflow'); void client.loadPlan(id); }
+  const signedOutProblem = state.error && !state.identity ? <Banner type="error">{t('로그인하지 못했거나 이 계정에는 실제 크루 접근 권한이 없습니다. 허용된 계정으로 다시 시도하세요.', 'Sign-in did not complete, or this account has no access to the live crew. Try again with an allowed account.')}</Banner> : undefined;
+  if (!state.identity) return <RehearsalConsole onSignIn={() => void client.signIn()} status={signedOutProblem} />;
   const message = state.error === 'analysis_unknown' ? t('분석 완료 여부가 불명확합니다. 같은 요청으로 모델을 다시 호출하지 않습니다.', 'The analysis outcome is unknown. This request will not call the model again.')
     : state.error === 'analysis_in_progress' ? t('분석 중입니다. 같은 요청 확인으로 결과를 확인하세요.', 'Analysis is in progress. Check the same request for its result.')
     : state.error?.startsWith('model_') ? t('모델 응답의 형식이나 근거를 확인할 수 없어 계획을 저장하지 않았습니다.', 'The model response or its evidence could not be validated. No plan was saved.')

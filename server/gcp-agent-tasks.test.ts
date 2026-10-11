@@ -33,12 +33,12 @@ async function setup(t: TestContext, script: ConstructorParameters<typeof FakeCh
   let clock = Date.parse('2026-10-10T01:00:00.000Z'); const now = () => clock;
   const store = new SqliteCloudStore(':memory:'); t.after(() => store.close());
   const access = new GcpWebAccess({ async verify(token) { if (!['user-a', 'user-b', 'user-c'].includes(token)) throw Error(); return { actorId: token, expiresAt: clock + 3600000 }; } }, store, now);
-  const chief = new FakeChief(script), tasks = new GcpAgentTasks(store, access, chief, KEY, now);
+  const chief = new FakeChief(script), denied = new Set<string>(), tasks = new GcpAgentTasks(store, access, chief, KEY, session => !denied.has(session.context.actorId), now);
   const org = { edition: 'organization' as const, organizationId: 'synthetic-org', workspaceId: 'synthetic-workspace', label: 'Synthetic' };
   const provision = (actorId: string, roles: ('viewer' | 'operator' | 'reviewer')[]) => access.organization.provision({ organizationId: org.organizationId, workspaceId: org.workspaceId, actorId, version: 1, active: true, roles, updatedAt: new Date(clock).toISOString() });
   await provision('user-a', options.roles ?? ['operator', 'reviewer']); await provision('user-b', ['operator']); await provision('user-c', ['viewer']);
   const session = (token: string) => access.authenticate(`Bearer ${token}`, org, 'mobile');
-  return { tasks, chief, session, advance: (ms: number) => { clock += ms; }, store };
+  return { tasks, chief, session, denied, advance: (ms: number) => { clock += ms; }, store };
 }
 
 test('an instruction is accepted at once, the crew streams progress into the record, and the task pauses for a person', async t => {
@@ -139,4 +139,16 @@ test('the TypeScript signer matches the Python verifier byte for byte', () => {
   const approval = signApproval(Buffer.from('cross-language-test-key-0123456789'), { action: 'rollback_traffic', service: 'shop-api', revision: 'shop-api-good' }, 'actor-hash-1', 300, 1_700_000_000_000);
   assert.deepEqual(approval, { digest: '38bada923e26be62e473360da022f96343b842182cf96cf3a8bcd5014eba137c', actor: 'actor-hash-1', expires_at: 1700000300, signature: 'mQLTf1wvOG7mVjFaU8z1S_iUS2GmwWeUdML140mRoYI' });
   assert.throws(() => signApproval(Buffer.alloc(0), action, 'a', 300, 0));
+});
+
+test('a verified person who owns no registered resource cannot start or decide a crew task', async t => {
+  const s = await setup(t, () => first()), session = await s.session('user-a');
+  const created = await s.tasks.create(session, { instruction: 'Checkout is failing on shop-api, handle it.', language: 'en' }, randomUUID());
+  await s.tasks.idle();
+  s.denied.add('user-a');
+  await assert.rejects(s.tasks.create(session, { instruction: 'Another request for the crew.', language: 'en' }, randomUUID()), { status: 403, code: 'crew_not_entitled' });
+  await assert.rejects(s.tasks.decide(session, created.id, { decision: 'approve' }, randomUUID()), { status: 403, code: 'crew_not_entitled' });
+  assert.equal(s.chief.messages.length, 1, 'the crew was not contacted again');
+  // Reading what the person already owns stays possible; it grants nothing new.
+  assert.equal((await s.tasks.list(session)).items.length, 1);
 });

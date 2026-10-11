@@ -1,9 +1,11 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import type { IconName } from '../ui';
 
-/** A signed-in page tells the console shell what to show in the left navigation and the right-hand assistant. */
-export type NavItem = { id: string; label: string; icon: IconName; badge?: number };
-export type ConsoleSlots = { nav?: { items: NavItem[]; active: string; onSelect(id: string): void }; assistant?: ReactNode; assistantLabel?: string; user?: string; onSignOut?: () => void; signOutLabel?: string; pendingDecisions?: number };
+/** A page tells the console shell what to show in the left navigation and the right-hand assistant. */
+export type NavItem = { id: string; label: string; icon: IconName; badge?: number; /** Opens the assistant instead of changing the page. */ action?: boolean; children?: NavItem[] };
+export type NavGroup = { id: string; label?: string; items: NavItem[] };
+export type ConsoleSlots = { nav?: { groups: NavGroup[]; active: string; onSelect(id: string): void }; assistant?: ReactNode; assistantLabel?: string; user?: string; onSignOut?: () => void; signOutLabel?: string;
+  onSignIn?: () => void; signInLabel?: string; pendingDecisions?: number };
 type Context = { slots: ConsoleSlots; set(slots: ConsoleSlots): void; assistantOpen: boolean; setAssistantOpen(open: boolean): void; draft: string; setDraft(value: string): void };
 const SlotsContext = createContext<Context | null>(null);
 

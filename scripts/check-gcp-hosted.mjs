@@ -57,20 +57,19 @@ try {
   assert.equal((await call(planPath)).execution.handoffs.length, 1); assert.deepEqual(fixture.counts(), { closed: 0, reads: 6, models: 1 });
   browser = await chromium.launch({ headless: true }); const english = await browser.newContext({ locale: 'en-US' }), englishPage = await english.newPage();
   // Without a saved choice, a non-Korean browser gets English first; a Korean browser gets Korean.
-  await englishPage.goto(origin); await expect(englishPage.getByRole('heading', { name: 'Choose your workspace' })).toBeVisible(); await english.close();
+  await englishPage.goto(origin); await expect(englishPage.getByText('Rehearsal mode · synthetic data')).toBeVisible(); await english.close();
   const context = await browser.newContext({ viewport: { width: 1440, height: 1000 }, locale: 'ko-KR' }); const page = await context.newPage(); const remote = [], unexpected = [], errors = [];
   page.on('pageerror', error => errors.push(error.message));
   await page.route('**/*', route => { if (!route.request().url().startsWith(origin + '/')) { remote.push(new URL(route.request().url()).hostname); return route.abort(); } return route.continue(); });
   page.on('request', request => { const path = new URL(request.url()).pathname; if (path.startsWith('/api/') && !path.startsWith('/api/gcp/config/')) unexpected.push(path); });
-  await page.goto(origin); await expect(page.getByRole('heading', { name: '운영 공간을 선택하세요' })).toBeVisible();
-  await page.getByRole('link', { name: '개인 GCP 열기' }).click(); await expect(page.getByText('시연 환경 연결 준비 중')).toBeVisible();
-  await page.getByRole('link', { name: '운영 공간 선택', exact: true }).first().click(); await page.getByRole('link', { name: '조직 GCP 열기' }).click(); await expect(page.getByText('시연 환경 연결 준비 중')).toBeVisible();
-  await page.getByLabel('Language / 언어').selectOption('en'); await expect(page.getByRole('heading', { name: 'GCP operations workflow' })).toBeVisible();
-  await page.getByRole('button', { name: 'Try synthetic workflow' }).click(); await expect(page.getByRole('region', { name: 'Synthetic workflow rehearsal', exact: true })).toBeVisible();
-  await page.reload(); await expect(page.getByRole('heading', { name: 'GCP operations workflow' })).toBeVisible();
-  // The signed-out crew rehearsal is a console of its own, driven in the browser. It must not call the API at all.
-  await page.getByRole('button', { name: 'Try the agent crew (no sign-in)' }).click();
-  await expect(page.getByRole('heading', { name: 'Overview', level: 1 })).toBeVisible(); await expect(page.getByText('Scripted rehearsal · synthetic data')).toBeVisible();
+  // One console at the root: no workspace picker, no provider logo, and a labeled rehearsal until someone signs in.
+  await page.goto(origin); await expect(page.getByText('체험 모드 · 합성 데이터')).toBeVisible(); await expect(page.getByText('실제 크루에 연결되지 않았습니다')).toBeVisible();
+  await expect(page.getByText('운영 공간을 선택하세요')).toHaveCount(0); await expect(page.getByRole('img', { name: 'Google Cloud' })).toHaveCount(0);
+  await expect(page.getByRole('navigation', { name: '주 메뉴' }).getByRole('button', { name: '개요', exact: true })).toBeVisible();
+  await page.getByLabel('Language / 언어').selectOption('en'); await expect(page.getByText('Rehearsal mode · synthetic data')).toBeVisible();
+  await page.reload(); await expect(page.getByText('Rehearsal mode · synthetic data')).toBeVisible();
+  // The signed-out rehearsal is driven in the browser. It must not call the API beyond the public sign-in configuration.
+  await expect(page.getByRole('heading', { name: 'Overview', level: 1 })).toBeVisible();
   const rehearsalKpis = page.getByRole('region', { name: 'Key metrics' }); await expect(rehearsalKpis.getByRole('group', { name: 'Serving revision' })).toContainText('shop-api-bad');
   await page.getByRole('textbox', { name: 'Ask the crew' }).first().fill('Checkout is failing. Handle it.'); await page.keyboard.press('Enter');
   const rehearsalCrew = page.getByRole('complementary', { name: 'Crew assistant' });
@@ -80,7 +79,6 @@ try {
   await expect(rehearsalCrew.getByRole('heading', { name: 'What happened' })).toBeVisible(); await expect(rehearsalCrew.getByText('Still unknown')).toBeVisible();
   await expect(rehearsalKpis.getByRole('group', { name: 'Serving revision' })).toContainText('shop-api-good');
   if (process.env.MOBILEOPS_SCREENSHOT_DIR) { await mkdir(process.env.MOBILEOPS_SCREENSHOT_DIR, { recursive: true }); await page.screenshot({ path: join(process.env.MOBILEOPS_SCREENSHOT_DIR, 'rehearsal-console.png'), fullPage: true }); }
-  await page.getByRole('button', { name: 'Exit rehearsal', exact: true }).click(); await expect(page.getByRole('heading', { name: 'GCP operations workflow' })).toBeVisible();
   for (const width of [390, 320]) {
     await page.setViewportSize({ width, height: 900 }); await page.getByRole('button', { name: 'Open navigation', exact: true }).click();
     await expect(page.getByRole('dialog')).toBeVisible(); await page.keyboard.press('Escape'); await expect(page.getByRole('dialog')).not.toBeVisible();
@@ -89,12 +87,12 @@ try {
     if (process.env.MOBILEOPS_SCREENSHOT_DIR) { await mkdir(process.env.MOBILEOPS_SCREENSHOT_DIR, { recursive: true }); await page.screenshot({ path: join(process.env.MOBILEOPS_SCREENSHOT_DIR, `gcp-hosted-en-${width}.png`), fullPage: true }); }
   }
   for (const route of ['/aws', '/personal/aws', '/organization/onprem', '/demo', '/catalog']) { await page.goto(origin + '/#' + route); await expect(page.getByRole('heading', { name: 'Page not found' })).toBeVisible(); }
-  await page.goto(origin + '/#/'); await expect(page.getByRole('heading', { name: 'Choose your workspace' })).toBeVisible(); assert.deepEqual(remote, []); assert.deepEqual(unexpected, []); assert.deepEqual(errors, []); assert.deepEqual(fixture.counts(), { closed: 0, reads: 6, models: 1 });
+  for (const route of ['/', '/personal/gcp', '/organization/gcp']) { await page.goto(origin + '/#' + route); await expect(page.getByText('Rehearsal mode · synthetic data')).toBeVisible(); } assert.deepEqual(remote, []); assert.deepEqual(unexpected, []); assert.deepEqual(errors, []); assert.deepEqual(fixture.counts(), { closed: 0, reads: 6, models: 1 });
   await browser.close(); browser = undefined; assert.equal(await runtime.close(), 'drained'); runtime = undefined; assert.equal(fixture.counts().closed, 1);
   // Process-level SIGTERM exercises the same bundled close method; no SDK/provider configuration.
   const childCode = `import {startGcpHosted} from './runtime.mjs'; const app=await startGcpHosted({services:{publicOrigin:'http://127.0.0.1'},async close(){console.log('resources closed')}},'./web',{port:0,host:'127.0.0.1',synthetic:true}); process.on('SIGTERM',async()=>{const outcome=await app.close(); console.log(outcome);process.exit(outcome==='drained'?0:1)});console.log('ready');`;
   await writeFile(join(root, 'signal-smoke.mjs'), childCode);
   const child = spawn(process.execPath, ['signal-smoke.mjs'], { cwd: root, env, stdio: ['ignore', 'pipe', 'pipe'] }); let output = ''; child.stdout.setEncoding('utf8'); child.stdout.on('data', value => { output += value; });
   try { for (let i = 0; !output.includes('ready') && i < 100; i++) { if (child.exitCode !== null) break; await new Promise(done => setTimeout(done, 20)); } assert.match(output, /ready/); const stopped = once(child, 'close'); child.kill('SIGTERM'); let timer; const [code] = await Promise.race([stopped, new Promise((_, reject) => { timer = setTimeout(() => reject(Error('SIGTERM timeout')), 2000); })]).finally(() => clearTimeout(timer)); assert.equal(code, 0); assert.match(output, /resources closed\ndrained/); } finally { if (child.exitCode === null) child.kill('SIGKILL'); }
-  console.log(`GCP hosted artifact passed: isolated SDK imports (${Object.keys(lock.packages).length - 1} locked packages), disabled entry, GCP-only API/auth/Origin and explicit workflow/replay/handoff, KO/EN entry/reload, 390/320px navigation/axe, explicit synthetic rehearsal, excluded local routes and SIGTERM. No live cloud or Docker calls.`);
+  console.log(`GCP hosted artifact passed: isolated SDK imports (${Object.keys(lock.packages).length - 1} locked packages), disabled entry, GCP-only API/auth/Origin and explicit workflow/replay/handoff, KO/EN single-console entry/reload without a workspace picker or provider logo, 390/320px navigation/axe, labeled rehearsal crew, excluded local routes and SIGTERM. No live cloud or Docker calls.`);
 } finally { await browser?.close(); await runtime?.close(); await rm(root, { recursive: true, force: true }); }

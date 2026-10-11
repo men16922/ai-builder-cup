@@ -1,4 +1,6 @@
 import { overviewSchema, type Overview, type OverviewService } from '../../../src/modules/gcp/domain/overview';
+import { CloudOperationError } from '../../../src/domain/cloud-workflow';
+import type { CrewEntitlement } from './agent-tasks';
 import type { GcpWebAccess, GcpWebSession } from './web-access';
 
 export type OverviewTarget = { name: string; project: string; region: string };
@@ -11,9 +13,9 @@ const revisionName = /^[a-z][a-z0-9-]{0,62}$/;
 
 /** Reads Cloud Run, Cloud Monitoring and Cloud Logging for the registered services only. Reads are bounded, cached briefly, and never change anything. */
 export class GcpOverview {
-  private readonly targets: OverviewTarget[]; private readonly ports: OverviewPorts; private readonly access: GcpWebAccess;
+  private readonly targets: OverviewTarget[]; private readonly ports: OverviewPorts; private readonly access: GcpWebAccess; private readonly entitled: CrewEntitlement;
   private readonly cache = new Map<string, { at: number; value: Promise<OverviewService> }>();
-  constructor(access: GcpWebAccess, targets: OverviewTarget[], ports: OverviewPorts) { this.access = access; this.targets = targets; this.ports = ports; }
+  constructor(access: GcpWebAccess, targets: OverviewTarget[], ports: OverviewPorts, entitled: CrewEntitlement) { this.access = access; this.targets = targets; this.ports = ports; this.entitled = entitled; }
   private now() { return (this.ports.now ?? Date.now)(); }
 
   private async get(url: string, signal: AbortSignal, init?: { method: string; body: string }): Promise<unknown> {
@@ -65,6 +67,7 @@ export class GcpOverview {
 
   async read(session: GcpWebSession): Promise<Overview> {
     await this.access.current(session);
+    if (!this.entitled(session)) throw new CloudOperationError(403, 'crew_not_entitled', 'The agent request is not available.');
     const at = this.now(), services = await Promise.all(this.targets.map(target => {
       const hit = this.cache.get(target.name);
       if (hit && at - hit.at < CACHE_MS) return hit.value;

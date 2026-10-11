@@ -97,7 +97,7 @@ try {
     console.log('GCP layout ' + JSON.stringify(measurements));
     await page.screenshot({ path: join(directory, `gcp-layout-${stage}.png`), fullPage: true });
   }
-  await page.goto(origin); await expect(page.getByRole('link', { name: '개요', exact: true })).toBeVisible(); await page.getByRole('button', { name: 'GCP 웹 로그인', exact: true }).click();
+  await page.goto(origin); await expect(page.getByText('체험 모드 · 합성 데이터')).toBeVisible(); await page.getByRole('banner').getByRole('button', { name: 'Google로 로그인', exact: true }).click();
   await expect(page.getByRole('combobox', { name: '허용된 Cloud Run 서비스', exact: true })).toContainText('Synthetic organization service');
   await layout('ready');
   expect(reads).toBe(0); expect(telemetryReads).toBe(0); expect(modelCalls).toBe(0);
@@ -160,7 +160,7 @@ try {
   await expect(page.locator('.gcp-handoff').getByText('합성 인계: 요청 지표와 로그는 후속 확인이 필요합니다.', { exact: true })).toBeVisible();
   // Extra synthetic list rows exercise local pagination without fetching any plan details.
   await fetch(`${origin}/fixture/expanded-list`);
-  await page.reload(); await page.getByRole('button', { name: 'GCP 웹 로그인', exact: true }).click();
+  await page.reload(); await page.getByRole('banner').getByRole('button', { name: 'Google로 로그인', exact: true }).click();
   await page.getByRole('tab', { name: '저장', exact: true }).click();
   const beforePagination = navigationRequests.length;
   await expect(page.getByRole('button', { name: /^저장 계획 열기 / })).toHaveCount(6);
@@ -220,9 +220,9 @@ try {
   await expect(page.getByText('Previous results were cleared because access could not be verified. Sign in again or check permissions.', { exact: true })).toBeVisible(); await expect(page.getByRole('button', { name: 'Read metadata, logs and metrics', exact: true })).toHaveCount(0);
   await expect(page.getByRole('region', { name: 'Selected service overview' })).not.toContainText('Synthetic organization service');
   await expect(page.getByRole('button', { name: /^Open stored plan / })).toHaveCount(0);
-  await page.getByRole('button', { name: 'Sign out of web', exact: true }).click(); await expect(page.getByRole('button', { name: 'Sign in to GCP workspace', exact: true })).toBeVisible();
-  await page.reload(); await expect(page.getByRole('button', { name: 'Sign in to GCP workspace', exact: true })).toBeVisible(); await expect(page.getByText('100%', { exact: true })).toHaveCount(0);
-  await fetch(`${origin}/fixture/reset`); await page.getByTestId('personal').click(); await page.getByRole('button', { name: 'Sign in to GCP workspace', exact: true }).click();
+  await page.getByRole('button', { name: 'Sign out of web', exact: true }).click(); await expect(page.getByText('Rehearsal mode · synthetic data')).toBeVisible();
+  await page.reload(); await expect(page.getByText('Rehearsal mode · synthetic data')).toBeVisible(); await expect(page.locator('.gcp-handoff')).toHaveCount(0); await expect(page.getByRole('button', { name: 'Sign out of web', exact: true })).toHaveCount(0);
+  await fetch(`${origin}/fixture/reset`); await page.getByTestId('personal').click(); await page.getByRole('banner').getByRole('button', { name: 'Sign in with Google', exact: true }).click();
   await expect(page.getByRole('combobox', { name: 'Allowed Cloud Run service', exact: true })).toContainText('Synthetic personal service'); await page.getByRole('button', { name: 'Read metadata, logs and metrics', exact: true }).click(); await expect(page.getByText('100%', { exact: true })).toBeVisible();
   expect(await page.evaluate(() => JSON.stringify({ ...localStorage, ...sessionStorage }))).not.toMatch(/user-a|token|revision|resource-|handoff|합성 인계/); expect(errors).toEqual([]);
   console.log('GCP web synthetic integration passed: actual API/authorization/store/collector with bounded telemetry and safe log projection, analysis/review/explicit read/handoff, lost execution response and same-key retry, persisted result restore after reload, unknown health, no reads during review/refresh, organization/personal scopes, user switch/revocation/logout, English mobile and axe.');

@@ -5,13 +5,13 @@ import { CloudRunCollector } from './cloud-run-collector';
 import { principalKey, type CloudRunTransport } from './cloud-run-transport';
 import type { GcpAnalysisModel } from './gemini';
 import { gcpServerConfiguration } from './configuration';
-import { GcpWebAccess } from './web-access';
+import { GcpWebAccess, type GcpWebSession } from './web-access';
 import { GcpObservations } from './observations';
 import { GcpAnalyses } from './analyses';
 import { GcpOperations } from './operations';
 import { createCloudRunAdapters } from './inspection-adapter';
 import type { GcpApiServices } from './api';
-import type { CloudBinding } from '../../../src/domain/cloud-operations';
+import { sameOwner, type CloudBinding } from '../../../src/domain/cloud-operations';
 import type { CloudRunTelemetryTransport } from './telemetry-transport';
 import { GcpNotifications, type GcpPushPorts } from './notifications';
 import { GcpAgentTasks, type ChiefPort } from './agent-tasks';
@@ -36,10 +36,12 @@ export function composeGcpServices(input: unknown, ports: {
     const telemetry = config.telemetry?.enabled ? ports.telemetry!(resource.binding) : undefined;
     return { ...resource, dataMode: ports.mode, telemetryEnabled: !!telemetry, collector: new CloudRunCollector({ binding: resource.binding, transport, expectedIdentity: principalKey(ports), telemetry }) };
   });
+  // Crew access follows resource ownership: the same rule that already scopes observations, plans and executions.
+  const entitled = (session: GcpWebSession) => registrations.some(item => sameOwner(item.binding.owner, session.context.owner) && item.binding.workspaceId === session.context.workspaceId);
   const observations = new GcpObservations(ports.store, access, registrations);
   const workflow = new CloudWorkflow(ports.store, createCloudRunAdapters(registrations, ports.mode, async () => { throw Error('Only the authenticated execution facade may dispatch.'); }));
   const analyses = new GcpAnalyses(ports.store, access, observations, workflow, ports.model);
-  return { access, observations, analyses, operations: new GcpOperations(ports.store, access, analyses, registrations), notifications: new GcpNotifications(ports.store, access, ports.notifications), agents: ports.agents ? new GcpAgentTasks(ports.store, access, ports.agents.chief, ports.agents.approvalKey) : undefined,
-    overview: ports.agents?.overview && config.agents?.services.length ? new GcpOverview(access, config.agents.services.map(item => ({ name: item.name, project: config.projectId, region: item.region })), ports.agents.overview) : undefined, publicOrigin: config.publicOrigin,
+  return { access, observations, analyses, operations: new GcpOperations(ports.store, access, analyses, registrations), notifications: new GcpNotifications(ports.store, access, ports.notifications), agents: ports.agents ? new GcpAgentTasks(ports.store, access, ports.agents.chief, ports.agents.approvalKey, entitled) : undefined,
+    overview: ports.agents?.overview && config.agents?.services.length ? new GcpOverview(access, config.agents.services.map(item => ({ name: item.name, project: config.projectId, region: item.region })), ports.agents.overview, entitled) : undefined, publicOrigin: config.publicOrigin,
     web: Object.fromEntries(config.scopes.map(scope => [scope.edition, { configured: true, scope, identity: { method: 'firebase-google', firebase: config.firebase } }])) };
 }

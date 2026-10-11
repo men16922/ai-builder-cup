@@ -123,3 +123,21 @@ test('configured GCP-only hosted composition completes authenticated review/read
   assert.throws(() => composeGcpServices({ ...input, notifications: { enabled: true, androidPackage: 'Not.A.Package' } }, { ...ports, notifications: push }));
   assert.throws(() => composeGcpServices({ ...input, notifications: { enabled: true, androidPackage: 'app.mobileops.agent', target: 'https://example.invalid' } }, { ...ports, notifications: push }));
 });
+
+test('crew access follows resource ownership: a member of the owning organization may start a task, a signed-in stranger and a personal sign-in may not', async () => {
+  const input = { ...await example(), agents: { enabled: true, chiefUrl: 'https://chief.example.invalid', services: [{ name: 'shop-api', region: 'asia-northeast3' }] } };
+  const binding = input.resources[0].binding, r = records();
+  const credential = { principal: input.credentials.serviceAccountEmail, sessionId: 'synthetic-entitlement-session', accessToken: 'synthetic-service-token' };
+  const model: GcpAnalysisModel = { enabled: input.model.enabled, engine: 'synthetic-fixture', modelId: input.model.modelId, configurationId: 'entitlement-test', async analyze() { throw Error('must not call'); } };
+  const ports = { store: r.store, mode: 'synthetic' as const, ...credential, model, identity: { async verify(token: string) { if (!['member', 'stranger'].includes(token)) throw Error(); return { actorId: token, expiresAt: Date.now() + 3600000 }; } },
+    transport: () => createSyntheticCloudRunRestTransport({ binding, ...credential, credentials: { async current() { return credential; } }, fetcher: async () => { throw Error('no read expected'); } }),
+    agents: { chief: { async *stream() { /* The crew is not needed to test who may ask. */ } }, approvalKey: Buffer.alloc(32, 7) } };
+  const services = composeGcpServices(input, ports), scope = input.scopes[0];
+  await services.access.organization.provision({ organizationId: scope.organizationId, workspaceId: scope.workspaceId, actorId: 'member', version: 1, active: true, roles: ['operator', 'reviewer'], updatedAt: new Date().toISOString() });
+  const asked = { instruction: 'Check shop-api and summarize its health.', language: 'en' as const };
+  const member = await services.access.authenticate('Bearer member', scope);
+  assert.equal((await services.agents!.create(member, asked, randomUUID())).state, 'working'); await services.agents!.idle();
+  // A verified Google sign-in that owns nothing is refused, both in the organization scope's workspace and as a personal sign-in.
+  const personal = await services.access.authenticate('Bearer stranger', { edition: 'personal', workspaceId: scope.workspaceId, label: 'Personal' });
+  await assert.rejects(services.agents!.create(personal, asked, randomUUID()), { status: 403, code: 'crew_not_entitled' });
+});

@@ -61,8 +61,8 @@ try {
   const target = { provider: 'gcp', projectId: 'example-mobileops-demo', location: 'asia-northeast3', resourceId: 'shop-api', resourceName: 'projects/example-mobileops-demo/locations/asia-northeast3/services/shop-api', resourceUid: 'synthetic-uid', revision: 'shop-api-bad' };
   const binding = { owner: { kind: 'organization', organizationId: scope.organizationId }, workspaceId: scope.workspaceId, environmentId: 'synthetic-env', target };
   const registrations = [{ id: 'shop-api', label: 'Synthetic shop-api', binding, dataMode: 'synthetic', telemetryEnabled: false, collector: { async collect() { throw Error('The agent dashboard never collects by itself.'); } } }];
-  const services = { access, observations: new GcpObservations(store, access, registrations), agents: new GcpAgentTasks(store, access, chief, Buffer.from('fixture-approval-key-0123456789abcdef')),
-    overview: new GcpOverview(access, [{ name: 'shop-api', project: 'example-project', region: 'asia-northeast3' }], { token: async () => 'synthetic-token', fetcher: google }), publicOrigin: 'http://127.0.0.1',
+  const services = { access, observations: new GcpObservations(store, access, registrations), agents: new GcpAgentTasks(store, access, chief, Buffer.from('fixture-approval-key-0123456789abcdef'), () => true),
+    overview: new GcpOverview(access, [{ name: 'shop-api', project: 'example-project', region: 'asia-northeast3' }], { token: async () => 'synthetic-token', fetcher: google }, () => true), publicOrigin: 'http://127.0.0.1',
     web: { organization: { configured: true, scope, identity: { method: 'company' } }, personal: { configured: false } } };
   server = createServer(async (request, response) => {
     const path = new URL(request.url, 'http://127.0.0.1').pathname;
@@ -79,10 +79,19 @@ try {
   const page = await context.newPage(); page.setDefaultTimeout(15000); const errors = []; page.on('pageerror', error => errors.push(error.message));
   const directory = process.env.MOBILEOPS_SCREENSHOT_DIR ?? 'test-results/screenshots'; await mkdir(directory, { recursive: true });
   await page.goto(origin); await page.getByRole('combobox', { name: 'Language / 언어' }).selectOption('en');
-  await page.getByRole('button', { name: 'Sign in to GCP workspace', exact: true }).click();
+  // Signed out: the same console frame in a labeled rehearsal, with the Cloud Console style navigation and the right-hand Gemini rail.
+  await expect(page.getByText('Rehearsal mode · synthetic data')).toBeVisible();
+  const navigation = page.getByRole('navigation', { name: 'Main navigation' });
+  for (const name of ['Overview', 'Services', 'Plans', 'Ask the crew', 'Decisions']) await expect(navigation.getByRole('button', { name, exact: true })).toBeVisible();
+  await expect(page.getByRole('complementary', { name: 'Agent tools' }).getByRole('button', { name: 'Ask Gemini' })).toBeVisible();
+  await expect(page.getByRole('img', { name: 'Google Cloud' })).toHaveCount(0);
+  await page.screenshot({ path: join(directory, 'console-signed-out.png'), fullPage: true });
+  await page.getByRole('banner').getByRole('button', { name: 'Sign in with Google', exact: true }).click();
   // Signed in with the crew connected: a console. The dashboard is first, the assistant is closed until asked for.
+  await expect(page.getByText('Rehearsal mode · synthetic data')).toHaveCount(0);
   await expect(page.getByRole('heading', { name: 'Overview', level: 1 })).toBeVisible();
-  await expect(page.getByRole('navigation', { name: 'Module navigation' }).getByRole('button', { name: 'Overview' })).toHaveAttribute('aria-current', 'page');
+  await expect(navigation.getByRole('button', { name: 'Overview', exact: true })).toHaveAttribute('aria-current', 'page');
+  await expect(navigation.getByRole('button', { name: 'Synthetic shop-api', exact: true })).toBeVisible();
   const kpis = page.getByRole('region', { name: 'Key metrics' });
   await expect(kpis.getByRole('group', { name: '5xx error rate' })).toContainText('55.0%');
   await expect(kpis.getByRole('group', { name: 'p95 latency' })).toContainText('1,304 ms');
@@ -114,7 +123,13 @@ try {
   // Collapsing the navigation to a rail and closing/reopening the assistant keep the page usable.
   await page.getByRole('button', { name: 'Collapse navigation' }).click();
   await assistant.getByRole('button', { name: 'Close the assistant' }).click(); await expect(assistant).toHaveCount(0);
-  await page.getByRole('button', { name: 'Gemini' }).click(); await expect(assistant).toBeVisible();
+  await page.getByRole('button', { name: 'Ask Gemini' }).click(); await expect(assistant).toBeVisible();
+  await page.getByRole('button', { name: 'Ask Gemini' }).click(); await expect(assistant).toHaveCount(0);
+  await page.getByRole('button', { name: 'Expand navigation' }).click();
+  // Navigation entries change the page; the agent entries open the right-hand panel instead.
+  await navigation.getByRole('button', { name: 'Plans', exact: true }).click(); await expect(page.getByText('No plan is open')).toBeVisible();
+  await navigation.getByRole('button', { name: 'Overview', exact: true }).click(); await expect(page.getByRole('heading', { name: 'Overview', level: 1 })).toBeVisible();
+  await navigation.getByRole('button', { name: /^Decisions/ }).click(); await expect(assistant).toBeVisible();
   await page.setViewportSize({ width: 390, height: 844 });
   await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   const axeMobile = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze();
@@ -124,7 +139,7 @@ try {
   await page.screenshot({ path: join(directory, 'console-dashboard-390.png'), fullPage: true });
   await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   expect(errors).toEqual([]);
-  console.log('GCP console integration passed: dashboard KPIs and charts from the overview, top-bar instruction opens the assistant, streamed progress, approval card with the exact action, one approval dispatch, final report, rail and assistant toggles, axe at desktop and 390px.');
+  console.log('GCP console integration passed: dashboard KPIs and charts from the overview, signed-out rehearsal in the same frame with Cloud Console style navigation and the right-hand Gemini rail, sign-in swaps in the live crew, top-bar instruction opens the assistant, streamed progress, approval card with the exact action, one approval dispatch, final report, rail and assistant toggles, axe at desktop and 390px.');
 } catch (error) {
   if (browser) { const page = browser.contexts()[0]?.pages()[0]; if (page) { await mkdir('test-results', { recursive: true }); await page.screenshot({ path: 'test-results/gcp-agents-failure.png', fullPage: true }).catch(() => {}); } }
   throw error;

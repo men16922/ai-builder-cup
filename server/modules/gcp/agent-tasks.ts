@@ -10,6 +10,8 @@ import { signApproval } from './agent-approval';
 import type { GcpWebAccess, GcpWebSession } from './web-access';
 
 /** The crew's front door (an A2A server). The gateway only streams from it; it never receives credentials or runs tools. */
+/** Who may drive the crew: only people who own at least one registered resource in the scope. A verified Google sign-in alone is not enough. */
+export type CrewEntitlement = (session: GcpWebSession) => boolean;
 export interface ChiefPort { stream(message: Record<string, unknown>, signal: AbortSignal): AsyncIterable<Record<string, unknown>> }
 
 const scopeOf = (session: GcpWebSession) => ({ owner: session.context.owner, workspaceId: session.context.workspaceId });
@@ -77,9 +79,9 @@ export function applyEvent(stored: Stored, event: Record<string, unknown>, nowMs
 }
 
 export class GcpAgentTasks {
-  private readonly store: CloudStore; private readonly access: GcpWebAccess; private readonly chief: ChiefPort; private readonly approvalKey: Buffer; private readonly now: () => number;
+  private readonly store: CloudStore; private readonly access: GcpWebAccess; private readonly chief: ChiefPort; private readonly approvalKey: Buffer; private readonly now: () => number; private readonly entitled: CrewEntitlement;
   private readonly running = new Set<Promise<void>>();
-  constructor(store: CloudStore, access: GcpWebAccess, chief: ChiefPort, approvalKey: Buffer, now = Date.now) { this.store = store; this.access = access; this.chief = chief; this.approvalKey = approvalKey; this.now = now; }
+  constructor(store: CloudStore, access: GcpWebAccess, chief: ChiefPort, approvalKey: Buffer, entitled: CrewEntitlement, now = Date.now) { this.store = store; this.access = access; this.chief = chief; this.approvalKey = approvalKey; this.entitled = entitled; this.now = now; }
 
   private view(stored: Stored, session: GcpWebSession): AgentTask {
     const task = structuredClone(stored.task), at = this.now();
@@ -100,11 +102,14 @@ export class GcpAgentTasks {
   private require(session: GcpWebSession, role: 'operator' | 'reviewer') {
     if (!session.context.roles.includes(role)) throw unavailable(403, `${role}_required`);
   }
+  private admit(session: GcpWebSession) {
+    if (!this.entitled(session)) throw unavailable(403, 'crew_not_entitled');
+  }
   /** Resolves when background work has settled; only tests and graceful shutdown wait on it. */
   async idle() { await Promise.allSettled([...this.running]); }
 
   async create(session: GcpWebSession, raw: unknown, key: string): Promise<AgentTask> {
-    const input = agentCreateSchema.parse(raw); this.require(session, 'operator'); z.uuid().parse(key);
+    const input = agentCreateSchema.parse(raw); this.require(session, 'operator'); this.admit(session); z.uuid().parse(key);
     const id = randomUUID(), at = this.now(), replay = requestKey(session, 'create', key);
     const made = await this.store.transact(async tx => {
       await this.access.assertCurrentIn(tx, session);
@@ -133,7 +138,7 @@ export class GcpAgentTasks {
   }
 
   async decide(session: GcpWebSession, id: string, raw: unknown, key: string): Promise<AgentTask> {
-    const input = agentDecisionSchema.parse(raw); z.uuid().parse(id); z.uuid().parse(key); this.require(session, 'reviewer');
+    const input = agentDecisionSchema.parse(raw); z.uuid().parse(id); z.uuid().parse(key); this.require(session, 'reviewer'); this.admit(session);
     const replay = requestKey(session, 'decide', key), at = this.now();
     const outcome = await this.store.transact(async tx => {
       await this.access.assertCurrentIn(tx, session);
