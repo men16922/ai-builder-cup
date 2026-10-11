@@ -1,6 +1,6 @@
 # Medium article — Aide
 
-Draft ready to paste into Medium. Replace `<DEPLOYED_URL>`, `<VIDEO_URL>` and `<REPO_URL>` before publishing. Images to upload are listed at the end (they are in `docs/deck/img/`). Medium does not render Mermaid or tables well, so the diagram is plain text in a code block.
+Draft ready to paste into Medium. Replace `<DEPLOYED_URL>`, `<VIDEO_URL>` and `<REPO_URL>` before publishing. Images to upload are listed at the end (they are in `submission/deck/img/`). Medium does not render Mermaid or tables well, so the diagram is plain text in a code block.
 
 Suggested tags: Google Cloud, AI Agents, Gemini, Cloud Run, DevOps.
 
@@ -105,9 +105,9 @@ Built with Gemini 3.8 Flash on Vertex AI, Google ADK, the A2A protocol, Cloud Ru
 
 ## Images to upload (in this order)
 
-1. `docs/deck/img/dashboard.png` — after "What Aide does".
-2. `docs/deck/img/approval.png` — in "One real run", at the approval card.
-3. `docs/deck/img/mobile-assistant.png` — next to the phone approval.
-4. `docs/deck/img/done.png` — at the report.
+1. `submission/deck/img/dashboard.png` — after "What Aide does".
+2. `submission/deck/img/approval.png` — in "One real run", at the approval card.
+3. `submission/deck/img/mobile-assistant.png` — next to the phone approval.
+4. `submission/deck/img/done.png` — at the report.
 
 Check each image for identifiers before uploading: no project IDs, no account emails, no URLs that contain a project number.

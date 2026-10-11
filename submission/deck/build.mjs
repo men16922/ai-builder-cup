@@ -1,4 +1,4 @@
-// Renders the submission deck to docs/deck/deck.pdf. Run: node --import tsx docs/deck/build.mjs
+// Renders the submission deck to submission/deck/deck.html (keys 1-9 and arrows move between slides) and deck.pdf. Run: node --import tsx submission/deck/build.mjs
 // The product name comes from apps/web/src/brand.ts and every number from the recorded evaluation results.
 import { chromium } from '@playwright/test';
 import { readFile, writeFile } from 'node:fs/promises';
@@ -29,7 +29,7 @@ const slides = [
 `<section><h2>We measured it</h2><p class="lead">Six scenarios, three runs each, against the real Gemini crew with fixed data. A run passes only if every exact rule check and every graded expectation passes.</p><div class="cols"><table><tr><th>Scenario</th><th>Passed</th><th>Median</th></tr>${rows}</table><div class="stat"><span class="num">${now.passed}/${now.total}</span><span>runs passed${remeasured ? `<br><small>first run: ${first.passed}/${first.total}. The evaluation exposed honesty gaps (calling empty data healthy, steering a user to delete by hand); we fixed the instructions and measured again. Tuned on these scenarios, so not a held-out score.</small>` : ''}</span></div></div></section>`,
 `<section><h2>Impact we can show</h2><ul class="big"><li>From instruction to a reviewed decision in about <b>${Math.round(median('bad_release'))} seconds</b> (median of three runs, bad release).</li><li>The person taps <b>once</b>. The crew performed the reads, the comparison and the verification.</li><li>Every step is visible and every change is attributable to an approval.</li></ul><p class="caption">Timings are from our evaluation runs, not a benchmark against manual work.</p></section>`,
 `<section><h2>Built on Google Cloud</h2><div class="chips"><span>Gemini 3.8 Flash</span><span>Agent Development Kit</span><span>A2A protocol</span><span>Cloud Run (5 private services)</span><span>Cloud Monitoring &amp; Logging</span><span>Firestore</span><span>Firebase Authentication</span><span>Secret Manager</span><span>Cloud Trace</span><span>Material Web &amp; Compose Material 3</span></div></section>`,
-`<section><h2>Next</h2><ul class="big"><li>Crew assistant on Android, with voice instructions</li><li>More reversible actions behind the same signed approval</li><li>Risk-based approvals to avoid approval fatigue</li><li>Interoperate with other teams' A2A agents</li></ul></section>`,
+`<section><h2>Next</h2><ul class="big"><li>Voice instructions in the Android assistant</li><li>More reversible actions behind the same signed approval</li><li>Risk-based approvals to avoid approval fatigue</li><li>Interoperate with other teams' A2A agents</li></ul></section>`,
 ];
 const html = `<!doctype html><html lang="en"><meta charset="utf-8"><title>${brand}</title><style>${tokens}
 @page { size: 1280px 720px; margin: 0 } *{box-sizing:border-box} body{margin:0;font-family:var(--md-ref-typeface-plain);color:var(--md-sys-color-on-surface);background:var(--md-sys-color-surface)}
@@ -44,7 +44,26 @@ table{border-collapse:collapse;font-size:22px;width:100%}td,th{padding:10px 14px
 .arch{display:flex;flex-direction:column;align-items:center;gap:8px;font-size:24px}.box{padding:14px 26px;border-radius:16px;background:var(--md-sys-color-secondary-container);text-align:center}.box small{display:block}
 .gateway{background:var(--md-sys-color-primary-container);color:var(--md-sys-color-on-primary-container)}.chief{background:var(--md-sys-color-primary);color:var(--md-sys-color-on-primary);padding:14px 60px}.arrow{font-size:18px;color:var(--md-sys-color-on-surface-variant)}.row{display:flex;gap:20px}.row .box{width:290px}
 .chips{display:flex;flex-wrap:wrap;gap:16px}.chips span{padding:14px 24px;border-radius:28px;background:var(--md-sys-color-secondary-container);font-size:26px}
-</style><body>${slides.join('')}</body></html>`;
+/* Screen: one slide at a time, scaled to the window. Print (the PDF): every slide in order. */
+@media screen{body{background:#111;overflow:hidden}section{display:none;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(var(--scale,1));transform-origin:center;background:var(--md-sys-color-surface)}section.active{display:block}section.title.active{display:flex}
+.nav{position:fixed;left:50%;bottom:8px;transform:translateX(-50%);padding:4px 12px;border-radius:12px;background:rgba(0,0,0,.65);font:13px sans-serif;color:#ccc;pointer-events:none}.nav b{color:#fff}}
+@media print{.nav{display:none}}
+</style><body>${slides.join('')}<div class="nav" aria-live="polite"></div><script>
+// 1-9 jump to a slide (0 is slide 10). Arrows, space, PageUp/PageDown, Home/End and a click on the left or right half also move.
+const slides = [...document.querySelectorAll('section')], nav = document.querySelector('.nav');
+let at = Math.max(0, Math.min(slides.length - 1, (parseInt(location.hash.slice(1), 10) || 1) - 1));
+const fit = () => document.documentElement.style.setProperty('--scale', Math.min(innerWidth / 1280, innerHeight / 720));
+const show = n => { at = Math.max(0, Math.min(slides.length - 1, n)); slides.forEach((s, i) => s.classList.toggle('active', i === at)); history.replaceState(null, '', '#' + (at + 1)); nav.innerHTML = '<b>' + (at + 1) + '</b> / ' + slides.length + ' · press 1-' + Math.min(9, slides.length) + (slides.length > 9 ? ', 0' : '') + ' or the arrow keys'; };
+addEventListener('keydown', e => {
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+  if (/^[0-9]$/.test(e.key)) { const n = e.key === '0' ? 10 : +e.key; if (n <= slides.length) show(n - 1); }
+  else if (['ArrowRight', 'ArrowDown', 'PageDown', ' ', 'Enter'].includes(e.key)) { e.preventDefault(); show(at + 1); }
+  else if (['ArrowLeft', 'ArrowUp', 'PageUp', 'Backspace'].includes(e.key)) { e.preventDefault(); show(at - 1); }
+  else if (e.key === 'Home') show(0); else if (e.key === 'End') show(slides.length - 1);
+});
+addEventListener('click', e => show(e.clientX < innerWidth / 3 ? at - 1 : at + 1));
+addEventListener('resize', fit); fit(); show(at);
+</script></body></html>`;
 await writeFile(join(here, 'deck.html'), html);
 const browser = await chromium.launch({ executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH ?? (existsSync('/usr/bin/chromium') ? '/usr/bin/chromium' : undefined) });
 const page = await browser.newPage({ viewport: { width: 1280, height: 720 } });

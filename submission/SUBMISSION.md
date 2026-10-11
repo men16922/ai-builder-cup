@@ -7,8 +7,8 @@ What the competition asks for, and where this repository stands. Items marked **
 | Team of 2–4, registered (closes 11 Oct) | **owner** | Not something the repository can do. Students are disqualified. |
 | Deployed link (Cloud Run) | Done | Console and the five services run on Cloud Run. Judges can try a scripted, labeled rehearsal without signing in; the live crew needs an allow-listed account. |
 | Public GitHub repository | Done | Public as `ai-builder-cup` (first commit pushed 2026-10-11, 302 files, `npm run check:publishable` passed first). Run the check again before every push. |
-| Demo video under 3 minutes | **owner** to record | Script in `docs/DEMO_SCRIPT.md`. |
-| PDF deck, English | Draft ready | `docs/deck/deck.pdf`, rebuilt with `node --import tsx docs/deck/build.mjs`. |
+| Demo video under 3 minutes | **owner** to record | Script in `submission/DEMO_SCRIPT.md`. |
+| PDF deck, English | Draft ready | `submission/deck/deck.pdf`, rebuilt with `node --import tsx submission/deck/build.mjs`. |
 | All materials in English | Mostly | README, architecture, evaluation, deck, script are English. The product UI is Korean and English. |
 | Built inside the window (7 Sep – 18 Oct) | Needs the owner's confirmation | The prototype's Git history starts 2026-10-09. Older projects were not copied, only ideas. |
 

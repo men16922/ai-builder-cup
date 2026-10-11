@@ -1,11 +1,11 @@
 # Next plan
 
-Open work only. Live status: `docs/STATUS.md`. Submission checklist: `docs/SUBMISSION.md`.
+Open work only. Live status: `docs/STATUS.md`. Submission checklist: `submission/SUBMISSION.md`.
 
 **Owner (deadline 18 Oct 2026; team registration closed 11 Oct):**
 1. Confirm the team registration (2–4 members).
-2. Watch `.tools/video/aide-demo-final.mp4` once (avatar initial, closing card), upload it, and keep the link.
-3. Fill `<VIDEO_URL>`, `<DEPLOYED_URL>`, `<REPO_URL>`, `<CONTACT>` in `docs/DEVPOST.md` and `docs/MEDIUM.md`, then ask for the push; submit the Devpost entry with the deck PDF (`docs/deck/deck.pdf`).
+2. Watch `submission/aide-demo-final.mp4` once (avatar initial, closing card), upload it, and keep the link.
+3. Fill `<VIDEO_URL>`, `<DEPLOYED_URL>`, `<REPO_URL>`, `<CONTACT>` in `submission/DEVPOST.md` and `submission/MEDIUM.md`, then ask for the push; submit the Devpost entry with the deck PDF (`docs/deck/deck.pdf`).
 4. Decide judge access: add judge Google accounts to the allow list, or leave rehearsal mode only.
 
 **Engineering, optional:**

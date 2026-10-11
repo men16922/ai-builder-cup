@@ -21,3 +21,4 @@ apps/android/**/google-services.json
 apps/android/app/src/main/assets/mobileops-agent.json
 *.jks
 *.keystore
+submission/*.mp4
