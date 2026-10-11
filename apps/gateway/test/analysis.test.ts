@@ -94,7 +94,7 @@ test('GCP analysis/workflow responses reject fixed-rule provenance reserved for 
   const s = await fixture(t), session = await s.session(), analysis = await s.analyses.prepare(session, s.input, randomUUID());
   const view = await s.operations.get(session, analysis.id);
   assert.equal(gcpAnalysisSchema.safeParse(analysis).success, true); assert.equal(gcpWorkflowViewSchema.safeParse(view).success, true);
-  const rules = { ...analysis.plan.analysis, engine: 'fixed-rules', ruleVersion: 'aws-dynamodb-recovery-v1', modelId: undefined, promptVersion: undefined };
+  const rules = { ...analysis.plan.analysis, engine: 'fixed-rules', ruleVersion: 'cloudrun-readiness-v1', modelId: undefined, promptVersion: undefined };
   assert.equal(gcpAnalysisSchema.safeParse({ ...analysis, plan: { ...analysis.plan, analysis: rules } }).success, false);
   assert.equal(gcpWorkflowViewSchema.safeParse({ ...view, plan: { ...view.plan, payload: { ...view.plan.payload, analysis: rules } } }).success, false);
 });

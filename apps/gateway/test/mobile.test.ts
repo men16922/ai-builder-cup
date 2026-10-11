@@ -6,7 +6,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { once } from 'node:events';
 import { request as httpRequest } from 'node:http';
-import type { CloudBinding, CloudPlanPayload, CloudTarget } from '@contracts/core/operations';
+import type { CloudBinding } from '@contracts/core/operations';
 import { gcpInboxSchema } from '@contracts/gcp/mobile';
 import { SqliteCloudStore } from '../src/store/sqlite-store';
 import { CloudWorkflow, cloudRecordKey } from '../src/workflow/workflow';
@@ -155,7 +155,8 @@ test('mobile inbox paginates current pending plans, handles expiry and never exe
 test('non-GCP records cannot enter mobile inbox, detail, decisions, execution or handoff even through contaminated indexes', async t => {
   const s = await setup(t), p = await s.prepare(), counts = s.counts();
   const context = (await s.services().access.authenticate('Bearer user-a', s.scope)).context;
-  const cases: { target: CloudTarget; action: CloudPlanPayload['action'] }[] = [
+  // Raw records as a corrupted or older store might hold them. They are not valid contract values, which is the point.
+  const cases: { target: { provider: string } & Record<string, unknown>; action: Record<string, unknown> }[] = [
     { target: { provider: 'aws', accountId: '111111111111', partition: 'aws', scope: { kind: 'regional', region: 'us-east-1' }, service: 's3', resourceId: 'checkout', nativeId: 'synthetic-bucket' }, action: { id: 'aws.s3.versioning.inspect.v1', version: 1, effect: 'read', inputs: {}, completionCriteria: ['Synthetic read.'] } },
     { target: { provider: 'onprem', siteId: 'local', connectorId: 'synthetic', platform: 'docker', engineId: 'synthetic', containerId: 'a'.repeat(64), name: 'checkout', resourceId: 'checkout' }, action: { id: 'onprem.docker.inspect.v1', version: 1, effect: 'read', inputs: {}, completionCriteria: ['Synthetic read.'] } },
     { target: { provider: 'azure', tenantId: randomUUID(), subscriptionId: '11111111-1111-4111-8111-111111111111', resourceGroup: 'synthetic', resourceId: 'checkout', armResourceId: '/subscriptions/11111111-1111-4111-8111-111111111111/resourceGroups/synthetic/providers/Microsoft.Compute/virtualMachines/example' }, action: { id: 'azure.vm.inspect.v1', version: 1, effect: 'read', inputs: { windowMinutes: 15 }, completionCriteria: ['Reserved contract only.'] } },

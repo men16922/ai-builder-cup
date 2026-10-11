@@ -4,7 +4,7 @@ import { randomUUID } from 'node:crypto';
 import { mkdtempSync, readFileSync, rmSync, statSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { evidenceSchema, planPayloadSchema, type CloudTarget, type VerifiedCloudContext } from '@contracts/core/operations';
+import { actionSchema, evidenceSchema, planPayloadSchema, targetSchema, type CloudTarget, type VerifiedCloudContext } from '@contracts/core/operations';
 import type { CloudIntent } from '@contracts/core/workflow';
 import { cloudDigest } from '../src/store/integrity';
 import { SqliteCloudStore } from '../src/store/sqlite-store';
@@ -142,23 +142,11 @@ test('lost worker is reconciled through reopened storage, never reclaimed or pro
   await assert.rejects(restarted.getEvidence(s.context, 'late-evidence'), status(404));
 });
 
-test('mobile rejects stored AWS records including cached decisions, execution and handoff', async t => {
-  const s = await setup(t);
-  const target = { provider: 'aws', accountId: '123456789012', partition: 'aws', scope: { kind: 'regional', region: 'us-east-1' }, service: 'dynamodb', resourceId: 'table-demo', nativeId: 'table-demo' } as const;
-  const evidence = { ...s.evidence, id: 'aws-evidence', target };
-  const payload = planPayloadSchema.parse({ ...s.payload, planId: 'aws-plan', target, evidence: { ...s.payload.evidence, snapshotId: evidence.id, digest: cloudDigest(evidence) }, action: { id: 'aws.dynamodb.recovery.inspect.v1', version: 1, effect: 'read', inputs: {}, completionCriteria: ['Read the fixed recovery settings.'] } });
-  const workflow = new CloudWorkflow(s.store, [{ ...s.adapter, actionId: payload.action.id, currentTarget: async () => target }], s.now);
-  await workflow.saveEvidence(s.context, evidence); const plan = await workflow.registerPlan(s.context, payload);
-  const version = { expectedVersion: 1, expectedDigest: plan.digest }, mobile = { ...s.context, channel: 'mobile' } as const;
-  await workflow.requestReview(s.context, payload.planId, version, randomUUID()); const key = randomUUID();
-  const decision = { ...version, decision: 'approve', note: '' };
-  await workflow.decide(s.context, payload.planId, decision, key);
-  await assert.rejects(workflow.decide(mobile, payload.planId, decision, key), status(403));
-  const input = { ...version, planId: payload.planId }, executionKey = randomUUID();
-  const run = await workflow.requestExecution(s.context, input, executionKey);
-  await assert.rejects(workflow.requestExecution(mobile, input, executionKey), status(403));
-  await assert.rejects(workflow.getExecution(mobile, run.id), status(403));
-  await assert.rejects(workflow.handoff(mobile, run.id, { note: 'No mobile AWS.' }, randomUUID()), status(403));
+test('only Google Cloud targets and actions exist in the shared contract', () => {
+  const aws = { provider: 'aws', accountId: '123456789012', partition: 'aws', scope: { kind: 'regional', region: 'us-east-1' }, service: 'dynamodb', resourceId: 'table-demo', nativeId: 'table-demo' };
+  assert.equal(targetSchema.safeParse(aws).success, false);
+  assert.equal(actionSchema.safeParse({ id: 'aws.dynamodb.recovery.inspect.v1', version: 1, effect: 'read', inputs: {}, completionCriteria: ['Read the fixed recovery settings.'] }).success, false);
+  assert.equal(targetSchema.safeParse({ provider: 'gcp', projectId: 'example-project', location: 'asia-northeast3', resourceId: 'service', resourceName: 'projects/other-project/locations/asia-northeast3/services/service', resourceUid: 'uid', revision: 'rev' }).success, false, 'a name from another project is refused');
 });
 
 test('transaction rollback leaves no partial record and live plans cannot use synthetic adapters', async t => {

@@ -40,11 +40,11 @@ test('GCP outbox ignores a valid foreign-provider plan and rolls back unverifiab
   const wrapped = withGcpNotificationIntents(base);
   await assert.rejects(wrapped.transact(async tx => { const value = await tx.get<typeof plan>(key); value.review.status = 'pending'; value.payload.analysis.summary = 'Tampered'; tx.put(key, value); }), /integrity/);
   assert.equal((await base.transact(tx => tx.get<typeof plan>(key))).review.status, 'not_requested');
-  // Even when a foreign record passes the general plan schema, it is outside the GCP outbox.
-  plan.payload.target = { provider: 'aws', accountId: '111111111111', partition: 'aws', scope: { kind: 'regional', region: 'us-east-1' }, service: 'dynamodb', resourceId: 'synthetic-table', nativeId: 'synthetic-table' };
-  plan.payload.action = { ...plan.payload.action, id: 'aws.dynamodb.recovery.inspect.v1', inputs: {} };
+  // A foreign-provider record in the store (corrupted or from an older version) is outside the GCP outbox and is ignored, not parsed into one.
+  plan.payload.target = { provider: 'aws', accountId: '111111111111', partition: 'aws', scope: { kind: 'regional', region: 'us-east-1' }, service: 'dynamodb', resourceId: 'synthetic-table', nativeId: 'synthetic-table' } as never;
+  plan.payload.action = { ...plan.payload.action, id: 'aws.dynamodb.recovery.inspect.v1', inputs: {} } as never;
   plan.digest = cloudDigest(plan.payload);
-  gcpStoredPlanSchema.parse(plan);
+  assert.equal(gcpStoredPlanSchema.safeParse(plan).success, false);
   await wrapped.transact(async tx => { await tx.get(key); tx.put(key, plan); });
   await wrapped.transact(async tx => { const value = await tx.get<typeof plan>(key); value.review.status = 'pending'; tx.put(key, value); });
   assert.equal(await base.transact(tx => tx.get(notificationIndexKey(scope))), undefined);

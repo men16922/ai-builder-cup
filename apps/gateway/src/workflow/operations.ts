@@ -49,9 +49,11 @@ export class GcpOperations {
       for (let i = position + 1; i < index.length; i++) {
         const entry = index[i], rawPlan = await tx.get(cloudRecordKey(session.context, 'plan', entry.id));
         if (!rawPlan) continue;
+        // A contaminated recent index cannot expose another provider's records to mobile: they are skipped before parsing.
+        // A record that claims to be Google Cloud but is malformed is still an error, never silently hidden.
+        if ((rawPlan as { payload?: { target?: { provider?: unknown } } }).payload?.target?.provider !== 'gcp') continue;
         const plan = gcpStoredPlanSchema.parse(rawPlan), payload = plan.payload;
-        // A contaminated recent index cannot expose another provider's records to mobile.
-        if (payload.target.provider !== 'gcp' || !['gcp.cloudrun.metadata.inspect.v1', 'gcp.cloudrun.inspect.v1'].includes(payload.action.id)) continue;
+        if (!['gcp.cloudrun.metadata.inspect.v1', 'gcp.cloudrun.inspect.v1'].includes(payload.action.id)) continue;
         assertCloudAccess(session.context, payload);
         if (payload.planId !== entry.id || plan.digest !== cloudDigest(payload)) throw fail('integrity_mismatch');
         const binding = { owner: payload.owner, workspaceId: payload.workspaceId, environmentId: payload.environmentId, target: payload.target };
