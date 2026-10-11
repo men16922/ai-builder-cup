@@ -46,7 +46,7 @@ const chief = { async *stream(message) {
     yield status('input-required', [data({ id: ids.call, name: 'adk_request_confirmation', args: { toolConfirmation: { hint: 'h', confirmed: false, payload: { action, risk: 'medium', reason: 'shop-api-bad fails 55% of requests while shop-api-good was healthy.' } }, originalFunctionCall: { name: 'propose_rollback' } } }, 'function_call')], true);
   } else {
     const response = message.parts[0].data.response;
-    await sleep(700); yield status('working', [data({ id: 'c3', name: 'propose_rollback', response: { status: response.confirmed ? 'executed' : 'rejected_by_person' } }, 'function_response')]);
+    await sleep(700); yield status('working', [data({ id: 'c3', name: 'propose_rollback', response: { status: response.confirmed ? 'applied' : 'rejected_by_person' } }, 'function_response')]);
     yield { kind: 'artifact-update', taskId: ids.task, contextId: ids.context, artifact: { parts: [{ kind: 'text', text: '### What happened\nCheckout failed after revision `shop-api-bad`.\n\n### What I did\n- Rolled traffic back to `shop-api-good`\n- Re-read the traffic split\n\n### What needs you\n**Nothing now.** Metrics lag a few minutes.' }] } };
     yield status('completed', undefined, true);
   }
@@ -118,6 +118,8 @@ try {
   await expect(assistant.getByRole('heading', { name: 'What happened' })).toBeVisible();
   await expect(assistant.getByText('Done', { exact: true }).first()).toBeVisible();
   await expect(assistant.getByRole('region', { name: 'Approval request' })).toHaveCount(0);
+  await assistant.getByText(/steps · \d+s/).first().click();
+  await expect(assistant.getByText('Applied and confirmed')).toBeVisible();
   expect(streams).toBe(2);
   await page.screenshot({ path: join(directory, 'console-done.png'), fullPage: true });
   // Collapsing the navigation to a rail and closing/reopening the assistant keep the page usable.

@@ -1,5 +1,12 @@
 # Progress log
 
+## 2026-10-11 — Execution states, single-use approvals, held-out evals, live approval run
+- Status: implemented, deployed (crew `crew:20261011-171831`, gateway `cloudops-auto-00014`); all changes uncommitted since `489eceb`.
+- Changed: five execution states (`refused|pending|applied|failed|unknown`, HTTP 403/202/200/502/504, never resend on unknown); approvals single-use per instance, refused when the service changed after approval or the window exceeds 5 min; Chief instruction rewritten (rollback offered with unconfirmed earlier revision); web state chip and Android state lines; evaluation extended (held-out 6, live finding case); README verification table; docs aligned.
+- Verified: `make check-all` exit 0 (crew 54 tests, gateway, browser flows); Android core test, assemble, lint; live run in the signed-in browser: `/execute` 200, `status=applied`, traffic read back, chip shown; evals 18/18 core and held-out after fixes (held-out first run 13/18, live finding 2/3 then 3/3).
+- Blockers: not seen live: same-approval replay, `pending`/`unknown`; Android reinstall on emulator; physical device. Commit/push needs the owner's request.
+- Next: see `docs/NEXT_PLAN.md`.
+
 ## 2026-10-11 — Console redesign, repo restructure, live verification, demo video
 - Status: submission material done except owner actions; drafts for Devpost and Medium committed locally (not pushed).
 - Changed: crew access needs ownership of a registered service (`crew_not_entitled`); one console at `/` with Cloud Console style navigation and a right-hand Agent Chat; repo restructured into `apps/` and `packages/contracts` (Google Cloud only); history rewritten to drop committed caches and a local path; name Aide confirmed; female narration (ElevenLabs) and a two-pane demo video.

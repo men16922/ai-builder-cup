@@ -3,7 +3,7 @@ import pytest
 from mobileops_agents.gcp import cloud_run, telemetry
 from mobileops_agents.gcp.client import GoogleApiClient, GoogleApiError
 
-from conftest import SERVICE
+from conftest import SERVICE, service_state
 
 BASE = f"/v2/{SERVICE.resource}"
 
@@ -62,8 +62,9 @@ async def test_rollback_only_to_an_existing_revision_and_waits_for_the_operation
     recorder.add("GET", BASE + "/revisions", {"json": {"revisions": [{"name": f"{SERVICE.resource}/revisions/shop-api-00001"}]}})
     recorder.add("PATCH", BASE, {"json": {"name": "projects/p/locations/l/operations/op1", "done": False}})
     recorder.add("GET", "/v2/projects/p/locations/l/operations/op1", {"json": {"done": True, "response": {}}})
+    recorder.add("GET", BASE, service_state("shop-api-00001"))
     result = await cloud_run.rollback_traffic(client, SERVICE, "shop-api-00001", poll_seconds=0)
-    assert result == {"service": "shop-api", "revision": "shop-api-00001", "applied": True, "operation_done": True}
+    assert result == {"service": "shop-api", "revision": "shop-api-00001", "operation_done": True, "change_sent": True, "status": "applied"}
     patch = next(call for call in recorder.calls if call[0] == "PATCH")
     assert patch[2]["updateMask"] == "traffic" and patch[3]["traffic"][0]["percent"] == 100
     with pytest.raises(GoogleApiError) as missing:
@@ -82,3 +83,55 @@ async def test_client_refuses_non_google_hosts_and_hides_error_bodies(api):
         await client.request("GET", "https://run.googleapis.com/v2/x")
     assert denied.value.code == "access_denied" and "TOKEN" not in str(denied.value)
     assert isinstance(client, GoogleApiClient)
+
+
+async def _rollback(recorder, client, *, patch, poll=(), service=None):
+    recorder.add("GET", BASE + "/revisions", {"json": {"revisions": [{"name": f"{SERVICE.resource}/revisions/shop-api-00001"}]}})
+    recorder.add("PATCH", BASE, patch)
+    if poll:
+        recorder.add("GET", "/v2/projects/p/locations/l/operations/op1", *poll)
+    if service:
+        recorder.add("GET", BASE, service)
+    return await cloud_run.rollback_traffic(client, SERVICE, "shop-api-00001", poll_seconds=0, attempts=3)
+
+
+OP = {"json": {"name": "projects/p/locations/l/operations/op1", "done": False}}
+
+
+async def test_an_unfinished_operation_is_pending_never_failed(api):
+    recorder, client = api
+    result = await _rollback(recorder, client, patch=OP, poll=[{"json": {"done": False}}])
+    assert result["status"] == "pending" and result["change_sent"] is True and result["operation_done"] is False
+    assert len([c for c in recorder.calls if c[0] == "PATCH"]) == 1
+
+
+async def test_an_operation_that_ends_in_error_is_failed(api):
+    recorder, client = api
+    result = await _rollback(recorder, client, patch=OP, poll=[{"json": {"done": True, "error": {"code": 13, "message": "secret upstream text"}}}])
+    assert result["status"] == "failed" and "secret" not in str(result)
+
+
+async def test_a_rejected_change_request_is_failed_and_nothing_was_sent(api):
+    recorder, client = api
+    result = await _rollback(recorder, client, patch={"status": 403, "json": {}})
+    assert result["status"] == "failed" and result["change_sent"] is False
+
+
+@pytest.mark.parametrize("status", [500, 503])
+async def test_a_server_error_on_the_change_request_is_unknown_and_never_resent(api, status):
+    recorder, client = api
+    result = await _rollback(recorder, client, patch={"status": status, "json": {}})
+    assert result["status"] == "unknown" and result["change_sent"] is True
+    assert len([c for c in recorder.calls if c[0] == "PATCH"]) == 1
+
+
+async def test_losing_the_operation_read_after_dispatch_is_unknown(api):
+    recorder, client = api
+    result = await _rollback(recorder, client, patch=OP, poll=[{"status": 503, "json": {}}])
+    assert result["status"] == "unknown" and result["change_sent"] is True
+
+
+async def test_a_finished_operation_whose_traffic_does_not_match_is_unknown(api):
+    recorder, client = api
+    result = await _rollback(recorder, client, patch={"json": {"name": "x", "done": True}}, service=service_state("shop-api-00002"))
+    assert result["status"] == "unknown" and "does not show" in result["error"]

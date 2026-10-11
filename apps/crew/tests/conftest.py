@@ -31,6 +31,11 @@ class Recorder:
         return httpx.MockTransport(handle)
 
 
+def service_state(revision: str, update_time: str = "2020-01-01T00:00:00Z", percent: int = 100) -> dict:
+    """What GET service returns: when it was last updated and where its traffic goes."""
+    return {"json": {"updateTime": update_time, "trafficStatuses": [{"type": "TRAFFIC_TARGET_ALLOCATION_TYPE_REVISION", "revision": revision, "percent": percent}]}}
+
+
 @pytest.fixture
 def api():
     recorder = Recorder()

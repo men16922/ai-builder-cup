@@ -24,6 +24,18 @@ class AgentTest {
         assertFalse(wireJson.decodeFromString<AgentTask>(task("working")).decidable(0)); assertTrue(AgentState.COMPLETED.terminal); assertFalse(AgentState.DECIDING.terminal)
     }
 
+    @Test fun `a change result step is read as its execution state and nothing else is`() {
+        fun step(name: String, kind: String, summary: String) = AgentStep("2026-10-10T01:00:02.000Z", "chief", kind, name, summary)
+        assertEquals(ExecutionState.APPLIED, step("propose_rollback", "result", "applied").executionState)
+        assertEquals(ExecutionState.PENDING, step("propose_rollback", "result", "pending: Cloud Run accepted the change").executionState)
+        assertEquals(ExecutionState.UNKNOWN, step("propose_rollback", "result", "unknown").executionState)
+        assertEquals(ExecutionState.FAILED, step("propose_rollback", "result", "failed: operation error").executionState)
+        assertEquals(ExecutionState.REFUSED, step("propose_rollback", "result", "refused: expired").executionState)
+        assertNull(step("propose_rollback", "result", "pendingly done").executionState)
+        assertNull(step("propose_rollback", "call", "pending").executionState)
+        assertNull(step("ops", "result", "applied").executionState)
+    }
+
     private class Api(var current: String) : MobileAgentApi {
         val sent = mutableListOf<Triple<String, String, String>>(); val decisions = mutableListOf<Triple<String, Boolean, String>>(); var fail: MobileFailure? = null; var reads = 0
         private fun parse(json: String) = wireJson.decodeFromString<AgentTask>(json).also { it.validate() }

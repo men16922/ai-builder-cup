@@ -21,12 +21,24 @@ export function Report({ text }: { text: string }) {
   return <div className="ops-report">{blocks}</div>;
 }
 
+/** The state of an approved change, read from the Chief's result step (the gateway writes it as "state" or "state: reason"). */
+export type ExecutionState = 'refused' | 'pending' | 'applied' | 'failed' | 'unknown';
+const executionChip: Record<ExecutionState, Chip> = { applied: 'success', pending: 'pending', unknown: 'warning', failed: 'error', refused: 'info' };
+export function executionState(step: AgentStep): ExecutionState | undefined {
+  if (step.name !== 'propose_rollback' || step.kind !== 'result') return undefined;
+  const match = /^(refused|pending|applied|failed|unknown)(?::|$)/.exec(step.summary);
+  return match ? match[1] as ExecutionState : undefined;
+}
+export const executionLabels = (t: (ko: string, en: string) => string): Record<ExecutionState, string> => ({
+  applied: t('적용됨 · 확인됨', 'Applied and confirmed'), pending: t('진행 중 · 아직 끝나지 않음', 'In progress, not finished'), unknown: t('결과 미확인', 'Outcome unknown'),
+  failed: t('적용 실패', 'Not applied: failed'), refused: t('거절됨 · 변경 없음', 'Refused, nothing changed') });
+
 const agentIcon: Record<string, IconName> = { ops: 'search', diagnosis: 'info', guardian: 'warning', chief: 'sparkle' };
 export function Timeline({ steps, working, labels }: { steps: AgentStep[]; working: boolean; labels: Record<string, string> }) {
   return <ol className="ops-timeline" aria-label={labels.timeline}>
     {steps.map((step, index) => <li key={index} className={`ops-agent-${step.agent}`}>
       <span className="ops-agent-badge"><Icon name={agentIcon[step.agent] ?? 'info'} size={16} /></span>
-      <div><strong>{labels[step.agent] ?? step.agent}</strong><span className="ops-step-kind">{step.kind === 'call' ? labels.asked : labels.answered}</span><p>{step.summary || step.name}</p></div>
+      <div><strong>{labels[step.agent] ?? step.agent}</strong><span className="ops-step-kind">{step.kind === 'call' ? labels.asked : labels.answered}</span><p>{step.summary || step.name}</p>{(() => { const state = executionState(step); return state ? <StatusChip type={executionChip[state]}>{labels[`exec_${state}`]}</StatusChip> : null; })()}</div>
     </li>)}
     {working ? <li className="ops-agent-working"><Spinner label={labels.working} /><div><strong>{labels.working}</strong></div></li> : null}
   </ol>;
@@ -34,7 +46,7 @@ export function Timeline({ steps, working, labels }: { steps: AgentStep[]; worki
 
 
 export const agentLabels = (t: (ko: string, en: string) => string): Record<string, string> => ({ timeline: t('에이전트 진행 단계', 'Crew progress'), ops: 'Ops', diagnosis: 'Diagnosis', guardian: 'Guardian', chief: 'Chief',
-  asked: t('요청', 'asked'), answered: t('응답', 'answered'), working: t('팀이 일하는 중…', 'The crew is working…') });
+  ...Object.fromEntries(Object.entries(executionLabels(t)).map(([key, value]) => [`exec_${key}`, value])), asked: t('요청', 'asked'), answered: t('응답', 'answered'), working: t('팀이 일하는 중…', 'The crew is working…') });
 export const stateLabels = (t: (ko: string, en: string) => string): Record<AgentTaskState, string> => ({ working: t('일하는 중', 'Working'), awaiting_approval: t('내 결정 필요', 'Needs your decision'), deciding: t('결정을 전달하는 중', 'Applying your decision'),
   completed: t('완료', 'Done'), rejected: t('거절함', 'Rejected'), failed: t('실패', 'Failed'), unknown: t('결과 미확인', 'Outcome unknown') });
 export const agentErrors = (t: (ko: string, en: string) => string): Record<string, string> => ({ reviewer_required: t('승인은 검토자 역할이 필요합니다.', 'Approving needs the reviewer role.'), operator_required: t('지시에는 운영자 역할이 필요합니다.', 'Sending an instruction needs the operator role.'),

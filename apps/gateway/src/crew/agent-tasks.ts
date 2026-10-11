@@ -27,10 +27,14 @@ const sanitize = (value: unknown, limit: number) => String(value ?? '').replace(
 const iso = (ms: number) => new Date(ms).toISOString();
 export const APPROVAL_WINDOW_MS = 8 * 60_000, STALE_MS = 3 * 60_000, MAX_STEPS = 60;
 
+const EXECUTION_STATES = new Set(['refused', 'pending', 'applied', 'failed', 'unknown']);
+
 function summarize(value: unknown): string {
   if (typeof value === 'string') return sanitize(value, 200);
   if (value && typeof value === 'object') {
     const record = value as Record<string, unknown>;
+    // A change result reads as its state and reason, so "pending" and "unknown" are never lost among key=value pairs.
+    if (typeof record.status === 'string' && EXECUTION_STATES.has(record.status)) return sanitize(typeof record.error === 'string' && record.error ? `${record.status}: ${record.error}` : record.status, 200);
     if (typeof record.result === 'string') return sanitize(record.result, 200);
     if (typeof record.request === 'string') return sanitize(record.request, 200);
     return sanitize(Object.entries(record).map(([k, v]) => `${k}=${typeof v === 'object' ? '…' : String(v)}`).join(' '), 200);

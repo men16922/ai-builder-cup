@@ -1,6 +1,6 @@
 # Repository status
 
-Updated: 2026-10-10. The user resumed development after the migration ("complete remaining work"). Only work that needs no new approval was done; items needing a user decision remain open in `docs/NEXT_PLAN.md`.
+Updated: 2026-10-11. The user resumed development after the migration ("complete remaining work"). Only work that needs no new approval was done; items needing a user decision remain open in `docs/NEXT_PLAN.md`.
 
 The GCP web/API, neutral contracts, Android sources, synthetic fixtures and regression checks were extracted from CloudOps-Automation. AWS/On-Prem/Azure implementations, company SSO/workers and original runtime data remain there. This is a separate Git repository on `main`, published as the public repository `ai-builder-cup` (first commit 2026-10-11).
 
@@ -16,6 +16,10 @@ The GCP web/API, neutral contracts, Android sources, synthetic fixtures and regr
 - `apps/gateway/src/notifications/firebase-push.ts` adds the Firebase Admin current-identity authority (disabled user and revocation vs `auth_time`) and the data-only FCM transport for a fixed Android package. Definite unregistered tokens deactivate only their generation, and nothing is ever resent.
 - `apps/gateway/src/notifications/notification-worker.ts` is a bounded in-process worker. It has no HTTP trigger, and the hosted entry starts it only when `notifications.enabled` is configured. Composition fails if the configuration and ports do not match.
 - Still missing: the Android FCM SDK and token source (needs new SDK approval), real FCM/Firebase calls and IAM, Cloud Run background CPU, and device delivery. See `docs/archive/runbooks/notifications.md`.
+
+## Execution states and single-use approvals (2026-10-11, code only)
+
+`/execute` now returns one of refused (403), pending (202), applied (200), failed (502) or unknown (504); an unfinished change is never reported as refused. An approval is used once and is refused when the service changed after it was issued. 54 crew tests pass offline. Deployed to the agent services and the gateway on 2026-10-11 and exercised by one live approval (applied, read back, shown as a chip); replay, pending and unknown were not seen live. Evaluation: six tuned scenarios 18/18; six held-out cases 13/18 on the first run and 18/18 after an instruction fix (see `docs/EVALUATION.md`).
 
 ## Live deployment (2026-10-10, user-authorized)
 

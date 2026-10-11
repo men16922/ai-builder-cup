@@ -1,7 +1,8 @@
 """Signed human approvals. The gateway signs after a verified person approves one exact action; the ops agent verifies.
 
 The model never holds the key, so it cannot create, extend or reuse an approval. An approval covers one action digest,
-one actor and a short time window.
+one actor and a short time window. The signature is single-use at the execution boundary (see tools.py), and the
+change is refused when the service was modified after the approval was issued.
 """
 from __future__ import annotations
 
@@ -11,6 +12,10 @@ import hmac
 import json
 import time
 from dataclasses import dataclass
+
+
+APPROVAL_TTL_SECONDS = 300  # the gateway signs for exactly this long; a longer window is refused
+CLOCK_SKEW_SECONDS = 30
 
 
 class ApprovalError(Exception):
@@ -39,6 +44,11 @@ def _mac(key: bytes, digest: str, actor: str, expires_at: int) -> str:
     return base64.urlsafe_b64encode(hmac.new(key, message, hashlib.sha256).digest()).decode().rstrip("=")
 
 
+def issued_at(approval: Approval) -> float:
+    """When the approval was issued, as far as the signed expiry shows (it is never later than the real time)."""
+    return approval.expires_at - APPROVAL_TTL_SECONDS
+
+
 def sign_approval(key: bytes, action: dict, actor: str, ttl_seconds: int = 300, now: float | None = None) -> Approval:
     if not key:
         raise ApprovalError("approval signing is not configured")
@@ -60,6 +70,9 @@ def verify_approval(key: bytes, action: dict, approval: dict | None, now: float 
         raise ApprovalError("the approval signature is invalid")
     if digest != action_digest(action):
         raise ApprovalError("the approval was granted for a different action")
-    if expires_at <= (time.time() if now is None else now):
+    current = time.time() if now is None else now
+    if expires_at <= current:
         raise ApprovalError("the approval has expired")
+    if expires_at - current > APPROVAL_TTL_SECONDS + CLOCK_SKEW_SECONDS:
+        raise ApprovalError("the approval window is longer than allowed")
     return Approval(digest, actor, expires_at, signature)

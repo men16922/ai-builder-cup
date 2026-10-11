@@ -52,6 +52,9 @@ def build_agent(kind: str, settings: Settings, tools: OpsTools | None):
     raise RuntimeError(f"unknown AGENT '{kind}'")
 
 
+EXECUTE_HTTP = {"applied": 200, "pending": 202, "refused": 403, "failed": 502, "unknown": 504}
+
+
 def execute_route(tools: OpsTools) -> Route:
     """The Ops service's only way to change anything. Deterministic: no model, and it re-checks policy and the signed approval itself."""
     async def execute(request: Request) -> JSONResponse:
@@ -59,13 +62,14 @@ def execute_route(tools: OpsTools) -> Route:
             body = await request.json()
             action, service, revision = body["action"], str(body["service"]), str(body["revision"])
         except (ValueError, KeyError, TypeError):
-            return JSONResponse({"executed": False, "error": "malformed request"}, status_code=400)
+            return JSONResponse({"executed": False, "status": "refused", "change_sent": False, "error": "malformed request"}, status_code=400)
         if action != "rollback_traffic":
-            return JSONResponse({"executed": False, "error": "unsupported action"}, status_code=400)
+            return JSONResponse({"executed": False, "status": "refused", "change_sent": False, "error": "unsupported action"}, status_code=400)
         result = await tools.execute_approved_rollback(service, revision, body.get("approval") or {})
         # Audit line: who approved what, or why it was refused. Reasons are fixed strings, never upstream bodies.
-        log.info("execute %s %s -> executed=%s approved_by=%s reason=%s", service, revision, result.get("executed"), result.get("approved_by"), result.get("error"))
-        return JSONResponse(result, status_code=200 if result.get("executed") else 403)
+        log.info("execute %s %s -> status=%s approved_by=%s reason=%s", service, revision, result.get("status"), result.get("approved_by"), result.get("error"))
+        # 403 only for a refusal (nothing was sent). An accepted but unfinished change is 202, never a refusal.
+        return JSONResponse(result, status_code=EXECUTE_HTTP.get(result.get("status"), 502))
 
     return Route("/execute", execute, methods=["POST"])
 

@@ -36,10 +36,10 @@ Every agent is its own private Cloud Run service with its own least-privilege se
 ## Why a model cannot talk its way into a change
 
 - **Typed tools only.** Agents choose among a fixed set of functions. They never receive credentials and never generate code to run.
-- **Signed human approval.** The gateway signs an HMAC over the exact action after a verified reviewer approves. Only the Ops service holds the verification key. The Chief cannot create, extend or reuse an approval.
+- **Signed human approval.** The gateway signs an HMAC over the exact action after a verified reviewer approves. Only the Ops service holds the verification key. The Chief cannot create, extend or reuse an approval. Each approval is used once and is refused if the service changed after it was issued.
 - **Two independent checks.** The Chief checks policy before asking you, and the Ops service re-checks policy and the signature before it touches Cloud Run. The mutation right is scoped to one service, not the project.
 - **Honest about missing data.** Empty metrics are "unknown", never zero and never healthy. Log text is treated as untrusted data, so instructions hidden in logs are not followed.
-- **No automatic resend.** A lost connection or an unknown outcome is shown as unknown. A change is never retried by the system.
+- **No automatic resend.** A lost connection or an unknown outcome is shown as unknown. A change is never retried by the system. An accepted change that is still running is reported as pending, never as refused.
 
 ## Try it without signing in
 
@@ -80,9 +80,21 @@ npm run dev       # the console on http://127.0.0.1:5174 (rehearsal mode without
 
 How to build and deploy is in [docs/DEPLOY.md](docs/DEPLOY.md). Real identifiers, configuration and credentials never enter the repository; `npm run check:publishable` enforces that before anything is published.
 
+## What is verified
+
+| Area | State |
+| --- | --- |
+| Web console and crew on the deployed Cloud Run services: read, propose, signed approval, rollback, report | Run live on 2026-10-10 and 2026-10-11 (recorded in `docs/STATUS.md`) |
+| Execution states (refused, pending, applied, failed, unknown), single-use and fresh-state approvals | 54 crew tests against a fake Cloud Run; deployed on 2026-10-11 and exercised by one live approved rollback (applied and read back); replay, pending and unknown not seen live |
+| Android on an emulator against the deployed services | Run on 2026-10-11 |
+| Android on a physical device | Not verified |
+| Push notifications | Implemented, off in the deployment, no real FCM send verified |
+| The page you see when signed out | A labeled rehearsal: scripted crew, synthetic data, no model call |
+| Evaluation | 18/18 on six scenarios after instruction fixes tuned on the same scenarios (not held out). On six held-out cases the first run scored 13/18 (the crew did not flag tiny samples or disagreeing signals); after an instruction fix the same cases scored 18/18, which is no longer a held-out result. See `docs/EVALUATION.md` |
+
 ## Current limits
 
-- The Android crew screen (instruction, progress, approval, report) is covered by unit tests against the real wire format and was driven end to end on an emulator in the synthetic rehearsal mode. It has not yet run against the live server from a signed-in device.
+- The Android crew screen (instruction, progress, approval, report) is covered by unit tests against the real wire format, and on 2026-10-11 was driven on an emulator against the deployed services (Google sign-in, a task opened from the server, a signed approval applied, an honest report). It has not run on a physical device.
 - Push notifications are implemented on the server and in the app but are off in the deployed demo.
 - ADK's A2A support is marked experimental by Google.
 - Only one reversible action (traffic rollback) can be applied. Everything else the crew does is read-only.

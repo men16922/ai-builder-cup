@@ -51,7 +51,15 @@ import java.time.Instant
         if (task.state == AgentState.WORKING || task.state == AgentState.DECIDING) LinearProgressIndicator(Modifier.fillMaxWidth())
         if (task.steps.isNotEmpty()) Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
             Text(text(ko, "진행 단계 ${task.steps.size}개", "${task.steps.size} steps"), style = MaterialTheme.typography.labelLarge)
-            for (step in task.steps.takeLast(8)) Text("${if (step.kind == "call") "→" else if (step.kind == "result") "✓" else "•"} ${step.agent}: ${step.summary}", style = MaterialTheme.typography.bodySmall)
+            for (step in task.steps.takeLast(8)) {
+                val outcome = step.executionState
+                if (outcome == null) Text("${if (step.kind == "call") "→" else if (step.kind == "result") "✓" else "•"} ${step.agent}: ${step.summary}", style = MaterialTheme.typography.bodySmall)
+                else {
+                    val (symbol, words) = executionText(ko, outcome)
+                    Text("$symbol ${step.agent}: $words", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold,
+                        color = if (outcome == ExecutionState.APPLIED) MaterialTheme.colorScheme.primary else if (outcome == ExecutionState.FAILED) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.tertiary)
+                }
+            }
         }
         val approval = task.approval
         if (approval != null && task.state == AgentState.AWAITING_APPROVAL) {
@@ -102,6 +110,14 @@ import java.time.Instant
 private fun inline(value: String) = buildAnnotatedString {
     var bold = false
     for ((index, part) in value.replace("`", "").split("**").withIndex()) { if (index > 0) bold = !bold; withStyle(SpanStyle(fontWeight = if (bold) FontWeight.Bold else null)) { append(part) } }
+}
+
+private fun executionText(ko: Boolean, state: ExecutionState) = when (state) {
+    ExecutionState.APPLIED -> "✓" to text(ko, "적용되고 확인됨", "Applied and confirmed")
+    ExecutionState.PENDING -> "…" to text(ko, "진행 중 · 아직 끝나지 않음", "In progress, not finished")
+    ExecutionState.UNKNOWN -> "?" to text(ko, "결과 미확인 · 다시 보내지 않음", "Outcome unknown, not sent again")
+    ExecutionState.FAILED -> "✕" to text(ko, "적용 실패", "Not applied: failed")
+    ExecutionState.REFUSED -> "–" to text(ko, "거절됨 · 변경 없음", "Refused, nothing changed")
 }
 
 private fun agentStateText(ko: Boolean, state: AgentState) = when (state) {

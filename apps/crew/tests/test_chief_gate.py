@@ -15,7 +15,7 @@ from mobileops_agents.config import RegisteredService, Settings
 from mobileops_agents.executor import LocalExecutor
 from mobileops_agents.tools import OpsTools, canonical_action
 
-from conftest import SERVICE
+from conftest import SERVICE, service_state
 
 KEY = b"approval-key-for-tests-0123456789"
 SETTINGS = Settings(project="example-project", services=(RegisteredService("shop-api", "example-project", "asia-northeast3"),), approval_key=KEY)
@@ -68,6 +68,7 @@ def answer(call, confirmed, approval=None):
 def rollback_routes(recorder):
     recorder.add("GET", BASE + "/revisions", {"json": {"revisions": [{"name": f"{SERVICE.resource}/revisions/shop-api-00001"}]}})
     recorder.add("PATCH", BASE, {"json": {"name": "projects/p/locations/l/operations/o", "done": True, "response": {}}})
+    recorder.add("GET", BASE, service_state("shop-api-00001"))
 
 
 async def start(chief):
@@ -101,7 +102,7 @@ async def test_a_valid_signed_approval_applies_exactly_the_approved_rollback(api
     runner, session, pause = await start(chief)
     approval = sign_approval(KEY, pause.args["toolConfirmation"]["payload"]["action"], "user-1").to_dict()
     _, _, _, final = await drive(chief, answer(pause, True, approval), session, runner)
-    assert '"status": "executed"' in final and "user-1" in final
+    assert '"status": "applied"' in final and "user-1" in final
     assert len(patches(recorder)) == 1 and patches(recorder)[0][3]["traffic"][0]["revision"] == "shop-api-00001"
 
 
@@ -116,7 +117,7 @@ async def test_a_person_saying_yes_without_a_valid_approval_changes_nothing(api,
                 "other_action": sign_approval(KEY, {**action, "revision": "shop-api-00009"}, "user-1").to_dict(),
                 "expired": sign_approval(KEY, action, "user-1", ttl_seconds=30, now=time.time() - 300).to_dict()}[kind]
     _, _, _, final = await drive(chief, answer(pause, True, approval), session, runner)
-    assert '"status": "not_executed"' in final and patches(recorder) == []
+    assert '"status": "refused"' in final and '"change_sent": false' in final and patches(recorder) == []
 
 
 async def test_unregistered_services_are_refused_before_anyone_is_asked(api):

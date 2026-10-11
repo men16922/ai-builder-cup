@@ -59,7 +59,7 @@ test('an instruction is accepted at once, the crew streams progress into the rec
 });
 
 test('only a reviewer decides, an approval is signed over exactly the stored action, and the person never supplies it', async t => {
-  const s = await setup(t, (_message, index) => index === 0 ? first() : [call('propose_rollback', action), result('propose_rollback', { status: 'executed' }), ...finish('Rolled back shop-api to shop-api-good.')]);
+  const s = await setup(t, (_message, index) => index === 0 ? first() : [call('propose_rollback', action), result('propose_rollback', { status: 'applied' }), ...finish('Rolled back shop-api to shop-api-good.')]);
   const operator = await s.session('user-b'), reviewer = await s.session('user-a'), viewer = await s.session('user-c');
   await assert.rejects(s.tasks.create(viewer, { instruction: 'fix it' }, randomUUID()), /operator_required|not available/);
   const task = await s.tasks.create(operator, { instruction: 'fix it', language: 'en' }, randomUUID()); await s.tasks.idle();
@@ -133,6 +133,14 @@ test('applyEvent ignores events after an approval is pending and never trusts un
   assert.equal(applyEvent(base, { kind: 'status-update', status: { state: 'completed' } }, 1000).task.state, 'awaiting_approval');
   const working = { ...base, task: { ...base.task, state: 'working' as const } };
   assert.equal(applyEvent(working, { kind: 'surprise', status: 'nonsense', parts: 'nope' }, 1000).task.state, 'working');
+});
+
+test('a change result is shown as its execution state and reason', () => {
+  const working = { actorId: 'a', task: { id: randomUUID(), state: 'working' as const, instruction: 'x', language: 'en' as const, createdAt: new Date(0).toISOString(), updatedAt: new Date(0).toISOString(), steps: [] } };
+  const shown = (response: unknown) => applyEvent(working, result('propose_rollback', response), 1000).task.steps.at(-1)?.summary;
+  assert.equal(shown({ status: 'pending', error: 'Cloud Run accepted the change and has not finished it yet.' }), 'pending: Cloud Run accepted the change and has not finished it yet.');
+  assert.equal(shown({ status: 'unknown', executed: false }), 'unknown');
+  assert.equal(shown({ status: 'applied', executed: true, approved_by: 'u1' }), 'applied');
 });
 
 test('the TypeScript signer matches the Python verifier byte for byte', () => {

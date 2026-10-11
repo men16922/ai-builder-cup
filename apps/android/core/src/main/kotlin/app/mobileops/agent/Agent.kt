@@ -22,6 +22,12 @@ import kotlinx.serialization.json.put
 @Serializable data class AgentStep(val at: String, val agent: String, val kind: String, val name: String, val summary: String) {
     fun validate() { time(at); require(agent.length in 1..40 && kind in setOf("call", "result", "note") && name.length in 1..60 && summary.length <= 240) }
 }
+/** The state of an approved change, as the gateway writes it into the Chief's result step ("state" or "state: reason"). */
+enum class ExecutionState { APPLIED, PENDING, UNKNOWN, FAILED, REFUSED }
+private val EXECUTION = Regex("^(refused|pending|applied|failed|unknown)(?::|$)")
+val AgentStep.executionState: ExecutionState? get() = if (name == "propose_rollback" && kind == "result")
+    EXECUTION.find(summary)?.groupValues?.get(1)?.let { ExecutionState.valueOf(it.uppercase()) } else null
+
 @Serializable data class AgentAction(val action: String, val service: String, val revision: String) {
     fun validate() { require(action == "rollback_traffic" && SLUG.matches(service) && SLUG.matches(revision)) }
     private companion object { val SLUG = Regex("^[a-z][a-z0-9-]{0,62}$") }
