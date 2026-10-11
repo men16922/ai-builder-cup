@@ -1,9 +1,9 @@
 import { readFileSync } from 'node:fs';
 import { randomUUID } from 'node:crypto';
 import { z } from 'zod';
-import { OrganizationWebAccess, membershipKey, membershipSchema } from '../server/cloud-auth';
-import { readGcpConfiguration } from '../server/platform/firebase/load-gcp';
-import { createFirestoreCloudStore } from '../server/platform/firebase/cloud-firestore-store';
+import { OrganizationWebAccess, membershipKey, membershipSchema } from '../apps/gateway/src/auth/organization-access';
+import { readGcpConfiguration } from '../apps/gateway/src/config/load';
+import { createFirestoreCloudStore } from '../apps/gateway/src/store/firestore-store';
 
 /** Trusted operator bootstrap for one organization membership. Not an HTTP route.
  * The operator's short-lived access token is read from stdin only; it is never an argument, env value or log line. */

@@ -3,7 +3,8 @@ import { realpathSync } from 'node:fs';
 import { relative, resolve, isAbsolute, delimiter, dirname } from 'node:path';
 
 const root = realpathSync(process.cwd());
-const forbidden = /(?:^|\/)(?:modules\/(?:aws|onprem|azure|registry)|apps\/(?:demo|personal|organization)|src\/(?:App|main|company-main|store)\.|src\/data\/|server\/(?:http|index|service|cloud-http|cloud-index)\.|platform\/firebase\/(?:organization|load-organization)\.|(?:@aws-sdk|@smithy)(?:\/|$)|\.data(?:\/|$)|\.env(?:\.|$))/;
+// Only GCP sources belong here: no other provider's code or SDK, no local data, no environment files.
+const forbidden = /(?:^|\/)(?:aws|azure|onprem)(?:\/|[.-])|(?:@aws-sdk|@smithy)(?:\/|$)|\.data(?:\/|$)|\.env(?:\.|$)/;
 const env = { ...process.env, PATH: [dirname(process.execPath), ...(process.env.PATH ?? '').split(delimiter).filter(path => !path.includes('node_modules'))].join(delimiter) };
 delete env.NODE_PATH; delete env.NODE_OPTIONS;
 const result = spawnSync(process.execPath, ['node_modules/typescript/bin/tsc', '-p', 'tsconfig.json', '--listFilesOnly'], { env, encoding: 'utf8', maxBuffer: 32 * 1024 * 1024 });

@@ -1,5 +1,5 @@
 // Renders the submission deck to docs/deck/deck.pdf. Run: node --import tsx docs/deck/build.mjs
-// The product name comes from src/brand.ts and every number from the recorded evaluation results.
+// The product name comes from apps/web/src/brand.ts and every number from the recorded evaluation results.
 import { chromium } from '@playwright/test';
 import { readFile, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
@@ -7,17 +7,17 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { dirname, join } from 'node:path';
 
 const here = dirname(fileURLToPath(import.meta.url)), root = join(here, '..', '..');
-const brand = (await readFile(join(root, 'src/brand.ts'), 'utf8')).match(/productName = '([^']+)'/)[1];
-const tokens = await readFile(join(root, 'src/theme.generated.css'), 'utf8');
-const results = JSON.parse(await readFile(join(root, 'agents/evals/results/latest.json'), 'utf8'));
-const baselinePath = join(root, 'agents/evals/results/baseline-run1.json');
+const brand = (await readFile(join(root, 'apps/web/src/brand.ts'), 'utf8')).match(/productName = '([^']+)'/)[1];
+const tokens = await readFile(join(root, 'apps/web/src/theme.generated.css'), 'utf8');
+const results = JSON.parse(await readFile(join(root, 'apps/crew/evals/results/latest.json'), 'utf8'));
+const baselinePath = join(root, 'apps/crew/evals/results/baseline-run1.json');
 const baseline = existsSync(baselinePath) ? JSON.parse(await readFile(baselinePath, 'utf8')) : undefined;
 const sum = report => { const runs = report.scenarios.flatMap(s => s.runs); return { passed: runs.filter(r => r.passed).length, total: runs.length }; };
 const now = sum(results), first = baseline && sum(baseline);
 // The "fixed and measured again" sentence appears only when the latest results really differ from the recorded first run.
 const remeasured = !!baseline && JSON.stringify(baseline.scenarios.map(s => s.runs.map(r => r.final))) !== JSON.stringify(results.scenarios.map(s => s.runs.map(r => r.final)));
 const median = id => results.scenarios.find(s => s.id === id)?.median_seconds;
-const img = name => pathToFileURL(join(here, 'img', name)).href;
+const img = name => `img/${name}`; // relative, so the published deck.html never carries a local path
 const rows = results.scenarios.map(s => `<tr><td><code>${s.id}</code></td><td>${s.runs.filter(r => r.passed).length}/${s.runs.length}</td><td>${s.median_seconds} s</td></tr>`).join('');
 const slides = [
 `<section class="title"><p class="eyebrow">AI Builder Cup 2026 · Future of Work &amp; Enterprise Productivity</p><h1>${brand}</h1><p class="lead">Be the boss. Hand the work to an agent crew from your phone and make only the big decisions.</p></section>`,

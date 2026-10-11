@@ -19,7 +19,7 @@ Best theme fit: **Future of Work & Enterprise Productivity** ("measurable gains 
 
 ## Provenance policy
 
-- This repository was extracted from a local prototype whose Git history starts on 2026-10-09, inside the building window. `source-manifest.json` records the extraction and is not changed.
+- This repository was extracted from a local prototype whose Git history starts on 2026-10-09, inside the building window. `docs/provenance/source-manifest.json` records the extraction and is not changed.
 - Older projects of the owner predate the window. New agent code is written here from the public ADK, A2A and Google Cloud documentation. Only design ideas, not copied code, come from the older projects, unless the owner decides otherwise after reading the eligibility rule above.
 - Third-party libraries keep their licenses and are attributed in the repository.
 

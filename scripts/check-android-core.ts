@@ -4,25 +4,25 @@ import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { once } from 'node:events';
 import { randomUUID } from 'node:crypto';
-import { SqliteCloudStore } from '../server/cloud-sqlite-store';
-import { CloudWorkflow } from '../server/cloud-workflow';
-import { createGcpApiServer } from '../server/modules/gcp/api';
-import { GcpWebAccess } from '../server/modules/gcp/web-access';
-import { GcpObservations, type GcpRegistration } from '../server/modules/gcp/observations';
-import { GcpAnalyses } from '../server/modules/gcp/analyses';
-import { GcpOperations } from '../server/modules/gcp/operations';
-import { createCloudRunAdapters } from '../server/modules/gcp/inspection-adapter';
-import { cloudRunSnapshotSchema } from '../src/modules/gcp/domain/cloud-run';
-import type { GcpApiServices } from '../server/modules/gcp/api';
-import { firebaseIdentityVerifier } from '../server/platform/firebase/cloud-firebase-auth';
-import { identityActor } from '../server/cloud-auth';
-import { GcpNotifications } from '../server/modules/gcp/notifications';
-import type { GcpNotification } from '../src/modules/gcp/domain/notifications';
+import { SqliteCloudStore } from '../apps/gateway/src/store/sqlite-store';
+import { CloudWorkflow } from '../apps/gateway/src/workflow/workflow';
+import { createGcpApiServer } from '../apps/gateway/src/http/api';
+import { GcpWebAccess } from '../apps/gateway/src/auth/web-access';
+import { GcpObservations, type GcpRegistration } from '../apps/gateway/src/workflow/observations';
+import { GcpAnalyses } from '../apps/gateway/src/workflow/analyses';
+import { GcpOperations } from '../apps/gateway/src/workflow/operations';
+import { createCloudRunAdapters } from '../apps/gateway/src/cloud-run/inspection-adapter';
+import { cloudRunSnapshotSchema } from '@contracts/gcp/cloud-run';
+import type { GcpApiServices } from '../apps/gateway/src/http/api';
+import { firebaseIdentityVerifier } from '../apps/gateway/src/auth/firebase-identity';
+import { identityActor } from '../apps/gateway/src/auth/organization-access';
+import { GcpNotifications } from '../apps/gateway/src/notifications/notifications';
+import type { GcpNotification } from '@contracts/gcp/notifications';
 
 if (process.env.MOBILEOPS_OFFLINE_TEST !== '1') throw Error('Synthetic-only gate requires MOBILEOPS_OFFLINE_TEST=1.');
 const directory = mkdtempSync(join(tmpdir(), 'mobileops-android-')), store = new SqliteCloudStore(join(directory, 'test.sqlite'));
 const at = Date.parse('2026-10-10T01:00:00.000Z'), now = () => at;
-const bundle = JSON.parse(readFileSync(new URL('../mobile/android/core/src/main/resources/synthetic-organization.json', import.meta.url), 'utf8'))[0];
+const bundle = JSON.parse(readFileSync(new URL('../apps/android/core/src/main/resources/synthetic-organization.json', import.meta.url), 'utf8'))[0];
 const snapshot = cloudRunSnapshotSchema.parse(bundle.original.snapshot); let collections = 0;
 const registration: GcpRegistration = { id: 'synthetic-mobile-service', label: 'Synthetic Android service', binding: snapshot.binding, dataMode: 'synthetic', telemetryEnabled: true,
   collector: { async collect() { collections++; return { ...structuredClone(snapshot), id: randomUUID() }; } } };
@@ -63,7 +63,7 @@ try {
   await services.operations!.review(native, nativePlan.id, { expectedVersion: nativePlan.plan.version, expectedDigest: nativePlan.planDigest }, randomUUID());
   server.listen(0, '127.0.0.1'); await once(server, 'listening'); const address = server.address(); if (!address || typeof address === 'string') throw Error();
   services.publicOrigin = `http://127.0.0.1:${address.port}`;
-  const child = spawn(resolve('mobile/android/gradlew'), ['-p', 'mobile/android', '-PcoreOnly=true', ':core:test', '--rerun-tasks', ...(process.env.MOBILEOPS_ANDROID_GRADLE_OFFLINE === '1' ? ['--offline'] : [])], {
+  const child = spawn(resolve('apps/android/gradlew'), ['-p', 'apps/android', '-PcoreOnly=true', ':core:test', '--rerun-tasks', ...(process.env.MOBILEOPS_ANDROID_GRADLE_OFFLINE === '1' ? ['--offline'] : [])], {
     stdio: 'inherit', env: { ...process.env, GRADLE_USER_HOME: process.env.GRADLE_USER_HOME ?? resolve('.tools/gradle-home'),
       MOBILEOPS_MOBILE_TEST_ORIGIN: services.publicOrigin, MOBILEOPS_MOBILE_NOTIFICATION_JSON: JSON.stringify(notification) },
   });

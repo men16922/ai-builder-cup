@@ -2,16 +2,19 @@
 
 ## Components
 
-| Component | Runtime | Responsibility | Identity |
-| --- | --- | --- | --- |
-| Console (web) | Browser, `@material/web` | Dashboard, assistant panel, approval card | Firebase Google sign-in |
-| Android app | Kotlin, Compose Material 3 | Same review flows on a phone | Firebase Google sign-in |
-| Gateway | Cloud Run, TypeScript | Verifies the person, owns tasks and approvals, signs approvals, streams from the Chief | `gateway` service account |
-| Chief agent | Cloud Run, ADK | Plans, delegates over A2A, asks for decisions | `agent-chief` |
-| Ops agent | Cloud Run, ADK + one deterministic endpoint | Reads Cloud Run, Monitoring, Logging; applies an approved rollback | `agent-ops` |
-| Diagnosis agent | Cloud Run, ADK | Evidence to hypotheses and unknowns | `agent-diagnosis` |
-| Guardian agent | Cloud Run, ADK | Explains policy verdicts | `agent-guardian` |
-| Store | Firestore | Tasks, approvals, memberships, audit | Gateway only |
+| Component | Code | Runtime | Responsibility | Identity |
+| --- | --- | --- | --- | --- |
+| Console (web) | `apps/web` | Browser, `@material/web` | Dashboard, left navigation, right-hand assistant, approval card | Firebase Google sign-in |
+| Android app | `apps/android` | Kotlin, Compose Material 3 | Same review flows on a phone | Firebase Google sign-in |
+| Gateway | `apps/gateway` | Cloud Run, TypeScript | Verifies the person, owns tasks and approvals, signs approvals, streams from the Chief | `gateway` service account |
+| Chief agent | `apps/crew` | Cloud Run, ADK | Plans, delegates over A2A, asks for decisions | `agent-chief` |
+| Ops agent | `apps/crew` | Cloud Run, ADK + one deterministic endpoint | Reads Cloud Run, Monitoring, Logging; applies an approved rollback | `agent-ops` |
+| Diagnosis agent | `apps/crew` | Cloud Run, ADK | Evidence to hypotheses and unknowns | `agent-diagnosis` |
+| Guardian agent | `apps/crew` | Cloud Run, ADK | Explains policy verdicts | `agent-guardian` |
+| Store | `apps/gateway/src/store` | Firestore | Tasks, approvals, memberships, audit | Gateway only |
+| Contracts | `packages/contracts` | Build time | Schemas and types shared by the web, the gateway and the Android fixtures | none |
+
+The four agents are one Python image started with a different `AGENT` setting. The web console and the gateway ship together as one Cloud Run service.
 
 All four agent services are private. Callers present a Google-signed identity token for the callee, and only the intended caller has `run.invoker`.
 
@@ -41,7 +44,7 @@ sequenceDiagram
 
 ## Trust boundaries
 
-1. **Person to gateway.** The identity, owner, workspace and roles come from the verified Firebase token and the stored membership. Nothing the client sends selects them.
+1. **Person to gateway.** The identity, owner, workspace and roles come from the verified Firebase token and the stored membership. Nothing the client sends selects them. Starting a crew task, deciding one and reading the overview additionally require that the person owns a registered service (`crew_not_entitled` otherwise), so a bare Google sign-in reaches nothing.
 2. **Gateway to Chief.** Authenticated service-to-service. The gateway never sends credentials, only the person's instruction and, later, a signed approval.
 3. **Chief to Ops.** Authenticated. The Chief has no Google API permission of its own beyond calling Gemini and its peers.
 4. **Ops to Google.** The Ops service account may read the project's Cloud Run, Monitoring and Logging data and may update **one named Cloud Run service**, acting only as that service's own runtime account.
@@ -64,10 +67,10 @@ Each agent service exports OpenTelemetry traces to Cloud Trace (`OPS_TRACE_TO_CL
 
 ## How the safety claims are checked
 
-- `agents/tests/test_execute_endpoint.py` attacks the Ops `/execute` endpoint over HTTP: malformed bodies, other actions (delete, IAM), no approval, a wrong signing key, a tampered actor or expiry, an expired approval, an approval for another revision or service, and an unregistered service. In every case Cloud Run receives no change request.
-- `agents/tests/test_chief_gate.py` drives the Chief with a scripted model: a change pauses for a person, a rejection never reaches Cloud Run, and "the person said yes" without a valid signature changes nothing.
+- `apps/crew/tests/test_execute_endpoint.py` attacks the Ops `/execute` endpoint over HTTP: malformed bodies, other actions (delete, IAM), no approval, a wrong signing key, a tampered actor or expiry, an expired approval, an approval for another revision or service, and an unregistered service. In every case Cloud Run receives no change request.
+- `apps/crew/tests/test_chief_gate.py` drives the Chief with a scripted model: a change pauses for a person, a rejection never reaches Cloud Run, and "the person said yes" without a valid signature changes nothing.
 - On the deployed Ops service, a call with no credentials and a call with the gateway's identity (which holds no invoker role there) are both refused by Cloud Run before any code runs. Only the Chief's service account may invoke Ops.
-- `agents/evals` runs the real crew on six scenarios; see [EVALUATION.md](EVALUATION.md).
+- `apps/crew/evals` runs the real crew on six scenarios; see [EVALUATION.md](EVALUATION.md).
 
 Known limit: an approval is bound to one action, one approver and a five-minute window, not to a single use. Presenting it twice inside the window can only repeat the same rollback to the same revision.
 

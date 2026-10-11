@@ -15,7 +15,7 @@ What the competition asks for, and where this repository stands. Items marked **
 ## Open decisions for the owner
 
 1. **Product name.** Working title is Aide. A simpler, one-word name was requested. `node scripts/apply-brand.mjs "<Name>"` changes every place a person reads the name (use `--dry-run` first), then rebuild the deck and run `make check`. Deployed resource names and the Android package id stay as they are.
-2. **How judges reach the demo.** The live console requires Google sign-in with an allow-listed account. Without any sign-in, the deployed page offers **Try the agent crew (no sign-in)**: the same console driven by a scripted crew with synthetic data, clearly labeled, with no API or model calls. It shows the interaction (instruction, steps, approval, report, dashboard change) but not live agents. Decide whether to also add judges' accounts to the allow list so they can see the real crew; that needs account names from the organizers.
+2. **How judges reach the demo.** The live console requires Google sign-in with an allow-listed account. Without any sign-in, the deployed console opens in a labeled **rehearsal mode**: the same frame driven by a scripted crew with synthetic data, clearly labeled, with no API or model calls. It shows the interaction (instruction, steps, approval, report, dashboard change) but not live agents. Decide whether to also add judges' accounts to the allow list so they can see the real crew; that needs account names from the organizers.
 3. **Repository name.** Created as `ai-builder-cup`, public. It is deliberately not tied to the product name, so a rename does not need a new repository.
 4. **Push notifications.** Off in the deployment. Enabling needs the FCM configuration and a signed-in device.
 

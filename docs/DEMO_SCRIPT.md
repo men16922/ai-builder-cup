@@ -1,6 +1,6 @@
 # Demo video script (target 2:30, hard limit 3:00)
 
-Record on a phone-width browser window or the Android emulator plus the web console. English narration. Use the demo target `shop-api`, reset with `demo/reset.sh` so the bad revision is serving before the take. Use only synthetic traffic.
+Record on a phone-width browser window or the Android emulator plus the web console. English narration. Use the demo target `shop-api`, reset with `apps/shop-api/reset.sh` so the bad revision is serving before the take. Use only synthetic traffic.
 
 | Time | On screen | Narration |
 | --- | --- | --- |
@@ -21,7 +21,7 @@ Record on a phone-width browser window or the Android emulator plus the web cons
 
 0. Record the real crew from the signed-in console. The signed-out rehearsal is only a fallback and must not be presented as the live crew.
 
-1. `demo/reset.sh` so `shop-api-bad` serves traffic; `demo/traffic.sh` for a minute so metrics exist.
+1. `apps/shop-api/reset.sh` so `shop-api-bad` serves traffic; `apps/shop-api/traffic.sh` for a minute so metrics exist.
 2. Sign in with the demo account in the intended browser profile. Clear old tasks so the panel starts empty.
 3. Keep the approval window (8 minutes) in mind: approve within one take.
 4. Do not show project IDs, account emails or URLs with the project number. Crop or blur the address bar.

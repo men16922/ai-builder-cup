@@ -1,20 +1,20 @@
 // Explicit synthetic Android rehearsal assets. Never contacts a provider or modifies runtime data.
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { gcpPreview } from '../src/modules/gcp/preview';
-import { demoTelemetry } from '../src/modules/gcp/demo';
-import { cloudRunSnapshotSchema } from '../src/modules/gcp/domain/cloud-run';
-import { summarizeTelemetry } from '../src/modules/gcp/domain/telemetry-summary';
-import { gcpObservationSchema } from '../src/modules/gcp/domain/observations';
-import { gcpWorkflowViewSchema } from '../src/modules/gcp/domain/workflow';
-import { cloudRunEvidence } from '../server/modules/gcp/cloud-run-collector';
-import { cloudRunInspectionEvidence } from '../server/modules/gcp/inspection-adapter';
-import { cloudDigest } from '../server/cloud-integrity';
-import { identityActor } from '../server/cloud-auth';
+import { gcpPreview } from '../tests/support/sample-observation';
+import { demoTelemetry } from '../tests/support/demo-telemetry';
+import { cloudRunSnapshotSchema } from '@contracts/gcp/cloud-run';
+import { summarizeTelemetry } from '@contracts/gcp/telemetry-summary';
+import { gcpObservationSchema } from '@contracts/gcp/observations';
+import { gcpWorkflowViewSchema } from '@contracts/gcp/workflow';
+import { cloudRunEvidence } from '../apps/gateway/src/cloud-run/collector';
+import { cloudRunInspectionEvidence } from '../apps/gateway/src/cloud-run/inspection-adapter';
+import { cloudDigest } from '../apps/gateway/src/store/integrity';
+import { identityActor } from '../apps/gateway/src/auth/organization-access';
 const uuid = (n: number) => `00000000-0000-4000-8000-${String(n).padStart(12, '0')}`;
 const args = process.argv.slice(2), check = args.length === 1 && args[0] === '--check';
 if (args.length && !check) throw Error('Use no arguments to generate, or --check to verify fixtures without writing.');
-const output = new URL('../mobile/android/core/src/main/resources/', import.meta.url);
-const testOutput = new URL('../mobile/android/core/src/test/resources/', import.meta.url);
+const output = new URL('../apps/android/core/src/main/resources/', import.meta.url);
+const testOutput = new URL('../apps/android/core/src/test/resources/', import.meta.url);
 if (!check) { mkdirSync(output, { recursive: true }); mkdirSync(testOutput, { recursive: true }); }
 const writeAsset = (file: URL, content: string) => {
   if (check) { if (readFileSync(file, 'utf8') !== content) throw Error(`Android fixture differs from the current server/web contract: ${file.pathname.split('/').at(-1)}`); }

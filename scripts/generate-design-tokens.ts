@@ -75,7 +75,7 @@ val OpsDarkSemantic = OpsSemanticColors(${semanticKeys.map(key => kotlinColor(da
 fun opsSemantic(dark: Boolean) = if (dark) OpsDarkSemantic else OpsLightSemantic
 fun opsColorScheme(dark: Boolean): ColorScheme = if (dark) OpsDarkColors else OpsLightColors
 `;
-const outputs: [URL, string][] = [[new URL('../src/theme.generated.css', import.meta.url), css], [new URL('../mobile/android/app/src/main/java/app/mobileops/agent/app/Theme.kt', import.meta.url), kotlin]];
+const outputs: [URL, string][] = [[new URL('../apps/web/src/theme.generated.css', import.meta.url), css], [new URL('../apps/android/app/src/main/java/app/mobileops/agent/app/Theme.kt', import.meta.url), kotlin]];
 for (const [file, content] of outputs) {
   if (check) { let current = ''; try { current = readFileSync(file, 'utf8'); } catch { /* A missing file is a difference. */ } if (current !== content) throw Error(`Generated design tokens differ from design/tokens.json: ${file.pathname.split('/').at(-1)}`); }
   else writeFileSync(file, content);

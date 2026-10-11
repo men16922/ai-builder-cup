@@ -43,7 +43,7 @@ Every agent is its own private Cloud Run service with its own least-privilege se
 
 ## Try it without signing in
 
-The deployed console's front page has **Try the agent crew (no sign-in)**. It runs the same console against a scripted crew and synthetic data, entirely in the browser, and says so on screen. It shows the flow (instruction, streamed steps, approval card, report, dashboard change). It does not call any agent or model; the real crew needs a signed-in, allow-listed account.
+Open the deployed console. It is the real console frame (navigation on the left, the Gemini-style assistant on the right) running in a labeled **rehearsal mode** until someone signs in: a scripted crew and synthetic data, entirely in the browser, with the mode stated on screen. It shows the flow (instruction, streamed steps, approval card, report, dashboard change). It does not call any agent or model. The real crew needs a signed-in account that owns the registered service; any other Google account is refused by the server.
 
 ## Evaluation
 
@@ -51,26 +51,34 @@ Six scenarios (bad release, healthy service, no data, prompt injection in logs, 
 
 ## Repository map
 
-| Path | Contents |
+Each app has its own README. Everything TypeScript shares one `package.json` at the root; the Python crew and the Android app have their own toolchains.
+
+| Path | What it is |
 | --- | --- |
-| `agents/` | Python crew: ADK agents, typed tools, policy, signed approvals, A2A serving, evaluation harness, tests |
-| `server/` | TypeScript gateway and web API: identity, workflow, agent tasks, overview, notifications |
-| `src/` | Web console (React, `@material/web`), shared domain schemas, i18n (Korean and English) |
-| `mobile/android/` | Android client (Kotlin, Compose Material 3) |
-| `design/tokens.json` | One Material 3 token source for web CSS and the Android color scheme |
-| `demo/` | `shop-api`, a small storefront with a healthy and a faulty revision, plus traffic scripts |
-| `docs/` | Architecture, evaluation, status and plans |
+| [`apps/web`](apps/web) | The console: React and Material Web, Google Cloud Console style, Korean and English |
+| [`apps/gateway`](apps/gateway) | TypeScript API on Cloud Run: sign-in, ownership checks, task store, bridge to the crew, notifications |
+| [`apps/crew`](apps/crew) | The agents (Python, ADK, A2A): Chief, Ops, Diagnosis, Guardian, plus the evaluation harness |
+| [`apps/android`](apps/android) | Android client (Kotlin, Compose Material 3) |
+| [`apps/shop-api`](apps/shop-api) | A small storefront with a healthy and a faulty revision. It is the service the crew operates on in the demo |
+| [`packages/contracts`](packages/contracts) | Zod schemas and types shared by the web, the gateway and the Android fixtures |
+| [`design`](design) | One Material 3 token file that generates the web CSS and the Android colors |
+| [`deploy`](deploy) | The gateway Dockerfile and example configuration files |
+| [`docs`](docs) | Architecture, evaluation, deployment, submission material and the deck |
+| [`scripts`](scripts) | Build and generator tooling and the publish gate |
+| [`tests`](tests) | Browser flows (`tests/browser`) and the synthetic data they share (`tests/support`) |
 
 ## Run it
 
 Prerequisites: Node.js 24+, Python 3.11+, a Google Cloud project with Vertex AI, Cloud Run, Firestore and Firebase Authentication enabled. Nothing here uses a stored key; local runs use your own Application Default Credentials.
 
 ```sh
-npm ci && npm run build && make check          # web, gateway and browser tests (synthetic data, offline)
-cd agents && python -m venv .venv && .venv/bin/pip install -e ".[dev]" && .venv/bin/python -m pytest
+npm ci
+make check        # typecheck, gateway tests, browser flows, token and fixture drift, publish gate (offline, synthetic data)
+make check-agents # Python crew tests (uses .tools/venv-agents; see apps/crew/README.md)
+npm run dev       # the console on http://127.0.0.1:5174 (rehearsal mode without a gateway)
 ```
 
-Deployment notes are in [deploy/](deploy/). Real identifiers, configuration and credentials never enter the repository.
+How to build and deploy is in [docs/DEPLOY.md](docs/DEPLOY.md). Real identifiers, configuration and credentials never enter the repository; `npm run check:publishable` enforces that before anything is published.
 
 ## Current limits
 
@@ -81,4 +89,4 @@ Deployment notes are in [deploy/](deploy/). Real identifiers, configuration and 
 
 ## Provenance and licenses
 
-The prototype this repository was extracted from has Git history starting on 2026-10-09, inside the AI Builder Cup building window (7 Sep – 18 Oct 2026). `source-manifest.json` records the initial extraction. Dependencies keep their licenses (Apache-2.0 for ADK, Material Web and the A2A SDK). Third-party names are used only to describe compatibility.
+The prototype this repository was extracted from has Git history starting on 2026-10-09, inside the AI Builder Cup building window (7 Sep – 18 Oct 2026). `docs/provenance/source-manifest.json` records the initial extraction. Dependencies keep their licenses (Apache-2.0 for ADK, Material Web and the A2A SDK). Third-party names are used only to describe compatibility.

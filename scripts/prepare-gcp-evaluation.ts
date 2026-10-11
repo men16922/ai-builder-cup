@@ -1,8 +1,8 @@
 import { mkdtempSync, writeFileSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
-import { prepareEvaluation, blankRuns } from '../server/modules/gcp/evaluation/pack';
-import { assessRecordedRun, reviewTemplate } from '../server/modules/gcp/evaluation/review';
+import { prepareEvaluation, blankRuns } from '../apps/gateway/src/evaluation/pack';
+import { assessRecordedRun, reviewTemplate } from '../apps/gateway/src/evaluation/review';
 
 if (process.env.MOBILEOPS_OFFLINE_TEST !== '1') throw Error('Offline preparation only. Set MOBILEOPS_OFFLINE_TEST=1.');
 const args = process.argv.slice(2);
