@@ -1,6 +1,6 @@
 # Hackathon plan — AI Builder Cup 2026
 
-Status: draft for the owner's decision, written 2026-10-10. English because the submission must be in English. The product name is a working title and may change.
+Status: draft for the owner's decision, written 2026-10-10. English because the submission must be in English. The product name is Aide, confirmed on 2026-10-11.
 
 ## Facts that constrain the plan
 

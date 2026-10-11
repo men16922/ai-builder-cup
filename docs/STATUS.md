@@ -46,7 +46,7 @@ The product direction changed to an AI agent app. `apps/crew/` holds a Python mu
 - **Default language:** without a saved choice the web page and the Android app follow the browser or device language (Korean for Korean, English otherwise), so English-speaking judges see English first. Language still only changes wording. Deployed as `cloudops-auto-00010` and checked on the live URL with both locales.
 - **Tracing:** each agent service exports OpenTelemetry traces to Cloud Trace (`OPS_TRACE_TO_CLOUD=1`, `gcp.project_id` resource attribute). Verified in Cloud Trace: ADK `invocation`, `invoke_agent`, `call_llm` and `generate_content` spans plus the A2A server spans.
 - **Submission material:** English `README.md`, `docs/ARCHITECTURE.md`, `docs/EVALUATION.md` (generated from recorded results) and a 10-slide deck built by `docs/deck/build.mjs` into `docs/deck/deck.pdf`.
-- Not done yet: the Android crew screen has unit tests and a clean build and lint, but no signed-in device run (the emulator could not take keyboard input for sign-in); the demo video and the final product name (Aide is applied in the repository and deck as a provisional choice; the deployed console still shows the previous working title until it is redeployed). ADK's A2A support is marked experimental by Google.
+- Not done yet: the Android crew screen has unit tests and a clean build and lint, but no signed-in device run (the emulator could not take keyboard input for sign-in); the demo video. The product name Aide was confirmed by the owner on 2026-10-11 and is deployed. ADK's A2A support is marked experimental by Google.
 
 ## Eligibility and provenance
 

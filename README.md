@@ -4,7 +4,7 @@
 
 A mobile-first multi-agent system for Google Cloud operations. You give one instruction. A crew of Gemini agents investigates a running Cloud Run service, explains what is wrong and what it does not know, and proposes a fix. A change is applied only after a person approves that exact action, and only by the one agent allowed to make it.
 
-Built for the AI Builder Cup 2026, theme *Future of Work & Enterprise Productivity*. The product name is a working title.
+Built for the AI Builder Cup 2026, theme *Future of Work & Enterprise Productivity*.
 
 ## What it does
 
