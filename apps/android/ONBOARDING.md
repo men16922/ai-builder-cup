@@ -82,11 +82,11 @@ APK 위치: `apps/android/app/build/outputs/apk/debug/app-debug.apk`. 두 명령
 
 1. **`mobileops-agent.json`**: 비공개 앱 설정(서버 주소, Firebase 앱 ID와 키, 웹 클라이언트 ID)입니다. `apps/android/app/src/main/assets/mobileops-agent.json`에 넣으세요. Git에서 제외되어 있으며, 커밋하거나 채팅에 붙여 넣거나 첫 화면 스크린샷(서버 주소가 보입니다)을 공유하지 마세요. `deploy/android-mobile.example.json`은 자리표시자라 **동작하지 않습니다**.
 2. **내 debug 인증서의 Firebase 등록.** 구글은 앱 패키지 `app.mobileops.agent`**와 서명 인증서 SHA-1**이 등록되어 있어야 토큰을 발급합니다. 팀원 PC의 debug 키스토어는 소유자 것과 다릅니다. 첫 빌드 후 `apps/android/scripts/doctor.sh`를 실행해 출력되는 `SHA1`, `SHA256` 줄을 소유자에게 보내세요. 공개 지문이라 비밀이 아닙니다. 키스토어 파일 자체는 절대 보내지 마세요. 등록 전에는 "This android application is not registered to use OAuth2.0" 오류가 납니다.
-3. **내 Google 계정의 서비스 접근 허용.** 접근은 서버가 "등록된 Cloud Run 서비스의 소유 여부"로 결정합니다(`crew_not_entitled`는 아직 허용되지 않았다는 뜻). 사용할 Google 계정을 소유자에게 알리고, 한 번 로그인해서 서버가 계정을 보게 하세요.
+3. **내 Google 계정의 서비스 접근 허용.** 접근은 서버가 "등록된 Cloud Run 서비스의 소유 여부"로 결정합니다(`crew_not_entitled`는 아직 허용되지 않았다는 뜻). 팀원은 조직 워크스페이스(**CloudOps demo team**)의 멤버(operator, reviewer)로 허용됩니다. 개인 워크스페이스는 소유자 계정 전용이라 쓰지 않습니다. 허용은 계정이 Firebase에 한 번 생긴 뒤에만 가능하므로, 먼저 웹 콘솔(소유자가 알려 주는 배포 주소)에서 사용할 Google 계정으로 **한 번 로그인**하고 소유자에게 알리세요.
 
 ### 그다음
 
-1. `apps/android/gradlew -p apps/android :app:installDebug` → 앱을 열고 개인 워크스페이스의 Google 로그인 버튼을 누릅니다.
+1. `apps/android/gradlew -p apps/android :app:installDebug` → 앱을 열고 **조직 워크스페이스(CloudOps demo team)**의 Google 로그인 버튼을 누릅니다.
 2. 지시를 입력합니다. 예: "shop-api가 느려, 조사해 줘". 시연 대상을 장애 상태로 만드는 `apps/shop-api/reset.sh <project>`와 트래픽 생성 `apps/shop-api/traffic.sh <url>`은 소유자가 실행합니다. 대상이 공유되는 실제 Cloud Run 서비스이므로, 실행 전에 소유자에게 부탁하세요.
 
 ## 7. 실기기 점검 (최종 산출물)

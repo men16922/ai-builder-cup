@@ -1,5 +1,12 @@
 # Progress log
 
+## 2026-10-12 — Android teammate access prepared
+- Status: teammate account (Google, given by the owner) is to be a member of `cloudops-demo/gcp-operations` (operator, reviewer); it does not exist in Firebase yet. Not committed: ONBOARDING change.
+- Changed: `apps/android/ONBOARDING.md` now says the teammate uses the organization workspace and signs in once on the web console first (uncommitted). A background watcher (local scratchpad script, 30 s polling, 2 h) waits for the account in Firebase Auth, then runs `scripts/provision-gcp-membership.ts` and appends the user to `.data/gcp/users.json`. Actor-id formula verified against the two existing users.
+- Verified: nothing run against the live store yet (the account was not found at 2026-10-12); `check:publishable` passed.
+- Blockers (owner): send `mobileops-agent.json` (local, Git-ignored) privately; push ONBOARDING (needs the owner's request); register the teammate's debug SHA-1 in Firebase once received (cannot be done by the teammate).
+- Next: after the teammate's web sign-in, confirm membership; register SHA-1; then the device run (ONBOARDING step 7).
+
 ## 2026-10-12 — Submission surface refreshed (P4.3, P5.1, P5.3, P5.4)
 - Changed: deck builder states single-use approvals, the held-out first run (13/18, read from the recorded results) and the first user; deck rebuilt. Devpost and Medium text updated for the five execution states, single-use approvals, held-out score, the live-run bug in our own fix and the live restart result; stale "next" items removed. README names the first user and has an "After the submission" roadmap (Dev agent, multi-cloud, more operations, durable task store). `submission/SUBMISSION.md` separates implemented from published. Test env var removed from `agent-chief`.
 - Verified: `make check-all` exit 0 (gateway, crew 54, browser flows, hosted artifact, publish gate).
