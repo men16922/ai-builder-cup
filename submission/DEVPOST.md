@@ -16,7 +16,7 @@ Alternatives: "Hand the ops work to an agent crew. Keep the decisions." · "Be t
 
 ## Elevator pitch
 
-You give one instruction from your phone. A crew of Gemini agents investigates a running Google Cloud service, tells you what is wrong and what it cannot see, and proposes a fix. Nothing changes until you approve that exact action, and only one agent is allowed to make the change.
+For the on-call engineer or small-team tech lead who is away from a laptop when a release goes bad. You give one instruction from your phone. A crew of Gemini agents investigates a running Google Cloud service, tells you what is wrong and what it cannot see, and proposes a fix. Nothing changes until you approve that exact action, and only one agent is allowed to make the change.
 
 ---
 
@@ -41,10 +41,10 @@ It runs as a Google Cloud Console-style web console (left navigation, a Gemini-s
 **Why a model cannot talk its way into a change**
 
 - **Typed tools only.** Agents choose among a fixed set of functions. They never receive credentials and never generate code to run.
-- **Signed human approval.** After a verified reviewer approves, the gateway signs an HMAC over the exact action (actor, action digest, expiry). Only the Ops service holds the verification key. The Chief cannot create, extend or reuse an approval.
+- **Signed human approval.** After a verified reviewer approves, the gateway signs an HMAC over the exact action (actor, action digest, expiry). Only the Ops service holds the verification key. The Chief cannot create, extend or reuse an approval. Each approval is used once and is refused if the service changed after it was issued.
 - **Two independent checks.** The Chief checks policy before asking you. The Ops service checks policy and the signature again before it touches Cloud Run, and its permission to change anything is scoped to one service, not the project.
 - **Honest about missing data.** Empty metrics are "unknown", never zero and never healthy. Log text is treated as untrusted data, so instructions hidden in logs are not followed.
-- **No automatic resend.** A lost connection or an unknown outcome is shown as unknown. A change is never retried by the system.
+- **Five honest outcomes.** A change ends as `refused`, `pending`, `applied`, `failed` or `unknown`. A change Cloud Run accepted but has not finished is "in progress", never "refused". A lost connection is `unknown` and is never retried by the system.
 
 ## How we built it
 
@@ -61,13 +61,16 @@ It runs as a Google Cloud Console-style web console (left navigation, a Gemini-s
 - **"Unknown" makes agents hesitate.** When the good revision had no recent metrics, the Diagnosis agent refused to call it healthy and the crew kept looking for evidence for several minutes before proposing the rollback. That is the correct behavior and a real trade-off. For the demo we generate traffic on both revisions first.
 - **A bare Google sign-in was too much access.** Firebase sign-up is open, so we found that an account that was merely signed in could start a crew task. The server now requires that the person owns a registered service (`crew_not_entitled`), with tests, and we redeployed before submitting.
 - **Mobile sign-in is configuration-sensitive.** Google refuses the token unless the app's package name and signing certificate are registered in Firebase. Ours were registered under an older package name, which the app reported only as "Sign in again to continue". The server logs and the Google error text made it findable.
+- **Held-out cases found what tuning hid.** Six new cases the crew had never been tuned on scored **13 of 18** on the first run: it did not flag tiny samples or disagreeing signals. We recorded that number as it came out, then fixed the instruction.
+- **Our own first live run caught a bug in our fix.** When the earlier revision had no recent samples, the crew stopped offering the rollback at all. We added that case to the evaluation (2 of 3 before, 3 of 3 after) and redeployed.
+- **Restarts lose in-memory agent state.** We restarted the Chief while an approval was waiting and then approved: the task ended as "outcome unknown, not retried", nothing was sent, and the traffic read back unchanged. That is safe, but the approval does not survive the restart.
 - **A2A support in ADK is experimental**, and Cloud Monitoring lags by minutes. The report has to say that, so it does.
 
 ## Accomplishments that we're proud of
 
 - A live, end-to-end run on the deployed services on **both web and Android**: instruction, streamed steps, approval card, signed approval, traffic actually shifted (checked on the service itself), and an honest report.
 - Safety claims that are tested rather than asserted: HTTP attack tests against the Ops `/execute` endpoint (forged or expired approvals, other actions, wrong service, wrong revision), a Chief test where "the person said yes" without a valid signature changes nothing, and a prompt-injection scenario in logs.
-- 167 gateway tests, 33 crew tests, browser flows with accessibility checks, and a publish gate that blocks secrets and local paths from the public repository.
+- 167 gateway tests, 54 crew tests (including a fake Cloud Run with slow, failing and dropped changes, and replayed or stale approvals), browser flows with accessibility checks, and a publish gate that blocks secrets and local paths from the public repository.
 - A console styled after the Google Cloud Console, with a labeled rehearsal mode so anyone can try the flow before signing in.
 
 ## What we learned
@@ -81,7 +84,8 @@ It runs as a Google Cloud Console-style web console (left navigation, a Gemini-s
 
 - Connect any project (project and billing account) instead of a fixed set of registered services, with the same ownership checks.
 - More reversible actions beyond a traffic rollback, each with its own policy entry, tests and approval text.
-- A held-out evaluation set, and single-use approvals (today an approval is bound to one action, one approver and five minutes, not to a single use).
+- A durable agent task store, so a pending approval survives an agent restart instead of ending as unknown.
+- A larger held-out evaluation set and a timed comparison against doing the same incident by hand.
 - Push notifications for pending decisions. They are implemented on the server and in the app but switched off in the deployed demo.
 
 ## Known limits (please keep this section)
@@ -90,7 +94,8 @@ It runs as a Google Cloud Console-style web console (left navigation, a Gemini-s
 - The crew operates on **registered services only**; arbitrary project connection is not implemented.
 - The live crew requires a signed-in account that owns the registered service. Without signing in, the console opens in a **labeled rehearsal mode** with a scripted crew and synthetic data. It is clearly marked and makes no model or Google calls.
 - The Android flow was verified on an **emulator** against the deployed services, not on a physical device.
-- The evaluation was tuned on the same six scenarios; it measures regressions in honesty and safety, not generalization.
+- The six core scenarios were tuned on; they measure regressions in honesty and safety, not generalization. The only held-out score is the first run on six new cases: 13 of 18.
+- The single-use ledger is in memory per Ops instance; across instances and restarts, the "service changed since approval" check is what holds. A replay of the same approval and the `pending`/`unknown` outcomes were tested offline, not seen live.
 - ADK's A2A support is marked experimental by Google.
 
 ## Built with

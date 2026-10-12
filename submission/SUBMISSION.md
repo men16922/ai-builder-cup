@@ -2,15 +2,16 @@
 
 What the competition asks for, and where this repository stands. Items marked **owner** can only be done by a person.
 
-| Requirement | State | Notes |
-| --- | --- | --- |
-| Team of 2–4, registered (closes 11 Oct) | **owner** | Not something the repository can do. Students are disqualified. |
-| Deployed link (Cloud Run) | Done | Console and the five services run on Cloud Run. Judges can try a scripted, labeled rehearsal without signing in; the live crew needs an allow-listed account. |
-| Public GitHub repository | Done | Public as `ai-builder-cup` (first commit pushed 2026-10-11, 302 files, `npm run check:publishable` passed first). Run the check again before every push. |
-| Demo video under 3 minutes | **owner** to record | Script in `submission/DEMO_SCRIPT.md`. |
-| PDF deck, English | Draft ready | `submission/deck/deck.pdf`, rebuilt with `node --import tsx submission/deck/build.mjs`. |
-| All materials in English | Mostly | README, architecture, evaluation, deck, script are English. The product UI is Korean and English. |
-| Built inside the window (7 Sep – 18 Oct) | Needs the owner's confirmation | The prototype's Git history starts 2026-10-09. Older projects were not copied, only ideas. |
+| Requirement | Implemented | Published / submitted | Notes |
+| --- | --- | --- | --- |
+| Team of 2–4, registered | Done (2026-10-12) | Done | Registration and invitations confirmed by the owner. |
+| Deployed link (Cloud Run) | Done | Link not yet in Devpost | Console and the five services run on Cloud Run. Judges can try a labeled rehearsal without signing in; the live crew needs an allow-listed account (see decision 2). |
+| Public GitHub repository | Done | Pushed up to `1bf9209`; later work local | Run `make check` and `npm run check:publishable` before every push. |
+| Demo video under 3 minutes | Recorded (`submission/aide-demo-final.mp4`, local, ignored by Git) | **owner**: upload | Re-record only if the shown approval card or report wording changed. |
+| PDF deck, English | Done, rebuilt 2026-10-12 (single-use approvals, held-out 13/18) | **owner**: attach in Devpost | `node --import tsx submission/deck/build.mjs`. |
+| Devpost and Medium text | Done, updated 2026-10-12 | **owner**: fill `<DEPLOYED_URL>`, `<VIDEO_URL>`, `<REPO_URL>`, `<CONTACT>` and submit | After the Android teammate's physical-device run, update the "emulator, not a physical device" lines in both. |
+| All materials in English | Done | — | The product UI is Korean and English. The Android onboarding guide is Korean on purpose (internal). |
+| Built inside the window (7 Sep – 18 Oct) | — | **owner**: confirm against the official rules | The prototype's Git history starts 2026-10-09. Older projects were not copied, only ideas. |
 
 ## Open decisions for the owner
 

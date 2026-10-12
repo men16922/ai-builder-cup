@@ -4,6 +4,8 @@
 
 A mobile-first multi-agent system for Google Cloud operations. You give one instruction. A crew of Gemini agents investigates a running Cloud Run service, explains what is wrong and what it does not know, and proposes a fix. A change is applied only after a person approves that exact action, and only by the one agent allowed to make it.
 
+**Who it is for:** the on-call engineer or small-team tech lead who is away from a laptop when a release goes bad. They no longer open three consoles, compare revisions and read logs on a phone screen; they read one report and make one decision.
+
 Built for the AI Builder Cup 2026, theme *Future of Work & Enterprise Productivity*.
 
 ## What it does
@@ -86,6 +88,7 @@ How to build and deploy is in [docs/DEPLOY.md](docs/DEPLOY.md). Real identifiers
 | --- | --- |
 | Web console and crew on the deployed Cloud Run services: read, propose, signed approval, rollback, report | Run live on 2026-10-10 and 2026-10-11 (recorded in `docs/STATUS.md`) |
 | Execution states (refused, pending, applied, failed, unknown), single-use and fresh-state approvals | 54 crew tests against a fake Cloud Run; deployed on 2026-10-11 and exercised by one live approved rollback (applied and read back); replay, pending and unknown not seen live |
+| Chief restarted while an approval is pending | Run live on 2026-10-12: the task ended as `unknown`, nothing was sent or retried, traffic unchanged (`docs/EVALUATION.md`) |
 | Android on an emulator against the deployed services | Run on 2026-10-11 |
 | Android on a physical device | Not verified |
 | Push notifications | Implemented, off in the deployment, no real FCM send verified |
@@ -98,6 +101,15 @@ How to build and deploy is in [docs/DEPLOY.md](docs/DEPLOY.md). Real identifiers
 - Push notifications are implemented on the server and in the app but are off in the deployed demo.
 - ADK's A2A support is marked experimental by Google.
 - Only one reversible action (traffic rollback) can be applied. Everything else the crew does is read-only.
+
+## After the submission (roadmap, not built)
+
+- A durable agent task store, so a pending approval survives an agent restart (today it ends as `unknown` and nothing is sent).
+- Connect any Google Cloud project instead of registered services, with the same ownership checks.
+- More reversible operations beyond the traffic rollback, each with its own policy entry, tests and approval text.
+- A Dev agent that proposes a fix as a branch and pull request in a repository.
+- Other clouds behind the same typed tools and signed approvals.
+- Push notifications for pending decisions (implemented, off in the deployment).
 
 ## Provenance and licenses
 

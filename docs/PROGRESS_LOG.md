@@ -1,5 +1,22 @@
 # Progress log
 
+## 2026-10-12 — Submission surface refreshed (P4.3, P5.1, P5.3, P5.4)
+- Changed: deck builder states single-use approvals, the held-out first run (13/18, read from the recorded results) and the first user; deck rebuilt. Devpost and Medium text updated for the five execution states, single-use approvals, held-out score, the live-run bug in our own fix and the live restart result; stale "next" items removed. README names the first user and has an "After the submission" roadmap (Dev agent, multi-cloud, more operations, durable task store). `submission/SUBMISSION.md` separates implemented from published. Test env var removed from `agent-chief`.
+- Verified: `make check-all` exit 0 (gateway, crew 54, browser flows, hosted artifact, publish gate).
+- Open (not engineering): physical device and phone backgrounding (Android teammate), human comparison (two people), judge access and video upload (owner), live replay of one approval (needs the owner's tap). Uncommitted.
+
+## 2026-10-12 — P3 restart behaviour, live with real data
+- Status: P3.1 settled with no deployment change (gateway already `cpu-throttling=false`; task record in Firestore; app only reads). P3.2(b) run live.
+- Verified: real crew run on `shop-api-bad` (300 generated requests), approval card shown; `agent-chief` redeployed (`agent-chief-00011-vpn`, env `AIDE_RESTART_TEST` added) while pending; owner approved; Chief `TaskNotFoundError`, no Ops `/execute`, task `unknown` "not retried", traffic read back 100 % `shop-api-bad`.
+- Decision: keep `unknown` (A2A wraps the missing task as a generic internal error mid-stream, so "nothing was sent" cannot be proven by the gateway).
+- Next: phone backgrounding (P3.2a) and physical device (P3.3) by the Android teammate; README/STATUS refresh; human comparison.
+
+## 2026-10-12 — Android teammate onboarding
+- Status: team registration and invitations done (owner). Added `apps/android/ONBOARDING.md`, `apps/android/scripts/doctor.sh` (read-only environment check, prints the debug SHA-1 to send the owner) and the missing `deploy/android-mobile.example.json`; Android README refreshed.
+- Verified: `make check-android-core` (49), `assembleDebug` + `lintDebug` pass; fresh APK installed and launched on the emulator; doctor passes on the owner's machine.
+- Blockers (owner): hand over `mobileops-agent.json`; register the teammate's SHA-1 in Firebase; allow their Google account on the registered service; put `shop-api` in the faulty state before their run. Uncommitted.
+- Next: teammate runs the device checklist in ONBOARDING.md step 7 and records it in `docs/EVALUATION.md`.
+
 ## 2026-10-11 — Execution states, single-use approvals, held-out evals, live approval run
 - Status: implemented, deployed (crew `crew:20261011-171831`, gateway `cloudops-auto-00014`); all changes uncommitted since `489eceb`.
 - Changed: five execution states (`refused|pending|applied|failed|unknown`, HTTP 403/202/200/502/504, never resend on unknown); approvals single-use per instance, refused when the service changed after approval or the window exceeds 5 min; Chief instruction rewritten (rollback offered with unconfirmed earlier revision); web state chip and Android state lines; evaluation extended (held-out 6, live finding case); README verification table; docs aligned.

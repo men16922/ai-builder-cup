@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "configured": true,
+  "origin": "https://aide-gateway.example.run.app",
+  "firebase": {
+    "projectId": "your-gcp-project",
+    "apiKey": "REPLACE_WITH_FIREBASE_ANDROID_API_KEY",
+    "appId": "1:000000000000:android:0000000000000000",
+    "webClientId": "000000000000-replace.apps.googleusercontent.com"
+  },
+  "workspaces": [
+    { "key": "personal", "edition": "personal", "workspaceId": "my-gcp", "label": "My GCP workspace" },
+    { "key": "organization", "edition": "organization", "organizationId": "your-org", "workspaceId": "gcp-operations", "label": "Demo team" }
+  ]
+}

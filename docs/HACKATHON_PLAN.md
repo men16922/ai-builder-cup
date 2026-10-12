@@ -79,7 +79,7 @@ Why it scores:
 
 ## Risks
 
-- Eight days is short. The scope above is the intended ceiling, and the Dev agent is the first item to cut.
+- Eight days is short. The scope above is the intended ceiling, and the Dev agent is the first item to cut. Cut on 2026-10-11: the Dev agent, multi-cloud and extra operations moved to the README roadmap ("After the submission").
 - `@material/web` is in maintenance mode. It is Google's official Material 3 web library, and missing parts are built from the same design tokens.
 - Compose Material 3 Expressive APIs are still in alpha. The Android app uses stable Material 3 and the shared tokens.
 - Antigravity is an IDE, not a runtime. Its use in building is documented honestly (workspace rules in `.agents/rules`, root `AGENTS.md`, workflows as markdown) and is not presented as part of the product.

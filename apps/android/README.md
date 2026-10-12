@@ -1,6 +1,8 @@
 # Aide · GCP Android
 
-Kotlin/Compose 앱 소스와 GCP 모바일 클라이언트다. 기본 앱은 **합성 시연 전용**이다. 선택적으로 고정 서버 설정·Credential Manager/Google → Firebase 신원 adapter·로그인 UI를 조립했다. Kotlin 신원/서버 HTTP 계약은 합성 검증했으며, Android 컴파일·APK·실제 Firebase 로그인·기기 검증은 아직 완료하지 않았다. Google/Gemini·FCM 실통합도 남아 있다.
+Kotlin/Compose 앱 소스와 GCP 모바일 클라이언트다. 기본 앱은 **합성 시연 전용**이다. 선택적으로 고정 서버 설정·Credential Manager/Google → Firebase 신원 adapter·로그인 UI를 조립했다. Kotlin 신원/서버 HTTP 계약은 합성 검증했다. 2026-10-11~12 기준 `assembleDebug`·`lintDebug` 통과, 에뮬레이터에서 실제 Google 로그인과 배포 서버의 crew 흐름 확인. 실기기 검증과 FCM 실수신은 아직 없다.
+
+**새로 합류했다면 [ONBOARDING.md](ONBOARDING.md)부터 읽는다** (환경 점검: `scripts/doctor.sh`).
 
 ## 현재 동작과 구조
 
@@ -43,7 +45,7 @@ make check-android-core
 
 ## Android SDK와 APK
 
-현재 기동 검사에서 **SDK location not found**를 확인했다. 공식 [SDK 약관](https://developer.android.com/studio#terms)은 다운로드/사용 전 동의를 요구한다. 사용자에게 로컬 `.tools/android-sdk`의 API 36·Build Tools 35.0.0·platform-tools 설치 동의를 요청했고 답변 대기다. 아직 약관 수락·SDK 다운로드·설치를 수행하지 않았다.
+SDK는 사용자 동의 후 저장소 로컬 `.tools/android-sdk`에 설치되어 있다(소유자 머신 전용, Git 제외). 새 환경은 [ONBOARDING.md](ONBOARDING.md) 3단계를 따르며 약관은 본인이 수락한다.
 
 동의 후 공식 command-line tools를 확인된 아키텍처에 맞게 설치한다. Mac ARM의 조사 시점 파일은 `commandlinetools-mac_arm64-15859902_latest.zip`, SHA-256 `835b62a26162b229b441d1f6d4680383815a270809eb33522c0d480fa5002c4e`다. [공식 다운로드 표](https://developer.android.com/studio#command-tools)에서 실행 시 다시 확인한다. 플랫폼/도구는 `sdkmanager --sdk_root=… "platforms;android-36" "build-tools;35.0.0" "platform-tools"`로 지정한다. 라이선스 파일을 위조하거나 일괄 자동 동의하지 않는다.
 

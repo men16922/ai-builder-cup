@@ -1,14 +1,15 @@
 # Repository status
 
-Updated: 2026-10-11. The user resumed development after the migration ("complete remaining work"). Only work that needs no new approval was done; items needing a user decision remain open in `docs/NEXT_PLAN.md`.
+Updated: 2026-10-12. Team registration done; Android teammate onboarding prepared (`apps/android/ONBOARDING.md`); P3 restart behaviour verified live. Open work is in `docs/NEXT_PLAN.md`.
 
 The GCP web/API, neutral contracts, Android sources, synthetic fixtures and regression checks were extracted from CloudOps-Automation. AWS/On-Prem/Azure implementations, company SSO/workers and original runtime data remain there. This is a separate Git repository on `main`, published as the public repository `ai-builder-cup` (first commit 2026-10-11).
 
 ## Current baseline
 
-- `make check`: type checking, source boundaries, independent web/API build, **149/149 server tests**, mobile fixtures, GCP HTTP/browser and hosted artifact smoke passed.
-- `make check-android-core`: Kotlin core and native HTTP **49/49** passed. No APK or device UI.
-- Details: `docs/archive/migration-verification.md`. All results are synthetic and local. No live Google/Firebase/Gemini/FCM, Docker, APK/device, deployment or publication has been verified.
+- `make check-all` (2026-10-11): gateway 167 tests, crew 54 tests, browser flows with axe, publish gate. `make check` re-run 2026-10-12: passed.
+- `make check-android-core`: Kotlin core and native HTTP **49/49**; `assembleDebug` and `lintDebug` pass (2026-10-12).
+- Live (user-authorized): deployed on Cloud Run with real Gemini, Cloud Run, Logging and Monitoring reads; signed approved rollback applied and read back (2026-10-10/11); Android emulator signed in against the deployed services (2026-10-11); Chief restart during a pending approval ends as `unknown` with nothing sent (2026-10-12).
+- Not verified: physical Android device, real FCM delivery, live replay of the same approval, `pending`/`unknown` from a slow or failing Cloud Run change. Migration-era details: `docs/archive/migration-verification.md`.
 
 ## Development increment: notification delivery composition (server)
 

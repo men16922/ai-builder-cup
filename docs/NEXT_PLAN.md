@@ -39,6 +39,8 @@ Plan of 2026-10-11, built from an external review (`FEEDBACK.md`). The review's 
 
 ## Priority 3: mobile and restart behaviour (2026-10-13 to 14)
 
+Done 2026-10-12 (`docs/EVALUATION.md`, "Mobile and restart behaviour"): P3.1 needs no change (the gateway already runs with instance-based CPU; the task record lives in Firestore and the app only reads it). P3.2(b) run live with real data: the Chief was redeployed while an approval was pending; the approval ended as `unknown`, nothing was sent or retried, traffic stayed on `shop-api-bad`. P3.2(a) on a phone and P3.3 remain with the Android teammate (`apps/android/ONBOARDING.md`, step 7).
+
 1. **Cloud Run settings.** Decide and document the CPU allocation the deployment needs for work that continues after the HTTP response (instance-based CPU or a Cloud Tasks/Run job style handoff). Change the deployment only if the test below fails; it is within the existing authorization but costs more, so state the cost.
 2. **Live tests, recorded in `docs/EVALUATION.md`:** (a) start a task, background the app or turn the screen off, return: state correct; (b) restart the Ops/Chief service while an approval is pending: the task ends as resumed or as an explicit expired/failed state, never silently lost. If A2A in-memory state is lost, the gateway task record must say so rather than show "running" forever.
 3. **Physical Android device** (owner or the Android teammate): Google sign-in, delegate, approve, result, close and reopen, double tap on approve. Record the date and device model (not a serial number).
@@ -46,23 +48,23 @@ Plan of 2026-10-11, built from an external review (`FEEDBACK.md`). The review's 
 ## Priority 4: evidence for judges (2026-10-15 to 16)
 
 1. **Done 2026-10-11 (see above). Held-out cases, run once and recorded as they came out** (add to `apps/crew/evals`, do not tune afterwards): external dependency failing with the previous revision also failing (must not roll back); very low traffic or contradictory metrics (must state the uncertainty); another deploy while an approval is pending (must re-review); slow or dropped change (must report `pending`/`unknown`, not a guess).
-2. **Human comparison.** The same incident done manually and with Aide by a teammate who has not used it: time to first valid recovery plan, number of manual operations, wrong approvals, and time the person was actually working versus waiting. Report the numbers with the sample size. Do not present the 42.8 s median (`bad_release`, synthetic) as MTTR.
-3. **Wording.** Keep "regression-tested on six scenarios and the observed failures fixed"; never "100% safe" or "100% accurate". Name the first user: an on-call engineer or small-team tech lead who is away from a laptop. Lead the pitch with what the person no longer has to do, not with the number of agents.
+2. **Human comparison.** Protocol ready: `docs/plans/2026-10-15-human-comparison.md`. The same incident done manually and with Aide by a teammate who has not used it: time to first valid recovery plan, number of manual operations, wrong approvals, and time the person was actually working versus waiting. Report the numbers with the sample size. Do not present the 42.8 s median (`bad_release`, synthetic) as MTTR.
+3. **Wording.** Done 2026-10-12: the first user is named in the README, Devpost, Medium and the deck; no "100% safe/accurate" claims. Keep "regression-tested on six scenarios and the observed failures fixed"; never "100% safe" or "100% accurate". Name the first user: an on-call engineer or small-team tech lead who is away from a laptop. Lead the pitch with what the person no longer has to do, not with the number of agents.
 
 ## Priority 5: submission surface (2026-10-12 start, freeze 17th)
 
-1. README top: a verification table (web + Cloud Run read and approved rollback: recorded live; Android emulator against the live server: recorded 2026-10-11; physical device: update after P3; real push: off in the deployment, not verified; signed-out page: synthetic rehearsal, no model call; demo video: link once uploaded). Fix line 85. Keep "implemented" and "published" as separate checkboxes in `submission/SUBMISSION.md`.
+1. Done 2026-10-12 (table in README, STATUS refreshed, implemented/published columns in `submission/SUBMISSION.md`). README top: a verification table (web + Cloud Run read and approved rollback: recorded live; Android emulator against the live server: recorded 2026-10-11; physical device: update after P3; real push: off in the deployment, not verified; signed-out page: synthetic rehearsal, no model call; demo video: link once uploaded). Fix line 85. Keep "implemented" and "published" as separate checkboxes in `submission/SUBMISSION.md`.
 2. Judge access: keep the public rehearsal and add a clearly separate route to the real deployment (allow-listed judge Google accounts on an isolated registered service, or a recorded real run). Never expose change permission publicly.
-3. Move Dev Agent PRs, multi-cloud and extra operations to a post-submission roadmap section.
-4. Regenerate the deck and Devpost/Medium text after P1 to P4 change any claim; re-run `make check-all` and the publish gate before every push.
+3. Done 2026-10-12: README "After the submission". Move Dev Agent PRs, multi-cloud and extra operations to a post-submission roadmap section.
+4. Done 2026-10-12 for P1 to P3 (deck rebuilt; Devpost and Medium updated); repeat after the physical-device run and the human comparison. Regenerate the deck and Devpost/Medium text after P1 to P4 change any claim; re-run `make check-all` and the publish gate before every push.
 
 ## Owner actions (not engineering)
 
-1. Confirm the team registration and the invitation acceptances. The organizers extended the team deadline to 14 Oct; finish it as soon as the teammate joins and check the exact cutoff time and time zone in the portal.
+1. ~~Confirm the team registration and the invitation acceptances.~~ Done (owner confirmed 2026-10-12). The organizers extended the team deadline to 14 Oct; finish it as soon as the teammate joins and check the exact cutoff time and time zone in the portal.
 2. Watch `submission/aide-demo-final.mp4`, upload it, keep the link. Re-record if P1 to P3 change what the demo shows (the report wording for pending/unknown, the approval card).
 3. Fill `<VIDEO_URL>`, `<DEPLOYED_URL>`, `<REPO_URL>`, `<CONTACT>` in `submission/DEVPOST.md` and `submission/MEDIUM.md`, then submit the Devpost entry with `submission/deck/deck.pdf`.
 4. Decide judge access (P5.2). Confirm that the pre-program origin of the code is acceptable under the official rules (still open in `docs/STATUS.md`).
-5. Brief the Android teammate (joins Monday 12 Oct): "Use the app on a physical device like a first-time on-call operator, from sign-in to the result after approval, including closing and reopening and double approval; fix what blocks you."
+5. Brief the Android teammate (joins Monday 12 Oct; guide and setup check in `apps/android/ONBOARDING.md`, `apps/android/scripts/doctor.sh`; owner still has to hand over the private config, register the teammate's debug SHA-1 in Firebase and allow their Google account on the registered service): "Use the app on a physical device like a first-time on-call operator, from sign-in to the result after approval, including closing and reopening and double approval; fix what blocks you."
 
 ## Division of work
 
