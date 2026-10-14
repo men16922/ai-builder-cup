@@ -85,8 +85,37 @@ val OpsDarkColors = darkColorScheme(
 )
 
 /** Roles that Material 3 does not define. They share the web token names (--md-sys-color-success and so on). */
-class OpsSemanticColors(val success: Color, val onSuccess: Color, val successContainer: Color, val onSuccessContainer: Color, val warning: Color, val onWarning: Color, val warningContainer: Color, val onWarningContainer: Color)
-val OpsLightSemantic = OpsSemanticColors(Color(0xFF0E6D2B), Color(0xFFFFFFFF), Color(0xFFCDEBC9), Color(0xFF08200C), Color(0xFF805600), Color(0xFFFFFFFF), Color(0xFFFFDDAF), Color(0xFF281800))
-val OpsDarkSemantic = OpsSemanticColors(Color(0xFF82DA8A), Color(0xFF003911), Color(0xFF344D34), Color(0xFFCDEBC9), Color(0xFFFFBA44), Color(0xFF442C00), Color(0xFF5C4215), Color(0xFFFFDDAF))
+class OpsSemanticColors(
+    val success: Color,
+    val onSuccess: Color,
+    val successContainer: Color,
+    val onSuccessContainer: Color,
+    val warning: Color,
+    val onWarning: Color,
+    val warningContainer: Color,
+    val onWarningContainer: Color
+)
+
+val OpsLightSemantic = OpsSemanticColors(
+    Color(0xFF0E6D2B),
+    Color(0xFFFFFFFF),
+    Color(0xFFCDEBC9),
+    Color(0xFF08200C),
+    Color(0xFF805600),
+    Color(0xFFFFFFFF),
+    Color(0xFFFFDDAF),
+    Color(0xFF281800)
+)
+val OpsDarkSemantic = OpsSemanticColors(
+    Color(0xFF82DA8A),
+    Color(0xFF003911),
+    Color(0xFF344D34),
+    Color(0xFFCDEBC9),
+    Color(0xFFFFBA44),
+    Color(0xFF442C00),
+    Color(0xFF5C4215),
+    Color(0xFFFFDDAF)
+)
+
 fun opsSemantic(dark: Boolean) = if (dark) OpsDarkSemantic else OpsLightSemantic
 fun opsColorScheme(dark: Boolean): ColorScheme = if (dark) OpsDarkColors else OpsLightColors
