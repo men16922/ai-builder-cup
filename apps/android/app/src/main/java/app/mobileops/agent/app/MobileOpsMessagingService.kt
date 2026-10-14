@@ -21,22 +21,50 @@ class MobileOpsMessagingService : FirebaseMessagingService() {
         PushFirebase.packaged(applicationContext)?.let { PushFirebase.app(applicationContext, it) }
         super.onCreate()
     }
-    override fun onNewToken(token: String) { PushTokenChanges.publish() }
+
+    override fun onNewToken(token: String) {
+        PushTokenChanges.publish()
+    }
+
     override fun onMessageReceived(message: RemoteMessage) {
         val raw = JsonObject(message.data.mapValues { JsonPrimitive(it.value) }).toString()
-        val notification = try { GcpNotification.parse(raw) } catch (_: Exception) { return }
+        val notification = try {
+            GcpNotification.parse(raw)
+        } catch (_: Exception) {
+            return
+        }
         if (Build.VERSION.SDK_INT >= 33 && checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) return
         val korean = resources.configuration.locales[0].language == "ko"
         val manager = getSystemService(NotificationManager::class.java)
-        manager.createNotificationChannel(NotificationChannel(CHANNEL, if (korean) "GCP 업무" else "GCP work", NotificationManager.IMPORTANCE_DEFAULT))
-        val open = Intent(this, MainActivity::class.java).setAction("app.mobileops.agent.OPEN_GCP_NOTIFICATION")
-            .putExtra("gcp_notification", raw).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        val pending = PendingIntent.getActivity(this, notification.notificationId.hashCode(), open, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
-        manager.notify(notification.notificationId.hashCode(), android.app.Notification.Builder(this, CHANNEL)
-            .setSmallIcon(android.R.drawable.stat_notify_sync)
-            .setContentTitle("Aide")
-            .setContentText(if (korean) "확인할 GCP 업무가 있습니다. 앱에서 최신 상태를 여세요." else "A GCP task needs attention. Open the latest state in the app.")
-            .setContentIntent(pending).setAutoCancel(true).build())
+        manager.createNotificationChannel(
+            NotificationChannel(
+                CHANNEL,
+                if (korean) "GCP 업무" else "GCP work",
+                NotificationManager.IMPORTANCE_DEFAULT
+            )
+        )
+        val open = Intent(
+            this,
+            MainActivity::class.java
+        ).setAction("app.mobileops.agent.OPEN_GCP_NOTIFICATION")
+            .putExtra("gcp_notification", raw)
+            .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        val pending = PendingIntent.getActivity(
+            this,
+            notification.notificationId.hashCode(),
+            open,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+        manager.notify(
+            notification.notificationId.hashCode(), android.app.Notification.Builder(this, CHANNEL)
+                .setSmallIcon(android.R.drawable.stat_notify_sync)
+                .setContentTitle("Aide")
+                .setContentText(if (korean) "확인할 GCP 업무가 있습니다. 앱에서 최신 상태를 여세요." else "A GCP task needs attention. Open the latest state in the app.")
+                .setContentIntent(pending).setAutoCancel(true).build()
+        )
     }
-    private companion object { const val CHANNEL = "gcp-work" }
+
+    private companion object {
+        const val CHANNEL = "gcp-work"
+    }
 }

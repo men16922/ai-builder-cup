@@ -25,7 +25,8 @@ import kotlinx.coroutines.withContext
 
 /** Created only from the packaged configuration after an explicit sign-in button.
  * Every attempt owns a named Firebase app; a cancelled attempt cannot sign out a newer one. */
-class AndroidFirebaseIdentity(context: Context, private val configuration: FirebaseConfiguration) : SessionIdentity {
+class AndroidFirebaseIdentity(context: Context, private val configuration: FirebaseConfiguration) :
+    SessionIdentity {
     private val sdk = SdkSession(context.applicationContext, configuration)
     private val bridge = FirebaseIdentity(configuration, sdk)
     override val session get() = bridge.session
@@ -36,12 +37,18 @@ class AndroidFirebaseIdentity(context: Context, private val configuration: Fireb
     suspend fun signIn(activity: Activity) = sdk.signIn(activity)
 }
 
-private class SdkSession(context: Context, private val configuration: FirebaseConfiguration) : FirebaseSessionPort {
-    private val app = FirebaseApp.initializeApp(context, FirebaseOptions.Builder()
-        .setProjectId(configuration.projectId).setApiKey(configuration.apiKey).setApplicationId(configuration.appId).build(),
-        "mobileops-mobile-${UUID.randomUUID()}").also { it.setDataCollectionDefaultEnabled(false) }
+private class SdkSession(context: Context, private val configuration: FirebaseConfiguration) :
+    FirebaseSessionPort {
+    private val app = FirebaseApp.initializeApp(
+        context, FirebaseOptions.Builder()
+            .setProjectId(configuration.projectId).setApiKey(configuration.apiKey)
+            .setApplicationId(configuration.appId).build(),
+        "mobileops-mobile-${UUID.randomUUID()}"
+    ).also { it.setDataCollectionDefaultEnabled(false) }
+
     // A new named app has no tenant by default; setTenantId requires a non-null ID.
-    private val auth = FirebaseAuth.getInstance(app).also { auth -> configuration.tenantId?.let { auth.setTenantId(it) } }
+    private val auth = FirebaseAuth.getInstance(app)
+        .also { auth -> configuration.tenantId?.let { auth.setTenantId(it) } }
     private val credentials = CredentialManager.create(context)
     private var sdkUser: FirebaseUser? = null
     override var user: FirebaseSession? = null; private set
@@ -50,17 +57,23 @@ private class SdkSession(context: Context, private val configuration: FirebaseCo
     private var signingIn = false
     private var disposed = false
     private val authListener = FirebaseAuth.AuthStateListener { publish(it.currentUser) }
-    init { auth.addAuthStateListener(authListener) }
+
+    init {
+        auth.addAuthStateListener(authListener)
+    }
+
     private fun publish(value: FirebaseUser?) {
         if (closed || value === sdkUser) return
         sdkUser = value
         user = value?.let { FirebaseSession(it.uid, it.tenantId, UUID.randomUUID().toString()) }
         listeners.toList().forEach { it() }
     }
+
     override fun subscribe(listener: () -> Unit): AutoCloseable {
         listeners += listener; listener()
         return AutoCloseable { listeners -= listener }
     }
+
     suspend fun signIn(activity: Activity) {
         if (closed || signingIn) throw MobileFailure(Failure.SIGN_IN)
         signingIn = true
@@ -69,22 +82,38 @@ private class SdkSession(context: Context, private val configuration: FirebaseCo
             credentials.clearCredentialState(ClearCredentialStateRequest())
             if (closed) throw MobileFailure(Failure.SIGN_IN)
             val option = GetSignInWithGoogleOption.Builder(configuration.webClientId).build()
-            val result = credentials.getCredential(activity, GetCredentialRequest.Builder().addCredentialOption(option).build())
+            val result = credentials.getCredential(
+                activity,
+                GetCredentialRequest.Builder().addCredentialOption(option).build()
+            )
             if (closed) throw MobileFailure(Failure.SIGN_IN)
-            val custom = result.credential as? CustomCredential ?: throw MobileFailure(Failure.SIGN_IN)
-            if (custom.type != GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) throw MobileFailure(Failure.SIGN_IN)
+            val custom =
+                result.credential as? CustomCredential ?: throw MobileFailure(Failure.SIGN_IN)
+            if (custom.type != GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) throw MobileFailure(
+                Failure.SIGN_IN
+            )
             val google = GoogleIdTokenCredential.createFrom(custom.data)
             // Firebase Tasks may complete after coroutine cancellation. Finish cleanup before disposing
             // this attempt's SDK instance, and never bind a retired result to the UI.
             withContext(NonCancellable) {
-                val signed = auth.signInWithCredential(GoogleAuthProvider.getCredential(google.idToken, null)).await()
+                val signed = auth.signInWithCredential(
+                    GoogleAuthProvider.getCredential(
+                        google.idToken,
+                        null
+                    )
+                ).await()
                 if (closed) auth.signOut() else publish(signed.user)
             }
             if (closed || user == null) throw MobileFailure(Failure.SIGN_IN)
-        } catch (error: CancellationException) { close(); throw error }
-        catch (_: Exception) { close(); throw MobileFailure(Failure.SIGN_IN) }
-        finally { signingIn = false; if (closed) dispose() }
+        } catch (error: CancellationException) {
+            close(); throw error
+        } catch (_: Exception) {
+            close(); throw MobileFailure(Failure.SIGN_IN)
+        } finally {
+            signingIn = false; if (closed) dispose()
+        }
     }
+
     override suspend fun tokenFor(user: FirebaseSession): FirebaseToken {
         val current = sdkUser
         if (closed || current == null || this.user != user) throw MobileFailure(Failure.SIGN_IN)
@@ -92,11 +121,18 @@ private class SdkSession(context: Context, private val configuration: FirebaseCo
         if (closed || current !== sdkUser || this.user != user) throw MobileFailure(Failure.SIGN_IN)
         val claims = result.claims
         val firebase = claims["firebase"] as? Map<*, *>
-        return FirebaseToken(result.token ?: throw MobileFailure(Failure.SIGN_IN),
-            claims["iss"] as? String ?: "", claims["aud"] as? String ?: "", claims["sub"] as? String ?: "",
+        return FirebaseToken(
+            result.token ?: throw MobileFailure(Failure.SIGN_IN),
+            claims["iss"] as? String ?: "",
+            claims["aud"] as? String ?: "",
+            claims["sub"] as? String ?: "",
             firebase?.get("tenant") as? String,
-            result.expirationTimestamp, result.issuedAtTimestamp, result.authTimestamp)
+            result.expirationTimestamp,
+            result.issuedAtTimestamp,
+            result.authTimestamp
+        )
     }
+
     override fun close() {
         if (closed) return
         closed = true; sdkUser = null; user = null
@@ -104,8 +140,18 @@ private class SdkSession(context: Context, private val configuration: FirebaseCo
         listeners.toList().forEach { it() }; listeners.clear()
         auth.signOut()
         // Provider cleanup contains no bearer/record data. Its failure never restores this session.
-        CoroutineScope(Dispatchers.Main.immediate).launch { try { credentials.clearCredentialState(ClearCredentialStateRequest()) } catch (_: Exception) { /* Local session is already closed. */ } }
+        CoroutineScope(Dispatchers.Main.immediate).launch {
+            try {
+                credentials.clearCredentialState(ClearCredentialStateRequest())
+            } catch (_: Exception) { /* Local session is already closed. */
+            }
+        }
         if (!signingIn) dispose()
     }
-    private fun dispose() { if (!disposed) { disposed = true; app.delete() } }
+
+    private fun dispose() {
+        if (!disposed) {
+            disposed = true; app.delete()
+        }
+    }
 }
