@@ -9,7 +9,7 @@ OP = "projects/example-project/locations/asia-northeast3/operations/op1"
 
 def service_state(serving: str, revisions: list[str], updated: str = "2026-10-10T10:00:00Z") -> list[dict]:
     return [
-        {"path": f"/v2/{SERVICE}", "json": {"generation": "3", "observedGeneration": "3", "updateTime": updated, "latestReadyRevision": f"{SERVICE}/revisions/{serving}", "latestCreatedRevision": f"{SERVICE}/revisions/{serving}",
+        {"path": f"/v2/{SERVICE}", "json": {"uid":"synthetic-eval-uid","etag":"synthetic-eval-etag","generation": "3", "observedGeneration": "3", "updateTime": updated, "latestReadyRevision": f"{SERVICE}/revisions/{serving}", "latestCreatedRevision": f"{SERVICE}/revisions/{serving}",
                                               "trafficStatuses": [{"type": "TRAFFIC_TARGET_ALLOCATION_TYPE_REVISION", "revision": serving, "percent": 100}]}},
         {"path": f"/v2/{SERVICE}/revisions", "json": {"revisions": [{"name": f"{SERVICE}/revisions/{r}", "createTime": "2026-10-10T10:00:00Z", "conditions": [{"type": "Ready", "state": "CONDITION_SUCCEEDED"}],
                                                                    "containers": [{"image": "example/shop:1", "env": [{"name": "APP_VERSION"}] + ([{"name": "FAIL_RATE"}] if r.endswith("bad") else [])}]} for r in revisions]}},

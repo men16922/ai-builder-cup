@@ -6,7 +6,9 @@ export const agentActionSchema = z.object({ action: z.literal('rollback_traffic'
 export type AgentAction = z.infer<typeof agentActionSchema>;
 export const agentStepSchema = z.object({ at: z.iso.datetime(), agent: z.string().min(1).max(40), kind: z.enum(['call', 'result', 'note']), name: z.string().min(1).max(60), summary: z.string().max(240) }).strict();
 export type AgentStep = z.infer<typeof agentStepSchema>;
-export const agentApprovalSchema = z.object({ action: agentActionSchema, risk: z.enum(['low', 'medium', 'high']), reason: z.string().max(500), requestedAt: z.iso.datetime(), expiresAt: z.iso.datetime() }).strict();
+export const agentApprovalSchema = z.object({ action: agentActionSchema, risk: z.enum(['low', 'medium', 'high']), reason: z.string().max(500), requestedAt: z.iso.datetime(), expiresAt: z.iso.datetime(),
+  reviewed:z.object({observedAt:z.iso.datetime(),traffic:z.array(z.object({revision:name,percent:z.number().int().min(1).max(100)}).strict()).min(1).max(10)}).strict().optional(),
+}).strict();
 export type AgentApproval = z.infer<typeof agentApprovalSchema>;
 export const agentTaskStateSchema = z.enum(['working', 'awaiting_approval', 'deciding', 'completed', 'rejected', 'failed', 'unknown']);
 export type AgentTaskState = z.infer<typeof agentTaskStateSchema>;

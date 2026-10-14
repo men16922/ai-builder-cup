@@ -14,6 +14,8 @@ export type GoogleAccessToken = { accessToken: string; expiresAt: number };
 export interface GoogleCredentials {
   readonly principal: string; readonly sessionId: string; readonly mode: 'live' | 'synthetic';
   token(signal: AbortSignal): Promise<GoogleAccessToken>;
+  /** Separate least-scope token for the official Maps MCP. Never exposed to models/clients. */
+  mapsToken?(signal: AbortSignal): Promise<GoogleAccessToken>;
   close(): void;
 }
 export class GoogleCredentialError extends Error {
@@ -47,7 +49,7 @@ export async function createSyntheticGoogleCredentials(input: unknown, fetcher: 
 }
 async function create(input: unknown, fetcher: typeof fetch, synthetic: boolean, now: () => number): Promise<GoogleCredentials> {
   const config = googleCredentialConfiguration.parse(input), sourceDigest = config.method === 'impersonated_user' ? (await readSource(config.sourceFile)).digest : '';
-  const sessionId = hash(JSON.stringify([config, sourceDigest])); let cached: GoogleAccessToken | undefined, closed = false;
+  const sessionId = hash(JSON.stringify([config, sourceDigest])); const cached = new Map<string, GoogleAccessToken>(); let closed = false;
   const guard = () => { if (closed || (!synthetic && process.env.MOBILEOPS_OFFLINE_TEST === '1')) throw fail('credential_disabled'); };
   const read = async (url: string, signal: AbortSignal, init: RequestInit = {}, metadata = false) => {
     guard(); signal.throwIfAborted();
@@ -65,18 +67,18 @@ async function create(input: unknown, fetcher: typeof fetch, synthetic: boolean,
     const email = (await metadata('instance/service-accounts/default/email', signal)).trim();
     if (email !== config.serviceAccountEmail || (await metadata('project/project-id', signal)).trim() !== config.runtimeProjectId) throw fail('credential_changed');
   };
-  return { principal: config.serviceAccountEmail, sessionId, mode: synthetic ? 'synthetic' : 'live', close() { closed = true; cached = undefined; },
-    async token(parent) {
+  const issue = async (parent: AbortSignal, scope: 'https://www.googleapis.com/auth/cloud-platform' | 'https://www.googleapis.com/auth/maps-platform.mapstools'): Promise<GoogleAccessToken> => {
       const signal = AbortSignal.any([parent, AbortSignal.timeout(5000)]);
       try {
         guard(); signal.throwIfAborted(); await identity(signal);
         const source = config.method === 'impersonated_user' ? await readSource(config.sourceFile) : undefined;
         if (source && source.digest !== sourceDigest) throw fail('credential_changed');
         guard(); signal.throwIfAborted();
-        if (cached && cached.expiresAt - now() > 60000) return { ...cached };
+        const existing = cached.get(scope);
+        if (existing && existing.expiresAt - now() > 60000) return { ...existing };
         const started = now(); let fresh: GoogleAccessToken;
         if (config.method === 'metadata') {
-          const token = tokenResponse.parse(JSON.parse(await metadata('instance/service-accounts/default/token', signal)));
+          const token = tokenResponse.parse(JSON.parse(await metadata('instance/service-accounts/default/token' + (scope === 'https://www.googleapis.com/auth/cloud-platform' ? '' : '?scopes=' + encodeURIComponent(scope)), signal)));
           fresh = { accessToken: token.access_token, expiresAt: started + token.expires_in * 1000 };
           await identity(signal);
         } else {
@@ -85,13 +87,17 @@ async function create(input: unknown, fetcher: typeof fetch, synthetic: boolean,
             body: new URLSearchParams({ grant_type: 'refresh_token', client_id: source!.value.client_id, client_secret: source!.value.client_secret, refresh_token: source!.value.refresh_token }).toString(),
           })));
           const value = z.object({ accessToken, expireTime: z.iso.datetime() }).strict().parse(JSON.parse(await read(`https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/${encodeURIComponent(config.serviceAccountEmail)}:generateAccessToken`, signal, {
-            method: 'POST', headers: { Authorization: `Bearer ${user.access_token}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ scope: ['https://www.googleapis.com/auth/cloud-platform'], lifetime: '600s' }),
+            method: 'POST', headers: { Authorization: `Bearer ${user.access_token}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ scope: [scope], lifetime: '600s' }),
           })));
           fresh = { accessToken: value.accessToken, expiresAt: Date.parse(value.expireTime) };
           if (fresh.expiresAt - started > 630000 || (await readSource(config.sourceFile)).digest !== sourceDigest) throw fail('credential_changed');
         }
-        guard(); signal.throwIfAborted(); if (fresh.expiresAt - now() <= 60000) throw fail(); cached = fresh; return { ...fresh };
-      } catch (error) { cached = undefined; if (signal.aborted) throw fail('credential_cancelled'); if (error instanceof GoogleCredentialError) throw error; throw fail(); }
-    },
+        guard(); signal.throwIfAborted(); if (fresh.expiresAt - now() <= 60000) throw fail(); cached.set(scope, fresh); return { ...fresh };
+      } catch (error) { cached.clear(); if (signal.aborted) throw fail('credential_cancelled'); if (error instanceof GoogleCredentialError) throw error; throw fail(); }
+  };
+  return { principal: config.serviceAccountEmail, sessionId, mode: synthetic ? 'synthetic' : 'live',
+    close() { closed = true; cached.clear(); },
+    token: parent => issue(parent, 'https://www.googleapis.com/auth/cloud-platform'),
+    mapsToken: parent => issue(parent, 'https://www.googleapis.com/auth/maps-platform.mapstools'),
   };
 }

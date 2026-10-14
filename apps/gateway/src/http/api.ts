@@ -10,12 +10,14 @@ import type { GcpOperations } from '../workflow/operations';
 import type { GcpNotifications } from '../notifications/notifications';
 import type { GcpAgentTasks } from '../crew/agent-tasks';
 import type { GcpOverview } from '../crew/overview';
+import type { GcpMobility } from '../mobility/service';
 export type GcpApiServices = { access: GcpWebAccess; observations: GcpObservations; publicOrigin: string;
   analyses?: GcpAnalyses;
   operations?: GcpOperations;
   notifications?: GcpNotifications;
   agents?: GcpAgentTasks;
   overview?: GcpOverview;
+  mobility?: GcpMobility;
   web?: Partial<Record<'personal' | 'organization', GcpWebConfiguration>> };
 export const isGcpApiPath = (path: string) => path.startsWith('/api/gcp/') || path.startsWith('/api/mobile/v1/') || /^\/api\/(?:personal|organizations)\/v1\/.*\/gcp(?:\/|$)/.test(path);
 export async function handleGcpApi(request: IncomingMessage, response: ServerResponse, services?: GcpApiServices) {
@@ -40,9 +42,20 @@ export async function handleGcpApi(request: IncomingMessage, response: ServerRes
       if (config.configured && config.scope.edition !== configRoute[1]) throw fail(503, 'gcp_not_configured');
       send(200, config); return;
     }
+    if(url.pathname==='/api/gcp/crew/execution-claims'){
+      if(request.method!=='POST'||!services.agents)throw fail(404,'not_found');
+      if(request.headers['content-type']?.split(';')[0]?.trim()!=='application/json')throw fail(415,'json_required');
+      if(request.rawHeaders.filter((name,index)=>index%2===0&&name.toLowerCase()==='authorization').length!==1)throw fail(403,'approval_grant_invalid');
+      const chunks:Buffer[]=[];let bytes=0;
+      for await(const chunk of request){const value=Buffer.from(chunk);bytes+=value.length;if(bytes>8192)throw fail(413,'body_too_large');chunks.push(value);}
+      let input:unknown;try{input=JSON.parse(Buffer.concat(chunks).toString('utf8'));}catch{throw fail(400,'invalid_json');}
+      const body=z.object({approval:z.object({signature:z.string()}).passthrough()}).strict().parse(input);
+      if(request.headers.authorization!==`Bearer ${body.approval.signature}`)throw fail(403,'approval_grant_invalid');
+      send(200,await services.agents.claimExecution(body.approval));return;
+    }
     const path = mobile ? url.pathname.replace('/api/mobile/v1/personal/', '/api/personal/v1/').replace('/api/mobile/v1/organizations/', '/api/organizations/v1/') : url.pathname;
-    const personal = /^\/api\/personal\/v1\/workspaces\/([A-Za-z0-9_.:-]{1,128})\/gcp\/(inbox|resources|observations|analyses|plans|executions|devices|notifications|agent-tasks|overview)(?:\/([a-f0-9-]{36})(?:\/(review|decision|execute|handoff|cancel|revoke|retire))?)?$/.exec(path);
-    const organization = /^\/api\/organizations\/v1\/([A-Za-z0-9_.:-]{1,128})\/workspaces\/([A-Za-z0-9_.:-]{1,128})\/gcp\/(inbox|resources|observations|analyses|plans|executions|devices|notifications|agent-tasks|overview)(?:\/([a-f0-9-]{36})(?:\/(review|decision|execute|handoff|cancel|revoke|retire))?)?$/.exec(path);
+    const personal = /^\/api\/personal\/v1\/workspaces\/([A-Za-z0-9_.:-]{1,128})\/gcp\/(inbox|resources|observations|analyses|plans|executions|devices|notifications|agent-tasks|overview|mobility)(?:\/([a-f0-9-]{36})(?:\/(review|decision|execute|handoff|cancel|revoke|retire))?)?$/.exec(path);
+    const organization = /^\/api\/organizations\/v1\/([A-Za-z0-9_.:-]{1,128})\/workspaces\/([A-Za-z0-9_.:-]{1,128})\/gcp\/(inbox|resources|observations|analyses|plans|executions|devices|notifications|agent-tasks|overview|mobility)(?:\/([a-f0-9-]{36})(?:\/(review|decision|execute|handoff|cancel|revoke|retire))?)?$/.exec(path);
     if (!personal && !organization) throw fail(404, 'not_found');
     const scope: GcpScope = personal ? { edition: 'personal', workspaceId: personal[1], label: 'Personal' }
       : { edition: 'organization', organizationId: organization![1], workspaceId: organization![2], label: 'Organization' };
@@ -65,6 +78,14 @@ export async function handleGcpApi(request: IncomingMessage, response: ServerRes
       const query = Object.fromEntries(params);
       send(200, await services.operations.inbox(session, { ...query, ...(query.limit === undefined ? {} : { limit: Number(query.limit) }) })); return;
     }
+    if (part === 'mobility') {
+      if (!services.mobility) throw fail(503, 'mobility_not_configured');
+      if (id || action) throw fail(404, 'not_found');
+      if (request.method === 'GET') { send(200, await services.mobility.read(session)); return; }
+      if (request.method !== 'POST') throw fail(405, 'method_not_allowed');
+      const { key, input } = await readJson();
+      send(200, await services.mobility.command(session, input, key)); return;
+    }
     if (part === 'overview') {
       if (!services.overview) throw fail(503, 'overview_not_configured');
       if (request.method !== 'GET' || id || action) throw fail(405, 'method_not_allowed');
@@ -83,7 +104,7 @@ export async function handleGcpApi(request: IncomingMessage, response: ServerRes
     const retirement = part === 'devices' && !!id && ['revoke', 'retire'].includes(action ?? '');
     if (notification && (!services.notifications || !retirement && !services.notifications.available)) throw fail(503, 'notifications_not_configured');
     if (mobile && (part === 'resources' || !id && !notification)) throw fail(404, 'not_found');
-    if (request.method === 'GET' && part === 'resources' && !id) { const list = await services.observations.list(session); send(200, { ...list, workflowAvailable: !!services.operations, agentsAvailable: !!services.agents, items: list.items.map(item => ({ ...item, analysisAvailable: services.analyses?.available(item.dataMode, item.telemetryEnabled) ?? false })) }); return; }
+    if (request.method === 'GET' && part === 'resources' && !id) { const list = await services.observations.list(session); send(200, { ...list, workflowAvailable: !!services.operations && list.items.length > 0, agentsAvailable: !!services.agents && list.items.length > 0, mobilityAvailable: !!services.mobility, items: list.items.map(item => ({ ...item, analysisAvailable: services.analyses?.available(item.dataMode, item.telemetryEnabled) ?? false })) }); return; }
     if (request.method === 'GET' && part === 'observations' && id && !action) { send(200, await services.observations.get(session, id)); return; }
     if (part === 'analyses' && !services.analyses) throw fail(503, 'analysis_not_configured');
     if (request.method === 'GET' && part === 'analyses' && id && !action) { send(200, await services.analyses!.get(session, id)); return; }

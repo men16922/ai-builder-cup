@@ -58,9 +58,9 @@ function Frame({ href, children, slots, assistantOpen, setAssistantOpen, setDraf
     {slots.pendingDecisions ? <span className="ops-badge ops-badge-inline" aria-hidden="true">{slots.pendingDecisions}</span> : null}
   </>;
   const geminiLabel = `${assistantLabel}${slots.pendingDecisions ? ` · ${t(`결정 ${slots.pendingDecisions}건 대기`, `${slots.pendingDecisions} decision waiting`)}` : ''}`;
-  return <div className={`ops-console${showAssistant && wide ? ' ops-with-assistant' : ''}${compact ? ' ops-rail-on' : ''}`}>
+  return <div className={`ops-console${showAssistant && wide ? ' ops-with-assistant' : ''}${compact ? ' ops-rail-on' : ''}${!nav ? ' ops-no-nav' : ''}`}>
     <header id="module-header" className="ops-topbar ops-console-bar">
-      <IconButton icon="menu" label={mobile ? t('탐색 열기', 'Open navigation') : rail ? t('탐색 펼치기', 'Expand navigation') : t('탐색 접기', 'Collapse navigation')} onClick={() => mobile ? setDrawer(true) : setRail(!rail)} />
+      {nav ? <IconButton icon="menu" label={mobile ? t('탐색 열기', 'Open navigation') : rail ? t('탐색 펼치기', 'Expand navigation') : t('탐색 접기', 'Collapse navigation')} onClick={() => mobile ? setDrawer(true) : setRail(!rail)} /> : null}
       <nav className="ops-brand-group" aria-label={t('제품 홈', 'Product home')}>
         <a href={href} className="ops-brand" aria-label={t(`${productName} 홈`, `${productName} home`)}><img src="/mark.svg" alt="" /><span>{productName}</span></a>
       </nav>
@@ -77,7 +77,7 @@ function Frame({ href, children, slots, assistantOpen, setAssistantOpen, setDraf
       </div>
     </header>
     <div className="ops-body">
-      {mobile ? null : <aside className="ops-sidebar">{navigation}</aside>}
+      {mobile || !nav ? null : <aside className="ops-sidebar">{navigation}</aside>}
       <main className="ops-main"><div className="module-content">{children}</div></main>
       {showAssistant ? <aside className="ops-assistant" aria-label={t('에이전트 패널', 'Crew assistant')}>
         <div className="ops-assistant-head"><Icon name="sparkle" size={20} /><strong>{assistantLabel}</strong><span className="ops-flex" /><IconButton icon="close" label={t('에이전트 패널 닫기', 'Close the assistant')} onClick={() => setAssistantOpen(false)} /></div>

@@ -32,6 +32,8 @@ export class AgentClient {
   }
   async decide(id: string, decision: 'approve' | 'reject') {
     if (this.value.busy) return;
+    const current=this.value.items.find(item=>item.id===id);
+    if(!current||current.state!=='awaiting_approval'||!current.approval||Date.parse(current.approval.expiresAt)<=Date.now()||decision==='approve'&&!current.approval.reviewed)return;
     this.set({ busy: true, error: undefined });
     try { const task = agentTaskSchema.parse(await this.call(`/agent-tasks/${id}/decision`, { key: crypto.randomUUID(), body: { decision } })); this.set({ busy: false }); this.upsert(task); this.watch(); }
     catch (error) { this.fail(error); }

@@ -12,28 +12,37 @@ import Assistant from './Assistant';
 import Dashboard from './Dashboard';
 import { AgentClient } from './agent-client';
 import { consoleNav, SERVICE_PREFIX } from './console-nav';
-import RehearsalConsole from './RehearsalConsole';
+import MobilityWelcome from '../mobility/MobilityWelcome';
+import MobilityWorkspace from '../mobility/MobilityWorkspace';
+import { MobilityClient } from '../mobility/mobility-client';
 export default function ConnectedObservation({ client, label }: { client: GcpObservationClient; label: string }) {
   const state = useSyncExternalStore(client.subscribe, client.getSnapshot), { t, language } = useLanguage();
   const selected = state.items.find(item => item.id === state.selectedId);
   const [chosenTab, setTab] = useState('');
+  const [journeyKind,setJourneyKind]=useState<'restaurant'|'charging'|'poi'>('restaurant');
   // With the agent crew connected the page becomes a console: dashboard first, the crew in a right-hand panel.
-  const consoleMode = !!state.identity && !!state.agentsAvailable;
+  const consoleMode = !!state.identity && (!!state.agentsAvailable || !!state.mobilityAvailable);
   const agents = useMemo(() => new AgentClient(client.agentCall), [client]);
+  const mobility = useMemo(() => new MobilityClient(client.agentCall), [client]);
   const board = useSyncExternalStore(agents.subscribe, agents.getSnapshot);
-  useEffect(() => { if (!consoleMode) return; agents.open(); void agents.load(); return () => agents.close(); }, [agents, consoleMode]);
+  useEffect(() => { if (!consoleMode || !state.agentsAvailable) return; agents.open(); void agents.load(); return () => agents.close(); }, [agents, consoleMode, state.agentsAvailable]);
   const pending = board.items.filter(item => item.state === 'awaiting_approval' && item.approval && Date.parse(item.approval.expiresAt) > Date.now()).length;
-  const tab = chosenTab || (consoleMode ? 'overview' : 'evidence');
+  const tab = chosenTab || (state.mobilityAvailable ? 'vehicle' : consoleMode ? 'overview' : 'evidence');
   const services = state.items.map(item => ({ id: item.id, label: item.label }));
   const active = tab === 'evidence' && selected ? `${SERVICE_PREFIX}${selected.id}` : tab;
   const open = (id: string) => { if (id.startsWith(SERVICE_PREFIX)) { setTab('evidence'); client.select(id.slice(SERVICE_PREFIX.length)); } else setTab(id); };
-  useConsoleSlots(consoleMode ? { assistant: <Assistant agents={agents} />, assistantLabel: 'Gemini', user: state.identity?.label, onSignOut: () => void client.signOut(), pendingDecisions: pending,
-    nav: { active, onSelect: open, groups: consoleNav(t, { pending, plans: !!state.workflowAvailable, services }) } } : undefined,
-    `${consoleMode}|${active}|${pending}|${state.identity?.key}|${state.workflowAvailable}|${language}|${services.map(item => item.id).join(',')}`);
+  useConsoleSlots(consoleMode ? { assistant: state.agentsAvailable ? <Assistant agents={agents} /> : undefined, assistantLabel: 'Gemini', user: state.identity?.label, onSignOut: () => void client.signOut(), pendingDecisions: pending,
+    nav: { active, onSelect: open, groups: consoleNav(t, { pending, plans: !!state.workflowAvailable, services, mobility: !!state.mobilityAvailable, operations: !!state.agentsAvailable || state.items.length > 0 }) } } : undefined,
+    `${consoleMode}|${active}|${pending}|${state.identity?.key}|${state.workflowAvailable}|${state.mobilityAvailable}|${language}|${services.map(item => item.id).join(',')}`);
   async function analyze() { await client.analyze(language); if (client.getSnapshot().operation) setTab('workflow'); }
   function openPlan(id: string) { setTab('workflow'); void client.loadPlan(id); }
-  const signedOutProblem = state.error && !state.identity ? <Banner type="error">{t('로그인하지 못했거나 이 계정에는 실제 크루 접근 권한이 없습니다. 허용된 계정으로 다시 시도하세요.', 'Sign-in did not complete, or this account has no access to the live crew. Try again with an allowed account.')}</Banner> : undefined;
-  if (!state.identity) return <RehearsalConsole onSignIn={() => void client.signIn()} status={signedOutProblem} />;
+  const signInMessage = state.error === 'sign_in_origin_denied' ? t('이 주소는 Google 로그인에 등록되지 않았습니다. 배포 주소에서 로그인해 주세요.', 'This address is not registered for Google sign-in. Use the deployed address.')
+    : state.error === 'sign_in_popup_blocked' ? t('로그인 팝업이 차단됐습니다. 브라우저에서 이 사이트의 팝업을 허용한 뒤 다시 시도하세요.', 'The sign-in popup was blocked. Allow popups for this site and try again.')
+    : state.error === 'sign_in_cancelled' ? t('로그인 창이 닫혔습니다. Google로 시작하기를 다시 선택해 주세요.', 'The sign-in window was closed. Select Continue with Google again.')
+    : state.error === 'sign_in_configuration_invalid' ? t('Google 로그인 설정을 확인할 수 없습니다. 관리자가 설정을 확인해야 합니다.', 'Google sign-in configuration is invalid. An administrator must check it.')
+    : t('로그인을 완료하지 못했습니다. 다시 시도해 주세요.', 'Sign-in did not complete. Please try again.');
+  const signedOutProblem = state.error && !state.identity ? <Banner type="error">{signInMessage}</Banner> : undefined;
+  if (!state.identity) return <MobilityWelcome onSignIn={() => void client.signIn()} signingIn={state.busy} status={signedOutProblem} />;
   const message = state.error === 'analysis_unknown' ? t('분석 완료 여부가 불명확합니다. 같은 요청으로 모델을 다시 호출하지 않습니다.', 'The analysis outcome is unknown. This request will not call the model again.')
     : state.error === 'analysis_in_progress' ? t('분석 중입니다. 같은 요청 확인으로 결과를 확인하세요.', 'Analysis is in progress. Check the same request for its result.')
     : state.error?.startsWith('model_') ? t('모델 응답의 형식이나 근거를 확인할 수 없어 계획을 저장하지 않았습니다.', 'The model response or its evidence could not be validated. No plan was saved.')
@@ -55,6 +64,7 @@ export default function ConnectedObservation({ client, label }: { client: GcpObs
       {selected?.binding.target.provider === 'gcp' ? <p className="gcp-wrap">{selected.binding.target.projectId} · {selected.binding.target.location} · {selected.binding.target.revision}</p> : null}
     </Stack></Card>;
     return <Stack gap="l">
+      {state.mobilityAvailable && ['vehicle','journey','assistance'].includes(panelTab) ? <MobilityWorkspace client={mobility} page={panelTab as 'vehicle'|'journey'|'assistance'} journeyKind={journeyKind} onNavigate={(page,kind)=>{if(kind)setJourneyKind(kind);open(page);}} /> : null}
       {panelTab === 'overview' ? <Dashboard client={client} agents={agents} /> : null}
       {panelTab === 'evidence' ? <><OperationsOverview state={state} />{connection}<div className="gcp-console-workspace gcp-console-single"><div className="gcp-console-main">{state.observation ? <ObservationPanel snapshot={state.observation.snapshot} /> : emptyEvidence}</div>{analysisPanel}</div></> : null}
       {panelTab === 'workflow' ? <>{state.error ? <Banner type="error">{message}</Banner> : null}{planView}</> : null}

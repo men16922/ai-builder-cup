@@ -8,7 +8,6 @@ from mobileops_agents.agents.chief import build_chief_agent
 from mobileops_agents.agents.diagnosis import build_diagnosis_agent
 from mobileops_agents.agents.guardian import build_guardian_agent
 from mobileops_agents.agents.ops import build_ops_agent
-from mobileops_agents.approval import sign_approval
 from mobileops_agents.config import load_settings
 from mobileops_agents.executor import LocalExecutor
 from mobileops_agents.gcp.client import default_client
@@ -33,19 +32,16 @@ async def drive(runner, session, message):
 
 
 async def main(prompt: str, approve: bool):
+    if approve:
+        raise SystemExit("Local mutation approval is disabled. Use the authenticated gateway.")
     settings = load_settings()
     tools = OpsTools(settings, default_client())
     chief = build_chief_agent(settings, build_ops_agent(settings, tools), build_diagnosis_agent(settings), build_guardian_agent(settings), LocalExecutor(tools))
     runner = InMemoryRunner(agent=chief, app_name="local")
     session = await runner.session_service.create_session(app_name="local", user_id="dev")
     pending = await drive(runner, session, types.Content(role="user", parts=[types.Part(text=prompt)]))
-    if pending and approve:
-        original = pending.args["originalFunctionCall"]["args"]
-        action = pending.args["toolConfirmation"]["payload"]["action"]
-        signed = sign_approval(settings.approval_key, action, "local-developer").to_dict()
-        print("APPROVING", json.dumps(action))
-        answer = types.Part(function_response=types.FunctionResponse(id=pending.id, name="adk_request_confirmation", response={"confirmed": True, "payload": {"approval": signed}}))
-        await drive(runner, session, types.Content(role="user", parts=[answer]))
-        _ = original
+    if pending:
+        print("Use the authenticated Aide gateway to review and approve. Local signing cannot issue a durable live grant.")
+    _ = approve
 
 asyncio.run(main(sys.argv[1], "--approve" in sys.argv))

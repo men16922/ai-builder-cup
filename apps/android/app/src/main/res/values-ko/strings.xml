@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ui_request_review" formatted="false">"검토 요청"</string>
+    <string name="ui_confirm_review" formatted="false">"검토 확인"</string>
+    <string name="ui_run_fixed_read_explicitly" formatted="false">"고정 읽기 명시적 실행"</string>
+    <string name="ui_cancel_before_start" formatted="false">"시작 전 중지"</string>
+    <string name="ui_save_handoff" formatted="false">"인계 저장"</string>
+    <string name="state_not_requested" formatted="false">"미요청"</string>
+    <string name="state_pending" formatted="false">"대기"</string>
+    <string name="state_approved" formatted="false">"확인됨"</string>
+    <string name="state_rejected" formatted="false">"거절됨"</string>
+    <string name="state_changes_requested" formatted="false">"수정 요청"</string>
+    <string name="state_not_started" formatted="false">"시작 전"</string>
+    <string name="state_queued" formatted="false">"실행 대기"</string>
+    <string name="state_running" formatted="false">"진행 중"</string>
+    <string name="state_succeeded" formatted="false">"조회 완료"</string>
+    <string name="state_failed" formatted="false">"실패"</string>
+    <string name="state_unknown" formatted="false">"미확인"</string>
+    <string name="state_cancelled" formatted="false">"중지"</string>
+    <string name="state_collected" formatted="false">"수집됨"</string>
+    <string name="state_no_data" formatted="false">"일치 표본 없음"</string>
+    <string name="state_denied" formatted="false">"권한 거절"</string>
+    <string name="state_missing" formatted="false">"누락"</string>
+    <string name="state_unavailable" formatted="false">"조회 불가"</string>
+    <string name="state_skipped" formatted="false">"건너뜀"</string>
+    <string name="state_partial" formatted="false">"부분 근거"</string>
+    <string name="state_complete" formatted="false">"완전"</string>
+    <string name="ui_gcp_work_notification" formatted="false">"GCP 업무 알림"</string>
+    <string name="ui_sign_in_to_the_task_s_workspace" formatted="false">"해당 업무의 공간으로 로그인한 뒤 최신 기록을 여세요. 알림은 검토나 실행을 시작하지 않습니다."</string>
+    <string name="ui_open_latest_task" formatted="false">"최신 업무 열기"</string>
+    <string name="ui_dismiss_notification" formatted="false">"알림 닫기"</string>
+    <string name="ui_your_next_decision_wherever_you_are" formatted="false">"당신의 이동에,\n한발 먼저."</string>
+    <string name="ui_review_gcp_evidence_explicitly_run_a_fixed" formatted="false">"차량 상태부터 충전 문제, 오늘 저녁의 목적지까지. 필요한 순간에 Aide가 함께합니다."</string>
+    <string name="ui_synthetic_rehearsal" formatted="false">"합성 시연"</string>
+    <string name="ui_no_real_sign_in_google_api_or" formatted="false">"실제 로그인·Google API·Gemini 호출은 없습니다. 예제 기록은 앱을 종료하면 초기화됩니다."</string>
+    <string name="ui_personal_workspace" formatted="false">"개인 운영 공간"</string>
+    <string name="ui_organization_workspace" formatted="false">"조직 운영 공간"</string>
+    <string name="ui_your_gcp_plans_and_results" formatted="false">"내 GCP 계획과 결과"</string>
+    <string name="ui_team_review_and_handoff" formatted="false">"팀의 검토와 인계"</string>
+    <string name="ui_start_personal_rehearsal" formatted="false">"개인 시연 시작"</string>
+    <string name="ui_start_organization_rehearsal" formatted="false">"조직 시연 시작"</string>
+    <string name="ui_aws_and_on_prem_operations_remain_on" formatted="false">"AWS·On-Prem 운영은 웹에서 사용합니다."</string>
+    <string name="ui_server_connection" formatted="false">"서버 연결"</string>
+    <string name="ui_personal_synthetic" formatted="false">"개인용 · 합성"</string>
+    <string name="ui_organization_synthetic" formatted="false">"조직용 · 합성"</string>
+    <string name="ui_sign_out" formatted="false">"로그아웃"</string>
+    <string name="ui_leave_workspace" formatted="false">"공간 나가기"</string>
+    <string name="ui_example_clock_2026_10_10_01_00" formatted="false">"예제 시각 · 2026-10-10 01:00 UTC"</string>
+    <string name="ui_review_read_and_handoff_below_are_rehearsed" formatted="false">"아래 판단·조회·인계는 이 앱의 메모리에서만 연습합니다."</string>
+    <string name="ui_restore_demo_connection" formatted="false">"연결 복구 연습"</string>
+    <string name="ui_simulate_offline" formatted="false">"오프라인 전환 연습"</string>
+    <string name="ui_gcp_server_records" formatted="false">"GCP 서버 기록"</string>
+    <string name="ui_the_server_verifies_access_and_scope_review" formatted="false">"권한과 작업 범위는 서버에서 확인합니다. 검토와 결과 재조회는 새 실행을 시작하지 않습니다."</string>
+    <string name="ui_refresh_required" formatted="false">"최신 기록 확인 필요"</string>
+    <string name="ui_request_outcome_unknown" formatted="false">"전송 결과 미확인"</string>
+    <string name="ui_do_not_start_a_new_request_read" formatted="false">"새 요청을 만들지 않습니다. 최신 기록을 확인한 후 같은 요청으로만 재확인하세요."</string>
+    <string name="ui_read_latest_server_record" formatted="false">"최신 서버 기록 확인"</string>
+    <string name="ui_retry_identical_request" formatted="false">"동일 요청으로 재확인"</string>
+    <string name="ui_inbox" formatted="false">"← 받은 작업"</string>
+    <string name="ui_refresh_details" formatted="false">"최신 상세 조회"</string>
+    <string name="ui_configuration_needs_attention" formatted="false">"연결 설정 확인 필요"</string>
+    <string name="ui_the_packaged_server_or_identity_configuration_is" formatted="false">"앱에 포함된 서버·인증 설정이 올바르지 않습니다. 관리자가 설정을 확인해야 합니다."</string>
+    <string name="ui_live_access_is_not_configured_you_can" formatted="false">"실제 환경 미설정 · 아래 합성 시연을 사용할 수 있습니다."</string>
+    <string name="ui_connect_your_gcp_workspace" formatted="false">"Aide와 연결하기"</string>
+    <string name="ui_sign_in_with_google_to_view_work" formatted="false">"개인 차량 또는 조직 워크스페이스를 선택하세요. Google 로그인으로 데이터와 권한을 각각 확인합니다."</string>
+    <string name="ui_cancel_sign_in" formatted="false">"로그인 취소"</string>
+    <string name="ui_sign_in_with_google" formatted="false">"Google로 로그인"</string>
+    <string name="ui_notification_cleanup_unconfirmed" formatted="false">"알림 해제 확인 필요"</string>
+    <string name="ui_the_previous_app_connection_is_cleared_server" formatted="false">"앱의 이전 연결은 해제했습니다. 서버의 단말 해제는 확인하지 못했으며 등록 기한과 현재 권한 검사가 계속 적용됩니다."</string>
+    <string name="ui_work_notifications_on_this_device" formatted="false">"이 기기의 업무 알림"</string>
+    <string name="ui_push_reception_is_not_connected_in_this" formatted="false">"이 빌드에는 알림 수신 연결이 없습니다. 받은 작업을 새로고침해 계속할 수 있습니다."</string>
+    <string name="ui_device_registration_confirmed_message_arrival_is_not" formatted="false">"단말 등록을 확인했습니다. 메시지의 실제 도착을 보장하지 않습니다."</string>
+    <string name="ui_enable_to_register_for_gcp_work_notifications" formatted="false">"명시적으로 켜면 현재 공간의 GCP 업무 알림에 등록합니다."</string>
+    <string name="ui_registration_outcome_unknown_recheck_the_same_request" formatted="false">"등록 결과 미확인 · 새 등록 대신 같은 요청으로 재확인합니다."</string>
+    <string name="ui_recheck_registration" formatted="false">"동일 등록 재확인"</string>
+    <string name="ui_refresh_registration" formatted="false">"알림 등록 갱신"</string>
+    <string name="ui_enable_work_notifications" formatted="false">"업무 알림 켜기"</string>
+    <string name="ui_disable_notifications" formatted="false">"알림 끄기"</string>
+    <string name="ui_local_connection_cleared_server_retirement_is_unconfirmed" formatted="false">"로컬 연결은 해제했지만 서버 해제를 확인하지 못했습니다."</string>
+    <string name="ui_inbox_2" formatted="false">"받은 작업"</string>
+    <string name="ui_pending" formatted="false">"검토 대기"</string>
+    <string name="ui_results" formatted="false">"결과"</string>
+    <string name="ui_all" formatted="false">"전체"</string>
+    <string name="ui_latest_50_plans_up_to_20_per" formatted="false">"최근 50개 계획 범위 · 한 페이지 최대 20개"</string>
+    <string name="ui_server_time" formatted="false">"서버 시각: "</string>
+    <string name="ui_no_work_in_this_range" formatted="false">"이 범위에 표시할 작업이 없습니다."</string>
+    <string name="ui_synthetic_data" formatted="false">"합성 데이터"</string>
+    <string name="ui_live_collection_record" formatted="false">"실제 수집 기록"</string>
+    <string name="ui_evidence" formatted="false">"근거 "</string>
+    <string name="ui_expired_execution_unavailable" formatted="false">"계획 만료 · 실행 불가"</string>
+    <string name="ui_next_page" formatted="false">"다음 페이지"</string>
+    <string name="ui_refresh_inbox" formatted="false">"목록 새로고침"</string>
+    <string name="ui_review" formatted="false">"검토"</string>
+    <string name="ui_execution" formatted="false">"실행"</string>
+    <string name="ui_01_target_and_evidence" formatted="false">"01 · 대상과 근거"</string>
+    <string name="ui_revision" formatted="false">"리비전: "</string>
+    <string name="ui_observed" formatted="false">"관측: "</string>
+    <string name="ui_expires" formatted="false">"만료: "</string>
+    <string name="ui_fixed_read_15_min_up_to_50" formatted="false">"고정 읽기 · 15분 · 로그 최대 50건"</string>
+    <string name="ui_fixed_read_service_and_revision_metadata" formatted="false">"고정 읽기 · 서비스·리비전 메타데이터"</string>
+    <string name="ui_02_evidence_interpretation" formatted="false">"02 · 근거 해석"</string>
+    <string name="ui_missing_information" formatted="false">"부족한 정보"</string>
+    <string name="ui_i_checked_the_target_evidence_and_expiry" formatted="false">"대상·근거·기한을 확인했습니다. 검토는 실행을 시작하지 않습니다."</string>
+    <string name="ui_review_note" formatted="false">"검토 메모"</string>
+    <string name="ui_reject" formatted="false">"거절"</string>
+    <string name="ui_request_changes" formatted="false">"수정 요청"</string>
+    <string name="ui_03_execution_result" formatted="false">"03 · 실행 결과"</string>
+    <string name="ui_query_completion_is_separate_from_service_health" formatted="false">"조회 완료와 서비스 정상 여부는 다릅니다. 서비스 상태: 미확인"</string>
+    <string name="ui_evidence_coverage" formatted="false">"근거 범위: "</string>
+    <string name="ui_04_handoff" formatted="false">"04 · 인계"</string>
+    <string name="ui_a_handoff_note_does_not_change_the" formatted="false">"메모는 실행 결과를 성공으로 바꾸지 않습니다."</string>
+    <string name="ui_next_checks" formatted="false">"다음 확인 사항"</string>
+    <string name="ui_error_sample_scenario" formatted="false">"오류 표본 시나리오"</string>
+    <string name="ui_empty_sample_scenario" formatted="false">"빈 표본 시나리오"</string>
+    <string name="ui_latency_access_denied" formatted="false">"지연 지표 권한 거절"</string>
+    <string name="ui_connection_lost_records_are_hidden_and_nothing" formatted="false">"연결이 끊겼습니다. 기록을 숨겼으며 자동으로 제출하지 않습니다."</string>
+    <string name="ui_sign_in_again_to_continue" formatted="false">"다시 로그인해야 합니다."</string>
+    <string name="ui_the_current_user_cannot_access_this_record" formatted="false">"현재 사용자에게 이 기록의 접근 권한이 없습니다."</string>
+    <string name="ui_the_record_changed_or_expired" formatted="false">"기록이 변경되었거나 만료되었습니다."</string>
+    <string name="ui_the_response_does_not_match_the_expected" formatted="false">"대상과 응답을 확인하지 못했습니다."</string>
+    <string name="ui_the_request_could_not_be_confirmed_read" formatted="false">"요청을 확인하지 못했습니다. 최신 기록부터 조회하세요."</string>
+    <string name="ui_agent_crew" formatted="false">"에이전트 팀"</string>
+    <string name="ui_say_it_in_one_sentence_the_crew" formatted="false">"한 문장으로 지시하세요. 조사와 진단은 팀이 하고, 큰 결정만 당신에게 묻습니다."</string>
+    <string name="ui_ask_the_crew" formatted="false">"에이전트에게 지시"</string>
+    <string name="ui_check_shop_api_and_summarize_its_health" formatted="false">"shop-api 상태를 점검하고 요약해 줘."</string>
+    <string name="ui_send" formatted="false">"지시하기"</string>
+    <string name="ui_needs_a_look" formatted="false">"확인이 필요합니다"</string>
+    <string name="ui_steps">"진행 단계 %1$s개"</string>
+    <string name="ui_your_decision_is_needed" formatted="false">"당신의 결정이 필요합니다"</string>
+    <string name="ui_send_100_of_traffic_back_to_revision">"%1$s의 트래픽 100%%를 %2$s 리비전으로 되돌립니다."</string>
+    <string name="ui_risk_reversible_nothing_is_deleted_decide_within">"위험도 %1$s. 되돌릴 수 있고 리비전을 삭제하지 않습니다. %2$s분 안에 결정하세요."</string>
+    <string name="ui_the_approval_window_has_passed_ask_again" formatted="false">"승인 기한이 지났습니다. 새로 지시하세요."</string>
+    <string name="ui_approve_and_apply" formatted="false">"승인하고 실행"</string>
+    <string name="ui_note" formatted="false">"참고"</string>
+    <string name="ui_applied_and_confirmed" formatted="false">"적용되고 확인됨"</string>
+    <string name="ui_in_progress_not_finished" formatted="false">"진행 중 · 아직 끝나지 않음"</string>
+    <string name="ui_outcome_unknown_not_sent_again" formatted="false">"결과 미확인 · 다시 보내지 않음"</string>
+    <string name="ui_not_applied_failed" formatted="false">"적용 실패"</string>
+    <string name="ui_refused_nothing_changed" formatted="false">"거절됨 · 변경 없음"</string>
+    <string name="ui_working" formatted="false">"진행 중"</string>
+    <string name="ui_waiting_for_your_decision" formatted="false">"승인 대기"</string>
+    <string name="ui_applying_your_decision" formatted="false">"결정 처리 중"</string>
+    <string name="ui_done" formatted="false">"완료"</string>
+    <string name="ui_rejected" formatted="false">"거절됨"</string>
+    <string name="ui_failed" formatted="false">"실패"</string>
+    <string name="ui_outcome_unknown" formatted="false">"결과 미확인"</string>
+    <string name="ui_connection_lost_nothing_was_resent_automatically_check" formatted="false">"연결이 끊겼습니다. 자동으로 다시 보내지 않았습니다. 최신 상태를 확인하세요."</string>
+    <string name="ui_you_are_not_allowed_to_do_this" formatted="false">"이 작업을 지시할 권한이 없습니다."</string>
+    <string name="ui_the_approval_expired_or_was_already_handled" formatted="false">"승인 기한이 지났거나 이미 처리되었습니다."</string>
+    <string name="ui_the_server_response_could_not_be_verified" formatted="false">"서버 응답을 확인하지 못했습니다."</string>
+    <string name="ui_the_request_could_not_be_confirmed_read_2" formatted="false">"요청 결과를 확인하지 못했습니다. 최신 기록을 먼저 확인하세요."</string>
+    <string name="ui_ready" formatted="false">"준비 완료"</string>
+    <string name="ui_readiness_failed" formatted="false">"준비 실패"</string>
+    <string name="ui_pending_2" formatted="false">"대기 중"</string>
+    <string name="ui_reconciling" formatted="false">"배포 반영 중"</string>
+    <string name="ui_unknown" formatted="false">"미확인"</string>
+    <string name="ui_original_plan_evidence" formatted="false">"계획의 원본 근거"</string>
+    <string name="ui_application_health_unknown" formatted="false">"서비스 상태 · 미확인"</string>
+    <string name="ui_deployment_readiness_does_not_establish_application_health" formatted="false">"배포 준비 상태와 서비스 정상 여부는 다릅니다. 아래는 계획 준비 당시의 관측이며 이후 실행 결과가 아닙니다."</string>
+    <string name="ui_service_readiness" formatted="false">"서비스 배포 준비"</string>
+    <string name="ui_pinned_revision_readiness" formatted="false">"지정 revision 준비"</string>
+    <string name="ui_before_after_comparison" formatted="false">"조회 전후 비교: "</string>
+    <string name="ui_no_change_observed" formatted="false">"변경 없음"</string>
+    <string name="ui_changed_during_collection" formatted="false">"조회 중 변경"</string>
+    <string name="ui_recheck_incomplete" formatted="false">"재확인 미완료"</string>
+    <string name="ui_observed_traffic_allocation" formatted="false">"관측된 트래픽 배분"</string>
+    <string name="ui_allocation_is_unavailable_this_does_not_mean" formatted="false">"배분을 확인하지 못했습니다. 트래픽 0%라는 뜻은 아닙니다."</string>
+    <string name="ui_unknown_revision" formatted="false">"revision 미확인"</string>
+    <string name="ui_show_fewer_allocations" formatted="false">"트래픽 배분 접기"</string>
+    <string name="ui_show_all_allocations">"배분 %1$s개 모두 보기"</string>
+    <string name="ui_routing_configuration_not_request_volume_or_error" formatted="false">"라우팅 설정이며 요청 수나 오류율이 아닙니다."</string>
+    <string name="ui_logs_and_metrics_not_collected" formatted="false">"로그·지표 미수집"</string>
+    <string name="ui_this_plan_was_prepared_from_service_and" formatted="false">"이 계획의 원본 근거에는 서비스와 revision 메타데이터만 있습니다."</string>
+    <string name="ui_logs_and_request_metrics" formatted="false">"로그·요청 지표"</string>
+    <string name="ui_pinned_revision_15_minutes_ending_two_minutes" formatted="false">"지정 revision · 최근 2분을 제외한 15분 · 한 페이지"</string>
+    <string name="ui_returned_request_count" formatted="false">"반환된 요청 수"</string>
+    <string name="ui_returned_5xx_count" formatted="false">"반환된 5xx 요청 수"</string>
+    <string name="ui_highest_per_minute_per_code_p95" formatted="false">"분·응답 코드별 p95 최댓값"</string>
+    <string name="ui_returned_requests_by_response_code" formatted="false">"응답 코드별 반환된 요청 수"</string>
+    <string name="ui_recent_log_samples" formatted="false">"최근 로그 표본"</string>
+    <string name="ui_more_pages_exist_partial_results" formatted="false">"다음 페이지 있음 · 부분 결과"</string>
+    <string name="ui_show_fewer_log_samples" formatted="false">"로그 표본 접기"</string>
+    <string name="ui_show_all_samples">"표본 %1$s개 모두 보기"</string>
+    <string name="ui_sample_limits" formatted="false">"표본의 한계"</string>
+    <string name="ui_these_are_not_complete_request_totals_error" formatted="false">"전체 요청 수·오류율·시간창 전체의 p95가 아닙니다. 없는 표본은 0으로 채우지 않습니다. 로그 본문·URL·IP는 포함하지 않으며 원인이나 서비스 정상을 확정하지 않습니다."</string>
+    <string name="ui_hide_deployment_details_and_sources" formatted="false">"배포 세부·출처 접기"</string>
+    <string name="ui_show_deployment_details_and_sources" formatted="false">"배포 세부·출처 보기"</string>
+    <string name="ui_deployment_details" formatted="false">"배포 세부 근거"</string>
+    <string name="ui_latest_created_revision" formatted="false">"최근 생성 revision: "</string>
+    <string name="ui_latest_ready_revision" formatted="false">"최근 준비 revision: "</string>
+    <string name="ui_requested_observed_generation" formatted="false">"요청 / 관측 generation: "</string>
+    <string name="ui_reconciling_2" formatted="false">"배포 반영 중: "</string>
+    <string name="ui_yes" formatted="false">"예"</string>
+    <string name="ui_no" formatted="false">"아니요"</string>
+    <string name="ui_missing_needs_review" formatted="false">"누락/확인 필요: "</string>
+    <string name="ui_service_read" formatted="false">"서비스 조회"</string>
+    <string name="ui_pinned_revision_read" formatted="false">"지정 revision 조회"</string>
+    <string name="ui_service_recheck" formatted="false">"서비스 재조회"</string>
+    <string name="ui_logs" formatted="false">"로그"</string>
+    <string name="ui_requests" formatted="false">"요청 수"</string>
+    <string name="ui_latency" formatted="false">"응답 지연"</string>
+    <string name="ui_collected" formatted="false">"수집됨"</string>
+    <string name="ui_no_samples_not_zero" formatted="false">"표본 없음 · 0 아님"</string>
+    <string name="ui_access_denied" formatted="false">"권한 거절"</string>
+    <string name="ui_not_found" formatted="false">"대상 미확인"</string>
+    <string name="ui_target_unverified_not_queried" formatted="false">"대상 미확인 · 조회 생략"</string>
+    <string name="ui_collection_unavailable" formatted="false">"수집 미완료"</string>
+    <string name="app_name" formatted="false">"Aide"</string>
+    <string name="app_tagline" formatted="false">"당신의 이동에, 한발 먼저"</string>
+    <string name="agent_request_language" formatted="false">"ko"</string>
+    <string name="onboarding_help" formatted="false">"사용 안내"</string>
+    <string name="onboarding_skip" formatted="false">"건너뛰기"</string>
+    <string name="onboarding_next" formatted="false">"다음"</string>
+    <string name="onboarding_back" formatted="false">"이전"</string>
+    <string name="onboarding_finish" formatted="false">"시작하기"</string>
+    <string name="onboarding_progress">"%1$d / %2$d"</string>
+    <string name="onboarding_title_1" formatted="false">"내 차의 상태를,\n한눈에."</string>
+    <string name="onboarding_body_1" formatted="false">"가상 차량의 배터리·충전·위치를 확인하세요. 서버에 저장된 최신 상태를 사용하며 실제 차량을 제어하지 않습니다."</string>
+    <string name="onboarding_title_2" formatted="false">"문제가 생기면,\nAide가 함께."</string>
+    <string name="onboarding_body_2" formatted="false">"AI가 근거를 조사합니다. 미리 허용한 안전한 충전 재연결은 한 번 조치하고 보고합니다. 낯선 증상이나 위험한 상황은 사람의 결정이 필요합니다."</string>
+    <string name="onboarding_title_3" formatted="false">"처음엔 선택하고,\n다음엔 Favorite으로."</string>
+    <string name="onboarding_body_3" formatted="false">"근처 저녁 식사나 충전소를 요청하세요. 처음에는 목적지를 선택하고, 같은 상황에서는 기억된 선택으로 지도 이동을 시뮬레이션합니다. 언제든 취소할 수 있습니다."</string>
+    <string name="workspace_value_title" formatted="false">"내 차와 운영 환경을 한곳에서"</string>
+    <string name="workspace_value_body" formatted="false">"개인 차량에서는 충전과 이동을, 조직에서는 서버 문제 조사와 승인된 조치를 확인합니다. 차량 제어는 시뮬레이션입니다."</string>
+    <string name="push_channel" formatted="false">"GCP 업무"</string>
+    <string name="push_body" formatted="false">"확인할 GCP 업무가 있습니다. 앱에서 최신 상태를 여세요."</string>
+    <string name="vehicle_image" formatted="false">"Aide 전기차 콘셉트 이미지"</string>
+    <string name="vehicle_request_attention" formatted="false">"최신 상태를 확인해 주세요"</string>
+    <string name="vehicle_connect_title" formatted="false">"나만의 Aide EV를 연결하세요"</string>
+    <string name="vehicle_connect_body" formatted="false">"서버에 저장되는 가상 차량으로 충전과 이동을 경험합니다. 실제 차량을 제어하지 않습니다."</string>
+    <string name="vehicle_connect" formatted="false">"가상 차량 연결"</string>
+    <string name="vehicle_refresh" formatted="false">"새로고침"</string>
+    <string name="vehicle_simulated" formatted="false">"가상 차량 · 서버에서 갱신"</string>
+    <string name="vehicle_battery" formatted="false">"배터리"</string>
+    <string name="vehicle_percent">"%1$d%%"</string>
+    <string name="vehicle_estimated_range" formatted="false">"예상 주행 가능 거리"</string>
+    <string name="vehicle_range_km">"%1$d km"</string>
+    <string name="vehicle_estimate_caption" formatted="false">"시뮬레이터 추정값"</string>
+    <string name="vehicle_charging" formatted="false">"충전"</string>
+    <string name="vehicle_power_kw">"%1$s kW"</string>
+    <string name="vehicle_interrupted" formatted="false">"연결 중단"</string>
+    <string name="vehicle_idle" formatted="false">"대기"</string>
+    <string name="vehicle_target">"목표 %1$d%%"</string>
+    <string name="vehicle_location">"가상 위치 · %1$s, %2$s"</string>
+    <string name="vehicle_aide_help" formatted="false">"문제가 생기면, Aide"</string>
+    <string name="vehicle_remedy_confirmed" formatted="false">"조치 후 확인됨"</string>
+    <string name="vehicle_needs_decision" formatted="false">"내 결정 필요"</string>
+    <string name="vehicle_human_help" formatted="false">"사람 확인 필요"</string>
+    <string name="vehicle_authority">"수행 권한 · %1$s"</string>
+    <string name="vehicle_standing_policy" formatted="false">"24시간 한정 자동 대응 정책"</string>
+    <string name="vehicle_explicit_decision" formatted="false">"직접 승인"</string>
+    <string name="vehicle_read_only" formatted="false">"읽기 전용 조사"</string>
+    <string name="vehicle_approve_reconnect" formatted="false">"가상 충전 세션 재연결 승인"</string>
+    <string name="vehicle_no_report" formatted="false">"아직 조사 기록이 없습니다. 증상이 발생하면 Aide가 근거를 확인합니다."</string>
+    <string name="vehicle_diagnose" formatted="false">"지금 진단하기"</string>
+    <string name="vehicle_policy_title" formatted="false">"자동 대응 범위"</string>
+    <string name="vehicle_policy_boundary" formatted="false">"주차 중인 가상 차량의 충전 연결 문제만, 안전 온도에서 한 번 재연결합니다. 같은 충전 연결 증상은 승인된 사례가 있을 때만 적용합니다. 과열과 분류되지 않은 경고는 사람에게 보고합니다."</string>
+    <string name="vehicle_policy_review" formatted="false">"24시간 동안 내 가상 차량에 재연결을 허용합니다. 회당 1회, 상태가 달라지면 중단합니다."</string>
+    <string name="vehicle_policy_allow" formatted="false">"이 범위로 허용"</string>
+    <string name="vehicle_cancel" formatted="false">"취소"</string>
+    <string name="vehicle_policy_disable" formatted="false">"자동 대응 끄기"</string>
+    <string name="vehicle_policy_configure" formatted="false">"자동 대응 설정"</string>
+    <string name="vehicle_simulator" formatted="false">"차량 시뮬레이터"</string>
+    <string name="vehicle_simulated_battery">"가상 배터리 · %1$d%%"</string>
+    <string name="vehicle_apply_state" formatted="false">"상태 적용"</string>
+    <string name="vehicle_charge_fault" formatted="false">"충전 연결 문제"</string>
+    <string name="vehicle_hot_fault" formatted="false">"배터리 과열"</string>
+    <string name="vehicle_unknown_fault" formatted="false">"낯선 충전 증상"</string>
+    <string name="vehicle_trip_dinner" formatted="false">"근처 저녁 먹을 곳을 추천하고 이동해 줘."</string>
+    <string name="vehicle_trip_charging" formatted="false">"근처 충전소를 찾아서 이동해 줘."</string>
+    <string name="vehicle_trip_poi" formatted="false">"근처 가볼 만한 곳을 찾아서 이동해 줘."</string>
+    <string name="vehicle_where_to" formatted="false">"어디로 갈까요?"</string>
+    <string name="vehicle_trip_intro" formatted="false">"처음엔 선택을 받고, 같은 맥락의 기억된 선택은 다음 이동에 사용합니다."</string>
+    <string name="vehicle_dinner" formatted="false">"오늘 저녁"</string>
+    <string name="vehicle_chargers" formatted="false">"충전소"</string>
+    <string name="vehicle_explore" formatted="false">"주변 장소"</string>
+    <string name="vehicle_trip_ask" formatted="false">"Aide에게 이동 요청"</string>
+    <string name="vehicle_let_aide" formatted="false">"Aide에게 맡기기"</string>
+    <string name="vehicle_maps_pending" formatted="false">"Google Places 연결을 준비 중입니다. 장소를 임의로 만들지 않습니다."</string>
+    <string name="vehicle_journey_moving" formatted="false">"시뮬레이션 이동 중"</string>
+    <string name="vehicle_journey_arrived" formatted="false">"도착"</string>
+    <string name="vehicle_journey_cancelled" formatted="false">"이동 취소"</string>
+    <string name="vehicle_choose_destination" formatted="false">"목적지를 선택하세요"</string>
+    <string name="vehicle_using_favorite" formatted="false">"저장한 Favorite 사용"</string>
+    <string name="vehicle_using_memory" formatted="false">"같은 상황의 이전 선택 사용"</string>
+    <string name="vehicle_remember_context" formatted="false">"7일 동안 같은 상황의 선택 기억"</string>
+    <string name="vehicle_place_rating">"평점 · %1$s"</string>
+    <string name="vehicle_ports_unknown" formatted="false">"사용 가능 충전기 미확인"</string>
+    <string name="vehicle_ports_available">"%1$d개 사용 가능"</string>
+    <string name="vehicle_go_here" formatted="false">"여기로 이동"</string>
+    <string name="vehicle_save_favorite" formatted="false">"Favorite 저장"</string>
+    <string name="vehicle_google_maps" formatted="false">"Google Maps 제공"</string>
+    <string name="vehicle_cancel_journey" formatted="false">"이동 취소"</string>
+    <string name="vehicle_journey_progress">"이동 진행 · %1$d%%"</string>
+    <string name="vehicle_simulation_route" formatted="false">"직선 경로 시뮬레이션 · 실제 도로 안내 아님"</string>
+    <string name="vehicle_tab" formatted="false">"내 차량"</string>
+    <string name="journey_tab" formatted="false">"충전·지도"</string>
+    <string name="assistance_tab" formatted="false">"Aide 도움"</string>
+    <string name="operations_tab" formatted="false">"서비스 운영"</string>
+    <string name="vehicle_map_position">가상 차량 위치</string>
+    <string name="vehicle_map_destination">목적지</string>
+    <string name="vehicle_maps_source">[%1$d] Google Maps · %2$s</string>
+    <string name="aide_privacy">개인정보와 데이터</string>
+    <string name="aide_terms">이용 안내</string>
+    <string name="vehicle_favorite_saved">Favorite 저장됨</string>
+    <string name="agent_reviewed_at">검토 시각 %1$s</string>
+    <string name="agent_reviewed_traffic">%1$s · 트래픽 %2$d%%</string>
+    <string name="agent_review_missing">검토한 서비스 상태가 없습니다. 새 조사를 요청하세요.</string>
+    <string name="vehicle_investigating">조사 중 · 아직 조치 없음</string>
+    <string name="recovery_title">함께 확인하고 복구</string>
+    <string name="recovery_check_signal">확인 가능한 충전 연결 증상</string>
+    <string name="recovery_check_parked">주차 상태</string>
+    <string name="recovery_check_temperature">배터리 온도 0–40°C</string>
+    <string name="recovery_check_battery">배터리가 목표 미만</string>
+    <string name="recovery_check_attempts">이 증상에서 미시도</string>
+    <string name="recovery_check_met">%1$s · 충족</string>
+    <string name="recovery_check_unmet">%1$s · 미충족</string>
+    <string name="recovery_review">복구 가이드 검토</string>
+    <string name="recovery_unavailable">현재 조건으로 재연결할 수 없습니다. 근거와 확인되지 않은 부분을 운영자와 확인해 주세요.</string>
+    <string name="recovery_step_checks">1. 현재 안전 조건을 확인합니다.</string>
+    <string name="recovery_step_reconnect">2. 기존 충전 런북으로 가상 세션을 한 번 재연결합니다.</string>
+    <string name="recovery_step_verify">3. 가상 차량의 충전 재개를 확인한 뒤 후보 사례로 저장합니다.</string>
+    <string name="recovery_once_boundary">이번 복구만 승인합니다. 향후 적용은 별도 사례 승인과 유효한 자동 대응 정책이 필요합니다.</string>
+    <string name="recovery_confirm">이 가이드로 함께 복구</string>
+    <string name="cases_title">함께 해결한 경험</string>
+    <string name="cases_boundary">검증한 복구만 기억합니다. 사례 승인과 자동 대응 권한은 별개입니다.</string>
+    <string name="cases_signal_title">충전 연결 중단 → 충전 재개</string>
+    <string name="cases_expired">만료</string>
+    <string name="cases_active">재발 대응에 사용</string>
+    <string name="cases_candidate">승인 전 후보</string>
+    <string name="cases_revoked">사용 중지</string>
+    <string name="cases_pattern">같은 차량·증상, 주차 중, 0–40°C, 목표 잔량 미만, 회당 한 번</string>
+    <string name="cases_verified_change">이전: 충전 중단 · 미시도 / 이후: 충전 재개 · 한 번 수행</string>
+    <string name="cases_simulation">가상 차량에서 확인한 기록입니다. 실제 차량 진단이 아닙니다.</string>
+    <string name="cases_register">재발 대응에 등록</string>
+    <string name="cases_revoke">이 사례 사용 중지</string>
+    <string name="cases_promotion_review">이 차량에서 같은 증상이 재발할 때 기존 재연결 런북의 근거로 사용합니다. 지금 조치하지 않으며 자동 대응 정책도 켜지지 않습니다.</string>
+    <string name="cases_promote">이 조건으로 사례 승인</string>
+    <string name="cases_valid_until">적용 기한 %1$s</string>
+    <string name="recovery_verified_remedy">가상 충전 %1$d회 재연결 → %2$d kW로 충전 재개</string>
+    <string name="cases_used">이전에 함께 확인한 사례로 재발에 대응했습니다.</string>
+    <string name="recovery_execution_record">근거와 수행 기록</string>
+    <string name="home_find_charger">충전소 찾기</string>
+    <string name="home_find_dinner">저녁 식사 요청</string>
+    <string name="home_needs_attention">확인이 필요한 증상이 있습니다.</string>
+    <string name="home_no_response">아직 대응 기록이 없습니다. 필요한 순간에 Aide가 함께합니다.</string>
+    <string name="home_review_response">대응과 권한 확인</string>
+    <string name="journey_pause_boundary">읽기·새로고침 후에는 자동으로 이동을 이어가지 않습니다. 현재 상태를 확인하고 계속하거나 취소하세요.</string>
+    <string name="journey_continue">시뮬레이션 계속</string>
+</resources>

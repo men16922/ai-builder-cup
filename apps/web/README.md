@@ -26,3 +26,5 @@ npm run dev                  # http://127.0.0.1:5174
 npm run test:agents          # browser flow of the console with a synthetic gateway (tests/browser/crew.mjs)
 npm run test:web             # signed-in evidence → plan → handoff flow (tests/browser/workflow.mjs)
 ```
+
+For authenticated local development, explicitly connect the loopback UI to the existing app gateway with `AIDE_DEV_API_ORIGIN=https://YOUR-SERVICE.run.app npm run dev`. The proxy keeps bearer and workspace checks at that gateway and rejects non-local/cross-site callers. Without this option, `npm run dev` serves UI source only; `/api` is not configured. Use the registered localhost address for Firebase sign-in. Private configuration and credentials remain outside the repository.

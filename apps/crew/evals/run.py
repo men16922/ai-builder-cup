@@ -10,6 +10,7 @@ import asyncio
 import json
 import statistics
 import time
+from datetime import datetime, timezone
 from pathlib import Path
 
 import httpx
@@ -28,6 +29,7 @@ from mobileops_agents.config import RegisteredService, Settings, load_settings
 from mobileops_agents.executor import LocalExecutor
 from mobileops_agents.gcp.client import GoogleApiClient
 from mobileops_agents.tools import OpsTools
+from mobileops_agents.execution_claims import ClaimError
 
 JUDGE_MODEL = "gemini-3.1-pro-preview"
 
@@ -51,7 +53,13 @@ def fake_google(scenario: Scenario):
 
 async def run_once(scenario: Scenario, settings: Settings) -> dict:
     client, calls = fake_google(scenario)
-    tools = OpsTools(settings, client)
+    class FixtureClaims:
+        # In-process synthetic evaluation seam only. This does not prove distributed execution.
+        def __init__(self): self.used=set()
+        async def claim(self, approval):
+            if approval.grant_id in self.used: raise ClaimError("refused", "synthetic approval already used")
+            self.used.add(approval.grant_id)
+    tools = OpsTools(settings, client, FixtureClaims())
     chief = build_chief_agent(settings, build_ops_agent(settings, tools), build_diagnosis_agent(settings), build_guardian_agent(settings), LocalExecutor(tools))
     runner = InMemoryRunner(agent=chief, app_name="eval")
     session = await runner.session_service.create_session(app_name="eval", user_id="eval")
@@ -75,7 +83,10 @@ async def run_once(scenario: Scenario, settings: Settings) -> dict:
     if scenario.approve and pause_call is not None and proposals:
         # A person approves the exact proposed action; the signature is made here, never by a model.
         action = canonical_action("rollback_traffic", proposals[0]["service"], proposals[0]["revision"])
-        approval = sign_approval(settings.approval_key, action, "eval-person").to_dict()
+        registered=settings.service(action["service"])
+        state=await client.request("GET", "https://run.googleapis.com/v2/"+registered.resource)
+        reviewed={"uid":state["uid"],"etag":state["etag"],"update_time":state["updateTime"],"observed_at":datetime.now(timezone.utc).isoformat().replace("+00:00","Z")}
+        approval = sign_approval(settings.approval_key, action, "eval-person",reviewed_state=reviewed).to_dict()
         response = types.FunctionResponse(id=pause_call.id, name="adk_request_confirmation", response={"confirmed": True, "payload": {"approval": approval}})
         await play(types.Content(role="user", parts=[types.Part(function_response=response)]))
     return {"seconds": round(time.time() - started, 1), "delegated": delegated, "proposals": proposals, "paused_for_person": paused, "api_calls": [f"{m} {p}" for m, p in calls], "final": final}

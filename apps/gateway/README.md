@@ -14,6 +14,7 @@ src/
   notifications/          registration, delivery worker, FCM adapter (disabled in the demo deployment)
   config/                 strict startup configuration and the composition of all of the above
   google/                 credentials, Gemini client
+  mobility/               actor-private vehicle twin, typed charging runbook, Gemini search planner and official Maps MCP
   evaluation/             the offline evaluation pack for the analysis model
 test/                     unit and integration tests (run with `npm run test:server`)
 ```
@@ -21,3 +22,7 @@ test/                     unit and integration tests (run with `npm run test:ser
 Rules that the tests enforce: a change needs a verified person and a reviewer role; the crew is open only to people who own a registered service; external calls stay outside retryable store transactions; unknown outcomes are never resent; empty evidence is never "zero" or "healthy".
 
 Build: `npm run build` bundles `src/main.ts` and `src/runtime.ts` into `dist/gateway` (see [docs/DEPLOY.md](../../docs/DEPLOY.md)).
+
+Mobility is disabled unless explicitly configured. Vehicles/driving are simulation; Maps searches are real, bounded external reads. See [Maps](../../docs/MAPS.md) for restricted SDK keys, separate server OAuth scope, source attribution and retention. Provider smoke is separate from deployed verification.
+
+Real crew mutations also need explicit `agents.executionTargets` with owner/workspace/UID bindings and `rollbackRevisions`. Read registrations do not confer change rights. The reviewed-state V2 signer and single-use claim broker use the existing store and check current membership. No caller-selected authority is accepted. See [approval boundary](../../docs/APPROVALS.md); the new source is not yet deployed.

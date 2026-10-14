@@ -1,13 +1,16 @@
 import { randomUUID } from 'node:crypto';
 import { z } from 'zod';
 import { CloudOperationError } from '@contracts/core/workflow';
-import { agentActionSchema, agentApprovalSchema, agentCreateSchema, agentDecisionSchema, agentTaskSchema, isTerminal,
+import { agentApprovalSchema, agentCreateSchema, agentDecisionSchema, agentTaskSchema, isTerminal,
   type AgentApproval, type AgentStep, type AgentTask, type AgentTaskState } from '@contracts/gcp/agent';
 import { cloudDigest } from '../store/integrity';
 import type { CloudStore } from '../store/store';
 import { cloudRecordKey } from '../workflow/workflow';
-import { signApproval } from './agent-approval';
+import { signApproval, verifySignedApproval, type SignedApproval } from './agent-approval';
 import type { GcpWebAccess, GcpWebSession } from '../auth/web-access';
+import { membershipKey, membershipSchema } from '../auth/organization-access';
+import type { CloudOwner } from '@contracts/core/operations';
+import type { ApprovalReviewPort, ReviewedState } from './approval-review';
 
 /** The crew's front door (an A2A server). The gateway only streams from it; it never receives credentials or runs tools. */
 /** Who may drive the crew: only people who own at least one registered resource in the scope. A verified Google sign-in alone is not enough. */
@@ -21,7 +24,9 @@ const requestKey = (session: GcpWebSession, operation: string, key: string) => c
 const unavailable = (status: number, code: string) => new CloudOperationError(status, code, 'The agent request is not available.');
 
 // Private record. The A2A ids and the person who asked never leave the server.
-type Stored = { task: AgentTask; actorId: string; callId?: string; a2a?: { taskId?: string; contextId: string }; decisionKey?: string; decisionActor?: string };
+type Stored = { task: AgentTask; actorId: string; callId?: string; a2a?: { taskId?: string; contextId: string }; decisionKey?: string; decisionActor?: string; reviewedState?:ReviewedState };
+type ExecutionGrant={approval:SignedApproval;action:AgentApproval['action'];owner:CloudOwner;workspaceId:string;identityExpiresAt:number;membershipVersion?:number;state:'ready'|'claimed'};
+const grantKey=(id:string)=>`crew-execution-grant:${z.uuid().parse(id)}`;
 const A2A_ID = z.string().regex(/^[A-Za-z0-9_.:-]{1,128}$/);
 const sanitize = (value: unknown, limit: number) => String(value ?? '').replace(/[\u0000-\u001f\u007f]+/g, ' ').trim().slice(0, limit);
 const iso = (ms: number) => new Date(ms).toISOString();
@@ -85,7 +90,8 @@ export function applyEvent(stored: Stored, event: Record<string, unknown>, nowMs
 export class GcpAgentTasks {
   private readonly store: CloudStore; private readonly access: GcpWebAccess; private readonly chief: ChiefPort; private readonly approvalKey: Buffer; private readonly now: () => number; private readonly entitled: CrewEntitlement;
   private readonly running = new Set<Promise<void>>();
-  constructor(store: CloudStore, access: GcpWebAccess, chief: ChiefPort, approvalKey: Buffer, entitled: CrewEntitlement, now = Date.now) { this.store = store; this.access = access; this.chief = chief; this.approvalKey = approvalKey; this.entitled = entitled; this.now = now; }
+  private readonly review?:ApprovalReviewPort;
+  constructor(store: CloudStore, access: GcpWebAccess, chief: ChiefPort, approvalKey: Buffer, entitled: CrewEntitlement, now = Date.now, review?:ApprovalReviewPort) { this.store = store; this.access = access; this.chief = chief; this.approvalKey = approvalKey; this.entitled = entitled; this.now = now; this.review=review; }
 
   private view(stored: Stored, session: GcpWebSession): AgentTask {
     const task = structuredClone(stored.task), at = this.now();
@@ -149,18 +155,23 @@ export class GcpAgentTasks {
       const prior = await tx.get<{ id: string; value: string }>(replay);
       if (prior) { if (prior.id !== id || prior.value !== input.decision) throw unavailable(409, 'idempotency_conflict'); return { dispatch: false as const }; }
       const stored = await tx.get<Stored>(taskKey(session, id));
+      await tx.get<ExecutionGrant>(grantKey(id));
       if (!stored) throw unavailable(404, 'agent_task_not_found');
       const { task } = stored;
       if (task.state !== 'awaiting_approval' || !task.approval || !stored.callId || !stored.a2a) throw unavailable(409, 'not_awaiting_approval');
       if (Date.parse(task.approval.expiresAt) <= at) throw unavailable(410, 'approval_expired');
+      if(input.decision==='approve'&&(!stored.reviewedState||!this.review?.allows(session.context.owner,session.context.workspaceId,task.approval.action,stored.reviewedState.uid)))throw unavailable(409,'approval_review_unverified');
       stored.task = { ...task, state: 'deciding', updatedAt: iso(at), decision: { value: input.decision, at: iso(at), byYou: true } }; stored.decisionKey = key; stored.decisionActor = session.context.actorId;
+      const signed=input.decision==='approve'?signApproval(this.approvalKey,task.approval.action,session.context.actorId,300,at,stored.reviewedState!,id):undefined;
+      if(signed)tx.put(grantKey(id),{approval:signed,action:task.approval.action,owner:session.context.owner,workspaceId:session.context.workspaceId,
+        identityExpiresAt:session.identity.expiresAt,...(session.organization?{membershipVersion:session.organization.membershipVersion}:{}),state:'ready'} satisfies ExecutionGrant);
       tx.put(taskKey(session, id), stored); tx.put(replay, { id, value: input.decision });
-      return { dispatch: true as const, stored };
+      return { dispatch: true as const, stored, signed };
     });
     if (outcome.dispatch) {
-      const { stored } = outcome, approval = stored.task.approval as AgentApproval, a2a = stored.a2a!;
+      const { stored } = outcome, a2a = stored.a2a!;
       const response = input.decision === 'approve'
-        ? { confirmed: true, payload: { approval: signApproval(this.approvalKey, agentActionSchema.parse(approval.action), session.context.actorId, 300, at) } }
+        ? { confirmed: true, payload: { approval: outcome.signed } }
         : { confirmed: false, payload: {} };
       const message = { kind: 'message', messageId: randomUUID(), role: 'user', contextId: a2a.contextId, ...(a2a.taskId ? { taskId: a2a.taskId } : {}),
         parts: [{ kind: 'data', data: { id: stored.callId, name: 'adk_request_confirmation', response }, metadata: { adk_type: 'function_response' } }] };
@@ -170,12 +181,48 @@ export class GcpAgentTasks {
     return this.get(session, id);
   }
 
+  /** Server-to-server capability redemption, not a user execution endpoint. No caller context is accepted.
+   * The gateway already owns Firestore; Ops gains no new Google permissions. No bearer/session is stored.
+   */
+  async claimExecution(raw:unknown):Promise<{claimed:true}> {
+    let approval:SignedApproval;
+    try{approval=verifySignedApproval(this.approvalKey,raw,this.now());}catch{throw unavailable(403,'approval_grant_invalid');}
+    await this.store.transact(async tx=>{
+      const key=grantKey(approval.grant_id),grant=await tx.get<ExecutionGrant>(key);
+      if(!grant||cloudDigest(grant.approval)!==cloudDigest(approval)||grant.approval.actor!==approval.actor||grant.identityExpiresAt<=this.now()
+        ||!this.review?.allows(grant.owner,grant.workspaceId,grant.action,approval.reviewed_state.uid))throw unavailable(403,'approval_grant_invalid');
+      if(grant.owner.kind==='organization'){
+        const member=membershipSchema.safeParse(await tx.get(membershipKey(grant.owner.organizationId,grant.workspaceId,approval.actor)));
+        if(!member.success||!member.data.active||member.data.version!==grant.membershipVersion||member.data.actorId!==approval.actor
+          ||member.data.organizationId!==grant.owner.organizationId||member.data.workspaceId!==grant.workspaceId||!member.data.roles.includes('reviewer'))throw unavailable(403,'approval_membership_changed');
+      }else if(grant.owner.userId!==approval.actor)throw unavailable(403,'approval_grant_invalid');
+      if(grant.state!=='ready')throw unavailable(409,'approval_already_claimed');
+      // Re-check the signed lease after store reads; a retry cannot extend or reuse it.
+      try{verifySignedApproval(this.approvalKey,approval,this.now());}catch{throw unavailable(403,'approval_grant_invalid');}
+      tx.put(key,{...grant,state:'claimed'} satisfies ExecutionGrant);
+    });
+    return {claimed:true};
+  }
+
   /** Streams the crew's progress into the stored record. The request that started it has already returned. */
   private launch(session: GcpWebSession, id: string, message: Record<string, unknown>) {
     const controller = new AbortController(), timer = setTimeout(() => controller.abort(), 240_000);
     const job = (async () => {
       try {
-        for await (const event of this.chief.stream(message, controller.signal)) await this.mutate(session, id, stored => applyEvent(stored, event, this.now()));
+        for await (const event of this.chief.stream(message, controller.signal)) {
+          const stored=await this.load(session,id),candidate=applyEvent(stored,event,this.now());
+          let reviewed:Awaited<ReturnType<ApprovalReviewPort['read']>>|undefined;
+          if(candidate.task.approval&&!stored.task.approval){
+            if(!this.review)throw Error('approval_review_unavailable');
+            await this.access.current(session);this.admit(session);
+            reviewed=await this.review.read(session,candidate.task.approval.action,AbortSignal.any([controller.signal,AbortSignal.timeout(10000)]));
+          }
+          await this.mutate(session,id,current=>{
+            const next=applyEvent(current,event,this.now());
+            if(reviewed&&next.task.approval){next.reviewedState=reviewed.state;next.task.approval.reviewed=reviewed.display;}
+            return next;
+          });
+        }
         // A stream that ends without a terminal or input-required state is an unknown outcome, never a silent success.
         await this.mutate(session, id, stored => {
           const state: AgentTaskState = stored.task.state;

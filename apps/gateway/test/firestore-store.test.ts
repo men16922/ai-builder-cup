@@ -37,3 +37,18 @@ test('Firestore adapter rejects malformed/oversized records and live storage is 
   await assert.rejects(s.store.transact(tx => tx.get('safe')), error => error instanceof CloudOperationError && error.code === 'invalid_stored_record');
   await assert.rejects(createFirestoreCloudStore({ projectId: 'synthetic-project' }), error => error instanceof CloudOperationError && error.code === 'live_store_disabled');
 });
+
+test('bounded records expire before Firestore TTL deletion and permanent claims remain readable', async () => {
+  let now=Date.parse('2026-10-15T00:00:00Z');
+  const values=new Map<string,unknown>();
+  const store=new FirestoreCloudStore({async runTransaction(body){return body({get:async id=>structuredClone(values.get(id)),set:(id,value)=>{values.set(id,structuredClone(value));}});}},()=>now);
+  await store.transact(async tx=>{
+    await tx.get('maps-view');await tx.get('claim');
+    tx.put('maps-view',{summary:'Synthetic grounded content'},new Date(now+1000));
+    tx.put('claim',{digest:'synthetic',state:'finished'});
+  });
+  now+=1000;
+  assert.equal(await store.transact(tx=>tx.get('maps-view')),undefined);
+  assert.deepEqual(await store.transact(tx=>tx.get('claim')),{digest:'synthetic',state:'finished'});
+  assert.equal(values.size,2); // Physical deletion may lag; access still refuses expired content.
+});

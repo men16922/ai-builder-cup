@@ -2,13 +2,15 @@
 
 Status: draft for the owner's decision, written 2026-10-10. English because the submission must be in English. The product name is Aide, confirmed on 2026-10-11.
 
+Historical direction and schedule. Current open work and rubric assessment are in `docs/NEXT_PLAN.md` and `docs/plans/2026-10-14-award-readiness.md`. Official dates rechecked on 14 October: registration closed 11 October, team formation closes 14 October, prototype submission closes 18 October.
+
 ## Facts that constrain the plan
 
 Verified on aibuildercup.com on 2026-10-10.
 
 | Item | Rule |
 | --- | --- |
-| Team | 2–4 members, no solo entry. Registration and team formation close **11 Oct**. |
+| Team | 2–4 members, no solo entry. Registration closes **11 Oct**; team formation closes **14 Oct** (rechecked 14 Oct). |
 | Building window | 7 Sep – 18 Oct. Prototype submission deadline **18 Oct**. Evaluation 19 Oct – 6 Nov. Finale in Singapore on 4 Dec. |
 | Submission | Working deployed link (Cloud Run, GCP or Firebase), demo video under 3 minutes, public GitHub repository, deck as PDF. All in English. |
 | Technology | Google Cloud stack, with Gemini or Gemma, or an agentic platform (Agent Platform, Antigravity, AI Studio). |

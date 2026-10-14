@@ -35,8 +35,10 @@ export default function Assistant({ agents }: { agents: AgentClient }) {
           <div className="ops-approval-head"><Icon name="warning" size={20} /><strong>{t('당신의 결정이 필요합니다', 'Your decision is needed')}</strong><StatusChip type="warning">{t('위험도', 'Risk')}: {approval.risk}</StatusChip></div>
           <p className="ops-approval-action">{t(`${approval.action.service}의 트래픽 100%를 ${approval.action.revision} 리비전으로 되돌립니다.`, `Send 100% of ${approval.action.service} traffic back to revision ${approval.action.revision}.`)}</p>
           <p>{approval.reason}</p>
+          {approval.reviewed?<div className="ops-reviewed-state"><p className="ops-caption">{t('검토한 서비스 상태','Reviewed service state')} · {time(approval.reviewed.observedAt)}</p>
+            {approval.reviewed.traffic.map((split,index)=><p className="ops-caption" key={index}>{split.revision} · {split.percent}%</p>)}</div>:<p>{t('검토한 서비스 상태가 없습니다. 새 조사를 요청하세요.','The reviewed service state is missing. Request a new investigation.')}</p>}
           <p className="ops-caption">{t(`되돌릴 수 있고 리비전을 삭제하지 않습니다. ${minutes}분 안에 결정하세요.`, `Reversible; nothing is deleted. Decide within ${minutes} min.`)}</p>
-          <div className="ops-actions"><Button variant="filled" loading={board.busy} onClick={() => void agents.decide(task.id, 'approve')}>{t('승인하고 실행', 'Approve and apply')}</Button><Button disabled={board.busy} onClick={() => void agents.decide(task.id, 'reject')}>{t('거절', 'Reject')}</Button></div>
+          <div className="ops-actions"><Button variant="filled" loading={board.busy} disabled={!approval.reviewed} onClick={() => void agents.decide(task.id, 'approve')}>{t('승인하고 실행', 'Approve and apply')}</Button><Button disabled={board.busy} onClick={() => void agents.decide(task.id, 'reject')}>{t('거절', 'Reject')}</Button></div>
         </section> : null}
         {task.note ? <Banner type={task.state === 'failed' ? 'error' : 'warning'}>{task.note}</Banner> : null}
         {task.result ? <Report text={task.result} /> : null}

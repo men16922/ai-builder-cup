@@ -4,11 +4,13 @@ Android 팀원을 위한 안내서입니다. 1~5단계는 소유자에게 받을
 
 **일정:** 제출물은 **2026-10-17에 동결**하고, 18일은 업로드와 접근 확인에 씁니다. 실기기 점검은 **14일까지** 끝내고, 15~16일은 수정에 쓰는 것을 목표로 합니다.
 
+**2026-10-14 업데이트:** 팀원의 SHA-1과 SHA-256을 Firebase에 등록하고 재조회로 확인했습니다. Google 로그인으로 계정이 생성됐으며, 없었던 조직 멤버십도 `operator`·`reviewer`로 등록하고 Firestore에서 확인했습니다. 앱을 완전히 닫았다 열고 **CloudOps demo team 조직 워크스페이스**로 다시 로그인한 뒤 6~7단계를 진행하세요. 실제 앱 접근과 실기기 흐름은 아직 별도 검증이 필요합니다.
+
 ## 맡은 일 (한 문장)
 
 **실제 Android 폰**에서 처음 쓰는 당직자처럼 Aide를 사용합니다. Google 로그인부터 승인 후 결과 확인까지, 앱을 닫았다 다시 열기와 승인 버튼 더블탭을 포함해 끝까지 해 보고, 막히는 것은 고치고, 본 것을 기록합니다.
 
-기능 추가는 요청하지 않습니다.
+15일에는 차량·지도 도메인으로 확장한 소스가 로컬에 있습니다. 원격에 아직 게시하지 않았으며 실서버 배포도 별도입니다. 검증 후보를 받을 때 revision과 APK를 함께 확인하세요.
 
 ## Aide가 무엇인가 (2분)
 
@@ -35,7 +37,7 @@ apps/android/scripts/doctor.sh      # 무엇이 부족한지 정확히 알려 �
 
 1. `README.md` (위쪽의 "What is verified": 무엇이 검증됐고 무엇이 안 됐는지)
 2. `apps/android/README.md` (구조, `core/`와 `app/`의 경계, 저장 경계)
-3. `docs/NEXT_PLAN.md`의 "Priority 3"(맡은 일)과 "Owner actions"
+3. `docs/NEXT_PLAN.md`의 "Priority 2: people and impact evidence"(맡은 일)과 "Priority 4"(소유자 작업)
 4. `docs/IDENTITY.md` (앱이 클라이언트가 보낸 역할을 믿지 않는 이유)
 
 `docs/STATUS.md`와 `docs/PROGRESS_LOG.md`는 지금까지의 기록입니다.
@@ -59,11 +61,11 @@ Android Studio 없이 하려면 <https://developer.android.com/studio#command-to
 저장소 루트에서:
 
 ```sh
-make check-android-core                                                # Kotlin core + 로컬 HTTP, 실제 gateway 코드 상대로 49개 테스트
+make check-android-core                                                # Kotlin core + 로컬 HTTP, 실제 gateway 코드 상대로 core 계약 테스트
 apps/android/gradlew -p apps/android :app:assembleDebug :app:lintDebug # APK + lint (오류 0 예상)
 ```
 
-APK 위치: `apps/android/app/build/outputs/apk/debug/app-debug.apk`. 두 명령 모두 2026-10-12에 소유자 머신에서 통과했습니다.
+APK 위치: `apps/android/app/build/outputs/apk/debug/app-debug.apk`. 15일 후보의 MVVM/resources/tutorial/Maps-key 빌드·lint·core와 에뮬레이터 검증은 STATUS에 기록합니다. 실물 폰 결과는 별도입니다.
 
 `make check-android-core`는 Gradle 의존성이 미리 받아져 있어야 합니다. 처음에는 네트워크가 되는 상태에서 `assemble` 줄을 한 번 먼저 실행하세요. `build/`, `.gradle/`, `local.properties`, 키스토어, 비공개 설정 파일은 Git에서 제외되어 있으니 커밋하지 마세요.
 
@@ -153,3 +155,23 @@ APK 위치: `apps/android/app/build/outputs/apk/debug/app-debug.apk`. 두 명령
 | 서버 통합 테스트가 skip됨 | `:core:test`를 직접 실행함. `make check-android-core`를 사용 |
 
 Google Cloud, Firebase, 대회 포털의 변경이 필요한 일은 직접 하지 말고 소유자에게 요청하세요.
+
+## 차량·지도 후보의 추가 점검
+
+새 후보에서 최초 안내 건너뛰기/완료/다시 보기, 기기 한국어/영어/미지원 언어 기본 영문, 화면 회전을 확인합니다. 해당 APK의 SHA-1로 제한된 `AIDE_ANDROID_MAPS_KEY`를 빌드 환경에 받습니다(키를 채팅·Git·로그에 기록하지 않습니다). 기본값은 지도 SDK 미구성입니다.
+
+배포 후보가 준비되면 내 차량 초기화 → 충전 연결 오류 → AI 보고 → 명시적 조치 또는 24시간 정책 → 과열/모르는 문제의 무조치 보고를 확인합니다. 지도에서 자연어 요청 → Google Maps 출처 → 첫 목적지 선택 → 동일 맥락 기억/Favorite → 재요청 → 이동 취소를 확인합니다. 차와 운전은 시뮬레이션입니다. 지도/검색 실패, 권한 회수와 로그아웃 때 이전 위치가 남지 않는지 봅니다. 현재의 직선 시뮬레이션을 실제 도로 안내로 기록하지 않습니다.
+
+## Mobility candidate check (15 October)
+
+The current private debug APK is built from uncommitted source; the remote checkout does not yet contain all of this work. Do not put Firebase settings, the Maps key or the APK into Git. The owner can hand over the APK privately. The package and registered signing restrictions are unchanged.
+
+1. Install the candidate, open it and complete or skip the three-page introduction. Use the phone language to verify Korean/English resources; the app has no manual language selector.
+2. Sign in to the personal vehicle workspace, connect the simulated Aide EV, and reopen the app to check server persistence after signing in again. The private actor twin is distinct from organization work and other accounts.
+3. From the vehicle home, choose a charger or dinner. Verify genuine Google tiles and source-linked Maps search, choose the first destination, save a Favorite, and cancel/arrive in the clearly labelled straight-line simulation. Refreshing or an uncertain step must pause automatic continuation; only an explicit Continue action may restart it. Availability may remain unknown; no GPS or physical steering permission is requested.
+4. In Aide assistance, expand the simulator and introduce an unfamiliar charging-link symptom. Expect a read-only report and five safety checks. Review and run one guided simulated reconnection; verify the 72 kW read-back and a candidate case.
+5. Promote the candidate separately. Promotion must leave automatic response off and execute nothing. Explicitly enable the bounded 24-hour policy, introduce a fresh matching symptom, and verify one remedy/report. Disable the policy after the test.
+6. Revoke the case or introduce overheating. Expect human assistance, no automatic remedy, and no repeat after refresh/reopen. A busy AI provider leaves the incident unknown and does not retry automatically.
+7. Separately sign in to the organization workspace for Cloud operations. Existing operator/reviewer membership is server verified. Read-only investigation is appropriate first; a real Cloud Run change requires an actual reviewer decision. Do not confuse the simulation policy with cloud mutation authority.
+
+Record device/OS, APK SHA-256, language, each outcome and observed defects privately. Emulator/core/browser results and certificate registration are already verified; physical-phone login, tiles, backgrounding and the complete workflow remain unverified until this checklist is run.

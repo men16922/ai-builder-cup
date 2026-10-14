@@ -40,6 +40,10 @@
     "apps/gateway/test/firestore-store.test.ts",
     "apps/gateway/test/workflow.test.ts",
     "apps/gateway/test/agent-tasks.test.ts",
+    "apps/gateway/test/approval-review.test.ts",
+    "apps/gateway/test/mobility.test.ts",
+    "apps/gateway/test/maps-mcp.test.ts",
+    "apps/gateway/test/mobility-client.test.ts",
     "apps/gateway/test/analysis.test.ts",
     "apps/gateway/test/cloud-run.test.ts",
     "apps/gateway/test/configuration.test.ts",
@@ -56,12 +60,14 @@
     "apps/gateway/test/telemetry.test.ts",
     "apps/gateway/test/web-client.test.ts",
     "tests/support/web-harness.tsx",
+    "tests/support/mobility-harness.tsx",
     "scripts/check-android-core.ts",
     "scripts/generate-design-tokens.ts",
     "scripts/generate-mobile-fixtures.ts",
     "scripts/provision-gcp-membership.ts",
     "scripts/prepare-gcp-evaluation.ts",
     "tests/browser/workflow.mjs",
-    "tests/browser/hosted.mjs"
+    "tests/browser/hosted.mjs",
+    "apps/web/src/mobility/GroundedText.tsx"
   ]
 }

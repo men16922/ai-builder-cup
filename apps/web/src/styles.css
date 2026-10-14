@@ -274,3 +274,115 @@ a.ops-utility { color: var(--md-sys-color-primary); }
   .ops-gemini-button { height: 36px; width: 40px; padding: 0; justify-content: center; } .ops-gemini-button .ops-badge-inline { position: absolute; top: -2px; right: -2px; margin: 0; }
   .ops-gemini-button { position: relative; }
 }
+
+/* Aide Mobility: Hyundai-inspired restraint, vehicle-first composition and deliberate whitespace. */
+.aide-eyebrow { color: var(--md-sys-color-tertiary); font-size: 11px; font-weight: 700; letter-spacing: .18em; display: block; margin-bottom: 12px; }
+.aide-welcome { max-width: 1280px; margin: 16px auto 48px; width: 100%; }
+.aide-welcome-hero { display: grid; grid-template-columns: 1fr 1.15fr; gap: 20px; align-items: center; border-radius: 28px; padding: 64px 40px; background: var(--md-sys-color-surface-container-low); overflow: hidden; min-height: 500px; }
+.aide-welcome-copy { position: relative; z-index: 1; }
+.aide-welcome-copy h1 { white-space: pre-line; font-size: clamp(36px, 4vw, 58px); line-height: 1.22; letter-spacing: -.055em; font-weight: 650; }
+.aide-welcome-copy > p { max-width: 390px; margin: 24px 0; font-size: 17px; color: var(--md-sys-color-on-surface-variant); }
+.aide-disclosure { display: block; font-size: 12px; color: var(--md-sys-color-on-surface-variant); margin-top: 18px; }
+.aide-welcome-car { position: relative; min-width: 0; }
+.aide-welcome-car img { width: 100%; max-width: 700px; margin: 0 auto; display: block; }
+.aide-car-label { display: block; text-align: center; letter-spacing: .2em; font-size: 13px; color: var(--md-sys-color-on-surface-variant); }
+.aide-benefits { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 40px; padding: 40px 12px; }
+.aide-benefits article { padding: 8px; }
+.aide-benefits h2 { font-size: 19px; font-weight: 600; margin: 16px 0 8px; }
+.aide-benefits p { font-size: 14px; color: var(--md-sys-color-on-surface-variant); }
+.ops-no-nav .ops-body { grid-template-columns: minmax(0,1fr); }
+.ops-no-nav .ops-main { padding: 24px; }
+.aide-workspace { display: flex; flex-direction: column; gap: 24px; max-width: 1180px; margin: 0 auto; width: 100%; }
+.aide-workspace .ops-page-header h1 { font-size: 30px; font-weight: 600; letter-spacing: -.04em; }
+.aide-vehicle-hero { background: var(--md-sys-color-surface-container-low); border: 1px solid var(--md-sys-color-outline-variant); border-radius: 24px; padding: 28px 32px 18px; overflow: hidden; }
+.aide-vehicle-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.aide-vehicle-heading h2 { font-size: 28px; font-weight: 600; }
+.aide-vehicle-heading p { color: var(--md-sys-color-on-surface-variant); font-size: 12px; margin-top: 6px; }
+.aide-vehicle-hero > img { display: block; width: 75%; max-width: 700px; margin: -28px auto -20px; }
+.aide-vehicle-stats { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 24px; padding: 0 8px 24px; }
+.aide-vehicle-stats > div { display: flex; flex-direction: column; gap: 8px; }
+.aide-vehicle-stats > div + div { border-left: 1px solid var(--md-sys-color-outline-variant); padding-left: 28px; }
+.aide-vehicle-stats span { font-size: 12px; color: var(--md-sys-color-on-surface-variant); }
+.aide-vehicle-stats strong { font-size: clamp(24px,3vw,40px); font-weight: 500; line-height: 1.25; letter-spacing: -.03em; }
+.aide-vehicle-stats small { font-size: 16px; margin-left: 6px; }
+.aide-vehicle-stats meter { max-width: 150px; width: 100%; height: 10px; accent-color: var(--md-sys-color-primary); }
+.aide-vehicle-foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; border-top: 1px solid var(--md-sys-color-outline-variant); padding-top: 16px; font-size: 11px; color: var(--md-sys-color-on-surface-variant); }
+.aide-vehicle-empty { text-align: center; padding: 20px 24px 40px; border-radius: 24px; background: var(--md-sys-color-surface-container-low); }
+.aide-vehicle-empty img { max-width: 600px; width: 100%; display: block; margin: 0 auto; }
+.aide-vehicle-empty p { max-width: 480px; margin: 16px auto 24px; color: var(--md-sys-color-on-surface-variant); }
+.aide-trip-form { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 16px; align-items: center; }
+.aide-trip-form textarea { border: 1px solid var(--md-sys-color-outline); background: var(--md-sys-color-surface); border-radius: 12px; padding: 16px; min-height: 64px; font: inherit; color: inherit; resize: vertical; }
+.aide-trip-form .ops-caption, .aide-trip-form .aide-segment { grid-column: 1/-1; }
+.aide-segment { display: flex; width: max-content; gap: 4px; border-radius: 12px; padding: 4px; background: var(--md-sys-color-surface-container-high); max-width: 100%; }
+.aide-segment button { border: 0; background: transparent; color: var(--md-sys-color-on-surface-variant); font: inherit; font-size: 14px; padding: 8px 18px; border-radius: 8px; cursor: pointer; }
+.aide-segment button[aria-pressed=true] { background: var(--md-sys-color-surface); color: var(--md-sys-color-primary); box-shadow: 0 1px 3px #0001; }
+.aide-journey { margin-top: 24px; display: flex; flex-direction: column; gap: 16px; }
+.aide-journey-header { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.aide-map-simulation { border-radius: 16px; overflow: hidden; background: var(--md-sys-color-surface-container-high); color: var(--md-sys-color-on-surface-variant); }
+.aide-map-simulation svg { display: block; width: 100%; height: 250px; }
+.aide-map-simulation > span { display: block; font-size: 11px; padding: 8px 16px; }
+.aide-destination strong { display: block; font-size: 18px; }
+.aide-destination p, .aide-destination a { font-size: 13px; margin: 8px 0; }
+.aide-remember { display: flex; align-items: center; gap: 10px; font-size: 13px; }
+.aide-places { display: flex; flex-direction: column; gap: 12px; }
+.aide-places article { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--md-sys-color-outline-variant); }
+.aide-places article > div:first-child { flex: 1; min-width: 200px; }
+.aide-places h3 { font-weight: 600; }
+.aide-places p { font-size: 13px; margin-top: 6px; }
+.aide-assistance-grid { display: grid; grid-template-columns: minmax(0,1.4fr) minmax(0,1fr); gap: 20px; }
+.aide-assistance-grid .ops-card { display: flex; flex-direction: column; gap: 16px; }
+.aide-assistance-grid .ops-card-head { margin-bottom: 0; }
+.aide-assistance-grid .ops-card-head p { margin-top: 8px; }
+.aide-report { display: flex; flex-direction: column; gap: 16px; }
+.aide-report .ops-details { font-size: 13px; }
+.aide-report ul { padding-left: 20px; margin-bottom: 12px; }
+.aide-policy-review { display: flex; flex-direction: column; gap: 12px; border-radius: 12px; background: var(--md-sys-color-surface-container-high); padding: 16px; }
+.aide-simulator { display: flex; flex-direction: column; gap: 16px; }
+.aide-simulator input { display: block; width: 100%; margin-top: 12px; accent-color: var(--md-sys-color-primary); }
+.aide-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+@media (max-width: 760px) {
+  .aide-welcome-hero { grid-template-columns: 1fr; padding: 36px 24px 12px; min-height: auto; gap: 24px; }
+  .aide-welcome-copy h1 { font-size: 38px; }
+  .aide-welcome-car img { width: 110%; margin-left: -5%; }
+  .aide-benefits { grid-template-columns: 1fr; gap: 20px; padding: 24px 8px; }
+  .ops-no-nav .ops-main { padding: 16px; }
+  .aide-assistance-grid { grid-template-columns: 1fr; }
+  .aide-vehicle-hero { padding: 24px 18px 16px; }
+  .aide-vehicle-heading { flex-wrap: wrap; }
+  .aide-vehicle-hero > img { width: 110%; margin: 0 -5%; }
+  .aide-vehicle-stats { gap: 12px; padding: 8px 0 20px; }
+  .aide-vehicle-stats > div + div { padding-left: 12px; }
+  .aide-vehicle-stats strong { font-size: 26px; }
+  .aide-vehicle-stats small { font-size: 12px; }
+  .aide-trip-form { grid-template-columns: 1fr; }
+  .aide-segment { width: 100%; }
+  .aide-segment button { flex: 1; padding: 8px 10px; }
+}
+.aide-google-map { border: 1px solid var(--md-sys-color-outline-variant); border-radius: 16px; overflow: hidden; }
+.aide-google-map-canvas { width: 100%; height: 320px; }
+.aide-google-map > p { padding: 16px; font-size: 13px; }
+.aide-map-fallback-hidden svg { display: none; }
+
+.aide-maps-grounded-output { padding:20px; border:1px solid var(--md-sys-color-outline-variant); border-radius:18px; margin:20px 0; }
+.aide-maps-grounded-output p { white-space:pre-wrap; line-height:1.7; }
+.aide-maps-sources { display:flex; flex-wrap:wrap; gap:12px 20px; font-size:13px; }
+.aide-policy-links { display:flex; justify-content:center; gap:24px; margin:32px 0 8px; font-size:12px; }
+.aide-policy-links a { color:var(--md-sys-color-on-surface-variant); }
+
+/* Guided recovery and learned cases align with the vehicle assistance cards. */
+.aide-recovery-guide { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--md-sys-color-outline-variant); }
+.aide-recovery-guide h3, .aide-case h3 { margin: 0; font-size: 1rem; }
+.aide-checks { padding: 0; list-style: none; display: grid; gap: 8px; }
+.aide-checks li { display: flex; align-items: baseline; gap: 8px; }
+.aide-checks .ops-caption { margin-left: auto; }
+.aide-learned-cases { display: grid; gap: 16px; }
+.aide-case { border: 1px solid var(--md-sys-color-outline-variant); border-radius: 16px; padding: 20px; }
+.aide-case-heading { display: flex; justify-content: space-between; align-items: start; gap: 16px; }
+@media (max-width: 600px) { .aide-case-heading { flex-direction: column; gap: 8px; } .aide-case { padding: 16px; } }
+
+.aide-grounded-text p { white-space: pre-line; line-height: 1.7; margin: 0 0 1rem; }
+.aide-grounded-text p:last-child { margin-bottom: 0; }
+
+.aide-home-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.aide-home-actions .ops-actions { flex-wrap: wrap; }
+@media (max-width: 700px) { .aide-home-actions { grid-template-columns: 1fr; } }

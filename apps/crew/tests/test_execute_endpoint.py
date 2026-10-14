@@ -1,3 +1,5 @@
+from conftest import MemoryClaims
+from conftest import reviewed_state
 """The Ops service's /execute endpoint, attacked over HTTP. Whatever the caller sends, Cloud Run must not change unless a valid signed approval covers exactly this action."""
 import time
 
@@ -23,10 +25,11 @@ def endpoint(api):
     recorder.add("GET", BASE + "/revisions", {"json": {"revisions": [{"name": f"{SERVICE.resource}/revisions/shop-api-good"}, {"name": f"{SERVICE.resource}/revisions/shop-api-bad"}]}})
     recorder.add("PATCH", BASE, {"json": {"name": "projects/p/locations/l/operations/o", "done": True, "response": {}}})
     recorder.add("GET", BASE, service_state("shop-api-good"))
-    return TestClient(Starlette(routes=[execute_route(OpsTools(SETTINGS, client))])), recorder
+    return TestClient(Starlette(routes=[execute_route(OpsTools(SETTINGS, client, claims=MemoryClaims()))])), recorder
 
 
 def approval(service="shop-api", revision="shop-api-good", actor="reviewer-1", **kwargs):
+    kwargs.setdefault("reviewed_state", reviewed_state())
     return sign_approval(KEY, canonical_action("rollback_traffic", service, revision), actor, **kwargs).to_dict()
 
 
@@ -63,7 +66,7 @@ def test_missing_forged_expired_and_borrowed_approvals_change_nothing(endpoint):
     client, recorder = endpoint
     good = approval()
     cases = {
-        "none": None, "empty": {}, "string": "approved", "wrong key": sign_approval(b"x" * 32, canonical_action("rollback_traffic", "shop-api", "shop-api-good"), "attacker").to_dict(),
+        "none": None, "empty": {}, "string": "approved", "wrong key": sign_approval(b"x" * 32, canonical_action("rollback_traffic", "shop-api", "shop-api-good"), "attacker", reviewed_state=reviewed_state()).to_dict(),
         "tampered actor": {**good, "actor": "someone-else"}, "tampered expiry": {**good, "expires_at": good["expires_at"] + 86400},
         "expired": approval(now=time.time() - 3600), "for another revision": approval(revision="shop-api-bad"), "for another service": approval(service="payments-prod"),
         "missing signature": {key: value for key, value in good.items() if key != "signature"},
@@ -107,9 +110,9 @@ def test_an_approval_is_refused_when_the_service_changed_after_it_was_issued(api
     recorder.add("GET", BASE + "/revisions", {"json": {"revisions": [{"name": f"{SERVICE.resource}/revisions/shop-api-good"}]}})
     recorder.add("GET", BASE, service_state("shop-api-new", update_time="2099-01-01T00:00:00Z"))  # someone deployed after the person approved
     recorder.add("PATCH", BASE, {"json": {"done": True}})
-    route = TestClient(Starlette(routes=[execute_route(OpsTools(SETTINGS, client))]))
+    route = TestClient(Starlette(routes=[execute_route(OpsTools(SETTINGS, client, claims=MemoryClaims()))]))
     reply = route.post("/execute", json=body(approval(now=time.time())))
-    assert reply.status_code == 403 and "changed after you approved" in reply.json()["error"] and reply.json()["change_sent"] is False
+    assert reply.status_code == 403 and "changed since the reviewed state" in reply.json()["error"] and reply.json()["change_sent"] is False
     assert changes(recorder) == []
 
 
@@ -126,7 +129,7 @@ def test_an_unfinished_change_is_reported_as_pending_not_as_a_refusal(api, monke
     recorder.add("PATCH", BASE, {"json": {"name": "projects/p/locations/l/operations/o", "done": False}})
     recorder.add("GET", "/v2/projects/p/locations/l/operations/o", {"json": {"done": False}})
     monkeypatch.setattr("mobileops_agents.gcp.cloud_run.asyncio.sleep", lambda _: _noop())
-    route = TestClient(Starlette(routes=[execute_route(OpsTools(SETTINGS, client))]))
+    route = TestClient(Starlette(routes=[execute_route(OpsTools(SETTINGS, client, claims=MemoryClaims()))]))
     reply = route.post("/execute", json=body(approval()))
     assert reply.status_code == 202 and reply.json()["status"] == "pending" and reply.json()["executed"] is False and reply.json()["change_sent"] is True
     assert len(changes(recorder)) == 1

@@ -4,7 +4,7 @@ import { gcpAnalysisSchema, type GcpAnalysis } from '@contracts/gcp/analysis';
 import type { WebIdentity, WebIdentityClient } from '../identity/web-identity';
 import { gcpApiBase, gcpScopeSchema, gcpResourceListSchema, gcpObservationSchema, type GcpScope, type GcpResource, type GcpObservation } from '@contracts/gcp/observations';
 import { sameOwner } from '@contracts/core/operations';
-export type GcpClientState = { identity: WebIdentity | null; items: GcpResource[]; selectedId?: string; observation?: GcpObservation; analysis?: GcpAnalysis; operation?: GcpWorkflowView; planItems?: GcpPlanItem[]; workflowAvailable?: boolean; agentsAvailable?: boolean; busy: boolean; error?: string; retryable: boolean };
+export type GcpClientState = { identity: WebIdentity | null; items: GcpResource[]; selectedId?: string; observation?: GcpObservation; analysis?: GcpAnalysis; operation?: GcpWorkflowView; planItems?: GcpPlanItem[]; workflowAvailable?: boolean; agentsAvailable?: boolean; mobilityAvailable?: boolean; busy: boolean; error?: string; retryable: boolean };
 class RequestError extends Error { readonly code: string; readonly status: number; constructor(code: string, status = 0) { super(code); this.code = code; this.status = status; } }
 export class GcpObservationClient {
   private value: GcpClientState = { identity: null, items: [], busy: false, retryable: false };
@@ -50,7 +50,7 @@ export class GcpObservationClient {
     if (error instanceof RequestError && [401, 403].includes(error.status)) { this.clear(this.value.identity); this.set({ error: error.code }); return; }
     this.set({ busy: false, observation: keepObservation ? this.value.observation : undefined, analysis: keepObservation ? this.value.analysis : undefined, operation: undefined, error: error instanceof RequestError ? error.code : 'request_unknown', retryable });
   }
-  async signIn() { this.accepting = true; const epoch = this.epoch, key = this.value.identity?.key; try { await this.auth.signIn(); if (key && key === this.value.identity?.key) await this.refresh(); } catch { this.failed(new RequestError('sign_in_failed'), epoch); } }
+  async signIn() { if (this.value.busy) return; this.set({busy:true,error:undefined}); this.accepting = true; const epoch = this.epoch, key = this.value.identity?.key; try { await this.auth.signIn(); if (key && key === this.value.identity?.key) await this.refresh(); } catch (error) { const code = error && typeof error === 'object' && 'code' in error ? error.code : ''; const reason = code === 'auth/unauthorized-domain' ? 'sign_in_origin_denied' : code === 'auth/popup-blocked' ? 'sign_in_popup_blocked' : ['auth/popup-closed-by-user','auth/cancelled-popup-request'].includes(String(code)) ? 'sign_in_cancelled' : code === 'auth/api-key-not-valid.-please-pass-a-valid-api-key.' || code === 'auth/invalid-api-key' ? 'sign_in_configuration_invalid' : 'sign_in_failed'; this.failed(new RequestError(reason), epoch); } finally { if (this.epoch === epoch) this.set({busy:false}); } }
   async signOut() { this.accepting = false; this.clear(null); const epoch = this.epoch; try { await this.auth.signOut(); } catch { this.failed(new RequestError('sign_out_failed'), epoch); } }
   async refresh() {
     if (!this.value.identity || this.value.busy) return;
@@ -60,7 +60,7 @@ export class GcpObservationClient {
       if (list.workspaceId !== this.scope.workspaceId || list.owner.kind !== this.scope.edition || this.scope.edition === 'organization' && (list.owner.kind !== 'organization' || list.owner.organizationId !== this.scope.organizationId)
         || list.items.some(item => !sameOwner(item.binding.owner, list.owner) || item.binding.workspaceId !== list.workspaceId) || new Set(list.items.map(item => item.id)).size !== list.items.length) throw new RequestError('invalid_response');
       const planItems = list.workflowAvailable ? await this.readPlans(epoch, list.owner) : []; this.current(epoch);
-      this.set({ planItems, workflowAvailable: !!list.workflowAvailable, agentsAvailable: !!list.agentsAvailable, items: list.items, selectedId: list.items.find(item => item.id === this.value.selectedId)?.id ?? list.items[0]?.id, busy: false });
+      this.set({ planItems, workflowAvailable: !!list.workflowAvailable, agentsAvailable: !!list.agentsAvailable, mobilityAvailable: !!list.mobilityAvailable, items: list.items, selectedId: list.items.find(item => item.id === this.value.selectedId)?.id ?? list.items[0]?.id, busy: false });
     } catch (error) { if (sequence === this.sequence) { this.set({ items: [], selectedId: undefined }); this.failed(error, epoch); } }
   }
   select(id: string) { if (this.value.busy || !this.value.items.some(item => item.id === id)) return; this.pending = undefined; this.pendingAnalysis = undefined; this.pendingWorkflow = undefined; this.set({ selectedId: id, observation: undefined, analysis: undefined, operation: undefined, retryable: false, error: undefined }); }

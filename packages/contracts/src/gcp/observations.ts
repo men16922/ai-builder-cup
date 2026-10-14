@@ -16,7 +16,7 @@ export const gcpWebConfigurationSchema = z.discriminatedUnion('configured', [
 ]);
 export const gcpResourceSchema = z.object({ id, label: z.string().min(1).max(128), binding: cloudRunBindingSchema,
   dataMode: z.enum(['synthetic', 'live']), configurationDigest: z.string().regex(/^[a-f0-9]{64}$/), analysisAvailable: z.boolean().optional(), telemetryEnabled: z.boolean().optional() }).strict();
-export const gcpResourceListSchema = z.object({ owner: ownerSchema, workspaceId: id, items: z.array(gcpResourceSchema).max(100), workflowAvailable: z.boolean().optional(), agentsAvailable: z.boolean().optional() }).strict();
+export const gcpResourceListSchema = z.object({ owner: ownerSchema, workspaceId: id, items: z.array(gcpResourceSchema).max(100), workflowAvailable: z.boolean().optional(), agentsAvailable: z.boolean().optional(), mobilityAvailable: z.boolean().optional() }).strict();
 export const collectGcpSchema = z.object({ resourceId: id }).strict();
 export const gcpObservationSchema = z.object({ resourceId: id, configurationDigest: z.string().regex(/^[a-f0-9]{64}$/), snapshot: cloudRunSnapshotSchema, evidenceDigest: z.string().regex(/^[a-f0-9]{64}$/) }).strict();
 export type GcpScope = z.infer<typeof gcpScopeSchema>;

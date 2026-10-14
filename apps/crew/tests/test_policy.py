@@ -1,3 +1,4 @@
+from conftest import reviewed_state
 import time
 
 import pytest
@@ -23,17 +24,17 @@ def test_changes_need_a_person_and_dangerous_or_unknown_actions_are_refused():
 
 
 def test_a_valid_approval_verifies_for_exactly_the_approved_action():
-    approval = sign_approval(KEY, ACTION, "user-1").to_dict()
+    approval = sign_approval(KEY, ACTION, "user-1", reviewed_state=reviewed_state()).to_dict()
     assert verify_approval(KEY, ACTION, approval).actor == "user-1"
     with pytest.raises(ApprovalError, match="different action"):
         verify_approval(KEY, {**ACTION, "revision": "shop-api-00009"}, approval)
 
 
 def test_forged_expired_and_missing_approvals_are_rejected():
-    approval = sign_approval(KEY, ACTION, "user-1", ttl_seconds=60, now=time.time() - 120).to_dict()
+    approval = sign_approval(KEY, ACTION, "user-1", ttl_seconds=60, now=time.time() - 120, reviewed_state=reviewed_state()).to_dict()
     with pytest.raises(ApprovalError, match="expired"):
         verify_approval(KEY, ACTION, approval)
-    fresh = sign_approval(KEY, ACTION, "user-1").to_dict()
+    fresh = sign_approval(KEY, ACTION, "user-1", reviewed_state=reviewed_state()).to_dict()
     with pytest.raises(ApprovalError, match="signature"):
         verify_approval(KEY, ACTION, {**fresh, "actor": "attacker"})
     with pytest.raises(ApprovalError, match="signature"):

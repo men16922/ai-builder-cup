@@ -1,11 +1,10 @@
 """Typed tools that agents may call. Models choose among these; they never supply credentials, project or region."""
 from __future__ import annotations
 
-import time
-from datetime import datetime
 
-from .approval import ApprovalError, issued_at, verify_approval
+from .approval import ApprovalError, verify_approval
 from .config import Settings
+from .execution_claims import ClaimError, DisabledExecutionClaims, ExecutionClaims
 from .gcp import cloud_run, telemetry
 from .gcp.client import GoogleApiClient, GoogleApiError
 from .policy import Verdict, evaluate
@@ -19,9 +18,9 @@ def canonical_action(action: str, service: str, revision: str) -> dict:
 class OpsTools:
     """Read tools for investigation plus the executor for an approved rollback. Holds the only mutation path."""
 
-    def __init__(self, settings: Settings, client: GoogleApiClient):
+    def __init__(self, settings: Settings, client: GoogleApiClient, claims: ExecutionClaims | None = None):
         self._settings, self._client = settings, client
-        self._used: dict[str, int] = {}  # approval signature -> expiry; one approval is one execution attempt on this instance
+        self._claims = claims or DisabledExecutionClaims()
 
     @property
     def registered(self) -> set[str]:
@@ -62,15 +61,6 @@ class OpsTools:
         except GoogleApiError as error:
             return {"error": f"Monitoring read failed: {error.code}"}
 
-    def _claim(self, signature: str, expires_at: int) -> bool:
-        now = time.time()
-        for key in [k for k, v in self._used.items() if v <= now]:
-            del self._used[key]
-        if signature in self._used:
-            return False
-        self._used[signature] = expires_at
-        return True
-
     async def execute_approved_rollback(self, service: str, revision: str, approval: dict) -> dict:
         """Apply a rollback only when a person's signed approval covers exactly this service and revision.
 
@@ -85,21 +75,22 @@ class OpsTools:
             granted = verify_approval(self._settings.approval_key, action, approval)
         except ApprovalError as error:
             return {"executed": False, "status": "refused", "change_sent": False, "error": str(error)}
-        if not self._claim(granted.signature, granted.expires_at):
-            return {"executed": False, "status": "refused", "change_sent": False, "error": "this approval was already used; ask again for a new decision"}
         registered = self._settings.service(service)
         try:
             current = await self._client.request("GET", f"{cloud_run.RUN}/{registered.resource}")
         except GoogleApiError as error:
             return {"executed": False, "status": "failed", "change_sent": False, "error": f"Cloud Run read before the change failed: {error.code}"}
+        reviewed = granted.reviewed_state
+        if current.get("uid") != reviewed.uid or current.get("etag") != reviewed.etag or current.get("updateTime") != reviewed.update_time:
+            return {"executed": False, "status": "refused", "change_sent": False, "error": "the service changed since the reviewed state; review it and decide again"}
         try:
-            changed_at = datetime.fromisoformat(str(current["updateTime"]).replace("Z", "+00:00")).timestamp()
-        except (KeyError, ValueError):
-            return {"executed": False, "status": "refused", "change_sent": False, "error": "the service's last update time is not known, so the approval cannot be matched to its state"}
-        if changed_at > issued_at(granted):
-            return {"executed": False, "status": "refused", "change_sent": False, "error": "the service changed after you approved; review the current state and decide again"}
+            # Claim only after the fresh read. The subsequent conditional PATCH closes the read/claim race.
+            granted = verify_approval(self._settings.approval_key, action, approval)
+            await self._claims.claim(granted)
+        except (ClaimError, ApprovalError) as error:
+            return {"executed": False, "status": error.status if isinstance(error, ClaimError) else "refused", "change_sent": False, "error": str(error)}
         try:
-            result = await cloud_run.rollback_traffic(self._client, registered, revision)
+            result = await cloud_run.rollback_traffic(self._client, registered, revision, etag=reviewed.etag, expires_at=granted.expires_at)
         except GoogleApiError as error:
             return {"executed": False, "status": "failed", "change_sent": False, "error": f"Cloud Run change failed before sending: {error.code}"}
         return {"executed": result["status"] == "applied", "approved_by": granted.actor, **result}

@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ui_request_review" formatted="false">"Request review"</string>
+    <string name="ui_confirm_review" formatted="false">"Confirm review"</string>
+    <string name="ui_run_fixed_read_explicitly" formatted="false">"Run fixed read explicitly"</string>
+    <string name="ui_cancel_before_start" formatted="false">"Cancel before start"</string>
+    <string name="ui_save_handoff" formatted="false">"Save handoff"</string>
+    <string name="state_not_requested" formatted="false">"not requested"</string>
+    <string name="state_pending" formatted="false">"pending"</string>
+    <string name="state_approved" formatted="false">"approved"</string>
+    <string name="state_rejected" formatted="false">"rejected"</string>
+    <string name="state_changes_requested" formatted="false">"changes requested"</string>
+    <string name="state_not_started" formatted="false">"not started"</string>
+    <string name="state_queued" formatted="false">"queued"</string>
+    <string name="state_running" formatted="false">"running"</string>
+    <string name="state_succeeded" formatted="false">"succeeded"</string>
+    <string name="state_failed" formatted="false">"failed"</string>
+    <string name="state_unknown" formatted="false">"unknown"</string>
+    <string name="state_cancelled" formatted="false">"cancelled"</string>
+    <string name="state_collected" formatted="false">"collected"</string>
+    <string name="state_no_data" formatted="false">"no data"</string>
+    <string name="state_denied" formatted="false">"denied"</string>
+    <string name="state_missing" formatted="false">"missing"</string>
+    <string name="state_unavailable" formatted="false">"unavailable"</string>
+    <string name="state_skipped" formatted="false">"skipped"</string>
+    <string name="state_partial" formatted="false">"partial"</string>
+    <string name="state_complete" formatted="false">"complete"</string>
+    <string name="ui_gcp_work_notification" formatted="false">"GCP work notification"</string>
+    <string name="ui_sign_in_to_the_task_s_workspace" formatted="false">"Sign in to the task’s workspace and open its latest record. A notification does not review or execute work."</string>
+    <string name="ui_open_latest_task" formatted="false">"Open latest task"</string>
+    <string name="ui_dismiss_notification" formatted="false">"Dismiss notification"</string>
+    <string name="ui_your_next_decision_wherever_you_are" formatted="false">"One step ahead\nof your journey."</string>
+    <string name="ui_review_gcp_evidence_explicitly_run_a_fixed" formatted="false">"From vehicle health to charging problems and tonight’s destination. Aide is with you when it matters."</string>
+    <string name="ui_synthetic_rehearsal" formatted="false">"Synthetic rehearsal"</string>
+    <string name="ui_no_real_sign_in_google_api_or" formatted="false">"No real sign-in, Google API or Gemini calls. Example records reset when the process ends."</string>
+    <string name="ui_personal_workspace" formatted="false">"Personal workspace"</string>
+    <string name="ui_organization_workspace" formatted="false">"Organization workspace"</string>
+    <string name="ui_your_gcp_plans_and_results" formatted="false">"Your GCP plans and results"</string>
+    <string name="ui_team_review_and_handoff" formatted="false">"Team review and handoff"</string>
+    <string name="ui_start_personal_rehearsal" formatted="false">"Start personal rehearsal"</string>
+    <string name="ui_start_organization_rehearsal" formatted="false">"Start organization rehearsal"</string>
+    <string name="ui_aws_and_on_prem_operations_remain_on" formatted="false">"AWS and On-Prem operations remain on the web."</string>
+    <string name="ui_server_connection" formatted="false">"Server connection"</string>
+    <string name="ui_personal_synthetic" formatted="false">"Personal · Synthetic"</string>
+    <string name="ui_organization_synthetic" formatted="false">"Organization · Synthetic"</string>
+    <string name="ui_sign_out" formatted="false">"Sign out"</string>
+    <string name="ui_leave_workspace" formatted="false">"Leave workspace"</string>
+    <string name="ui_example_clock_2026_10_10_01_00" formatted="false">"Example clock · 2026-10-10 01:00 UTC"</string>
+    <string name="ui_review_read_and_handoff_below_are_rehearsed" formatted="false">"Review, read and handoff below are rehearsed in this app’s memory only."</string>
+    <string name="ui_restore_demo_connection" formatted="false">"Restore demo connection"</string>
+    <string name="ui_simulate_offline" formatted="false">"Simulate offline"</string>
+    <string name="ui_gcp_server_records" formatted="false">"GCP server records"</string>
+    <string name="ui_the_server_verifies_access_and_scope_review" formatted="false">"The server verifies access and scope. Review and result refresh do not start a new execution."</string>
+    <string name="ui_refresh_required" formatted="false">"Refresh required"</string>
+    <string name="ui_request_outcome_unknown" formatted="false">"Request outcome unknown"</string>
+    <string name="ui_do_not_start_a_new_request_read" formatted="false">"Do not start a new request. Read the latest record, then explicitly retry the exact same request."</string>
+    <string name="ui_read_latest_server_record" formatted="false">"Read latest server record"</string>
+    <string name="ui_retry_identical_request" formatted="false">"Retry identical request"</string>
+    <string name="ui_inbox" formatted="false">"← Inbox"</string>
+    <string name="ui_refresh_details" formatted="false">"Refresh details"</string>
+    <string name="ui_configuration_needs_attention" formatted="false">"Configuration needs attention"</string>
+    <string name="ui_the_packaged_server_or_identity_configuration_is" formatted="false">"The packaged server or identity configuration is invalid. Ask the administrator to check it."</string>
+    <string name="ui_live_access_is_not_configured_you_can" formatted="false">"Live access is not configured. You can use the synthetic rehearsal below."</string>
+    <string name="ui_connect_your_gcp_workspace" formatted="false">"Connect with Aide"</string>
+    <string name="ui_sign_in_with_google_to_view_work" formatted="false">"Choose your personal vehicle or your organization workspace. Google sign-in keeps their data and authority separate."</string>
+    <string name="ui_cancel_sign_in" formatted="false">"Cancel sign-in"</string>
+    <string name="ui_sign_in_with_google" formatted="false">"Sign in with Google"</string>
+    <string name="ui_notification_cleanup_unconfirmed" formatted="false">"Notification cleanup unconfirmed"</string>
+    <string name="ui_the_previous_app_connection_is_cleared_server" formatted="false">"The previous app connection is cleared. Server retirement was not confirmed; registration expiry and current access checks still apply."</string>
+    <string name="ui_work_notifications_on_this_device" formatted="false">"Work notifications on this device"</string>
+    <string name="ui_push_reception_is_not_connected_in_this" formatted="false">"Push reception is not connected in this build. Refresh your inbox to continue."</string>
+    <string name="ui_device_registration_confirmed_message_arrival_is_not" formatted="false">"Device registration confirmed. Message arrival is not guaranteed."</string>
+    <string name="ui_enable_to_register_for_gcp_work_notifications" formatted="false">"Enable to register for GCP work notifications in the current workspace."</string>
+    <string name="ui_registration_outcome_unknown_recheck_the_same_request" formatted="false">"Registration outcome unknown. Recheck the same request."</string>
+    <string name="ui_recheck_registration" formatted="false">"Recheck registration"</string>
+    <string name="ui_refresh_registration" formatted="false">"Refresh registration"</string>
+    <string name="ui_enable_work_notifications" formatted="false">"Enable work notifications"</string>
+    <string name="ui_disable_notifications" formatted="false">"Disable notifications"</string>
+    <string name="ui_local_connection_cleared_server_retirement_is_unconfirmed" formatted="false">"Local connection cleared; server retirement is unconfirmed."</string>
+    <string name="ui_inbox_2" formatted="false">"Inbox"</string>
+    <string name="ui_pending" formatted="false">"Pending"</string>
+    <string name="ui_results" formatted="false">"Results"</string>
+    <string name="ui_all" formatted="false">"All"</string>
+    <string name="ui_latest_50_plans_up_to_20_per" formatted="false">"Latest 50 plans · up to 20 per page"</string>
+    <string name="ui_server_time" formatted="false">"Server time: "</string>
+    <string name="ui_no_work_in_this_range" formatted="false">"No work in this range."</string>
+    <string name="ui_synthetic_data" formatted="false">"Synthetic data"</string>
+    <string name="ui_live_collection_record" formatted="false">"Live collection record"</string>
+    <string name="ui_evidence" formatted="false">"Evidence "</string>
+    <string name="ui_expired_execution_unavailable" formatted="false">"Expired · execution unavailable"</string>
+    <string name="ui_next_page" formatted="false">"Next page"</string>
+    <string name="ui_refresh_inbox" formatted="false">"Refresh inbox"</string>
+    <string name="ui_review" formatted="false">"Review"</string>
+    <string name="ui_execution" formatted="false">"Execution"</string>
+    <string name="ui_01_target_and_evidence" formatted="false">"01 · Target and evidence"</string>
+    <string name="ui_revision" formatted="false">"Revision: "</string>
+    <string name="ui_observed" formatted="false">"Observed: "</string>
+    <string name="ui_expires" formatted="false">"Expires: "</string>
+    <string name="ui_fixed_read_15_min_up_to_50" formatted="false">"Fixed read · 15 min · up to 50 logs"</string>
+    <string name="ui_fixed_read_service_and_revision_metadata" formatted="false">"Fixed read · service and revision metadata"</string>
+    <string name="ui_02_evidence_interpretation" formatted="false">"02 · Evidence interpretation"</string>
+    <string name="ui_missing_information" formatted="false">"Missing information"</string>
+    <string name="ui_i_checked_the_target_evidence_and_expiry" formatted="false">"I checked the target, evidence and expiry. Review does not start execution."</string>
+    <string name="ui_review_note" formatted="false">"Review note"</string>
+    <string name="ui_reject" formatted="false">"Reject"</string>
+    <string name="ui_request_changes" formatted="false">"Request changes"</string>
+    <string name="ui_03_execution_result" formatted="false">"03 · Execution result"</string>
+    <string name="ui_query_completion_is_separate_from_service_health" formatted="false">"Query completion is separate from service health. Service health: unknown"</string>
+    <string name="ui_evidence_coverage" formatted="false">"Evidence coverage: "</string>
+    <string name="ui_04_handoff" formatted="false">"04 · Handoff"</string>
+    <string name="ui_a_handoff_note_does_not_change_the" formatted="false">"A handoff note does not change the execution outcome."</string>
+    <string name="ui_next_checks" formatted="false">"Next checks"</string>
+    <string name="ui_error_sample_scenario" formatted="false">"Error sample scenario"</string>
+    <string name="ui_empty_sample_scenario" formatted="false">"Empty sample scenario"</string>
+    <string name="ui_latency_access_denied" formatted="false">"Latency access denied"</string>
+    <string name="ui_connection_lost_records_are_hidden_and_nothing" formatted="false">"Connection lost. Records are hidden and nothing is submitted automatically."</string>
+    <string name="ui_sign_in_again_to_continue" formatted="false">"Sign in again to continue."</string>
+    <string name="ui_the_current_user_cannot_access_this_record" formatted="false">"The current user cannot access this record."</string>
+    <string name="ui_the_record_changed_or_expired" formatted="false">"The record changed or expired."</string>
+    <string name="ui_the_response_does_not_match_the_expected" formatted="false">"The response does not match the expected target."</string>
+    <string name="ui_the_request_could_not_be_confirmed_read" formatted="false">"The request could not be confirmed. Read the latest record first."</string>
+    <string name="ui_agent_crew" formatted="false">"Agent crew"</string>
+    <string name="ui_say_it_in_one_sentence_the_crew" formatted="false">"Say it in one sentence. The crew investigates and diagnoses and only asks you for the big decisions."</string>
+    <string name="ui_ask_the_crew" formatted="false">"Ask the crew"</string>
+    <string name="ui_check_shop_api_and_summarize_its_health" formatted="false">"Check shop-api and summarize its health."</string>
+    <string name="ui_send" formatted="false">"Send"</string>
+    <string name="ui_needs_a_look" formatted="false">"Needs a look"</string>
+    <string name="ui_steps">"%1$s steps"</string>
+    <string name="ui_your_decision_is_needed" formatted="false">"Your decision is needed"</string>
+    <string name="ui_send_100_of_traffic_back_to_revision">"Send 100%% of %1$s traffic back to revision %2$s."</string>
+    <string name="ui_risk_reversible_nothing_is_deleted_decide_within">"Risk %1$s. Reversible; nothing is deleted. Decide within %2$s min."</string>
+    <string name="ui_the_approval_window_has_passed_ask_again" formatted="false">"The approval window has passed. Ask again."</string>
+    <string name="ui_approve_and_apply" formatted="false">"Approve and apply"</string>
+    <string name="ui_note" formatted="false">"Note"</string>
+    <string name="ui_applied_and_confirmed" formatted="false">"Applied and confirmed"</string>
+    <string name="ui_in_progress_not_finished" formatted="false">"In progress, not finished"</string>
+    <string name="ui_outcome_unknown_not_sent_again" formatted="false">"Outcome unknown, not sent again"</string>
+    <string name="ui_not_applied_failed" formatted="false">"Not applied: failed"</string>
+    <string name="ui_refused_nothing_changed" formatted="false">"Refused, nothing changed"</string>
+    <string name="ui_working" formatted="false">"Working"</string>
+    <string name="ui_waiting_for_your_decision" formatted="false">"Waiting for your decision"</string>
+    <string name="ui_applying_your_decision" formatted="false">"Applying your decision"</string>
+    <string name="ui_done" formatted="false">"Done"</string>
+    <string name="ui_rejected" formatted="false">"Rejected"</string>
+    <string name="ui_failed" formatted="false">"Failed"</string>
+    <string name="ui_outcome_unknown" formatted="false">"Outcome unknown"</string>
+    <string name="ui_connection_lost_nothing_was_resent_automatically_check" formatted="false">"Connection lost. Nothing was resent automatically. Check the latest state."</string>
+    <string name="ui_you_are_not_allowed_to_do_this" formatted="false">"You are not allowed to do this."</string>
+    <string name="ui_the_approval_expired_or_was_already_handled" formatted="false">"The approval expired or was already handled."</string>
+    <string name="ui_the_server_response_could_not_be_verified" formatted="false">"The server response could not be verified."</string>
+    <string name="ui_the_request_could_not_be_confirmed_read_2" formatted="false">"The request could not be confirmed. Read the latest record first."</string>
+    <string name="ui_ready" formatted="false">"Ready"</string>
+    <string name="ui_readiness_failed" formatted="false">"Readiness failed"</string>
+    <string name="ui_pending_2" formatted="false">"Pending"</string>
+    <string name="ui_reconciling" formatted="false">"Reconciling"</string>
+    <string name="ui_unknown" formatted="false">"Unknown"</string>
+    <string name="ui_original_plan_evidence" formatted="false">"Original plan evidence"</string>
+    <string name="ui_application_health_unknown" formatted="false">"Application health · Unknown"</string>
+    <string name="ui_deployment_readiness_does_not_establish_application_health" formatted="false">"Deployment readiness does not establish application health. These observations prepared the plan; they are not the later execution result."</string>
+    <string name="ui_service_readiness" formatted="false">"Service readiness"</string>
+    <string name="ui_pinned_revision_readiness" formatted="false">"Pinned revision readiness"</string>
+    <string name="ui_before_after_comparison" formatted="false">"Before / after comparison: "</string>
+    <string name="ui_no_change_observed" formatted="false">"No change observed"</string>
+    <string name="ui_changed_during_collection" formatted="false">"Changed during collection"</string>
+    <string name="ui_recheck_incomplete" formatted="false">"Recheck incomplete"</string>
+    <string name="ui_observed_traffic_allocation" formatted="false">"Observed traffic allocation"</string>
+    <string name="ui_allocation_is_unavailable_this_does_not_mean" formatted="false">"Allocation is unavailable. This does not mean zero traffic."</string>
+    <string name="ui_unknown_revision" formatted="false">"Unknown revision"</string>
+    <string name="ui_show_fewer_allocations" formatted="false">"Show fewer allocations"</string>
+    <string name="ui_show_all_allocations">"Show all %1$s allocations"</string>
+    <string name="ui_routing_configuration_not_request_volume_or_error" formatted="false">"Routing configuration, not request volume or error rate."</string>
+    <string name="ui_logs_and_metrics_not_collected" formatted="false">"Logs and metrics not collected"</string>
+    <string name="ui_this_plan_was_prepared_from_service_and" formatted="false">"This plan was prepared from service and revision metadata only."</string>
+    <string name="ui_logs_and_request_metrics" formatted="false">"Logs and request metrics"</string>
+    <string name="ui_pinned_revision_15_minutes_ending_two_minutes" formatted="false">"Pinned revision · 15 minutes ending two minutes before collection · one page"</string>
+    <string name="ui_returned_request_count" formatted="false">"Returned request count"</string>
+    <string name="ui_returned_5xx_count" formatted="false">"Returned 5xx count"</string>
+    <string name="ui_highest_per_minute_per_code_p95" formatted="false">"Highest per-minute, per-code p95"</string>
+    <string name="ui_returned_requests_by_response_code" formatted="false">"Returned requests by response code"</string>
+    <string name="ui_recent_log_samples" formatted="false">"Recent log samples"</string>
+    <string name="ui_more_pages_exist_partial_results" formatted="false">"More pages exist · partial results"</string>
+    <string name="ui_show_fewer_log_samples" formatted="false">"Show fewer log samples"</string>
+    <string name="ui_show_all_samples">"Show all %1$s samples"</string>
+    <string name="ui_sample_limits" formatted="false">"Sample limits"</string>
+    <string name="ui_these_are_not_complete_request_totals_error" formatted="false">"These are not complete request totals, error rates or an interval-wide p95. Missing samples are not zero. Log payloads, URLs and IPs are excluded. These samples do not establish cause or health."</string>
+    <string name="ui_hide_deployment_details_and_sources" formatted="false">"Hide deployment details and sources"</string>
+    <string name="ui_show_deployment_details_and_sources" formatted="false">"Show deployment details and sources"</string>
+    <string name="ui_deployment_details" formatted="false">"Deployment details"</string>
+    <string name="ui_latest_created_revision" formatted="false">"Latest created revision: "</string>
+    <string name="ui_latest_ready_revision" formatted="false">"Latest ready revision: "</string>
+    <string name="ui_requested_observed_generation" formatted="false">"Requested / observed generation: "</string>
+    <string name="ui_reconciling_2" formatted="false">"Reconciling: "</string>
+    <string name="ui_yes" formatted="false">"Yes"</string>
+    <string name="ui_no" formatted="false">"No"</string>
+    <string name="ui_missing_needs_review" formatted="false">"Missing / needs review: "</string>
+    <string name="ui_service_read" formatted="false">"Service read"</string>
+    <string name="ui_pinned_revision_read" formatted="false">"Pinned revision read"</string>
+    <string name="ui_service_recheck" formatted="false">"Service recheck"</string>
+    <string name="ui_logs" formatted="false">"Logs"</string>
+    <string name="ui_requests" formatted="false">"Requests"</string>
+    <string name="ui_latency" formatted="false">"Latency"</string>
+    <string name="ui_collected" formatted="false">"Collected"</string>
+    <string name="ui_no_samples_not_zero" formatted="false">"No samples · not zero"</string>
+    <string name="ui_access_denied" formatted="false">"Access denied"</string>
+    <string name="ui_not_found" formatted="false">"Not found"</string>
+    <string name="ui_target_unverified_not_queried" formatted="false">"Target unverified · not queried"</string>
+    <string name="ui_collection_unavailable" formatted="false">"Collection unavailable"</string>
+    <string name="app_name" formatted="false">"Aide"</string>
+    <string name="app_tagline" formatted="false">"One step ahead of your journey"</string>
+    <string name="agent_request_language" formatted="false">"en"</string>
+    <string name="onboarding_help" formatted="false">"How it works"</string>
+    <string name="onboarding_skip" formatted="false">"Skip"</string>
+    <string name="onboarding_next" formatted="false">"Next"</string>
+    <string name="onboarding_back" formatted="false">"Back"</string>
+    <string name="onboarding_finish" formatted="false">"Get started"</string>
+    <string name="onboarding_progress">"%1$d / %2$d"</string>
+    <string name="onboarding_title_1" formatted="false">"Your car’s status.\nAt a glance."</string>
+    <string name="onboarding_body_1" formatted="false">"Check your simulated vehicle’s battery, charging and location. State is stored on the server. No physical vehicle control."</string>
+    <string name="onboarding_title_2" formatted="false">"When something goes wrong,\nAide is here."</string>
+    <string name="onboarding_body_2" formatted="false">"AI investigates the evidence. A preauthorized safe charging reconnection runs once and reports back. Unfamiliar or risky situations need a person."</string>
+    <string name="onboarding_title_3" formatted="false">"Choose the first time.\nUse your Favorite next time."</string>
+    <string name="onboarding_body_3" formatted="false">"Ask for dinner or a charger nearby. Choose a destination first; a remembered choice can simulate the next journey in the same context. Cancel anytime."</string>
+    <string name="workspace_value_title" formatted="false">"Your vehicle and operations, together"</string>
+    <string name="workspace_value_body" formatted="false">"Personal vehicle: charging and journeys. Organization workspace: investigate service issues and review bounded recovery actions. Vehicle control is simulated."</string>
+    <string name="push_channel" formatted="false">"GCP work"</string>
+    <string name="push_body" formatted="false">"A GCP task needs attention. Open the latest state in the app."</string>
+    <string name="vehicle_image" formatted="false">"Aide electric vehicle concept image"</string>
+    <string name="vehicle_request_attention" formatted="false">"Check the latest state"</string>
+    <string name="vehicle_connect_title" formatted="false">"Meet your Aide EV"</string>
+    <string name="vehicle_connect_body" formatted="false">"A server-persisted simulated vehicle for charging and journeys. No physical vehicle control."</string>
+    <string name="vehicle_connect" formatted="false">"Connect simulated vehicle"</string>
+    <string name="vehicle_refresh" formatted="false">"Refresh"</string>
+    <string name="vehicle_simulated" formatted="false">"Simulated vehicle · server updated"</string>
+    <string name="vehicle_battery" formatted="false">"Battery"</string>
+    <string name="vehicle_percent">"%1$d%%"</string>
+    <string name="vehicle_estimated_range" formatted="false">"Estimated range"</string>
+    <string name="vehicle_range_km">"%1$d km"</string>
+    <string name="vehicle_estimate_caption" formatted="false">"Simulator estimate"</string>
+    <string name="vehicle_charging" formatted="false">"Charging"</string>
+    <string name="vehicle_power_kw">"%1$s kW"</string>
+    <string name="vehicle_interrupted" formatted="false">"Interrupted"</string>
+    <string name="vehicle_idle" formatted="false">"Idle"</string>
+    <string name="vehicle_target">"Target %1$d%%"</string>
+    <string name="vehicle_location">"Simulated location · %1$s, %2$s"</string>
+    <string name="vehicle_aide_help" formatted="false">"When something goes wrong"</string>
+    <string name="vehicle_remedy_confirmed" formatted="false">"Remedy confirmed"</string>
+    <string name="vehicle_needs_decision" formatted="false">"Needs your decision"</string>
+    <string name="vehicle_human_help" formatted="false">"Human assistance needed"</string>
+    <string name="vehicle_authority">"Authority · %1$s"</string>
+    <string name="vehicle_standing_policy" formatted="false">"24-hour standing policy"</string>
+    <string name="vehicle_explicit_decision" formatted="false">"Explicit human decision"</string>
+    <string name="vehicle_read_only" formatted="false">"Read-only investigation"</string>
+    <string name="vehicle_approve_reconnect" formatted="false">"Approve simulated charge reconnection"</string>
+    <string name="vehicle_no_report" formatted="false">"No investigation yet. Aide checks the evidence when a symptom appears."</string>
+    <string name="vehicle_diagnose" formatted="false">"Diagnose now"</string>
+    <string name="vehicle_policy_title" formatted="false">"Automatic response boundary"</string>
+    <string name="vehicle_policy_boundary" formatted="false">"Reconnect a parked simulated charge session once, within a safe temperature. A recurring charging signal also needs an approved case. Overheating and unclassified warnings are escalated."</string>
+    <string name="vehicle_policy_review" formatted="false">"Allow reconnection on your simulated vehicle for 24 hours. One attempt per episode; stop if state changes."</string>
+    <string name="vehicle_policy_allow" formatted="false">"Allow this boundary"</string>
+    <string name="vehicle_cancel" formatted="false">"Cancel"</string>
+    <string name="vehicle_policy_disable" formatted="false">"Disable automatic response"</string>
+    <string name="vehicle_policy_configure" formatted="false">"Configure automatic response"</string>
+    <string name="vehicle_simulator" formatted="false">"Vehicle simulator"</string>
+    <string name="vehicle_simulated_battery">"Simulated battery · %1$d%%"</string>
+    <string name="vehicle_apply_state" formatted="false">"Apply state"</string>
+    <string name="vehicle_charge_fault" formatted="false">"Charging connection fault"</string>
+    <string name="vehicle_hot_fault" formatted="false">"Battery overheating"</string>
+    <string name="vehicle_unknown_fault" formatted="false">"Unfamiliar charging symptom"</string>
+    <string name="vehicle_trip_dinner" formatted="false">"Find somewhere nearby for dinner and take me there."</string>
+    <string name="vehicle_trip_charging" formatted="false">"Find a charging station nearby and take me there."</string>
+    <string name="vehicle_trip_poi" formatted="false">"Find somewhere interesting nearby and take me there."</string>
+    <string name="vehicle_where_to" formatted="false">"Where shall we go?"</string>
+    <string name="vehicle_trip_intro" formatted="false">"Choose first. A remembered choice in the same context can handle the next journey."</string>
+    <string name="vehicle_dinner" formatted="false">"Dinner"</string>
+    <string name="vehicle_chargers" formatted="false">"Charging"</string>
+    <string name="vehicle_explore" formatted="false">"Explore"</string>
+    <string name="vehicle_trip_ask" formatted="false">"Ask Aide for a journey"</string>
+    <string name="vehicle_let_aide" formatted="false">"Let Aide handle it"</string>
+    <string name="vehicle_maps_pending" formatted="false">"Google Places is not connected yet. Places are never fabricated."</string>
+    <string name="vehicle_journey_moving" formatted="false">"Simulated driving"</string>
+    <string name="vehicle_journey_arrived" formatted="false">"Arrived"</string>
+    <string name="vehicle_journey_cancelled" formatted="false">"Cancelled"</string>
+    <string name="vehicle_choose_destination" formatted="false">"Choose a destination"</string>
+    <string name="vehicle_using_favorite" formatted="false">"Using your Favorite"</string>
+    <string name="vehicle_using_memory" formatted="false">"Using your previous choice in this context"</string>
+    <string name="vehicle_remember_context" formatted="false">"Remember this choice in the same context for 7 days"</string>
+    <string name="vehicle_place_rating">"Rating · %1$s"</string>
+    <string name="vehicle_ports_unknown" formatted="false">"Available ports unknown"</string>
+    <string name="vehicle_ports_available">"%1$d ports available"</string>
+    <string name="vehicle_go_here" formatted="false">"Go here"</string>
+    <string name="vehicle_save_favorite" formatted="false">"Save Favorite"</string>
+    <string name="vehicle_google_maps" formatted="false">"From Google Maps"</string>
+    <string name="vehicle_cancel_journey" formatted="false">"Cancel journey"</string>
+    <string name="vehicle_journey_progress">"Journey progress · %1$d%%"</string>
+    <string name="vehicle_simulation_route" formatted="false">"Straight-line simulation · not road navigation"</string>
+    <string name="vehicle_tab" formatted="false">"My vehicle"</string>
+    <string name="journey_tab" formatted="false">"Charging &amp; map"</string>
+    <string name="assistance_tab" formatted="false">"Aide help"</string>
+    <string name="operations_tab" formatted="false">"Operations"</string>
+    <string name="vehicle_map_position">Simulated vehicle position</string>
+    <string name="vehicle_map_destination">Destination</string>
+    <string name="vehicle_maps_source">[%1$d] Google Maps · %2$s</string>
+    <string name="aide_privacy">Privacy and data</string>
+    <string name="aide_terms">Terms of use</string>
+    <string name="vehicle_favorite_saved">Favorite saved</string>
+    <string name="agent_reviewed_at">Reviewed at %1$s</string>
+    <string name="agent_reviewed_traffic">%1$s · %2$d%% of traffic</string>
+    <string name="agent_review_missing">Reviewed service state is missing. Request a new investigation.</string>
+    <string name="vehicle_investigating">Investigating · no remedy yet</string>
+    <string name="recovery_title">Check and recover together</string>
+    <string name="recovery_check_signal">Identifiable charging connection symptom</string>
+    <string name="recovery_check_parked">Parked vehicle</string>
+    <string name="recovery_check_temperature">Battery temperature 0–40°C</string>
+    <string name="recovery_check_battery">Battery below target</string>
+    <string name="recovery_check_attempts">No attempt in this episode</string>
+    <string name="recovery_check_met">%1$s · met</string>
+    <string name="recovery_check_unmet">%1$s · not met</string>
+    <string name="recovery_review">Review recovery guide</string>
+    <string name="recovery_unavailable">Reconnection is unavailable under the current conditions. Review the evidence and unknowns with a responder.</string>
+    <string name="recovery_step_checks">1. Review the current safety checks.</string>
+    <string name="recovery_step_reconnect">2. Reconnect the simulated session once using the existing charge runbook.</string>
+    <string name="recovery_step_verify">3. Verify resumed charging in the server twin, then save a candidate case.</string>
+    <string name="recovery_once_boundary">This approves this recovery only. Future use requires separate case approval and an active response policy.</string>
+    <string name="recovery_confirm">Recover with this guide</string>
+    <string name="cases_title">What we solved together</string>
+    <string name="cases_boundary">Remember verified recoveries. Case approval and automatic response permission stay separate.</string>
+    <string name="cases_signal_title">Charging connection interrupted → resumed</string>
+    <string name="cases_expired">Expired</string>
+    <string name="cases_active">Available for recurrence</string>
+    <string name="cases_candidate">Candidate awaiting approval</string>
+    <string name="cases_revoked">Revoked</string>
+    <string name="cases_pattern">Same vehicle and signal, parked, 0–40°C, battery below target, one attempt per episode.</string>
+    <string name="cases_verified_change">Before: interrupted, no attempt / After: charging resumed, one attempt</string>
+    <string name="cases_simulation">Verified in the simulated vehicle. No physical vehicle diagnosis.</string>
+    <string name="cases_register">Register for recurrence</string>
+    <string name="cases_revoke">Stop using this case</string>
+    <string name="cases_promotion_review">Use this verified case for the existing reconnect runbook when the same signal recurs on this vehicle. No remedy runs now and no response policy is enabled.</string>
+    <string name="cases_promote">Approve this bounded case</string>
+    <string name="cases_valid_until">Valid until %1$s</string>
+    <string name="recovery_verified_remedy">Simulated charge reconnected %1$d time → charging resumed at %2$d kW</string>
+    <string name="cases_used">A previously verified case was used to handle this recurrence.</string>
+    <string name="recovery_execution_record">Evidence and execution record</string>
+    <string name="home_find_charger">Find a charger</string>
+    <string name="home_find_dinner">Find dinner</string>
+    <string name="home_needs_attention">A symptom needs attention.</string>
+    <string name="home_no_response">No response recorded yet. Aide is here when you need help.</string>
+    <string name="home_review_response">Review response and authority</string>
+    <string name="journey_pause_boundary">Reading or refreshing does not resume movement. Check the current state, then continue or cancel.</string>
+    <string name="journey_continue">Continue simulation</string>
+</resources>

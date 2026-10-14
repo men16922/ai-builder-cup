@@ -1,78 +1,59 @@
 # Aide · GCP Android
 
-Kotlin/Compose 앱 소스와 GCP 모바일 클라이언트다. 기본 앱은 **합성 시연 전용**이다. 선택적으로 고정 서버 설정·Credential Manager/Google → Firebase 신원 adapter·로그인 UI를 조립했다. Kotlin 신원/서버 HTTP 계약은 합성 검증했다. 2026-10-11~12 기준 `assembleDebug`·`lintDebug` 통과, 에뮬레이터에서 실제 Google 로그인과 배포 서버의 crew 흐름 확인. 실기기 검증과 FCM 실수신은 아직 없다.
+차량 상태, 충전 문제, 지도 이동과 서비스 운영을 다루는 Kotlin/Compose 앱이다. 차량·배터리·운전은 서버에 저장하는 **시뮬레이션**이며 실제 차량을 제어하지 않는다. 장소 검색은 명시적으로 구성한 서버의 Gemini 검색 계획 → 공식 Google Maps MCP 흐름을 사용한다. 미구성·실패를 예제 데이터로 대체하지 않는다.
 
-**새로 합류했다면 [ONBOARDING.md](ONBOARDING.md)부터 읽는다** (환경 점검: `scripts/doctor.sh`).
+새 개발자는 [ONBOARDING.md](ONBOARDING.md)부터 읽는다. 현재 개발 상태와 배포 여부는 [STATUS](../../docs/STATUS.md)를 확인한다. 에뮬레이터 검증은 실물 휴대폰 검증과 별개다.
 
-## 현재 동작과 구조
+## MVVM과 파일 책임
 
-- `core/Contract.kt`: GCP 전용 owner/workspace/target·고정 action·근거/결과/Inbox 계약. 다른 provider·owner, 확장 입력 변경, 계획과 결과 불일치를 거부한다.
-- `core/OriginalEvidence.kt`: 원본 서비스/revision·트래픽 배분·고정 15분 로그/지표를 strict DTO로 검증한다. 대상/UID/출처·관측 시각·50개 로그/120개 metric points·안전 정수/중복을 검사하며 로그 본문·URL·IP·임의 JSON을 받지 않는다. 준비 상태/조회 전후 변경과 서비스 정상 여부를 분리한다.
-- `core/Client.kt`: 신원 port에서 매 요청 토큰을 받고, [모바일 API](../../docs/archive/runbooks/mobile.md)에 native bearer 요청한다. HTTPS 기본, 테스트에서만 명시적 loopback HTTP. redirect/응답 캐시/자동 retry 없음, 응답 2 MiB 제한. 서버 오류 원문·토큰을 기록하지 않는다.
-- `core/Controller.kt`: Inbox/상세/검토/명시적 실행/결과/인계 상태. 실패/권한 변경 때 이전 데이터를 숨긴다. 세션 전환·background 이후 늦은 응답을 버린다. 응답 유실 시 최신 GET 후 같은 요청 키/본문으로만 명시적 재확인한다. 프로세스 재시작 시 저장한 실행 명령은 없다.
-- `core/FixtureApi.kt`: 개인/조직 각각 오류 표본·빈 표본·지연 권한 거절의 메모리 시연. 실제 API/AI/클라우드가 아니다. 예제 시각은 **2026-10-10 01:00 UTC**로 고정된다. `scripts/generate-mobile-fixtures.ts`가 현재 서버 Zod 스키마/근거 변환기로 자산을 생성한다.
-- `core/Configuration.kt`, `FirebaseIdentity.kt`, `LiveAccess.kt`: strict 공개 설정, 서버와 같은 issuer/tenant/UID → actor 계산, 토큰 issuer/audience/subject/tenant/기한 확인, 명시적 로그인과 세션 교체·취소 처리. 이 검사는 서버의 서명·회수·membership 검증을 대신하지 않는다.
-- `app/`: 한/영 공간 선택 → 검토 대기/결과/전체 Inbox → 대상·근거 → 검토 → 별도 읽기 버튼 → 결과·인계. ViewModel은 activity 재생성을 유지하고 재진입 시 GET으로 다시 확인한다. 로그아웃/시연 전환은 진행 중 로그인을 취소한다. 앱 자체의 저장 설정은 언어뿐이며 근거·메모·실행 키·토큰을 별도 파일이나 SavedState에 복사하지 않는다. Firebase SDK의 내부 인증 저장은 아래와 구분한다.
+| 계층 | 파일 / 디렉터리 | 책임 |
+| --- | --- | --- |
+| 조립 | `MainActivity`, `data/AppContainer` | 플랫폼 의존성 주입, Activity에서 Google 로그인·알림 권한 처리 |
+| 상태 | `MobileViewModel`, `OnboardingViewModel`, `mobility/VehicleViewModel` | 불변 상태와 명명된 사용자 작업. Context/Activity를 보관하지 않음 |
+| UI | `MobileOpsApp`, 각 기능 Screen, `mobility/` | 상태 표시와 callback. 직접 서버 호출·권한 생성 없음 |
+| 데이터 | `core/.../data/MobileRepository`, `DefaultMobileRepository` | 신원, 세션, 업무·에이전트·알림 coordinator 조립 |
+| 차량 | `core/.../mobility/` | strict DTO, typed command, 세션 세대와 늦은 응답 차단 |
+| 전송 | `core/Client`, `FirebaseIdentity`, `LiveAccess` | 고정 HTTPS 서버, 매 요청 bearer, 신원·공간·응답 검증 |
 
-화면의 검토는 회사 승인이 아니며 조회 완료는 서비스 정상을 의미하지 않는다. 예제 분석/완료 기준은 생성 당시 영문 원문이며 UI 언어와 별개다. 실제 분석 언어는 웹에서 준비할 때 결정된다. Google Cloud 이미지는 기존 [provider 자산 출처](../../reference/provider-icons.md)를 따른다.
+영문은 `res/values/strings.xml`, 한국어는 `res/values-ko/strings.xml`이다. Android가 기기의 언어 목록에 따라 선택하고 지원하지 않는 언어는 기본 영문을 사용한다. 국가·언어는 계정이나 권한을 고르지 않는다. 수동 언어 토글과 UI의 Korean/English 분기를 제거했다. Agent 요청 언어도 동일한 resource에서 얻는다.
 
-## 상세에서 확인할 근거
+첫 실행 안내는 세 페이지로 구성한다. 건너뛰기·완료 여부만 앱 preferences에 저장하며 설정에서 다시 볼 수 있다. 미완료 상태는 다음 실행에 다시 표시한다. UI/ViewModel/Repository의 책임과 보안 경계를 주석으로 설명한다.
 
-`EvidencePanel.kt`는 계획을 준비한 원본 관측의 서비스·지정 revision 준비, 조회 전후 변경, 트래픽 배분 막대와 요청/5xx/p95 카드·응답 코드별 막대·안전한 로그 표본을 표시한다. 기본 로그는 5개, 펼치면 수집된 최대 50개이며 추가 API는 호출하지 않는다. 배포 세부와 출처도 펼칠 수 있다. 이후 실행 결과와 원본 관측을 구분한다. **Compose 소스는 작성했으나 Android 컴파일/기기 시각 검증 전이다.**
+## 실행과 데이터 경계
 
-수치는 웹의 `summarizeTelemetry`와 같은 계산이다. 실제 수집된 0, 일치 표본 없음, 빈 부분 페이지, 거절/미수집을 구분한다. 5xx series가 없으면 오류 0으로 채우지 않으며 p95는 분·응답 코드별 값의 최댓값이다. 전체 요청 수·오류율·시간창 전체의 p95로 표현하지 않는다. 원본이 검증을 통과하지 못하면 이전 상세/근거와 검토 확인을 해제한다.
+- 로그인·workspace membership·operator/reviewer 권한은 서버에서 검증한다. 앱 설정이나 표시 모드로 권한을 만들 수 없다.
+- 앱 시작과 설정 읽기는 Firebase 로그인이나 서버 요청을 시작하지 않는다. 사용자 로그인 버튼에서 SDK를 초기화한다.
+- HTTP redirect, 응답 캐시, 자동 변경 retry를 사용하지 않는다. 계정·공간 변경/로그아웃 때 이전 화면을 지우고 늦은 응답을 버린다. 복귀·새로고침은 GET이며 실행을 재개하지 않는다.
+- 차량 조치는 고정된 simulated charging runbook만 가능하다. 최초에는 사람 선택, 명시적으로 켠 정책은 24시간. 서버는 최신 온도·정차·episode·버전·시도 횟수를 다시 확인한다. 모르는 상황은 조치하지 않고 보고한다.
+- 목적지는 처음에 선택한다. Favorite 또는 7일의 동일 맥락 선택 동의만 서버가 재사용한다. 이동은 취소 가능한 지도 시뮬레이션이다.
+- Google Maps MCP의 설명과 출처 링크를 함께 보여준다. 충전기 이용 가능 수가 없으면 미확인으로 표시한다. 지도 데이터를 모델 학습이나 사례 학습에 사용하지 않는다. 보관 기한과 재초기화는 개인정보 안내에 표시한다.
+- 테스트의 synthetic fixture는 ViewModel에 주입한다. 제품 화면에는 합성 시연 실행 버튼이 없다.
+
+기존 업무의 원본 근거 패널은 실제 관측된 0, 빈 부분 결과, 누락/미수집을 구분한다. 준비 상태·조회 성공을 서비스 정상으로 표현하지 않는다. 검토와 실행 확인은 별도 작업이며 알 수 없는 실행 결과를 자동으로 재전송하지 않는다.
 
 ## 도구와 검증
 
-고정 버전: Gradle **8.13**, Android Gradle Plugin **8.13.2**, Kotlin/Compose compiler **2.2.21**, Compose BOM **2025.08.01**, compile/target SDK **36**, Build Tools **35.0.0**, min SDK **26**. 현재 JDK **21**로 JVM 17 bytecode를 만든다. AGP/Kotlin 플러그인은 root의 동일 classpath에서 로딩한다.
+Gradle 8.13, AGP 8.13.2, Kotlin/Compose compiler 2.2.21, Compose BOM 2025.08.01, Maps Compose 6.8.0, SDK 36, Build Tools 35.0.0, min SDK 26. JDK 21로 JVM 17 bytecode를 만든다.
 
-공식 근거: [AGP 호환표](https://developer.android.com/build/releases/agp-8-13-0-release-notes), [Kotlin과 Compose compiler 버전](https://developer.android.com/develop/ui/compose/setup-compose-dependencies-and-compiler), [Compose BOM](https://developer.android.com/develop/ui/compose/bom/bom-mapping), [Gradle Java 21 지원](https://docs.gradle.org/8.5/release-notes.html).
-
-Gradle wrapper는 공식 배포의 SHA-256을 고정한다. 최초 의존성 준비는 게이트와 별도로 수행한다. 저장소 루트에서:
+최초 SDK·의존성 준비는 게이트와 별도로 수행한다. 소유자 머신의 `.tools/android-sdk`, `.tools/gradle-home`은 Git에서 제외한다. 준비 후 저장소 루트에서:
 
 ```sh
-GRADLE_USER_HOME="$PWD/.tools/gradle-home" apps/android/gradlew -p apps/android -PcoreOnly=true :core:test
 make check-android-core
+ANDROID_HOME="$PWD/.tools/android-sdk" GRADLE_USER_HOME="$PWD/.tools/gradle-home" apps/android/gradlew -p apps/android --offline :app:assembleDebug :app:testDebugUnitTest :app:lintDebug
+# 연결한 에뮬레이터/시험용 단말에서:
+ANDROID_HOME="$PWD/.tools/android-sdk" GRADLE_USER_HOME="$PWD/.tools/gradle-home" apps/android/gradlew -p apps/android --offline :app:connectedDebugAndroidTest
 ```
 
-첫 명령은 의존성을 다운로드할 수 있다. 둘째는 TypeScript 도구 타입 검사와 `generate-mobile-fixtures.ts --check`의 재생성 일치 확인 후 `--offline` Gradle을 실행한다. 게이트는 fixture를 덮어쓰지 않는다. 최신 검증은 **49개**(원본 근거 6, 신원/설정 9, 클라이언트/상태 14, 알림 core/수명주기 16, 실제 로컬 HTTP 4)다. 서버 스키마/웹 실제 요약 계산으로 생성한 11종 벡터를 Kotlin 결과와 대조한다. 임시 SQLite/GCP HTTP 서버와 Kotlin 클라이언트가 연결되며 신원/관측/모델은 합성이다. 조직과 개인 공간에서 각각 준비 1회 + 명시적 실행 1회로 총 4회 수집하고 인계·같은 요청·재접속으로 늘지 않는다. Firebase 서명 검증 SDK는 합성 port로 대체한다. `:core:test`만 직접 실행하면 서버 통합 4개는 환경 주소가 없어 skip되므로 전체 모바일 계약 검증에는 `make check-android-core`를 사용한다.
+`make check-android-core`는 실제 로컬 gateway와 Kotlin native HTTP 계약을 합성 신원/관측으로 연결한다. 직접 `:core:test`만 실행하면 서버 통합 네 개는 주소가 없어 skip될 수 있다. 웹/서버 게이트는 Android 빌드·기기 검증을 대신하지 않는다.
 
-기존 웹/서버 전체 회귀는 `make check`이며 Android 검증을 대체하지 않는다. SDK나 의존성을 게이트 안에서 설치하지 않는다.
+`.editorconfig`는 4칸 들여쓰기를 지정한다. 공식 ktfmt 0.65 jar를 별도로 준비한 뒤 `scripts/format-kotlin.sh` 또는 `--check`를 사용한다. SHA-256을 검증하며 formatter 명령은 다운로드하지 않는다. `Theme.kt`는 `design/tokens.json`의 생성 파일이므로 formatter에서 제외한다.
 
-## 업무 알림 수명주기
+## 비공개 설정과 지도 키
 
-`NotificationLifecycle.kt`는 명시적 enable·token 갱신·같은 등록 요청 재확인·해제의 coordinator다. 로그인은 source를 만들지 않으며 기본 앱에는 실제 FCM source factory가 없다. 정상 로그아웃은 현재/진행 중 등록 요청 키를 retire한 뒤 신원을 닫고, 해제 미확인은 별도로 표시한다. Intent entry는 최소 ID만 받아 로그인한 공간에서 최신 업무를 여는 버튼으로 연결했다. 화면/manifest 소스의 APK/기기 검증은 남아 있다. [API·저장·앱 계약](../../docs/archive/runbooks/notifications.md)을 따른다.
+고정 설정은 `app/src/main/assets/mobileops-agent.json`에 패키징한다(Git 제외). [설정 예시](../../deploy/android-mobile.example.json)를 실제 설정으로 그대로 사용하지 않는다. HTTPS origin, Firebase Android app/API key, Web OAuth client ID와 workspace만 담는다. 서비스 계정 key나 CLI token을 넣지 않는다. 설정이 없으면 로그인을 켜지 않고, 잘못된 설정은 고정 오류만 표시한다.
 
-## Android SDK와 APK
+Android Maps SDK 키는 **`AIDE_ANDROID_MAPS_KEY` 빌드 환경 변수**로 제공한다. Manifest에 들어가는 공개 SDK 키는 Maps SDK for Android API와 `app.mobileops.agent` 패키지·설치 APK의 SHA-1로 제한해야 한다. 키가 없는 빌드는 Google map을 초기화하지 않는다. 웹 지도 키와 서버 OAuth 토큰을 재사용하지 않는다. 상세: [Google Maps 연결](../../docs/MAPS.md).
 
-SDK는 사용자 동의 후 저장소 로컬 `.tools/android-sdk`에 설치되어 있다(소유자 머신 전용, Git 제외). 새 환경은 [ONBOARDING.md](ONBOARDING.md) 3단계를 따르며 약관은 본인이 수락한다.
+Firebase SDK는 인증 상태를 앱 내부에 저장할 수 있다. 정상 로그아웃은 Firebase signOut과 Credential Manager 정리를 호출하고 앱 백업을 비활성화한다. 전체 인증의 메모리 전용 보관, 내부 파일의 안전 삭제나 원격 세션 회수를 보장하지 않는다.
 
-동의 후 공식 command-line tools를 확인된 아키텍처에 맞게 설치한다. Mac ARM의 조사 시점 파일은 `commandlinetools-mac_arm64-15859902_latest.zip`, SHA-256 `835b62a26162b229b441d1f6d4680383815a270809eb33522c0d480fa5002c4e`다. [공식 다운로드 표](https://developer.android.com/studio#command-tools)에서 실행 시 다시 확인한다. 플랫폼/도구는 `sdkmanager --sdk_root=… "platforms;android-36" "build-tools;35.0.0" "platform-tools"`로 지정한다. 라이선스 파일을 위조하거나 일괄 자동 동의하지 않는다.
-
-SDK 준비 후 저장소 루트에서:
-
-```sh
-ANDROID_HOME="$PWD/.tools/android-sdk" GRADLE_USER_HOME="$PWD/.tools/gradle-home" apps/android/gradlew -p apps/android :app:assembleDebug :app:lintDebug
-# 에뮬레이터/시험용 기기를 확인한 뒤에만:
-ANDROID_HOME="$PWD/.tools/android-sdk" GRADLE_USER_HOME="$PWD/.tools/gradle-home" apps/android/gradlew -p apps/android :app:connectedDebugAndroidTest
-```
-
-기기 테스트 소스는 한/영 개인·조직 선택, 검토 전 버튼 차단, 별도 명시적 실행, 인계, activity 재생성, 오프라인/재접속을 포함한다. **작성과 통과는 다르다.** 아직 실행하지 못했다. 실제 화면 크기·폰트 확대·회전·TalkBack·프로세스 종료/재진입은 빌드 후 확인한다.
-
-## 선택적 서버 연결 설정
-
-현재 실제 설정 파일은 없다. 자산이 없거나 내용이 정확히 `{"configured":false}`이면 로그인 기능을 켜지 않는다. 잘못된 설정은 고정 오류만 표시하며 원문을 출력하지 않는다. 앱 시작·설정 읽기·합성 시연에서는 Firebase SDK나 HTTP 클라이언트를 만들지 않는다.
-
-실제 대상/비용 범위를 확정한 뒤 [합성 설정 예시](../../deploy/android-mobile.example.json)의 값을 교체해 `app/src/main/assets/mobileops-agent.json`에 패키징한다. 파일은 Git에서 제외한다. 예시를 그대로 복사해서 실제 연결로 사용하지 않는다.
-
-1. `origin`: [GCP 모바일 API](../../docs/archive/runbooks/mobile.md)를 제공하는 고정 HTTPS origin. 경로·사용자 정보·query·fragment·443 이외 포트는 거부한다. 앱 화면에서 임의 주소를 받지 않는다.
-2. `firebase`: 서버 verifier와 같은 projectId/선택적 tenantId, 해당 Android 앱의 공개 apiKey/appId, Google 로그인용 **Web OAuth client ID**. 서비스 계정/private key/CLI·SSO token은 넣지 않는다. Android 등록·서명 인증서 SHA 및 Google 로그인 제공자 설정은 실제 Firebase 프로젝트에서 별도로 준비한다. [공식 Android Google 로그인 구성](https://firebase.google.com/docs/auth/android/google-signin)
-3. `workspaces`: 개인/조직 모드·workspaceId·조직이면 organizationId·표시 label. 개인 actor는 실제 Firebase 신원에서 계산하며 설정으로 지정하지 않는다. 조직 membership/role과 등록 자원은 서버에서 준비한다. 이 파일은 권한을 부여하지 않는다.
-
-사용자는 작업 공간의 Google 로그인 버튼을 누른 뒤 계정을 선택한다. Credential Manager의 Google credential을 Firebase 신원으로 교환하고 **Firebase ID token**을 모바일 API에 전달한다. 선택마다 별도의 named FirebaseApp을 소유하고 취소/사용자 변경 시 기존 화면을 해제한다. 늦은 이전 로그인 결과가 새 공간을 연결하지 못하도록 세션 세대를 확인한다. 로그인 실패를 예제 데이터로 대체하지 않는다.
-
-Firebase BOM 34.4.0(Auth 24.0.1)·Credential Manager 1.3.0·Google ID 1.1.1·coroutines play-services 1.10.2를 고정했다. Gradle 의존성 그래프는 해석됐지만 Android 컴파일 통과 근거는 아니다. default FirebaseInitProvider는 제거하며 명시적 버튼에서만 SDK를 초기화한다.
-
-**저장 경계:** Firebase Android SDK는 인증 상태를 앱 내부 저장소에 관리할 수 있다. 따라서 전체 인증이 메모리에만 존재한다고 보장하지 않는다. 정상 로그아웃은 Firebase `signOut`과 Credential Manager 상태 정리를 호출하고 앱 백업은 비활성화한다. 강제 종료 시 SDK 잔여 저장·실기기 백업/복원은 아직 검증하지 않았다. SDK 내부 파일의 안전 삭제나 원격 세션 회수 완료로 표현하지 않는다. [FirebaseAuth 저장/로그아웃 계약](https://firebase.google.com/docs/reference/android/com/google/firebase/auth/FirebaseAuth#signOut())
-
-실제 Firebase/Google 로그인·토큰 회수·TLS API·기기 상태 일치는 지정 프로젝트에서 검증해야 한다. GCP 알림 저장·단말 API·전송 port와 Kotlin의 ID-only data/최신 조회 core는 합성 연결했다. 등록 수명주기 core·앱의 명시적 열기/상태 UI 소스를 조립했다. 서버 측 수신자 매핑·FCM 전송 adapter·worker는 조립했으나 앱의 FCM source factory/SDK(새 SDK 승인 필요)·APK/기기 수신은 아직 없다. [알림 계약](../../docs/archive/runbooks/notifications.md)과 [전체 완료 기준](../../docs/plans/2026-10-10-gcp-android.md)을 따른다.
+FCM source adapter는 사용자 opt-in 후에만 조립한다. 주소는 서버의 비공개 단말 기록이며 업무·감사 payload에 넣지 않는다. 등록/해제 수명주기와 ID-only 알림 조회는 검증했지만 실제 push 수신·물리 단말 접근은 별도 검증 대상이다. 배포에서 알림이 꺼져 있으면 로그인만으로 켜지지 않는다.

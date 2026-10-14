@@ -20,7 +20,7 @@ export function hostedConfiguration(input: unknown) {
   return config;
 }
 const types: Record<string, string> = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.svg': 'image/svg+xml', '.png': 'image/png', '.woff': 'font/woff', '.woff2': 'font/woff2', '.ico': 'image/x-icon' };
-const pathPattern = /^\/(?:index\.html|mark\.svg|assets\/[A-Za-z0-9_-]+(?:\.[A-Za-z0-9_-]+)+)$/;
+const pathPattern = /^\/(?:index\.html|mark\.svg|vehicles\/aide-ev\.png|assets\/[A-Za-z0-9_-]+(?:\.[A-Za-z0-9_-]+)+)$/;
 const assetsSchema = z.object({ version: z.literal(1), files: z.array(z.object({ path: z.string().regex(pathPattern), sha256: z.string().regex(/^[a-f0-9]{64}$/) }).strict()).min(1).max(512) }).strict();
 async function regularFile(root: string, file: string, maximum: number) {
   const path = resolve(root, file); if (await realpath(path) !== path || !path.startsWith(root + '/')) throw Error('Invalid hosted asset.');
@@ -55,7 +55,7 @@ export async function startGcpHosted(composition: HostedServices, directory: str
     const assets = await loadHostedAssets(directory), inFlight = new Set<Promise<void>>();
     let stopping = false, shutdown: Promise<'drained' | 'deadline' | 'failed'> | undefined;
     const server = createServer((request, response) => {
-      response.setHeader('Cache-Control', 'no-store'); response.setHeader('X-Content-Type-Options', 'nosniff'); response.setHeader('Referrer-Policy', 'same-origin');
+      response.setHeader('Cache-Control', 'no-store'); response.setHeader('X-Content-Type-Options', 'nosniff'); response.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
       const send = (status: number, code: string) => { response.writeHead(status, { 'Content-Type': 'application/json' }); response.end(JSON.stringify({ code })); };
       response.once('finish', () => { if (stopping) setImmediate(() => server.closeIdleConnections()); });
       if (stopping) { response.setHeader('Connection', 'close'); send(503, 'shutting_down'); return; }

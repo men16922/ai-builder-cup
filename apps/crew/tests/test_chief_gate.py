@@ -1,3 +1,5 @@
+from conftest import MemoryClaims
+from conftest import reviewed_state
 """The Chief's approval gate, exercised with a scripted model and an in-memory Google API. No network and no real Gemini."""
 import json
 import time
@@ -8,6 +10,7 @@ from google.adk.models.base_llm import BaseLlm
 from google.adk.models.llm_response import LlmResponse
 from google.adk.runners import InMemoryRunner
 from google.genai import types
+from pydantic import Field
 
 from mobileops_agents.agents.chief import build_chief_agent
 from mobileops_agents.approval import sign_approval
@@ -28,8 +31,10 @@ class ScriptedModel(BaseLlm):
     model: str = "scripted"
     revision: str = "shop-api-00001"
     service: str = "shop-api"
+    requests: list[str] = Field(default_factory=list)
 
     async def generate_content_async(self, llm_request, stream=False):
+        self.requests.append(json.dumps([content.model_dump(mode="json") for content in llm_request.contents]))
         last = llm_request.contents[-1]
         responses = [p.function_response for p in last.parts if p.function_response]
         if responses:
@@ -41,7 +46,7 @@ class ScriptedModel(BaseLlm):
 
 def make_chief(api, revision="shop-api-00001", service="shop-api"):
     recorder, client = api
-    tools = OpsTools(SETTINGS, client)
+    tools = OpsTools(SETTINGS, client, claims=MemoryClaims())
     stub = LlmAgent(name="stub", model="gemini-3.8-flash", instruction="unused")
     chief = build_chief_agent(SETTINGS, stub, LlmAgent(name="stub2", model="gemini-3.8-flash", instruction="unused"),
                               LlmAgent(name="stub3", model="gemini-3.8-flash", instruction="unused"), LocalExecutor(tools))
@@ -100,10 +105,23 @@ async def test_a_valid_signed_approval_applies_exactly_the_approved_rollback(api
     chief, recorder = make_chief(api)
     rollback_routes(recorder)
     runner, session, pause = await start(chief)
-    approval = sign_approval(KEY, pause.args["toolConfirmation"]["payload"]["action"], "user-1").to_dict()
+    approval = sign_approval(KEY, pause.args["toolConfirmation"]["payload"]["action"], "user-1", reviewed_state=reviewed_state()).to_dict()
     _, _, _, final = await drive(chief, answer(pause, True, approval), session, runner)
     assert '"status": "applied"' in final and "user-1" in final
     assert len(patches(recorder)) == 1 and patches(recorder)[0][3]["traffic"][0]["revision"] == "shop-api-00001"
+
+
+async def test_private_approval_capability_and_review_etag_never_enter_model_context(api):
+    chief, recorder = make_chief(api)
+    rollback_routes(recorder)
+    runner, session, pause = await start(chief)
+    approval = sign_approval(KEY, pause.args["toolConfirmation"]["payload"]["action"], "user-1", reviewed_state=reviewed_state()).to_dict()
+    await drive(chief, answer(pause, True, approval), session, runner)
+    assert len(patches(recorder)) == 1
+    context = "\n".join(chief.model.requests)
+    assert approval["signature"] not in context
+    assert approval["reviewed_state"]["etag"] not in context
+    assert KEY.decode() not in context
 
 
 @pytest.mark.parametrize("kind", ["missing", "forged", "other_action", "expired"])
@@ -113,9 +131,9 @@ async def test_a_person_saying_yes_without_a_valid_approval_changes_nothing(api,
     runner, session, pause = await start(chief)
     action = pause.args["toolConfirmation"]["payload"]["action"]
     approval = {"missing": None,
-                "forged": {**sign_approval(KEY, action, "user-1").to_dict(), "actor": "attacker"},
-                "other_action": sign_approval(KEY, {**action, "revision": "shop-api-00009"}, "user-1").to_dict(),
-                "expired": sign_approval(KEY, action, "user-1", ttl_seconds=30, now=time.time() - 300).to_dict()}[kind]
+                "forged": {**sign_approval(KEY, action, "user-1", reviewed_state=reviewed_state()).to_dict(), "actor": "attacker"},
+                "other_action": sign_approval(KEY, {**action, "revision": "shop-api-00009"}, "user-1", reviewed_state=reviewed_state()).to_dict(),
+                "expired": sign_approval(KEY, action, "user-1", ttl_seconds=30, now=time.time() - 300, reviewed_state=reviewed_state()).to_dict()}[kind]
     _, _, _, final = await drive(chief, answer(pause, True, approval), session, runner)
     assert '"status": "refused"' in final and '"change_sent": false' in final and patches(recorder) == []
 
@@ -129,7 +147,7 @@ async def test_unregistered_services_are_refused_before_anyone_is_asked(api):
 
 async def test_the_ops_executor_refuses_on_its_own_even_if_the_chief_is_bypassed(api):
     recorder, client = api
-    tools = OpsTools(SETTINGS, client)
+    tools = OpsTools(SETTINGS, client, claims=MemoryClaims())
     assert (await tools.execute_approved_rollback("payments-prod", "r1", {}))["executed"] is False
     assert (await tools.execute_approved_rollback("shop-api", "shop-api-00001", {}))["executed"] is False
     assert recorder.calls == []

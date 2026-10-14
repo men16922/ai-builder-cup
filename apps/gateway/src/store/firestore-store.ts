@@ -4,17 +4,18 @@ import { CloudOperationError } from '@contracts/core/workflow';
 import type { CloudStore, CloudTransaction } from './store';
 import type { GoogleCredentials } from '../google/credentials';
 
-type Envelope = { schemaVersion: 1; key: string; payload: string };
+type Envelope = { schemaVersion: 1; key: string; payload: string; expiresAt?: Date };
 type RecordTransaction = { get(id: string): Promise<unknown | undefined>; set(id: string, envelope: Envelope): void };
 /** Small SDK port permits deterministic offline transaction-contract tests. */
 export interface FirestoreRecordPort { runTransaction<T>(body: (tx: RecordTransaction) => Promise<T>): Promise<T>; close?(): Promise<void> }
-const envelopeSchema = z.object({ schemaVersion: z.literal(1), key: z.string().min(1).max(1024), payload: z.string() }).strict();
+const envelopeSchema = z.object({ schemaVersion: z.literal(1), key: z.string().min(1).max(1024), payload: z.string(), expiresAt:z.date().optional() }).strict();
 const recordId = (key: string) => createHash('sha256').update(z.string().min(1).max(1024).parse(key)).digest('hex');
 const invalid = () => new CloudOperationError(500, 'invalid_stored_record', 'The stored record could not be verified.');
 
 export class FirestoreCloudStore implements CloudStore {
   private readonly records: FirestoreRecordPort;
-  constructor(records: FirestoreRecordPort) { this.records = records; }
+  private readonly now: () => number;
+  constructor(records: FirestoreRecordPort, now = Date.now) { this.records = records; this.now=now; }
   async close() { await this.records.close?.(); }
   transact<T>(body: (transaction: CloudTransaction) => Promise<T>): Promise<T> {
     return this.records.runTransaction(async remote => {
@@ -27,17 +28,20 @@ export class FirestoreCloudStore implements CloudStore {
             if (raw !== undefined) {
               const envelope = envelopeSchema.safeParse(raw);
               if (!envelope.success || envelope.data.key !== key || Buffer.byteLength(envelope.data.payload) > 750_000) throw invalid();
-              try { value = JSON.parse(envelope.data.payload); } catch { throw invalid(); }
+              if (!envelope.data.expiresAt || envelope.data.expiresAt.getTime()>this.now()) {
+                try { value = JSON.parse(envelope.data.payload); } catch { throw invalid(); }
+              }
             }
             reads.set(key, value);
           }
           return structuredClone(reads.get(key)) as V | undefined;
         },
-        put: (key, value) => {
+        put: (key, value, expiresAt) => {
           if (!reads.has(key)) throw new Error('Read a record before writing it.');
           const payload = JSON.stringify(value);
           if (!payload || Buffer.byteLength(payload) > 750_000) throw new CloudOperationError(413, 'record_too_large', 'The record exceeds the storage limit.');
-          writing = true; remote.set(recordId(key), { schemaVersion: 1, key, payload });
+          if (expiresAt && (!Number.isFinite(expiresAt.getTime()) || expiresAt.getTime()<=this.now())) throw invalid();
+          writing = true; remote.set(recordId(key), { schemaVersion: 1, key, payload, ...(expiresAt ? {expiresAt}: {}) });
         },
       });
     });
@@ -61,7 +65,14 @@ export async function createFirestoreCloudStore(configuration: unknown, credenti
   }
   return new FirestoreCloudStore({ close: credentials ? () => db.terminate() : undefined, runTransaction: async body => {
     guard(); if (credentials) await credentials.token(AbortSignal.timeout(5000)); return db.runTransaction(async tx => body({
-      get: async id => { guard(); const value = await tx.get(db.collection(config.collection).doc(id)); return value.exists ? value.data() : undefined; },
+      get: async id => {
+        guard(); const value = await tx.get(db.collection(config.collection).doc(id));
+        if (!value.exists) return undefined;
+        const data = value.data()!;
+        // Firestore Date writes return Timestamp reads. Normalize only inside this SDK boundary.
+        if (data.expiresAt && typeof data.expiresAt.toDate === 'function') data.expiresAt=data.expiresAt.toDate();
+        return data;
+      },
       set: (id, envelope) => { guard(); tx.set(db.collection(config.collection).doc(id), envelope); },
     }), { maxAttempts: 5 });
   } });

@@ -3,6 +3,8 @@ from __future__ import annotations
 
 import logging
 import os
+import httpx
+from contextlib import asynccontextmanager
 from urllib.parse import urlsplit
 
 from google.adk.agents.remote_a2a_agent import RemoteA2aAgent
@@ -22,6 +24,7 @@ from .gcp.client import default_client
 from .service_auth import peer_client
 from .tools import OpsTools
 from .tracing import setup_tracing
+from .execution_claims import GatewayExecutionClaims
 
 log = logging.getLogger("mobileops")
 CARD_PATH = "/.well-known/agent-card.json"
@@ -78,9 +81,19 @@ def create_app(kind: str | None = None, settings: Settings | None = None):
     kind = kind or os.environ.get("AGENT", "")
     setup_tracing()
     settings = settings or load_settings()
-    tools = OpsTools(settings, default_client()) if kind == "ops" else None
+    claim_client = httpx.AsyncClient(follow_redirects=False) if kind == "ops" and settings.gateway_origin else None
+    claims = GatewayExecutionClaims(settings.gateway_origin, claim_client) if claim_client else None
+    tools = OpsTools(settings, default_client(), claims) if kind == "ops" else None
     public = urlsplit(os.environ.get("PUBLIC_URL", "http://localhost:8080"))
-    app = to_a2a(build_agent(kind, settings, tools), host=public.hostname or "localhost", port=public.port or (443 if public.scheme == "https" else 80), protocol=public.scheme)
+    @asynccontextmanager
+    async def lifespan(_app):
+        try:
+            yield
+        finally:
+            if claim_client:
+                await claim_client.aclose()
+
+    app = to_a2a(build_agent(kind, settings, tools), host=public.hostname or "localhost", port=public.port or (443 if public.scheme == "https" else 80), protocol=public.scheme, lifespan=lifespan)
 
     async def healthz(_: Request) -> JSONResponse:
         return JSONResponse({"agent": kind, "status": "ready"})

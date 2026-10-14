@@ -6,8 +6,11 @@ import kotlinx.serialization.json.*
 
 @Serializable
 data class FirebaseConfiguration(
-    val projectId: String, val apiKey: String, val appId: String,
-    val webClientId: String, val tenantId: String? = null
+    val projectId: String,
+    val apiKey: String,
+    val appId: String,
+    val webClientId: String,
+    val tenantId: String? = null,
 ) {
     fun validate() {
         require(Regex("^[a-z][a-z0-9-]{4,28}[a-z0-9]$").matches(projectId))
@@ -20,15 +23,20 @@ data class FirebaseConfiguration(
 
 @Serializable
 data class WorkspaceConfiguration(
-    val key: String, val edition: String, val workspaceId: String,
-    val label: String, val organizationId: String? = null
+    val key: String,
+    val edition: String,
+    val workspaceId: String,
+    val label: String,
+    val organizationId: String? = null,
 ) {
     fun validate() {
         require(validId(key) && validId(workspaceId) && label.length in 1..128)
         require(
             when (edition) {
-                "personal" -> organizationId == null; "organization" -> organizationId?.let(::validId) == true; else -> false
-            }
+                "personal" -> organizationId == null
+                "organization" -> organizationId?.let(::validId) == true
+                else -> false
+            },
         )
     }
 
@@ -36,11 +44,13 @@ data class WorkspaceConfiguration(
         validate()
         return Scope(
             actorId,
-            if (edition == "personal") Owner(
-                "personal",
-                userId = actorId
-            ) else Owner("organization", organizationId = organizationId),
-            workspaceId
+            if (edition == "personal")
+                Owner(
+                    "personal",
+                    userId = actorId,
+                )
+            else Owner("organization", organizationId = organizationId),
+            workspaceId,
         )
     }
 }
@@ -48,20 +58,36 @@ data class WorkspaceConfiguration(
 /** Public, build-packaged settings. No credential, role, resource or arbitrary endpoint fields. */
 @Serializable
 data class MobileConfiguration(
-    val schemaVersion: Int, val configured: Boolean, val origin: String,
-    val firebase: FirebaseConfiguration, val workspaces: List<WorkspaceConfiguration>
+    val schemaVersion: Int,
+    val configured: Boolean,
+    val origin: String,
+    val firebase: FirebaseConfiguration,
+    val workspaces: List<WorkspaceConfiguration>,
 ) {
     fun validate() {
         require(schemaVersion == 1 && configured)
         val url = URI(origin)
-        require(url.scheme == "https" && url.host != null && url.rawUserInfo == null && url.rawPath.isNullOrEmpty() && url.rawQuery == null && url.rawFragment == null)
+        require(
+            url.scheme == "https" &&
+                url.host != null &&
+                url.rawUserInfo == null &&
+                url.rawPath.isNullOrEmpty() &&
+                url.rawQuery == null &&
+                url.rawFragment == null,
+        )
         require(url.port == -1 || url.port == 443)
         firebase.validate()
-        require(workspaces.size in 1..10 && workspaces.map { it.key }
-            .distinct().size == workspaces.size)
+        require(
+            workspaces.size in 1..10 &&
+                workspaces.map { it.key }.distinct().size == workspaces.size,
+        )
         workspaces.forEach { it.validate() }
-        require(workspaces.map { listOf(it.edition, it.organizationId, it.workspaceId) }
-            .distinct().size == workspaces.size)
+        require(
+            workspaces
+                .map { listOf(it.edition, it.organizationId, it.workspaceId) }
+                .distinct()
+                .size == workspaces.size,
+        )
     }
 }
 

@@ -18,6 +18,7 @@ import { firebaseIdentityVerifier } from '../apps/gateway/src/auth/firebase-iden
 import { identityActor } from '../apps/gateway/src/auth/organization-access';
 import { GcpNotifications } from '../apps/gateway/src/notifications/notifications';
 import type { GcpNotification } from '@contracts/gcp/notifications';
+import { GcpMobility } from '../apps/gateway/src/mobility/service';
 
 if (process.env.MOBILEOPS_OFFLINE_TEST !== '1') throw Error('Synthetic-only gate requires MOBILEOPS_OFFLINE_TEST=1.');
 const directory = mkdtempSync(join(tmpdir(), 'mobileops-android-')), store = new SqliteCloudStore(join(directory, 'test.sqlite'));
@@ -44,6 +45,9 @@ const analyses = new GcpAnalyses(store, access, observations, workflow, { engine
 let notification: GcpNotification | undefined;
 const notifications = new GcpNotifications(store, access, { dataMode: 'synthetic', async current() { return true; }, async send(_token, data) { notification = data; return 'accepted'; } }, now);
 const services: GcpApiServices = { access, observations, analyses, notifications, operations: new GcpOperations(store, access, analyses, registrations, now), publicOrigin: 'http://127.0.0.1' };
+services.mobility = new GcpMobility(store,access,()=>true,{engine:'offline-fixture',async diagnose(vehicle,_language,_signal,cases=[]){
+  return {summary:'Synthetic native HTTP diagnosis.',evidenceIds:['fault','signal'],unknowns:['No physical vehicle connected.'],runbook:vehicle.fault==='charge_handshake'||cases.length===1?'charge-reconnect-v1':'none'};
+}},undefined,now);
 const server = createGcpApiServer(services);
 try {
   await access.organization.provision({ organizationId: bundle.scope.owner.organizationId, workspaceId: bundle.scope.workspaceId, actorId: bundle.scope.actorId, version: 1, active: true, roles: ['operator', 'reviewer'], updatedAt: new Date(at).toISOString() });

@@ -32,6 +32,8 @@ class Settings:
     # HMAC key shared only by the gateway (which signs approvals) and the ops agent (which verifies them).
     approval_key: bytes = field(default=b"", repr=False)
     approval_ttl_seconds: int = 300
+    # Fixed gateway broker. Empty means real execution is disabled; reads still work.
+    gateway_origin: str = ""
 
     def service(self, name: str) -> RegisteredService:
         for item in self.services:
@@ -63,4 +65,5 @@ def load_settings(env: dict[str, str] | None = None) -> Settings:
         guardian_url=env.get("GUARDIAN_AGENT_URL", ""),
         approval_key=key.encode() if key else b"",
         approval_ttl_seconds=int(env.get("OPS_APPROVAL_TTL_SECONDS", "300")),
+        gateway_origin=env.get("OPS_GATEWAY_ORIGIN", ""),
     )

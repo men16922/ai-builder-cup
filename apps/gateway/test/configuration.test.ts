@@ -140,4 +140,17 @@ test('crew access follows resource ownership: a member of the owning organizatio
   // A verified Google sign-in that owns nothing is refused, both in the organization scope's workspace and as a personal sign-in.
   const personal = await services.access.authenticate('Bearer stranger', { edition: 'personal', workspaceId: scope.workspaceId, label: 'Personal' });
   await assert.rejects(services.agents!.create(personal, asked, randomUUID()), { status: 403, code: 'crew_not_entitled' });
+  // Driver access has no cloud-resource prerequisite, but is confined to configured
+  // scopes and actor-private twins. It never extends the operational crew's authority.
+  const driverScope = {edition:'personal' as const,workspaceId:'drivers',label:'My vehicle'};
+  const mobilityServices = composeGcpServices({...input,scopes:[...input.scopes,driverScope],mobility:{enabled:true,placesEnabled:false}},ports);
+  const driver = await mobilityServices.access.authenticate('Bearer stranger',driverScope);
+  const own = await mobilityServices.mobility!.command(driver,{operation:'initialize'},randomUUID());
+  assert.equal(own.vehicle?.source,'simulation');
+  const other = await mobilityServices.access.authenticate('Bearer member',driverScope);
+  assert.equal((await mobilityServices.mobility!.read(other)).vehicle,null);
+  const wrongScope = await mobilityServices.access.authenticate('Bearer stranger',{...driverScope,workspaceId:'unconfigured'});
+  await assert.rejects(mobilityServices.mobility!.command(wrongScope,{operation:'initialize'},randomUUID()),{status:403,code:'mobility_not_entitled'});
+  await assert.rejects(mobilityServices.agents!.create(driver,asked,randomUUID()),{status:403,code:'crew_not_entitled'});
+  await assert.rejects(mobilityServices.access.authenticate('Bearer stranger',scope),{status:403});
 });

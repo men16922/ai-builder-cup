@@ -34,6 +34,18 @@ test('metadata credentials verify attached principal/project, pin all GETs and c
   assert.ok(!JSON.stringify(credentials).includes('synthetic-metadata-token')); credentials.close(); await assert.rejects(credentials.token(signal()), code('credential_disabled'));
 });
 
+test('Maps MCP credentials request only their fixed scope and never reuse a cloud token', async t => {
+  const f=metadataFixture(),credentials=await createSyntheticGoogleCredentials(config,f.fetcher,f.now);
+  t.after(()=>credentials.close());
+  await credentials.token(signal()); await credentials.mapsToken!(signal()); await credentials.mapsToken!(signal());
+  const tokenCalls=f.calls.filter(call=>new URL(call.url).pathname.endsWith('/token'));
+  assert.equal(tokenCalls.length,2);
+  assert.equal(new URL(tokenCalls[0].url).search,'');
+  assert.equal(new URL(tokenCalls[1].url).searchParams.get('scopes'),'https://www.googleapis.com/auth/maps-platform.mapstools');
+  f.email('changed@example.invalid');
+  await assert.rejects(credentials.mapsToken!(signal()),code('credential_changed'));
+});
+
 test('metadata rejects project/principal/header mismatch before use and changed identity after token issuance', async t => {
   for (const kind of ['email', 'project', 'flavor', 'during'] as const) await t.test(kind, async child => {
     const f = metadataFixture(); if (kind === 'email') f.email('different@example.invalid'); if (kind === 'project') f.project('other-project'); if (kind === 'flavor') f.flavor(false);

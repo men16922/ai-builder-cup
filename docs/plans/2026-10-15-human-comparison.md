@@ -2,6 +2,8 @@
 
 Goal: measure the same incident handled by hand and with Aide, by a person who has not used Aide before. Report the numbers with the sample size. Do not present any result as MTTR.
 
+Status confirmed by the owner on 2026-10-14: not yet run. Physical-device testing is also not yet run; the teammate's SHA-1 and SHA-256 were registered and read back in Firebase on 14 October. A fingerprint registration does not prove sign-in or the workflow.
+
 ## Setup (owner, 10 minutes)
 
 1. `apps/shop-api/reset.sh <project>` so `shop-api-bad` serves 100% of traffic.
@@ -30,3 +32,18 @@ Goal: measure the same incident handled by hand and with Aide, by a person who h
 ## Reporting
 
 Add a section "Human comparison" to `docs/EVALUATION.md` with the table, the sample size (expected 2 participants × 2 modes) and one sentence of limits: small sample, one incident type, participants are team members. Then update the "Impact we can show" slide in `submission/deck/build.mjs`, the Devpost "Accomplishments" and the Medium article, and rebuild the deck.
+
+## Recording form (not results)
+
+Start and end each stopwatch at the same event in both modes. Record failed or abandoned runs; do not remove them from the sample. Finish the first attempt before teaching the participant how the app works.
+
+| Participant | Order | Mode | Device | Valid plan (s) | Traffic restored (s) | Active human time (s) | Manual operations | Wrong/risky actions | Understood uncertainty? |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| P1 | 1 | manual | laptop | not run | not run | not run | not run | not run | not run |
+| P1 | 2 | Aide | phone | not run | not run | not run | not run | not run | not run |
+| P2 | 1 | Aide | phone | not run | not run | not run | not run | not run | not run |
+| P2 | 2 | manual | laptop | not run | not run | not run | not run | not run | not run |
+
+Record device model, date, candidate revision and any setup failure without account names, URLs or project identifiers. After each run ask: "What did the system actually change? Was the target revision's recent health confirmed? What would you do if the outcome were unknown?"
+
+Report paired raw times before any percentage. Laptop versus phone, repeat-task learning and team familiarity are confounds; counterbalancing does not eliminate them in a two-person pilot. The result can support this narrowly defined workflow, not a causal or general MTTR claim.

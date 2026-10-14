@@ -1,5 +1,7 @@
 # Architecture
 
+Current source includes the 15 October V2 approval protocol and simulated mobility domains; these changes are not deployed. Historical live runs used V1. Detailed configuration, evidence and limits: [APPROVALS](APPROVALS.md), [Maps](MAPS.md), [STATUS](STATUS.md).
+
 ## Components
 
 | Component | Code | Runtime | Responsibility | Identity |
@@ -26,19 +28,25 @@ sequenceDiagram
     participant G as Gateway
     participant C as Chief
     participant O as Ops
+    participant R as Cloud Run
     P->>G: instruction (verified identity, role operator)
     G->>C: A2A message/stream
     C->>O: A2A: read service, metrics, logs
     O-->>C: evidence (empty is unknown)
     C->>C: Diagnosis and Guardian over A2A
     C-->>G: task input-required + proposed action
-    G-->>P: approval card (exact action, risk, reason)
+    G->>R: fixed registered UID/service read
+    G-->>P: approval card (action, reviewed traffic/time, risk, reason)
     P->>G: approve (role reviewer)
-    G->>G: HMAC over the exact action, 5 minute expiry
+    G->>G: atomically store grant and sign action + reviewed state, 5 minute expiry
     G->>C: function_response with the signed approval
     C->>O: POST /execute (action + approval)
     O->>O: re-check policy and signature
-    O-->>C: applied, or refused with a fixed reason
+    O->>R: fresh UID/etag/updateTime read
+    O->>G: redeem the exact grant once
+    G->>G: current membership/target check + durable claim
+    O->>R: one conditional etag traffic PATCH
+    O-->>C: refused / pending / applied / failed / unknown
     C-->>G: report (what it did, what is still unknown)
 ```
 
@@ -48,7 +56,7 @@ sequenceDiagram
 2. **Gateway to Chief.** Authenticated service-to-service. The gateway never sends credentials, only the person's instruction and, later, a signed approval.
 3. **Chief to Ops.** Authenticated. The Chief has no Google API permission of its own beyond calling Gemini and its peers.
 4. **Ops to Google.** The Ops service account may read the project's Cloud Run, Monitoring and Logging data and may update **one named Cloud Run service**, acting only as that service's own runtime account.
-5. **Model output to action.** The model proposes. A deterministic policy and a signature decide. Approval covers one action digest, one actor and five minutes, is used once, and expires when the service changes.
+5. **Model output to action.** The model proposes. Deterministic policy, explicit owner/UID/destination registration and a human-issued V2 grant authorize execution. Approval covers one action, actor, five-minute lease and reviewed state. A durable gateway claim precedes one conditional PATCH. Unknown outcomes never resend.
 
 ## Failure behavior
 
@@ -76,9 +84,9 @@ Each agent service exports OpenTelemetry traces to Cloud Trace (`OPS_TRACE_TO_CL
 
 `/execute` answers with exactly one `status`. `refused` (HTTP 403): policy, signature, expiry, a reused approval or a changed service; no change request was sent. `pending` (202): Cloud Run accepted the change and had not finished it within the bounded wait; the report says it is in progress and the Chief reads the traffic split once. `applied` (200): the operation finished and the re-read traffic shows 100% on the approved revision. `failed` (502): Cloud Run did not take the change or the operation ended in an error. `unknown` (504 or no answer): the request may have been delivered; nothing is resent and the person is told the outcome is unknown. A 403 is never used for work that may be running.
 
-Approvals are single-use and tied to the state the person saw. The Ops service refuses a second use of the same signature (in memory, per instance) and, independent of any instance, refuses an approval when the service's last update time is later than the moment the approval was issued. That blocks both a repeat after a successful rollback and a rollback over a deploy made after the person approved. An approval whose signed window is longer than five minutes is refused.
+V2 source binds the grant to the state shown on the approval card. Ops compares reviewed UID, etag and update time, redeems a private gateway grant once, checks expiry and sends the etag with the one PATCH. Revoked or changed organization membership refuses redemption. Missing broker configuration disables mutation. No Firestore/IAM permission is added to Ops.
 
-Known limits: the single-use ledger is in memory, so the update-time check is what holds across instances and restarts; the check relies on Cloud Run's clock being close to the gateway's (a few seconds of skew can only refuse, not allow, a stale approval); a deploy between the proposal and the person's tap is not detected, only one after the tap.
+Local concurrency/state-drift/HTTP tests pass, and isolated live Firestore contention has one winner. V2 is not deployed. Real read/PATCH conflict rejection is not proved by `validateOnly` (both fresh/modified etag requests returned 200 with unchanged service). Firebase identity is delegated for a bounded lease, not continuously reverified after issuance. See [APPROVALS](APPROVALS.md). The older deployment still uses V1's per-instance ledger and post-tap timestamp check.
 
 ## What is deliberately out of scope
 

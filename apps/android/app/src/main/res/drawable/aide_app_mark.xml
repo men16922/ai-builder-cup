@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Original repository mark from apps/web/public/mark.svg, rendered as a native vector. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="48dp" android:height="48dp" android:viewportWidth="40" android:viewportHeight="40">
+    <path android:fillColor="#2563EB" android:pathData="M11,0 L29,0 Q40,0 40,11 L40,29 Q40,40 29,40 L11,40 Q0,40 0,29 L0,11 Q0,0 11,0 Z" />
+    <path android:fillColor="#FFFFFF" android:pathData="M12,13 L28,13 L28,18 L17,18 L17,27 L28,27 L28,32 L12,32 Z" />
+    <path android:fillColor="#A5D8FF" android:pathData="M23,9 L31,17 L23,25 L23,19 L15,19 L15,15 L23,15 Z" />
+</vector>

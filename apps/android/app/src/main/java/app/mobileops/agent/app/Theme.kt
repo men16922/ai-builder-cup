@@ -6,20 +6,24 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.ui.graphics.Color
 
+val AideNavy = Color(0xFF002C5F)
+val AideSky = Color(0xFF00AAD2)
+val AidePaper = Color(0xFFF6F3F2)
+
 val OpsLightColors = lightColorScheme(
-    primary = Color(0xFF0456CF),
+    primary = Color(0xFF215FA6),
     onPrimary = Color(0xFFFFFFFF),
-    primaryContainer = Color(0xFFDAE2FF),
-    onPrimaryContainer = Color(0xFF0040A0),
-    inversePrimary = Color(0xFFB1C5FF),
-    secondary = Color(0xFF585E71),
+    primaryContainer = Color(0xFFD5E3FF),
+    onPrimaryContainer = Color(0xFF004787),
+    inversePrimary = Color(0xFFA6C8FF),
+    secondary = Color(0xFF565F6B),
     onSecondary = Color(0xFFFFFFFF),
-    secondaryContainer = Color(0xFFDCE2F9),
-    onSecondaryContainer = Color(0xFF404659),
-    tertiary = Color(0xFF336762),
+    secondaryContainer = Color(0xFFDAE3F1),
+    onSecondaryContainer = Color(0xFF3E4852),
+    tertiary = Color(0xFF00677C),
     onTertiary = Color(0xFFFFFFFF),
-    tertiaryContainer = Color(0xFFB7EDE7),
-    onTertiaryContainer = Color(0xFF184F4B),
+    tertiaryContainer = Color(0xFFB1EBFF),
+    onTertiaryContainer = Color(0xFF004E5E),
     error = Color(0xFFBA1A1A),
     onError = Color(0xFFFFFFFF),
     errorContainer = Color(0xFFFFDAD6),
@@ -37,7 +41,7 @@ val OpsLightColors = lightColorScheme(
     surfaceContainer = Color(0xFFEFEDF0),
     surfaceContainerHigh = Color(0xFFE9E8EA),
     surfaceContainerHighest = Color(0xFFE3E2E4),
-    surfaceTint = Color(0xFF0456CF),
+    surfaceTint = Color(0xFF215FA6),
     inverseSurface = Color(0xFF2F3032),
     inverseOnSurface = Color(0xFFF1F0F2),
     outline = Color(0xFF73777D),
@@ -46,19 +50,19 @@ val OpsLightColors = lightColorScheme(
 )
 
 val OpsDarkColors = darkColorScheme(
-    primary = Color(0xFFB1C5FF),
-    onPrimary = Color(0xFF002C72),
-    primaryContainer = Color(0xFF0040A0),
-    onPrimaryContainer = Color(0xFFDAE2FF),
-    inversePrimary = Color(0xFF0456CF),
-    secondary = Color(0xFFC0C6DD),
-    onSecondary = Color(0xFF2A3042),
-    secondaryContainer = Color(0xFF404659),
-    onSecondaryContainer = Color(0xFFDCE2F9),
-    tertiary = Color(0xFF9CD1CB),
-    onTertiary = Color(0xFF003734),
-    tertiaryContainer = Color(0xFF184F4B),
-    onTertiaryContainer = Color(0xFFB7EDE7),
+    primary = Color(0xFFA6C8FF),
+    onPrimary = Color(0xFF003060),
+    primaryContainer = Color(0xFF004787),
+    onPrimaryContainer = Color(0xFFD5E3FF),
+    inversePrimary = Color(0xFF215FA6),
+    secondary = Color(0xFFBEC7D4),
+    onSecondary = Color(0xFF28313B),
+    secondaryContainer = Color(0xFF3E4852),
+    onSecondaryContainer = Color(0xFFDAE3F1),
+    tertiary = Color(0xFF80D2EB),
+    onTertiary = Color(0xFF003642),
+    tertiaryContainer = Color(0xFF004E5E),
+    onTertiaryContainer = Color(0xFFB1EBFF),
     error = Color(0xFFFFB4AB),
     onError = Color(0xFF690005),
     errorContainer = Color(0xFF93000A),
@@ -76,7 +80,7 @@ val OpsDarkColors = darkColorScheme(
     surfaceContainer = Color(0xFF1E2021),
     surfaceContainerHigh = Color(0xFF292A2C),
     surfaceContainerHighest = Color(0xFF343537),
-    surfaceTint = Color(0xFFB1C5FF),
+    surfaceTint = Color(0xFFA6C8FF),
     inverseSurface = Color(0xFFE3E2E4),
     inverseOnSurface = Color(0xFF2F3032),
     outline = Color(0xFF8D9197),
@@ -85,37 +89,8 @@ val OpsDarkColors = darkColorScheme(
 )
 
 /** Roles that Material 3 does not define. They share the web token names (--md-sys-color-success and so on). */
-class OpsSemanticColors(
-    val success: Color,
-    val onSuccess: Color,
-    val successContainer: Color,
-    val onSuccessContainer: Color,
-    val warning: Color,
-    val onWarning: Color,
-    val warningContainer: Color,
-    val onWarningContainer: Color
-)
-
-val OpsLightSemantic = OpsSemanticColors(
-    Color(0xFF0E6D2B),
-    Color(0xFFFFFFFF),
-    Color(0xFFCDEBC9),
-    Color(0xFF08200C),
-    Color(0xFF805600),
-    Color(0xFFFFFFFF),
-    Color(0xFFFFDDAF),
-    Color(0xFF281800)
-)
-val OpsDarkSemantic = OpsSemanticColors(
-    Color(0xFF82DA8A),
-    Color(0xFF003911),
-    Color(0xFF344D34),
-    Color(0xFFCDEBC9),
-    Color(0xFFFFBA44),
-    Color(0xFF442C00),
-    Color(0xFF5C4215),
-    Color(0xFFFFDDAF)
-)
-
+class OpsSemanticColors(val success: Color, val onSuccess: Color, val successContainer: Color, val onSuccessContainer: Color, val warning: Color, val onWarning: Color, val warningContainer: Color, val onWarningContainer: Color)
+val OpsLightSemantic = OpsSemanticColors(Color(0xFF0E6D2B), Color(0xFFFFFFFF), Color(0xFFCDEBC9), Color(0xFF08200C), Color(0xFF805600), Color(0xFFFFFFFF), Color(0xFFFFDDAF), Color(0xFF281800))
+val OpsDarkSemantic = OpsSemanticColors(Color(0xFF82DA8A), Color(0xFF003911), Color(0xFF344D34), Color(0xFFCDEBC9), Color(0xFFFFBA44), Color(0xFF442C00), Color(0xFF5C4215), Color(0xFFFFDDAF))
 fun opsSemantic(dark: Boolean) = if (dark) OpsDarkSemantic else OpsLightSemantic
 fun opsColorScheme(dark: Boolean): ColorScheme = if (dark) OpsDarkColors else OpsLightColors

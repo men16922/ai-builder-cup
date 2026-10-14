@@ -22,9 +22,9 @@ const files = [];
 async function copy(directory, prefix = '') {
   for (const entry of await readdir(directory, { withFileTypes: true })) {
     const relative = prefix + entry.name;
-    if (entry.isDirectory()) { if (relative !== 'assets') throw Error('Unexpected web directory'); await copy(join(directory, entry.name), relative + '/'); continue; }
+    if (entry.isDirectory()) { if (!['assets','vehicles'].includes(relative)) throw Error('Unexpected web directory'); await copy(join(directory, entry.name), relative + '/'); continue; }
     if (relative === 'module-inputs.json') continue;
-    if (!entry.isFile() || !/^\/(?:index\.html|mark\.svg|assets\/[A-Za-z0-9_-]+(?:\.[A-Za-z0-9_-]+)+)$/.test('/' + relative)) throw Error(`Unexpected web asset: ${relative}`);
+    if (!entry.isFile() || !/^\/(?:index\.html|mark\.svg|vehicles\/aide-ev\.png|assets\/[A-Za-z0-9_-]+(?:\.[A-Za-z0-9_-]+)+)$/.test('/' + relative)) throw Error(`Unexpected web asset: ${relative}`);
     const data = await readFile(join(directory, entry.name)); await mkdir(join(stage, 'web', prefix), { recursive: true }); await writeFile(join(stage, 'web', relative), data); files.push({ path: '/' + relative, sha256: hash(data) });
   }
 }

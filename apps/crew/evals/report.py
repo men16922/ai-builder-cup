@@ -2,10 +2,13 @@
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 
 root = Path(__file__).parent
 docs = root.parents[2] / "docs" / "EVALUATION.md"
+# Live/human evidence is maintained by people, not produced by fixture evaluations.
+manual_sections = re.findall(r"^## (?:Mobile and restart behaviour|Human comparison).*?(?=^## |\Z)", docs.read_text() if docs.exists() else "", re.MULTILINE | re.DOTALL)
 
 
 def load(name: str) -> dict | None:
@@ -48,7 +51,7 @@ out = ["# Agent evaluation", "",
        "- **Rule checks** are exact: which tool calls and arguments the Chief made, whether any change was applied without an approval, and whether any request touched a service or revision it must not.",
        "- **Expectations** in plain language are graded by a different, stronger model than the crew, with a strict rubric.",
        "- A run passes only when every rule check and every expectation passes.", "",
-       "Reproduce with `cd agents && python -m evals.run --runs 3` (needs Vertex AI access) and `python -m evals.report`.", ""]
+       "Reproduce with `cd apps/crew && python -m evals.run --runs 3` (needs Vertex AI access) and `python -m evals.report`.", ""]
 for name, report in rounds:
     fingerprint = json.dumps([[r["final"] for r in s["runs"]] for s in report["scenarios"]])
     if fingerprint in seen:
@@ -76,9 +79,26 @@ for title, name, note in [("Case found in the first live run, before the fix", "
         out += [f"## {title}: {total(extra)} passed", ""] + ([note, ""] if note else []) + [table(extra), ""]
         miss = failures(extra)
         out += (["What failed, as recorded:", ""] + miss + [""]) if miss else ["Every recorded run passed.", ""]
+for title, filename, note in [
+    ("Fresh qualification, first run (2026-10-14)", "fresh-first-20261014.json", "Six new cases, one run each, frozen after the telemetry fix and before this first execution. No agent instruction was tuned on these outcomes. This is a small unseen-case smoke test, separate from the original held-out 13/18."),
+    ("Telemetry collector regressions (2026-10-14)", "telemetry-first-20261014.json", "Two cases target known defects: a paginated success-only response and a missing error-count value. These are regression checks after the fix, not held-out cases."),
+    ("Core regression after telemetry coverage change (2026-10-14)", "core-regression-20261014.json", "The original six tuned cases, one run each. This is regression evidence, not an unseen-case score or a new 18-run benchmark."),
+]:
+    report = load(filename)
+    if report:
+        out += [f"## {title}: {total(report)} passed", "", note, "", report["scope"], "",
+                f"Crew model `{report['crew_model']}`, judge `{report['judge_model']}`. Completed: `{report['completed']}`. Source SHA-256 hashes and per-attempt results: `{filename}` (local run record held back from Git; request privately as described in REMOTE_HANDOFF.md).", "", table(report), ""]
+        for scenario in report["scenarios"]:
+            for index, run in enumerate(scenario["runs"]):
+                if run.get("error_type"):
+                    out += [f"- `{scenario['id']}` attempt {index + 1}: `{run['error_type']}`, recorded as failed; it remains in the denominator.", ""]
+        miss = failures(report)
+        if miss:
+            out += ["What failed, as recorded:", ""] + miss + [""]
+out += [section.rstrip() + "\n" for section in manual_sections]
 out += ["## Limits", "",
-        "- Twelve scenarios and a few runs each are a smoke test of safety behavior, not a benchmark.",
-        "- The agent instructions were tightened between rounds using these same scenarios, so later scores on those six are not held-out results. They show that the recorded failures were fixed. Only the first held-out run is a score on cases the crew was not tuned on, and it is small.",
+        "- Small scenario suites with a few runs each are smoke tests of behavior, not a benchmark.",
+        "- Agent instructions were tightened between older rounds using those same cases. Later scores show the recorded failures were fixed. The original first held-out run and the separate fresh qualification are the unseen-case results; both samples are small.",
         "- The judge is a model; its verdicts can be wrong in either direction. The rule checks are the hard evidence.",
         "- The data is fixed and synthetic. Real services return messier evidence.", ""]
 docs.write_text("\n".join(out))

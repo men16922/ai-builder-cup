@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import asyncio
 import re
+import time
 
 from ..config import RegisteredService
 from .client import GoogleApiClient, GoogleApiError
@@ -42,7 +43,7 @@ def _traffic_is(raw: dict, revision: str) -> bool:
     return len(targets) == 1 and targets[0].get("percent") == 100 and _short(targets[0].get("revision")) == revision
 
 
-async def rollback_traffic(client: GoogleApiClient, service: RegisteredService, revision: str, *, poll_seconds: float = 1.0, attempts: int = 20) -> dict:
+async def rollback_traffic(client: GoogleApiClient, service: RegisteredService, revision: str, *, etag: str, expires_at: int | None = None, poll_seconds: float = 1.0, attempts: int = 20) -> dict:
     """Send 100% of traffic to an existing revision. Reversible; it never deletes a revision or builds new code.
 
     Raises GoogleApiError only before any change was sent. After that it reports one of:
@@ -50,13 +51,15 @@ async def rollback_traffic(client: GoogleApiClient, service: RegisteredService, 
     failed (Cloud Run refused the request or the operation ended in an error) or unknown (the outcome cannot be read).
     The change request is never sent twice.
     """
-    if not REVISION_RE.match(revision):
+    if not REVISION_RE.match(revision) or not isinstance(etag, str) or not 1 <= len(etag) <= 256:
         raise GoogleApiError(400, "invalid_request")
     listing = await client.request("GET", f"{RUN}/{service.resource}/revisions", params={"pageSize": 50})
     if revision not in {_short(r.get("name")) for r in listing.get("revisions", [])}:
         raise GoogleApiError(404, "not_found")
     result = {"service": service.name, "revision": revision, "operation_done": False}
-    body = {"traffic": [{"type": "TRAFFIC_TARGET_ALLOCATION_TYPE_REVISION", "revision": revision, "percent": 100}]}
+    if expires_at is not None and expires_at <= time.time():
+        return {**result, "status": "refused", "change_sent": False, "error": "the approval expired before dispatch; review and decide again"}
+    body = {"etag": etag, "traffic": [{"type": "TRAFFIC_TARGET_ALLOCATION_TYPE_REVISION", "revision": revision, "percent": 100}]}
     try:
         operation = await client.request("PATCH", f"{RUN}/{service.resource}", params={"updateMask": "traffic"}, json=body)
     except GoogleApiError as error:

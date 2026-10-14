@@ -57,21 +57,77 @@ async def test_request_metrics_group_by_revision_and_class(api):
     assert not result["no_samples"]
 
 
+async def test_missing_metric_values_do_not_become_observed_zero(api):
+    recorder, client = api
+    missing = {"resource": {"labels": {"revision_name": "shop-api-00002"}},
+               "metric": {"labels": {"response_code_class": "5xx"}}, "points": [{"value": {}}]}
+    recorder.add("GET", "/v3/projects/example-project/timeSeries", {"json": {"timeSeries": [missing]}})
+    result = await telemetry.read_request_metrics(client, SERVICE)
+    assert result["request_counts"] == [] and result["latency_p95"] == []
+    assert result["no_samples"] and result["coverage"]["requests"] == "partial"
+
+
+async def test_paginated_metric_success_is_only_a_partial_observation(api):
+    recorder, client = api
+    success = {"resource": {"labels": {"revision_name": "shop-api-00002"}},
+               "metric": {"labels": {"response_code_class": "2xx"}},
+               "points": [{"value": {"int64Value": "120"}}]}
+    recorder.add("GET", "/v3/projects/example-project/timeSeries",
+                 {"json": {"timeSeries": [success], "nextPageToken": "private-page-cursor"}}, {"json": {}})
+    result = await telemetry.read_request_metrics(client, SERVICE)
+    assert result["request_counts"][0]["requests"] == 120
+    assert result["coverage"]["requests"] == "partial" and result["coverage"]["latency"] == "empty"
+    assert "private-page-cursor" not in str(result)
+    assert len(recorder.calls) == 2  # bounded reads; no automatic pagination
+
+
+@pytest.mark.parametrize("value", [{}, {"int64Value": "-1"}, {"int64Value": "not-a-count"}, {"int64Value": True}, {"int64Value": str(2**63)}])
+async def test_invalid_counts_are_omitted_with_partial_coverage(api, value):
+    recorder, client = api
+    sample = {"resource": {"labels": {"revision_name": "shop-api-00002"}},
+              "metric": {"labels": {"response_code_class": "5xx"}}, "points": [{"value": value}]}
+    recorder.add("GET", "/v3/projects/example-project/timeSeries", {"json": {"timeSeries": [sample]}}, {"json": {}})
+    result = await telemetry.read_request_metrics(client, SERVICE)
+    assert result["request_counts"] == [] and result["coverage"]["requests"] == "partial"
+
+
+@pytest.mark.parametrize("value", [{}, {"doubleValue": -1}, {"doubleValue": "NaN"}, {"doubleValue": True}])
+async def test_invalid_latency_is_omitted_with_partial_coverage(api, value):
+    recorder, client = api
+    sample = {"resource": {"labels": {"revision_name": "shop-api-00002"}}, "points": [{"value": value}]}
+    recorder.add("GET", "/v3/projects/example-project/timeSeries", {"json": {}}, {"json": {"timeSeries": [sample]}})
+    result = await telemetry.read_request_metrics(client, SERVICE)
+    assert result["latency_p95"] == [] and result["coverage"]["latency"] == "partial"
+
+
+async def test_explicit_zero_remains_an_observation_and_missing_labels_do_not(api):
+    recorder, client = api
+    sample = {"resource": {"labels": {"revision_name": "shop-api-00002"}},
+              "metric": {"labels": {"response_code_class": "5xx"}}, "points": [{"value": {"int64Value": "0"}}]}
+    recorder.add("GET", "/v3/projects/example-project/timeSeries",
+                 {"json": {"timeSeries": [sample, {"points": [{"value": {"int64Value": "5"}}]}]}},
+                 {"json": {"timeSeries": [{"resource": sample["resource"], "points": [{"value": {"doubleValue": 0.0}}]}]}})
+    result = await telemetry.read_request_metrics(client, SERVICE)
+    assert result["request_counts"] == [{"revision": "shop-api-00002", "response_class": "5xx", "requests": 0}]
+    assert result["latency_p95"] == [{"revision": "shop-api-00002", "p95_ms": 0.0}]
+    assert not result["no_samples"] and result["coverage"] == {"requests": "partial", "latency": "complete"}
+
+
 async def test_rollback_only_to_an_existing_revision_and_waits_for_the_operation(api):
     recorder, client = api
     recorder.add("GET", BASE + "/revisions", {"json": {"revisions": [{"name": f"{SERVICE.resource}/revisions/shop-api-00001"}]}})
     recorder.add("PATCH", BASE, {"json": {"name": "projects/p/locations/l/operations/op1", "done": False}})
     recorder.add("GET", "/v2/projects/p/locations/l/operations/op1", {"json": {"done": True, "response": {}}})
     recorder.add("GET", BASE, service_state("shop-api-00001"))
-    result = await cloud_run.rollback_traffic(client, SERVICE, "shop-api-00001", poll_seconds=0)
+    result = await cloud_run.rollback_traffic(client, SERVICE, "shop-api-00001", poll_seconds=0, etag="synthetic-etag-v1")
     assert result == {"service": "shop-api", "revision": "shop-api-00001", "operation_done": True, "change_sent": True, "status": "applied"}
     patch = next(call for call in recorder.calls if call[0] == "PATCH")
     assert patch[2]["updateMask"] == "traffic" and patch[3]["traffic"][0]["percent"] == 100
     with pytest.raises(GoogleApiError) as missing:
-        await cloud_run.rollback_traffic(client, SERVICE, "shop-api-00099", poll_seconds=0)
+        await cloud_run.rollback_traffic(client, SERVICE, "shop-api-00099", poll_seconds=0, etag="synthetic-etag-v1")
     assert missing.value.code == "not_found"
     with pytest.raises(GoogleApiError):
-        await cloud_run.rollback_traffic(client, SERVICE, "../../delete", poll_seconds=0)
+        await cloud_run.rollback_traffic(client, SERVICE, "../../delete", poll_seconds=0, etag="synthetic-etag-v1")
 
 
 async def test_client_refuses_non_google_hosts_and_hides_error_bodies(api):
@@ -92,7 +148,7 @@ async def _rollback(recorder, client, *, patch, poll=(), service=None):
         recorder.add("GET", "/v2/projects/p/locations/l/operations/op1", *poll)
     if service:
         recorder.add("GET", BASE, service)
-    return await cloud_run.rollback_traffic(client, SERVICE, "shop-api-00001", poll_seconds=0, attempts=3)
+    return await cloud_run.rollback_traffic(client, SERVICE, "shop-api-00001", poll_seconds=0, attempts=3, etag="synthetic-etag-v1")
 
 
 OP = {"json": {"name": "projects/p/locations/l/operations/op1", "done": False}}

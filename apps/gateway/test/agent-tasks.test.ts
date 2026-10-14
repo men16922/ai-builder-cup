@@ -4,12 +4,16 @@ import { randomUUID } from 'node:crypto';
 import { SqliteCloudStore } from '../src/store/sqlite-store';
 import { GcpWebAccess } from '../src/auth/web-access';
 import { GcpAgentTasks, applyEvent, type ChiefPort } from '../src/crew/agent-tasks';
-import { actionDigest, signApproval } from '../src/crew/agent-approval';
+import { actionDigest, signApproval, type SignedApproval } from '../src/crew/agent-approval';
 import { agentTaskSchema } from '@contracts/gcp/agent';
+import type { ApprovalReviewPort } from '../src/crew/approval-review';
+import { createGcpApiServer, type GcpApiServices } from '../src/http/api';
+import { GcpObservations } from '../src/workflow/observations';
 
 const KEY = Buffer.from('gateway-approval-key-for-tests-0123456789');
 const action = { action: 'rollback_traffic', service: 'shop-api', revision: 'shop-api-good' } as const;
 const ids = { task: 'a2a-task-synthetic-1', context: 'a2a-context-synthetic-1', call: 'adk-confirm-synthetic-1' };
+const reviewState={uid:'synthetic-uid',etag:'synthetic-etag',update_time:'2026-10-10T00:59:00.000Z',observed_at:'2026-10-10T01:00:00.000Z'};
 
 const call = (name: string, args: unknown) => ({ kind: 'status-update', taskId: ids.task, contextId: ids.context, final: false, status: { state: 'working', message: { kind: 'message', role: 'agent', parts: [{ kind: 'data', data: { id: `c-${name}`, name, args }, metadata: { adk_type: 'function_call' } }] } } });
 const result = (name: string, response: unknown) => ({ kind: 'status-update', taskId: ids.task, contextId: ids.context, final: false, status: { state: 'working', message: { kind: 'message', role: 'agent', parts: [{ kind: 'data', data: { id: `c-${name}`, name, response }, metadata: { adk_type: 'function_response' } }] } } });
@@ -33,12 +37,15 @@ async function setup(t: TestContext, script: ConstructorParameters<typeof FakeCh
   let clock = Date.parse('2026-10-10T01:00:00.000Z'); const now = () => clock;
   const store = new SqliteCloudStore(':memory:'); t.after(() => store.close());
   const access = new GcpWebAccess({ async verify(token) { if (!['user-a', 'user-b', 'user-c'].includes(token)) throw Error(); return { actorId: token, expiresAt: clock + 3600000 }; } }, store, now);
-  const chief = new FakeChief(script), denied = new Set<string>(), tasks = new GcpAgentTasks(store, access, chief, KEY, session => !denied.has(session.context.actorId), now);
+  const review:ApprovalReviewPort={allows:(_owner,_workspace,action,uid)=>action.service==='shop-api'&&action.revision==='shop-api-good'&&uid===reviewState.uid,
+    async read(_session,action){if(!this.allows(_session.context.owner,_session.context.workspaceId,action,reviewState.uid))throw Error('unregistered');
+      return {state:{...reviewState,observed_at:new Date(clock).toISOString()},display:{observedAt:new Date(clock).toISOString(),traffic:[{revision:'shop-api-bad',percent:100}]}};}};
+  const chief = new FakeChief(script), denied = new Set<string>(), tasks = new GcpAgentTasks(store, access, chief, KEY, session => !denied.has(session.context.actorId), now,review);
   const org = { edition: 'organization' as const, organizationId: 'synthetic-org', workspaceId: 'synthetic-workspace', label: 'Synthetic' };
   const provision = (actorId: string, roles: ('viewer' | 'operator' | 'reviewer')[]) => access.organization.provision({ organizationId: org.organizationId, workspaceId: org.workspaceId, actorId, version: 1, active: true, roles, updatedAt: new Date(clock).toISOString() });
   await provision('user-a', options.roles ?? ['operator', 'reviewer']); await provision('user-b', ['operator']); await provision('user-c', ['viewer']);
   const session = (token: string) => access.authenticate(`Bearer ${token}`, org, 'mobile');
-  return { tasks, chief, session, denied, advance: (ms: number) => { clock += ms; }, store };
+  return { tasks, chief, session, denied, advance: (ms: number) => { clock += ms; }, store,access,review,now,provision };
 }
 
 test('an instruction is accepted at once, the crew streams progress into the record, and the task pauses for a person', async t => {
@@ -74,7 +81,7 @@ test('only a reviewer decides, an approval is signed over exactly the stored act
   const resume = s.chief.messages[1] as { taskId: string; contextId: string; parts: { data: { id: string; name: string; response: { confirmed: boolean; payload: { approval: { digest: string; actor: string; expires_at: number; signature: string } } } } }[] };
   assert.equal(resume.taskId, ids.task); assert.equal(resume.contextId, ids.context);
   const data = resume.parts[0].data; assert.equal(data.id, ids.call); assert.equal(data.name, 'adk_request_confirmation'); assert.equal(data.response.confirmed, true);
-  const expected = signApproval(KEY, action, 'user-a', 300, Date.parse('2026-10-10T01:00:00.000Z'));
+  const expected = signApproval(KEY, action, 'user-a', 300, Date.parse('2026-10-10T01:00:00.000Z'),reviewState,task.id);
   assert.deepEqual(data.response.payload.approval, expected); assert.equal(expected.digest, actionDigest(action));
   // Replaying the decision with the same key neither re-signs nor re-sends; a different key is a conflict.
   assert.equal((await s.tasks.decide(reviewer, task.id, { decision: 'approve' }, key)).state, 'completed'); assert.equal(s.chief.messages.length, 2);
@@ -144,9 +151,52 @@ test('a change result is shown as its execution state and reason', () => {
 });
 
 test('the TypeScript signer matches the Python verifier byte for byte', () => {
-  const approval = signApproval(Buffer.from('cross-language-test-key-0123456789'), { action: 'rollback_traffic', service: 'shop-api', revision: 'shop-api-good' }, 'actor-hash-1', 300, 1_700_000_000_000);
-  assert.deepEqual(approval, { digest: '38bada923e26be62e473360da022f96343b842182cf96cf3a8bcd5014eba137c', actor: 'actor-hash-1', expires_at: 1700000300, signature: 'mQLTf1wvOG7mVjFaU8z1S_iUS2GmwWeUdML140mRoYI' });
-  assert.throws(() => signApproval(Buffer.alloc(0), action, 'a', 300, 0));
+  const reviewed={uid:'synthetic-uid',etag:'synthetic-etag',update_time:'2023-11-14T22:12:00.000Z',observed_at:'2023-11-14T22:13:20.000Z'},grantId='11111111-1111-4111-8111-111111111111';
+  const approval = signApproval(Buffer.from('cross-language-test-key-0123456789'), { action: 'rollback_traffic', service: 'shop-api', revision: 'shop-api-good' }, 'actor-hash-1', 300, 1_700_000_000_000,reviewed,grantId);
+  assert.equal(approval.digest,'38bada923e26be62e473360da022f96343b842182cf96cf3a8bcd5014eba137c');
+  assert.equal(approval.signature,'mzjovoXUVh40S5_l2S271ZqBAkWBh4beNKHlOehxtXk');
+  assert.throws(() => signApproval(Buffer.alloc(0), action, 'a', 300, 0,reviewed,grantId));
+});
+
+async function issuedGrant(t:TestContext){
+  const s=await setup(t,(_message,index)=>index===0?first():finish('Synthetic completion'));
+  const reviewer=await s.session('user-a'),task=await s.tasks.create(reviewer,{instruction:'Review shop-api'},randomUUID());
+  await s.tasks.idle();await s.tasks.decide(reviewer,task.id,{decision:'approve'},randomUUID());await s.tasks.idle();
+  const message=s.chief.messages[1] as {parts:{data:{response:{payload:{approval:SignedApproval}}}}[]};
+  return {...s,grant:message.parts[0].data.response.payload.approval};
+}
+test('a durable grant can be redeemed once across reconstructed gateway instances without storing bearer sessions',async t=>{
+  const s=await issuedGrant(t);
+  const second=new GcpAgentTasks(s.store,s.access,s.chief,KEY,()=>true,s.now,s.review);
+  const results=await Promise.allSettled([s.tasks.claimExecution(s.grant),second.claimExecution(s.grant)]);
+  assert.equal(results.filter(result=>result.status==='fulfilled').length,1);
+  assert.equal(results.filter(result=>result.status==='rejected').length,1);
+  await assert.rejects(second.claimExecution(s.grant),/not available/);
+  const record=await s.store.transact(tx=>tx.get<Record<string,unknown>>('crew-execution-grant:'+s.grant.grant_id));
+  assert.equal(record?.state,'claimed');assert.doesNotMatch(JSON.stringify(record),/authorization|Bearer|recipient|issuer|subject/);
+});
+test('tampered, unissued, expired and revoked-membership grants cannot be redeemed',async t=>{
+  const s=await issuedGrant(t);
+  for(const raw of [{...s.grant,actor:'user-b'},{...s.grant,reviewed_state:{...s.grant.reviewed_state,etag:'changed'}},{...s.grant,grant_id:randomUUID()},
+    {...s.grant,context:{roles:['reviewer']}}, {...s.grant,version:1}])await assert.rejects(s.tasks.claimExecution(raw));
+  await s.access.organization.provision({organizationId:'synthetic-org',workspaceId:'synthetic-workspace',actorId:'user-a',roles:['viewer'],version:2,active:false,updatedAt:new Date(s.now()).toISOString()});
+  await assert.rejects(s.tasks.claimExecution(s.grant));
+  const expired=await issuedGrant(t);expired.advance(300000);await assert.rejects(expired.tasks.claimExecution(expired.grant));
+});
+
+test('the HTTP broker requires Origin and a signed capability, never a client context or native bypass',async t=>{
+  const s=await issuedGrant(t),services:GcpApiServices={access:s.access,observations:new GcpObservations(s.store,s.access,[]),agents:s.tasks,publicOrigin:'http://127.0.0.1'};
+  const server=createGcpApiServer(services);await new Promise<void>(resolve=>server.listen(0,'127.0.0.1',resolve));
+  t.after(()=>new Promise<void>(resolve=>server.close(()=>resolve())));
+  const address=server.address();assert.ok(address&&typeof address!=='string');services.publicOrigin=`http://127.0.0.1:${address.port}`;
+  const call=(body:unknown,authorization=`Bearer ${s.grant.signature}`,origin:string|undefined=services.publicOrigin)=>fetch(services.publicOrigin+'/api/gcp/crew/execution-claims',{
+    method:'POST',headers:{'Content-Type':'application/json',Authorization:authorization,...(origin?{Origin:origin}:{})},body:JSON.stringify(body)});
+  assert.equal((await call({approval:s.grant},'Bearer user-a')).status,403);
+  assert.equal((await call({approval:s.grant},`Bearer ${s.grant.signature}`,'https://attacker.invalid')).status,403);
+  assert.equal((await call({approval:s.grant},`Bearer ${s.grant.signature}`,'' )).status,403);
+  assert.equal((await call({approval:s.grant,context:{roles:['reviewer']}})).status,400);
+  const claimed=await call({approval:s.grant});assert.equal(claimed.status,200);assert.deepEqual(await claimed.json(),{claimed:true});
+  const replay=await call({approval:s.grant});assert.equal(replay.status,409);assert.doesNotMatch(await replay.text(),new RegExp(s.grant.signature+'|synthetic-uid'));
 });
 
 test('a verified person who owns no registered resource cannot start or decide a crew task', async t => {

@@ -16,6 +16,7 @@
     "test:server": "MOBILEOPS_OFFLINE_TEST=1 node --import tsx --test apps/gateway/test/*.test.ts",
     "test:web": "MOBILEOPS_OFFLINE_TEST=1 node --import tsx tests/browser/workflow.mjs",
     "test:agents": "MOBILEOPS_OFFLINE_TEST=1 node --import tsx tests/browser/crew.mjs",
+    "test:mobility": "MOBILEOPS_OFFLINE_TEST=1 node --import tsx tests/browser/mobility.mjs",
     "test:hosted": "MOBILEOPS_OFFLINE_TEST=1 node --import tsx tests/browser/hosted.mjs",
     "generate:tokens": "node --import tsx scripts/generate-design-tokens.ts",
     "check:publishable": "node scripts/check-publishable.mjs",
@@ -23,7 +24,7 @@
     "check:fixtures": "MOBILEOPS_OFFLINE_TEST=1 node --import tsx scripts/generate-mobile-fixtures.ts --check",
     "test:android-core": "MOBILEOPS_OFFLINE_TEST=1 MOBILEOPS_ANDROID_GRADLE_OFFLINE=1 node --import tsx scripts/check-android-core.ts",
     "prepare:evaluation": "MOBILEOPS_OFFLINE_TEST=1 node --import tsx scripts/prepare-gcp-evaluation.ts",
-    "check": "npm run build && npm run test:server && npm run check:tokens && npm run check:fixtures && npm run test:web && npm run test:agents && npm run test:hosted && npm run check:publishable"
+    "check": "npm run build && npm run test:server && npm run check:tokens && npm run check:fixtures && npm run test:web && npm run test:agents && npm run test:mobility && npm run test:hosted && npm run check:publishable"
   },
   "dependencies": {
     "@google-cloud/firestore": "9.3.1",

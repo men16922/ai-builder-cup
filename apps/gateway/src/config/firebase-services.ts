@@ -9,6 +9,7 @@ import { createFirebaseIdentityVerifier } from '../auth/firebase-identity';
 import { createFirestoreCloudStore } from '../store/firestore-store';
 import { createFirebaseNotificationPorts } from '../notifications/firebase-push';
 import { httpChiefPort, metadataIdToken } from '../crew/chief-a2a';
+import { vertexVehicleReasoner, googleMapsMcpPlaces } from '../mobility/google-ports';
 /** Explicit startup configuration, no membership bootstrap or discovery of host gcloud credentials. */
 export async function createFirebaseGcpServices(input: unknown, enabled: boolean) {
   const config = gcpServerConfiguration.parse(input);
@@ -27,7 +28,8 @@ export async function createFirebaseGcpServices(input: unknown, enabled: boolean
     const approvalKey = Buffer.from(process.env.AGENT_APPROVAL_KEY ?? '', 'utf8');
     if (config.agents?.enabled && approvalKey.length < 32) throw Error('AGENT_APPROVAL_KEY is required when the agent gateway is enabled.');
     const agents = config.agents?.enabled ? { chief: httpChiefPort(config.agents.chiefUrl, metadataIdToken()), approvalKey, overview: { token: async (signal: AbortSignal) => (await credentials.token(signal)).accessToken } } : undefined;
-    const services = composeGcpServices(config, { identity, store, agents, mode: credentials.mode, principal: credentials.principal, sessionId: credentials.sessionId, model, notifications: notifications?.ports,
+    const mobility = config.mobility?.enabled ? { browserMapKey: process.env.AIDE_MAPS_BROWSER_KEY, reasoner: config.model.enabled ? vertexVehicleReasoner({ projectId: config.projectId, location: config.model.location, modelId: config.model.modelId, principal: credentials.principal, sessionId: credentials.sessionId, credentials: { current } }) : undefined, places: config.mobility.placesEnabled ? googleMapsMcpPlaces({ projectId: config.projectId, token: async signal => { if (!credentials.mapsToken) throw Error("maps_credentials_disabled"); return (await credentials.mapsToken(signal)).accessToken; } }) : undefined } : undefined;
+    const services = composeGcpServices(config, { identity, store, agents, mobility, mode: credentials.mode, principal: credentials.principal, sessionId: credentials.sessionId, model, notifications: notifications?.ports,
       telemetry: binding => createCloudRunTelemetryTransport({ binding, enabled: true, principal: credentials.principal, sessionId: credentials.sessionId, credentials: { current } }),
       transport: binding => createCloudRunRestTransport({ binding, enabled: true, offline: false, principal: credentials.principal, sessionId: credentials.sessionId, credentials: { current } }) });
     return { services, async close() { credentials.close(); await Promise.all([store?.close(), identity?.close?.(), notifications?.close()]); } };
