@@ -73,7 +73,7 @@ function Frame({ href, children, slots, assistantOpen, setAssistantOpen, setDraf
         {slots.user ? <div className="ops-account">
           <button type="button" className="ops-avatar" aria-label={t('계정', 'Account')} aria-expanded={menu} onClick={() => setMenu(!menu)}>{slots.user.slice(0, 1).toUpperCase()}</button>
           {menu ? <div className="ops-account-menu" role="group" aria-label={t('계정 메뉴', 'Account menu')}><p>{slots.user}</p>{slots.onSignOut ? <button type="button" onClick={() => { setMenu(false); slots.onSignOut?.(); }}>{slots.signOutLabel ?? t('웹 로그아웃', 'Sign out of web')}</button> : null}</div> : null}
-        </div> : slots.onSignIn ? <Button variant="filled" onClick={slots.onSignIn}>{slots.signInLabel ?? t('로그인', 'Sign in')}</Button> : <Icon name="person" size={22} />}
+        </div> : slots.onSignIn ? <Button variant="filled" onClick={slots.onSignIn}>{slots.signInLabel ?? t('로그인', 'Sign in')}</Button> : null}
       </div>
     </header>
     <div className="ops-body">

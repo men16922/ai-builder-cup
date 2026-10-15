@@ -299,6 +299,11 @@
     <string name="operations_tab" formatted="false">"Operations"</string>
     <string name="vehicle_map_position">Simulated vehicle position</string>
     <string name="vehicle_map_destination">Destination</string>
+    <string name="vehicle_drive_live">DRIVING</string>
+    <string name="vehicle_drive_done">ARRIVED</string>
+    <string name="vehicle_drive_remaining">Remaining</string>
+    <string name="vehicle_drive_straight">Straight line</string>
+    <string name="vehicle_drive_km">%1$s km</string>
     <string name="vehicle_maps_source">[%1$d] Google Maps · %2$s</string>
     <string name="aide_privacy">Privacy and data</string>
     <string name="aide_terms">Terms of use</string>

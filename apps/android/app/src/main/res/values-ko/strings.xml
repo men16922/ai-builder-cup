@@ -299,6 +299,11 @@
     <string name="operations_tab" formatted="false">"서비스 운영"</string>
     <string name="vehicle_map_position">가상 차량 위치</string>
     <string name="vehicle_map_destination">목적지</string>
+    <string name="vehicle_drive_live">주행 중</string>
+    <string name="vehicle_drive_done">도착</string>
+    <string name="vehicle_drive_remaining">남은 거리</string>
+    <string name="vehicle_drive_straight">직선 거리</string>
+    <string name="vehicle_drive_km">%1$s km</string>
     <string name="vehicle_maps_source">[%1$d] Google Maps · %2$s</string>
     <string name="aide_privacy">개인정보와 데이터</string>
     <string name="aide_terms">이용 안내</string>

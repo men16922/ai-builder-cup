@@ -278,18 +278,21 @@ a.ops-utility { color: var(--md-sys-color-primary); }
 /* Aide Mobility: Hyundai-inspired restraint, vehicle-first composition and deliberate whitespace. */
 .aide-eyebrow { color: var(--md-sys-color-tertiary); font-size: 11px; font-weight: 700; letter-spacing: .18em; display: block; margin-bottom: 12px; }
 .aide-welcome { max-width: 1280px; margin: 16px auto 48px; width: 100%; }
-.aide-welcome-hero { display: grid; grid-template-columns: 1fr 1.15fr; gap: 20px; align-items: center; border-radius: 28px; padding: 64px 40px; background: var(--md-sys-color-surface-container-low); overflow: hidden; min-height: 500px; }
+.aide-welcome-hero { position: relative; display: grid; grid-template-columns: 1fr 1.15fr; gap: 20px; align-items: center; border-radius: 32px; padding: 72px 56px; overflow: hidden; min-height: 540px; isolation: isolate;
+  --aide-hero-accent: var(--md-sys-color-inverse-primary); color: var(--md-sys-color-inverse-on-surface);
+  background: radial-gradient(70% 80% at 78% 92%, color-mix(in srgb, var(--aide-hero-accent) 30%, transparent), transparent 70%), radial-gradient(60% 60% at 0% 0%, color-mix(in srgb, var(--aide-hero-accent) 10%, transparent), transparent 70%), var(--md-sys-color-inverse-surface);
+  /* Material buttons inside the inverse hero take the inverse accent. */
+  --md-sys-color-primary: var(--aide-hero-accent); --md-sys-color-on-primary: var(--md-sys-color-inverse-surface); }
+.aide-welcome-car::after { content: ''; position: absolute; left: -10%; right: -20%; bottom: 9%; height: 1px; background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--aide-hero-accent) 55%, transparent) 60%, transparent); }
 .aide-welcome-copy { position: relative; z-index: 1; }
-.aide-welcome-copy h1 { white-space: pre-line; font-size: clamp(36px, 4vw, 58px); line-height: 1.22; letter-spacing: -.055em; font-weight: 650; }
-.aide-welcome-copy > p { max-width: 390px; margin: 24px 0; font-size: 17px; color: var(--md-sys-color-on-surface-variant); }
-.aide-disclosure { display: block; font-size: 12px; color: var(--md-sys-color-on-surface-variant); margin-top: 18px; }
+.aide-welcome-copy h1 { color: inherit; white-space: pre-line; font-size: clamp(36px, 4vw, 58px); line-height: 1.22; letter-spacing: -.055em; font-weight: 650; }
+.aide-welcome-copy > p { max-width: 390px; margin: 24px 0 32px; font-size: 17px; color: color-mix(in srgb, var(--md-sys-color-inverse-on-surface) 72%, transparent); }
+.aide-welcome-copy > p.aide-legal { max-width: 360px; margin: 28px 0 0; font-size: 12px; line-height: 1.7; color: color-mix(in srgb, var(--md-sys-color-inverse-on-surface) 58%, transparent); }
+.aide-legal a { color: inherit; }
+.aide-welcome-copy .ops-banner, .aide-welcome-copy [role="alert"] { margin-top: 16px; }
 .aide-welcome-car { position: relative; min-width: 0; }
-.aide-welcome-car img { width: 100%; max-width: 700px; margin: 0 auto; display: block; }
-.aide-car-label { display: block; text-align: center; letter-spacing: .2em; font-size: 13px; color: var(--md-sys-color-on-surface-variant); }
-.aide-benefits { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 40px; padding: 40px 12px; }
-.aide-benefits article { padding: 8px; }
-.aide-benefits h2 { font-size: 19px; font-weight: 600; margin: 16px 0 8px; }
-.aide-benefits p { font-size: 14px; color: var(--md-sys-color-on-surface-variant); }
+.aide-welcome-car img { position: relative; width: 100%; max-width: 700px; margin: 0 auto; display: block; filter: drop-shadow(0 30px 40px rgb(0 0 0 / .35)); }
+.aide-welcome-car::before { content: ''; position: absolute; left: 12%; right: 8%; bottom: 6%; height: 18%; border-radius: 50%; background: radial-gradient(closest-side, color-mix(in srgb, var(--aide-hero-accent) 35%, transparent), transparent); filter: blur(6px); }
 .ops-no-nav .ops-body { grid-template-columns: minmax(0,1fr); }
 .ops-no-nav .ops-main { padding: 24px; }
 .aide-workspace { display: flex; flex-direction: column; gap: 24px; max-width: 1180px; margin: 0 auto; width: 100%; }
@@ -298,7 +301,7 @@ a.ops-utility { color: var(--md-sys-color-primary); }
 .aide-vehicle-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
 .aide-vehicle-heading h2 { font-size: 28px; font-weight: 600; }
 .aide-vehicle-heading p { color: var(--md-sys-color-on-surface-variant); font-size: 12px; margin-top: 6px; }
-.aide-vehicle-hero > img { display: block; width: 75%; max-width: 700px; margin: -28px auto -20px; }
+.aide-vehicle-hero > img { display: block; width: 75%; max-width: min(700px, 60vh); margin: -28px auto -20px; }
 .aide-vehicle-stats { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 24px; padding: 0 8px 24px; }
 .aide-vehicle-stats > div { display: flex; flex-direction: column; gap: 8px; }
 .aide-vehicle-stats > div + div { border-left: 1px solid var(--md-sys-color-outline-variant); padding-left: 28px; }
@@ -344,7 +347,6 @@ a.ops-utility { color: var(--md-sys-color-primary); }
   .aide-welcome-hero { grid-template-columns: 1fr; padding: 36px 24px 12px; min-height: auto; gap: 24px; }
   .aide-welcome-copy h1 { font-size: 38px; }
   .aide-welcome-car img { width: 110%; margin-left: -5%; }
-  .aide-benefits { grid-template-columns: 1fr; gap: 20px; padding: 24px 8px; }
   .ops-no-nav .ops-main { padding: 16px; }
   .aide-assistance-grid { grid-template-columns: 1fr; }
   .aide-vehicle-hero { padding: 24px 18px 16px; }
@@ -358,8 +360,24 @@ a.ops-utility { color: var(--md-sys-color-primary); }
   .aide-segment { width: 100%; }
   .aide-segment button { flex: 1; padding: 8px 10px; }
 }
-.aide-google-map { border: 1px solid var(--md-sys-color-outline-variant); border-radius: 16px; overflow: hidden; }
-.aide-google-map-canvas { width: 100%; height: 320px; }
+.aide-google-map { position: relative; border: 1px solid var(--md-sys-color-outline-variant); border-radius: 20px; overflow: hidden; }
+.aide-google-map-canvas { width: 100%; height: 360px; }
+/* Driving HUD floats over the map, like an in-car cluster: status, progress, distances. */
+.aide-drive-hud { position: absolute; z-index: 2; top: 12px; left: 12px; right: 12px; max-width: 420px; padding: 14px 16px 12px; border-radius: 16px;
+  background: color-mix(in srgb, var(--md-sys-color-inverse-surface) 88%, transparent); color: var(--md-sys-color-inverse-on-surface); backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgb(0 0 0 / .22); }
+.aide-drive-hud-head { display: flex; align-items: center; gap: 8px; min-width: 0; font-size: 13px; }
+.aide-drive-hud-head strong { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--md-sys-color-inverse-primary); }
+.aide-drive-dest { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
+.aide-drive-sim { font-size: 10px; letter-spacing: .12em; padding: 2px 6px; border-radius: 6px; border: 1px solid color-mix(in srgb, var(--md-sys-color-inverse-on-surface) 35%, transparent); opacity: .8; }
+.aide-drive-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--md-sys-color-inverse-primary); flex: none; }
+.aide-drive-dot.is-live { animation: aide-live 1.6s ease-out infinite; }
+@keyframes aide-live { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--md-sys-color-inverse-primary) 70%, transparent); } 100% { box-shadow: 0 0 0 9px transparent; } }
+.aide-drive-track { height: 4px; margin: 12px 0; border-radius: 4px; background: color-mix(in srgb, var(--md-sys-color-inverse-on-surface) 18%, transparent); overflow: hidden; }
+.aide-drive-track span { display: block; height: 100%; border-radius: inherit; background: var(--md-sys-color-inverse-primary); transition: width 1.1s linear; }
+.aide-drive-hud dl { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 0; }
+.aide-drive-hud dt { font-size: 11px; opacity: .7; }
+.aide-drive-hud dd { margin: 2px 0 0; font-size: 17px; font-weight: 650; font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
+@media (prefers-reduced-motion: reduce) { .aide-drive-dot.is-live { animation: none; } .aide-drive-track span { transition: none; } }
 .aide-google-map > p { padding: 16px; font-size: 13px; }
 .aide-map-fallback-hidden svg { display: none; }
 
@@ -367,7 +385,7 @@ a.ops-utility { color: var(--md-sys-color-primary); }
 .aide-maps-grounded-output p { white-space:pre-wrap; line-height:1.7; }
 .aide-maps-sources { display:flex; flex-wrap:wrap; gap:12px 20px; font-size:13px; }
 .aide-policy-links { display:flex; justify-content:center; gap:24px; margin:32px 0 8px; font-size:12px; }
-.aide-policy-links a { color:var(--md-sys-color-on-surface-variant); }
+.aide-policy-links a, .aide-policy-links span { color:var(--md-sys-color-on-surface-variant); }
 
 /* Guided recovery and learned cases align with the vehicle assistance cards. */
 .aide-recovery-guide { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--md-sys-color-outline-variant); }
