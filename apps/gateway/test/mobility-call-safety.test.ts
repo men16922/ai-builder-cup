@@ -5,6 +5,11 @@ import { SqliteCloudStore } from '../src/store/sqlite-store';
 import { GcpWebAccess } from '../src/auth/web-access';
 import { GcpMobility, type VehicleReasoner, type MobilityPlaces } from '../src/mobility/service';
 import { MobilityClient } from '../../web/src/mobility/mobility-client';
+import { createGcpApiServer } from '../src/http/api';
+import { syntheticVehicleReasoner, vertexVehicleReasoner, MobilityCallOutputError } from '../src/mobility/google-ports';
+import { callDigestSchema } from '@contracts/gcp/mobility';
+import { once } from 'node:events';
+import { GcpObservations } from '../src/workflow/observations';
 import type { MobilityState, CallStep } from '@contracts/gcp/mobility';
 
 async function setup(t: TestContext, step: NonNullable<VehicleReasoner['call']>, places?: MobilityPlaces) {
@@ -25,7 +30,7 @@ async function setup(t: TestContext, step: NonNullable<VehicleReasoner['call']>,
   const send = (state: MobilityState, command: Record<string, unknown>, key = randomUUID()) => api.command(session, { ...command, expectedVersion: state.vehicle!.version }, key);
   const initial = await api.command(session, { operation: 'initialize' }, randomUUID());
   const ringing = await send(initial, { operation: 'call_incoming', scenario: 'meeting_reschedule', language: 'en' });
-  return { api, session, ringing, send, create, calls: () => calls, advance(ms: number) { clock += ms; } };
+  return { api, session, access, store, reasoner, ringing, send, create, calls: () => calls, advance(ms: number) { clock += ms; } };
 }
 const greeting: CallStep = { caller: 'Could we move the fictional meeting?', aide: 'I will check with the driver.', callerEnds: false };
 
@@ -224,4 +229,59 @@ test('a read during a delayed call never rearms the selected journey', async t =
   await start; await client.load(); release(); await pending;
   assert.equal(client.getSnapshot().state?.call?.state, 'active');
   assert.equal(client.getSnapshot().journeyRunning, false);
+});
+
+test('invalid generated call summaries are outcome-unknown, not invalid user requests, and never resend', async t => {
+  const s = await setup(t, async () => greeting);
+  const active = await s.send(s.ringing, { operation: 'call_answer', callId: s.ringing.call!.id, handledBy: 'aide' });
+  const before = structuredClone(active.call!.turns);
+  let summaries = 0;
+  s.reasoner.summarizeCall = async () => {
+    summaries++;
+    // A valid client request can receive invalid model output. No output is repaired into an action.
+    return callDigestSchema.parse({ text: 'Synthetic summary', actionItems: [], followups: [{ kind: 'calendar', title: 'Synthetic meeting', minutesFromNow: -1 }] });
+  };
+  const services = { access: s.access, observations: new GcpObservations(s.store, s.access, []), mobility: s.api, publicOrigin: 'http://127.0.0.1' };
+  const server = createGcpApiServer(services);
+  server.listen(0, '127.0.0.1'); await once(server, 'listening');
+  t.after(() => new Promise<void>(resolve => { server.closeAllConnections(); server.close(() => resolve()); }));
+  const address = server.address(); assert.ok(address && typeof address !== 'string');
+  const origin = `http://127.0.0.1:${address.port}`; services.publicOrigin = origin;
+  const response = await fetch(`${origin}/api/organizations/v1/synthetic-org/workspaces/synthetic-workspace/gcp/mobility`, {
+    method: 'POST', headers: { Origin: origin, Authorization: 'Bearer driver-a', 'Content-Type': 'application/json', 'Idempotency-Key': randomUUID() },
+    body: JSON.stringify({ operation: 'call_end', callId: active.call!.id, expectedVersion: active.vehicle!.version }),
+  });
+  assert.equal(summaries, 1, 'The valid client command reached the summary provider');
+  assert.equal((await s.api.read(s.session)).call!.state, 'unknown', 'The server has already classified the dispatched step as uncertain');
+  assert.equal(response.status, 502, 'A provider-result validation error is not a bad user request');
+  assert.equal((await response.json() as { code: string }).code, 'mobility_outcome_unknown');
+  const latest = await s.api.read(s.session);
+  assert.equal(latest.call!.state, 'unknown'); assert.deepEqual(latest.call!.turns, before);
+  assert.equal(latest.call!.summary, undefined);
+  await assert.rejects(s.send(latest, { operation: 'call_end', callId: latest.call!.id }));
+  assert.equal(summaries, 1, 'A fresh request key must not repeat an uncertain summary');
+  const malformed = await fetch(`${origin}/api/organizations/v1/synthetic-org/workspaces/synthetic-workspace/gcp/mobility`, {
+    method: 'POST', headers: { Origin: origin, Authorization: 'Bearer driver-a', 'Content-Type': 'application/json', 'Idempotency-Key': randomUUID() },
+    body: JSON.stringify({ operation: 'call_end', callId: active.call!.id, expectedVersion: 'invalid-user-version' }),
+  });
+  assert.equal(malformed.status, 400); assert.equal(summaries, 1);
+});
+
+test('Vertex call validation exposes only fixed diagnostic labels and keeps live transports out of offline tests', async () => {
+  const options = { projectId: 'synthetic-project', location: 'global', modelId: 'gemini-2.5-flash', principal: 'synthetic-runtime', sessionId: 'synthetic-session', credentials: { async current() { return { accessToken: 'synthetic-token', principal: 'synthetic-runtime', sessionId: 'synthetic-session' }; } } };
+  const input = { scenario: 'meeting_reschedule' as const, language: 'en' as const, caller: { name: 'Synthetic caller', relation: 'Fixture' }, goal: 'Synthetic meeting', driverContext: 'Parked; synthetic context', handledBy: 'aide' as const, step: 'summary' as const, turns: [] };
+  let calls = 0;
+  const reasoner = syntheticVehicleReasoner(options, async () => {
+    calls++;
+    return new Response(JSON.stringify({ candidates: [{ finishReason: 'STOP', content: { parts: [{ text: JSON.stringify({ text: 'Synthetic summary', actionItems: [], followups: [{ kind: 'calendar', title: 'DO_NOT_LOG_PROVIDER_TEXT', minutesFromNow: -1 }] }) }] } }] }));
+  });
+  await assert.rejects(reasoner.summarizeCall!(input, AbortSignal.timeout(1000)), error => {
+    assert.ok(error instanceof MobilityCallOutputError);
+    assert.equal(error.phase, 'summary'); assert.deepEqual(error.fields, ['followup_time']); assert.deepEqual(error.constraints, ['too_small']);
+    assert.doesNotMatch(JSON.stringify(error), /DO_NOT_LOG|synthetic-token|Synthetic summary/);
+    return true;
+  });
+  assert.equal(calls, 1);
+  assert.throws(() => vertexVehicleReasoner(options), /live_mobility_disabled/);
+  assert.throws(() => syntheticVehicleReasoner(options, globalThis.fetch), /synthetic_mobility_disabled/);
 });

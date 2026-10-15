@@ -10,6 +10,7 @@ import { cloudRecordKey } from '../workflow/workflow';
 import { chargeReconnectVerdict, safeChargeConditions } from './runbooks';
 import { chargingEvidence, matchingCases, recoveryGuidance, verifiedCase } from './case-learning';
 import { callPersona, driverContext, settleVehicle, type CallInput } from './calls';
+import { MobilityCallOutputError } from './google-ports';
 
 export interface VehicleReasoner {
   readonly engine: 'gemini' | 'offline-fixture';
@@ -242,8 +243,10 @@ export class GcpMobility {
       return this.view(finished);
     } catch (error) {
       const providerBusy = error instanceof Error && error.message === 'google_mobility_busy';
+      const callOutput = callSteps.has(command.operation) ? error instanceof MobilityCallOutputError ? error : error instanceof z.ZodError ? new MobilityCallOutputError(command.operation === 'call_end' ? 'summary' : 'turn', error) : undefined : undefined;
       // Fixed classifications only: no identities, locations, tokens, prompts or provider bodies.
       if (investigates && process.env.MOBILEOPS_OFFLINE_TEST !== '1') console.warn(JSON.stringify({event:'mobility_investigation_unconfirmed',reason:providerBusy?'provider_capacity':error instanceof Error && ['TimeoutError','AbortError'].includes(error.name)?'deadline':'unconfirmed'}));
+      if (callSteps.has(command.operation) && process.env.MOBILEOPS_OFFLINE_TEST !== '1') console.warn(JSON.stringify({event:'mobility_call_unconfirmed',operation:command.operation,reason:callOutput?'output_validation':providerBusy?'provider_capacity':error instanceof Error && ['TimeoutError','AbortError'].includes(error.name)?'deadline':'unconfirmed',...(callOutput?{phase:callOutput.phase,fields:callOutput.fields,constraints:callOutput.constraints}:{})}));
       // This is only a storage update: never retry the model, Places or a control action here.
       await this.store.transact(async tx => {
         const claim = await tx.get<Receipt>(receiptKey);
@@ -276,6 +279,9 @@ export class GcpMobility {
       });
       // Fresh telemetry remains recorded even when its read-only investigation is uncertain.
       if (command.operation === 'telemetry' && investigates) return this.read(session);
+      // The client request was admitted before this provider/result failure. It is not a
+      // malformed user request, and must retain unknown/no-resend guidance after cleanup.
+      if (callOutput) throw fail(502, 'mobility_outcome_unknown');
       throw error;
     }
   }

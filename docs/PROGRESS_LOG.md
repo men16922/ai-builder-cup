@@ -1,10 +1,14 @@
 # Progress log
 
+## 2026-10-15 — Actual native sign-in, proposals and Maps; call-output classification
+- Changed: a valid summary's output-validation failure now reports unknown/502 instead of a user-input 400, with fixed diagnostic labels and unchanged durable no-resend semantics. Scope: [native live review](reviews/2026-10-15-native-live-call-output.md).
+- Verified: actual prepared APK, Google/Firebase/Firestore, real Gemini proposals and explicit controls, five Maps places/tiles/photo attribution; native answer/delegate 200, summary 400 then unknown/no follow-up. HTTP reproduction changes 400→502; full local web/API 227/browser/axe/hosted/publish pass. Exact original invalid field is unavailable; no summary-generation fix claimed.
+- Next: image-only deploy and distinct new call qualification, then held-vehicle input race, current phone/web acceptance, real reviewer/impact/actual video. Original failures/recordings retained; no old unknown step resent, no physical or human-productivity claim.
+
 ## 2026-10-15 — Current My Aide deck, entry and recording handoff
 - Changed: ten English slides use shared tokens/original EV art, reviewed evidence and three 2x offline components; source/capture/image hashes retained. Entry, checklist, canonical 2:45 actual recording script and remote handoff now reflect Ask/calls/diagnosis and separate cloud authority.
 - Verified: complete web gate passes (225 API, browser/axe/hosted/publish); offline capture fixture, all ten final PDF renders, text/footer clearance, HTML keyboard navigation, image/fixture hashes and decoded text scan (eight patterns/six private identifiers). No live provider call or runtime source change; native/crew results remain separately recorded.
-- Scope: generated HTML/PDF, private APK and raw evaluation outputs are held back. Previous 150-second narrated presentation refers to the previous PDF and is stale, not a current actual demo. No deployment, upload or submission in this unit.
-- Next: current authenticated Ask/call/photo/Stop/diagnosis run and exact physical APK check, real V2 reviewer/conflict, paired pilot, actual recording and owner eligibility/submission. Full award-readiness remains incomplete.
+- Scope: generated HTML/PDF, private APK and raw evaluation outputs are held back. Previous 150-second narrated presentation refers to the previous PDF and is stale, not a current actual demo. No deployment, upload or submission in this unit. Next: current authenticated Ask/call/photo/Stop/diagnosis run and exact physical APK check, real V2 reviewer/conflict, paired pilot, actual recording and owner eligibility/submission. Full award-readiness remains incomplete.
 
 ## 2026-10-15 — Simulated movement and Stop stay usable during model latency
 - Reproduced: waiting for a call model blocked advance/Stop; concurrent movement also made a valid delayed answer fail vehicle-version checks. Separate call revisions, request lanes and state merging now preserve both streams, with session/permission and exact-call/lease checks retained.

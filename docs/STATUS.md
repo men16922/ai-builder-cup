@@ -6,6 +6,11 @@ Updated: 2026-10-15. Goal: award-ready Aide submission on 18 October. Current ow
 
 Execution status: owner resumed the goal on 15 October evening. Organization-login result is pending; browser control is not exposed in this resumed session, so the current authenticated page is unverified. Historical blocked checks remain recorded separately. Physical phone, real reviewer, paired impact, Korea-capable routing inputs and submission still require owner/external evidence; full goal is incomplete.
 
+## Actual native signed-in increment
+
+- Exact private APK `34a14f1` now passes actual Google/Firebase/Firestore sign-in, real Gemini proposals/explicit temperature+climate actions and five-place Maps/tiles/photo-attribution checks on API 36 emulator. Native answer/delegate pass; end/summary returned 400 and remained unknown with confirmed transcript/no follow-up after read. Original failed take retained; no resend. This is not physical-phone, complete call acceptance or human impact proof.
+- Local classification fix: generated call-output validation now yields unknown/502 rather than invalid user request/400; fixed diagnostic labels expose no output content. HTTP red→green and full web/API 227/browser/axe/hosted/publish pass. Deployment and a distinct new call remain next; exact original invalid field is unproved. [Review](reviews/2026-10-15-native-live-call-output.md).
+
 ## Current My Aide submission materials
 
 - Refreshed the ten-page English deck around Ask, grounded discovery, fictional calls, diagnosis and independent cloud authority. Shared tokens/original EV art and three 2x synthetic component captures have source/fixture/image provenance. Final ten rendered pages inspected, text/footer clearance and HTML navigation pass; decoded text has no eight-pattern/six-private-identifier match.

@@ -14,6 +14,8 @@ Owner authorized this commit/push on 15 October; verify current Git refs rather 
 
 ## Final access checks and judging assets
 
+Current engineering next step: image-only deployment of the reviewed call-output classification fix, then a distinct new native call. Actual emulator sign-in/Ask/Maps and answer/delegate now pass; the first summary failed output validation and is retained unknown, not resent. See `docs/reviews/2026-10-15-native-live-call-output.md`. Do not claim the original invalid field or summary-generation cause is known. A vehicle-busy/input reproduction precedes any dispatch change.
+
 Follow-up: complete the retained organization login manually before the current deployed read-only Chief check. Two automated organization re-logins ended popup-closed before any crew instruction; root cause remains unproven. Personal-domain login/inspection remains separately verified.
 
 Earlier authenticated browser Maps/Firestore and policy-bound charging read-back are verified, with the first unknown and separate 429 retained; test policy is disabled. Newer Ask/call/photo features have separate provider/local evidence. Current native tiles/car/straight-line path pass one opt-in API 36 emulator probe at `34a14f1`; default offline checks skip it. Finish current signed-in/physical acceptance and the actual judging demonstration. No physical or productivity claim follows from these checks.
