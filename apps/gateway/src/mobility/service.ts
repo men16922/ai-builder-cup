@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { z } from 'zod';
-import { mobilityCommandSchema, mobilityStateSchema, vehicleDiagnosisSchema, callStepSchema, callDigestSchema, type CallStep, type CallDigest, type VehicleCall,
+import { mobilityCommandSchema, mobilityStateSchema, vehicleDiagnosisSchema, callStepSchema, callDigestSchema, assistPlanSchema, type AssistPlan, type AssistTurn, type CallStep, type CallDigest, type VehicleCall,
   journeySearchSchema, type JourneySearch, type MobilityCommand, type MobilityPlace, type MobilityReport, type MobilityState, type MobilityCase, type VehicleDiagnosis, type SimulatedVehicle } from '@contracts/gcp/mobility';
 import { CloudOperationError } from '@contracts/core/workflow';
 import type { GcpWebAccess, GcpWebSession } from '../auth/web-access';
@@ -18,6 +18,8 @@ export interface VehicleReasoner {
   /** Voices a synthetic caller or drafts My Aide's reply. It never sends, books or controls anything. */
   call?(input: CallInput, signal: AbortSignal): Promise<CallStep>;
   summarizeCall?(input: CallInput, signal: AbortSignal): Promise<CallDigest>;
+  /** Maps a driver request to a reply and up to three catalog proposals; the driver taps to act. */
+  assist?(input: { text: string; language: 'ko'|'en'; context: string }, signal: AbortSignal): Promise<AssistPlan>;
 }
 export type MobilitySearchResult = { places: MobilityPlace[]; summary?: string };
 export interface MobilityPlaces {
@@ -69,7 +71,7 @@ export class GcpMobility {
     if (record.state.journey) record.state.journey.autopilot = false;
     return true;
   }
-  private empty(): RecordState { return { state: { vehicle: null, reports: [], journey: null, favorites: [], cases: [], call: null, calls: [],
+  private empty(): RecordState { return { state: { vehicle: null, reports: [], journey: null, favorites: [], cases: [], call: null, calls: [], assist: null,
     policy: { enabled: false, expiresAt: null, runbook: 'charge-reconnect-v1' }, mapsAvailable: !!this.places, mapsBrowserKey:null }, consents: [] }; }
   /** Stored twins written before newer fields existed take the contract defaults. */
   private normalize(record: RecordState): RecordState { record.state = mobilityStateSchema.parse(record.state); return record; }
@@ -122,7 +124,7 @@ export class GcpMobility {
       this.expireInvestigations(record);
       const receipt = await tx.get<Receipt>(receiptKey);
       const budgetKey = this.key(session, 'budget');
-      const callModel = callSteps.has(command.operation);
+      const callModel = callSteps.has(command.operation) || command.operation === 'assist';
       const storedBudget = investigates || callModel || command.operation === 'trip_request' ? await tx.get<Budget>(budgetKey) : undefined;
       if (receipt) {
         if (receipt.digest !== digest) throw fail(409,'mobility_request_changed');
@@ -132,7 +134,8 @@ export class GcpMobility {
       if (command.operation !== 'initialize' && (!record.state.vehicle || record.state.vehicle.version !== command.expectedVersion)) throw fail(409,'vehicle_changed');
       if (['policy','approve','resolve_unknown','promote_case','revoke_case'].includes(command.operation) && !session.context.roles.includes('reviewer')) throw fail(403,'reviewer_required');
       // Reject an impossible call step before spending a model call or a request claim.
-      if (callModel && (!this.reasoner?.call || !this.reasoner.summarizeCall)) throw fail(503,'call_ai_not_configured');
+      if (command.operation === 'assist' && !this.reasoner?.assist) throw fail(503,'assist_ai_not_configured');
+      if (callSteps.has(command.operation) && (!this.reasoner?.call || !this.reasoner.summarizeCall)) throw fail(503,'call_ai_not_configured');
       this.precheckCall(record.state, command);
       const callStepKey = callModel && record.state.call ? this.callKey(session, record.state.call) : undefined;
       const callClaim = callStepKey ? await tx.get<CallClaim>(callStepKey) : undefined;
@@ -182,7 +185,7 @@ export class GcpMobility {
     });
     if ('replay' in admitted) return this.view(admitted.replay!);
     const record = admitted.record!, before = record.state.vehicle, callStepKey = admitted.callStepKey;
-    let diagnosis: VehicleDiagnosis | undefined, candidates: MobilityPlace[] | undefined, searchSummary: string | undefined, callStep: CallStep | undefined, callDigest: CallDigest | undefined;
+    let diagnosis: VehicleDiagnosis | undefined, candidates: MobilityPlace[] | undefined, searchSummary: string | undefined, callStep: CallStep | undefined, callDigest: CallDigest | undefined, assistPlan: AssistPlan | undefined;
     const investigationLanguage = 'language' in command ? command.language : 'en';
     let appliedCommand: MobilityCommand = command.operation === 'telemetry' && investigates ? {operation:'diagnose',expectedVersion:before!.version,language:investigationLanguage} : command;
     try {
@@ -190,6 +193,7 @@ export class GcpMobility {
         if (!this.reasoner) throw fail(503,'vehicle_ai_not_configured');
         diagnosis = vehicleDiagnosisSchema.parse(await this.reasoner.diagnose(before!,investigationLanguage,AbortSignal.timeout(25_000),matchingCases(before!,record.state.cases ?? [],this.now())));
       }
+      if (command.operation === 'assist') assistPlan = assistPlanSchema.parse(await this.reasoner!.assist!({ text: command.text, language: command.language, context: driverContext(record.state, command.language, this.now()) }, AbortSignal.timeout(20_000)));
       if (callSteps.has(command.operation)) {
         const input = this.callInput(record.state, command);
         if (command.operation === 'call_end') callDigest = callDigestSchema.parse(await this.reasoner!.summarizeCall!(input, AbortSignal.timeout(25_000)));
@@ -223,7 +227,7 @@ export class GcpMobility {
         if (claim?.state !== 'working' || claim.digest !== digest) throw fail(409,'mobility_outcome_unknown');
         if (appliedCommand.operation !== 'initialize' && current.state.vehicle?.version !== appliedCommand.expectedVersion) throw fail(409,'vehicle_changed');
         if (investigates && (this.now()-Date.parse(current.state.reports.find(report=>report.episode===before!.episode)?.at ?? '')>35000 || current.state.reports.find(report=>report.episode===before!.episode)?.state!=='investigating')) throw fail(409,'investigation_expired');
-        const next = this.apply(structuredClone(current),appliedCommand,diagnosis,candidates,searchSummary,{step:callStep,digest:callDigest});
+        const next = this.apply(structuredClone(current),appliedCommand,diagnosis,candidates,searchSummary,{step:callStep,digest:callDigest,assist:assistPlan});
         const state = mobilityStateSchema.parse(next.state);
         tx.put(storageKey,next,next.mapsExpiresAt ? new Date(next.mapsExpiresAt) : undefined);
         tx.put(receiptKey,{ digest, state:'finished' } satisfies Receipt);
@@ -271,7 +275,7 @@ export class GcpMobility {
       throw error;
     }
   }
-  private apply(record: RecordState, command: MobilityCommand, diagnosis?: VehicleDiagnosis, candidates?: MobilityPlace[], searchSummary?: string, call: { step?: CallStep; digest?: CallDigest } = {}): RecordState {
+  private apply(record: RecordState, command: MobilityCommand, diagnosis?: VehicleDiagnosis, candidates?: MobilityPlace[], searchSummary?: string, call: { step?: CallStep; digest?: CallDigest; assist?: AssistPlan } = {}): RecordState {
     const state = record.state, now = this.now(), at = new Date(now).toISOString();
     state.cases ??= [];
     if (command.operation === 'initialize') {
@@ -415,6 +419,18 @@ export class GcpMobility {
           vehicle.charging='idle';vehicle.powerKw=0;delete vehicle.chargeSession;
         }
         // flash and honk are acknowledged simulated signals with no stored effect beyond the version.
+        break;
+      }
+      case 'assist': {
+        // Keep only well-formed catalog proposals; a malformed suggestion is dropped, never repaired into an action.
+        const proposals: AssistTurn['proposals'] = [];
+        for (const item of call.assist!.proposals) {
+          if (item.kind === 'control' && item.action) {
+            const ranged = item.action === 'set_temperature' ? item.value !== undefined && item.value >= 16 && item.value <= 28 : item.action === 'set_charge_limit' ? item.value !== undefined && item.value >= 50 && item.value <= 100 : true;
+            if (ranged) proposals.push({ kind: 'control', action: item.action, ...(['set_temperature','set_charge_limit'].includes(item.action) ? { value: item.action === 'set_temperature' ? Math.round(item.value! * 2) / 2 : Math.round(item.value!) } : {}) });
+          } else if (item.kind === 'trip' && item.tripKind) proposals.push({ kind: 'trip', tripKind: item.tripKind, instruction: (item.instruction?.trim() || command.text).slice(0, 300) });
+        }
+        state.assist = { id: randomUUID(), at, request: command.text, reply: call.assist!.reply, proposals: proposals.slice(0, 3), language: command.language, engine: this.reasoner!.engine };
         break;
       }
       case 'call_incoming': {

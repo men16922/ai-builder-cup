@@ -18,6 +18,7 @@ async function setup(t: TestContext, custom: Partial<VehicleReasoner> = {}) {
     async call(input) { modelCalls++; if (custom.call) return custom.call(input, AbortSignal.timeout(1000));
       return input.step === 'open' ? { ...(input.handledBy === 'aide' ? { aide: 'Hello, the driver is driving, so My Aide is answering.' } : {}), caller: 'Can we move the review to 4:30?', callerEnds: false }
         : input.step === 'delegate' ? { aide: '4:30 works; the driver will send the deck on arrival.', caller: 'Great, see you then.', callerEnds: true } : { caller: 'Thanks, noted.', callerEnds: false }; },
+    async assist(input) { modelCalls++; if (custom.assist) return custom.assist(input, AbortSignal.timeout(1000)); return { reply: 'Ready.', proposals: [] }; },
     async summarizeCall() { modelCalls++; return { text: 'The review moved to 4:30 pm; the deck follows on arrival.', actionItems: ['Send the deck'], followups: [
       { kind: 'calendar', title: 'Design review', minutesFromNow: 90 }, { kind: 'message', title: 'Confirm the new time', body: '4:30 works for me.', to: 'Jordan Kim' }] }; } };
   const places: MobilityPlaces = { async nearby(location, kind) { return [{ id: 'synthetic-charger', name: 'Synthetic charger', address: 'Fixture only', location: { latitude: location.latitude + .01, longitude: location.longitude }, kind, source: 'google-places', fetchedAt: new Date(clock).toISOString() }]; } };
@@ -115,4 +116,13 @@ test('a long call stops taking turns before the transcript bound', async t => {
   const before = s.modelCalls();
   await assert.rejects(s.send(state, { operation: 'call_say', callId, text: 'One more.' }), /mobility request/);
   assert.equal(s.modelCalls(), before); assert.ok(state.call!.turns.length <= 16);
+});
+
+test('Ask your own Aide keeps only catalog proposals and runs nothing until the driver taps', async t => {
+  const s = await setup(t, { async assist() { return { reply: 'Cooling the cabin to 20° and locking are ready to tap.', proposals: [
+    { kind: 'control', action: 'set_temperature', value: 20.2 }, { kind: 'control', action: 'set_temperature', value: 40 }, { kind: 'trip', tripKind: 'charging' }] }; } });
+  const before = s.initial;
+  const state = await s.send(before, { operation: 'assist', text: 'Cool it down to 20 and find a charger', language: 'en' });
+  assert.deepEqual(state.assist?.proposals, [{ kind: 'control', action: 'set_temperature', value: 20 }, { kind: 'trip', tripKind: 'charging', instruction: 'Cool it down to 20 and find a charger' }]);
+  assert.equal(state.vehicle?.climate.targetCelsius, 21); assert.equal(state.vehicle?.climate.on, false); assert.equal(state.journey, null);
 });

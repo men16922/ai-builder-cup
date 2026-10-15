@@ -80,11 +80,19 @@ export const vehicleCallSchema = z.object({ id: z.uuid(), scenario: callScenario
   turns: z.array(callTurnSchema).max(16), startedAt: z.iso.datetime(), endedAt: z.iso.datetime().optional(), language: z.enum(['ko', 'en']),
   summary: callSummarySchema.optional(), saved: z.boolean().default(false), engine: z.enum(['gemini', 'offline-fixture']).optional() }).strict();
 export type VehicleCall = z.infer<typeof vehicleCallSchema>;
+const controlActionSchema = z.enum(['lock','unlock','climate_on','climate_off','set_temperature','set_charge_limit','start_charging','stop_charging','flash','honk']);
+/** A model proposal the driver can tap. It names a catalog action; it never executes by itself. */
+export const assistTurnSchema = z.object({ id: z.uuid(), at: z.iso.datetime(), request: z.string().min(1).max(300), reply: z.string().min(1).max(600),
+  proposals: z.array(z.union([z.object({ kind: z.literal('control'), action: controlActionSchema, value: z.number().min(16).max(100).optional() }).strict(),
+    z.object({ kind: z.literal('trip'), tripKind: z.enum(['restaurant','charging','poi']), instruction: z.string().min(1).max(300) }).strict()])).max(3),
+  language: z.enum(['ko','en']), engine: z.enum(['gemini','offline-fixture']) }).strict();
+export type AssistTurn = z.infer<typeof assistTurnSchema>;
 export const mobilityStateSchema = z.object({ vehicle: vehicleSchema.nullable(), reports: z.array(mobilityReportSchema).max(20),
   journey: journeySchema.nullable(), favorites: z.array(favoritePlaceSchema).max(10),
   policy: z.object({ enabled: z.boolean(), expiresAt: z.iso.datetime().nullable(), runbook: z.literal('charge-reconnect-v1') }).strict(),
   cases:z.array(mobilityCaseSchema).max(10).default([]),
   call: vehicleCallSchema.nullable().default(null), calls: z.array(vehicleCallSchema).max(10).default([]),
+  assist: assistTurnSchema.nullable().default(null),
   mapsAvailable: z.boolean(), mapsBrowserKey: z.string().regex(/^[A-Za-z0-9_-]{20,128}$/).nullable().optional(),
 }).strict();
 export type MobilityState = z.infer<typeof mobilityStateSchema>;
@@ -105,7 +113,8 @@ export const mobilityCommandSchema = z.discriminatedUnion('operation', [
   z.object({ operation: z.literal('advance'), expectedVersion, journeyId: z.uuid() }).strict(),
   z.object({ operation: z.literal('stop'), expectedVersion, journeyId: z.uuid() }).strict(),
   z.object({ operation: z.literal('favorite'), expectedVersion, journeyId: z.uuid(), placeId: z.string().min(1).max(200) }).strict(),
-  z.object({ operation: z.literal('control'), expectedVersion, action: z.enum(['lock','unlock','climate_on','climate_off','set_temperature','set_charge_limit','start_charging','stop_charging','flash','honk']),
+  z.object({ operation: z.literal('assist'), expectedVersion, text: z.string().trim().min(1).max(300), language: z.enum(['ko','en']) }).strict(),
+  z.object({ operation: z.literal('control'), expectedVersion, action: controlActionSchema,
     value: z.number().min(16).max(100).optional() }).strict(),
   z.object({ operation: z.literal('call_incoming'), expectedVersion, scenario: callScenarioSchema, language: z.enum(['ko','en']) }).strict(),
   z.object({ operation: z.literal('call_answer'), expectedVersion, callId: z.uuid(), handledBy: z.enum(['driver','aide']) }).strict(),
@@ -138,3 +147,8 @@ export const callDigestSchema = z.object({ text: z.string().min(1).max(1200), ac
   followups: z.array(z.object({ kind: z.enum(['message','calendar','reminder']), title: z.string().min(1).max(120), body: z.string().max(600).optional(),
     minutesFromNow: z.number().int().min(0).max(10080).optional(), to: z.string().max(80).optional() }).strict()).max(3) }).strict();
 export type CallDigest = z.infer<typeof callDigestSchema>;
+
+/** What the model may return for a driver request: a short reply and up to three catalog proposals. */
+export const assistPlanSchema = z.object({ reply: z.string().min(1).max(600), proposals: z.array(z.object({ kind: z.enum(['control','trip']),
+  action: controlActionSchema.optional(), value: z.number().optional(), tripKind: z.enum(['restaurant','charging','poi']).optional(), instruction: z.string().max(300).optional() }).strict()).max(3) }).strict();
+export type AssistPlan = z.infer<typeof assistPlanSchema>;

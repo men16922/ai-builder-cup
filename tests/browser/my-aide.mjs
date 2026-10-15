@@ -27,6 +27,7 @@ try {
     async diagnose(){modelCalls++;return {summary:'A low tire pressure signal was observed on the rear-left wheel of the simulated vehicle.',evidenceIds:['fault','signal'],unknowns:['No physical vehicle is connected.'],runbook:'none'};},
     async call(input){modelCalls++;return input.step==='open'?{...(input.handledBy==='aide'?{aide:'Hello Jordan, the driver is on the road, so My Aide is answering.'}:{}),caller:'Could we move the design review to 4:30 pm?',callerEnds:false}
       :input.step==='delegate'?{aide:'4:30 pm works. The driver will email the deck on arrival.',caller:'Perfect, thank you. Bye!',callerEnds:true}:{caller:'Great, noted.',callerEnds:false};},
+    async assist(input){modelCalls++;return {reply:input.language==='ko'?'출발 전에 20도로 맞춰 둘까요?':'Shall I cool the cabin to 20° before you leave?',proposals:[{kind:'control',action:'set_temperature',value:20},{kind:'control',action:'climate_on'},{kind:'trip',tripKind:'charging',instruction:'fast charger nearby'}]};},
     async summarizeCall(){modelCalls++;return {text:'Jordan moved the design review to 4:30 pm. The deck will be emailed on arrival.',actionItems:['Email the deck before 4:30 pm'],
       followups:[{kind:'message',title:'Confirm the new time',body:'4:30 pm works for me. Deck coming soon.',to:'Jordan Kim'},{kind:'calendar',title:'Design review',minutesFromNow:120}]};}};
   const places={async nearby(location,kind){return [1,2,3].map(index=>({id:`synthetic-place-${index}`,name:`Synthetic ${kind} ${index}`,address:`Fixture street ${index}`,rating:4+index/10,
@@ -60,7 +61,14 @@ try {
   await page.getByRole('button',{name:'Raise temperature',exact:true}).click();await expect(page.getByText('21.5°',{exact:true})).toBeVisible();
   await page.getByRole('button',{name:/^Charge Limit/}).click();await expect(page.getByRole('button',{name:/^Charging 11 kW/})).toBeVisible();
   await page.getByRole('button',{name:/^Charging 11 kW/}).click();await expect(page.getByRole('button',{name:/^Charge Limit/})).toBeVisible();
-  assert.equal(modelCalls,0);await axe(page);
+  assert.equal(modelCalls,0);
+  // Ask your own Aide: proposals appear, and only a tap changes the car.
+  await page.getByRole('textbox',{name:'Ask your own Aide'}).fill('Cool the car to 20 before I leave');await page.getByRole('button',{name:'Ask',exact:true}).click();
+  await expect(page.getByText('Shall I cool the cabin to 20° before you leave?')).toBeVisible();assert.equal(modelCalls,1);
+  const controls=operations.filter(op=>op==='control').length;await page.getByRole('button',{name:'Set cabin to 20°',exact:true}).click();
+  await expect(page.getByText(/Set cabin to 20° · done · simulated/)).toBeVisible();await expect(page.getByText('20.0°',{exact:true})).toBeVisible();
+  assert.equal(operations.filter(op=>op==='control').length,controls+1);
+  await axe(page);
   await page.screenshot({path:join(directory,'my-aide-home.png'),fullPage:true});
 
   // Places: photo-first cards with Google author attribution and numbered markers that match the cards.

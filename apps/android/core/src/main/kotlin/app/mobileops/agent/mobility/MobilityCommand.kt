@@ -44,6 +44,9 @@ sealed interface MobilityCommand {
     /** Simulated remote control of the twin: lock, climate, charging and locate signals. */
     data class Control(val action: String, val value: Double? = null) : MobilityCommand
 
+    /** Ask your own Aide: a free-text request that returns proposals only. */
+    data class Assist(val text: String, val language: String) : MobilityCommand
+
     data class CallIncoming(val scenario: String, val language: String) : MobilityCommand
 
     data class CallAnswer(val callId: String, val handledBy: String) : MobilityCommand
@@ -150,6 +153,14 @@ sealed interface MobilityCommand {
                 put("operation", "control")
                 put("action", command.action)
                 command.value?.let { put("value", it) }
+            }
+            is Assist -> {
+                require(
+                    command.text.trim().length in 1..300 && command.language in setOf("ko", "en"),
+                )
+                put("operation", "assist")
+                put("text", command.text.trim())
+                put("language", command.language)
             }
             is CallIncoming -> {
                 require(command.scenario in CALL_SCENARIOS && command.language in setOf("ko", "en"))

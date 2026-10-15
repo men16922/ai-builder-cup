@@ -9,6 +9,7 @@ import VehicleControls from './VehicleControls';
 import DiagnosisCluster, { faultPart } from './DiagnosisCluster';
 import CallCenter, { CallHistory, CallScenarios } from './CallCenter';
 import ErrorManual from './ErrorManual';
+import AskAide from './AskAide';
 
 type Page = 'vehicle'|'journey'|'calls'|'assistance';
 type Kind = 'restaurant'|'charging'|'poi';
@@ -40,6 +41,7 @@ export default function MobilityWorkspace({ client, page='vehicle', onNavigate, 
         <div className="aide-vehicle-stats"><div><span>{t('배터리','Battery')}</span><strong>{vehicle.batteryPercent}<small>%</small></strong><meter min={0} max={100} value={vehicle.batteryPercent} aria-label={t('가상 배터리 잔량','Simulated battery level')}/></div><div><span>{t('예상 주행 가능 거리','Estimated range')}</span><strong>{vehicle.rangeKm}<small>km</small></strong><span>{t('시뮬레이터 추정값','Simulator estimate')}</span></div><div><span>{t('충전','Charging')}</span><strong>{vehicle.charging==='charging'?`${vehicle.powerKw} kW`:vehicle.charging==='interrupted'?t('연결 중단','Interrupted'):t('대기','Idle')}</strong><span>{t(`목표 ${vehicle.targetPercent}%`,`Target ${vehicle.targetPercent}%`)}</span></div></div>
         <div className="aide-vehicle-foot"><span>{t('최근 갱신','Updated')} {new Date(vehicle.observedAt).toLocaleTimeString(locale)}</span><span>{vehicle.location.latitude.toFixed(4)}, {vehicle.location.longitude.toFixed(4)} · {t('가상 위치','Simulated location')}</span></div>
       </section>:null}
+      {page==='vehicle'?<AskAide client={client} onTrip={(kind,instruction)=>{onNavigate?.('journey',kind);void client.command({operation:'trip_request',kind,instruction,language});}}/>:null}
       {page==='vehicle'?<VehicleControls client={client}/>:null}
       {page==='vehicle'&&vehicle.batteryPercent<25&&vehicle.charging!=='charging'?<section className="aide-nudge" role="status"><Icon name="bolt" size={22}/><div><strong>{t(`배터리 ${vehicle.batteryPercent}% · 충전이 필요해요`,`Battery ${vehicle.batteryPercent}% · time to charge`)}</strong><p>{t('My Aide가 가까운 충전소를 찾아 안내할 수 있어요.','My Aide can find a nearby charger and take you there.')}</p></div><Button variant="filled" onClick={()=>onNavigate?.('journey','charging')}>{t('충전소 찾기','Find a charger')}</Button></section>:null}
       {page==='vehicle'&&state.mapsBrowserKey?<GoogleJourneyMap apiKey={state.mapsBrowserKey} latitude={journey?.state==='moving'?journey.position.latitude:vehicle.location.latitude} longitude={journey?.state==='moving'?journey.position.longitude:vehicle.location.longitude} journey={journey?.state==='moving'?journey:null} onCall={state.call?.state==='active'}/>:null}

@@ -580,3 +580,14 @@ a.ops-utility { color: var(--md-sys-color-primary); }
 .aide-guardrails li { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; line-height: 1.5; }
 .aide-guardrails li svg { flex: none; color: var(--md-sys-color-primary); margin-top: 2px; }
 @media (max-width: 760px) { .aide-platform-grid, .aide-guardrails { grid-template-columns: 1fr; } }
+
+/* Ask your own Aide: one line to ask, tappable proposals under the answer. */
+.aide-ask { display: flex; flex-direction: column; gap: 12px; padding: 16px 18px; border-radius: 24px; background: linear-gradient(135deg, color-mix(in srgb, var(--md-sys-color-primary) 10%, var(--md-sys-color-surface)), var(--md-sys-color-surface-container-low)); border: 1px solid var(--md-sys-color-outline-variant); }
+.aide-ask-form { display: flex; align-items: center; gap: 10px; }
+.aide-ask-mark { width: 40px; height: 40px; flex: none; display: grid; place-items: center; border-radius: 50%; background: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); }
+.aide-ask-form input { flex: 1; min-width: 0; height: 44px; border: 0; background: transparent; font: inherit; font-size: 16px; color: var(--md-sys-color-on-surface); outline: none; }
+.aide-ask-answer { display: flex; flex-direction: column; gap: 10px; padding-left: 50px; }
+.aide-ask-answer p { margin: 0; line-height: 1.6; } .aide-ask-answer strong { color: var(--md-sys-color-primary); margin-right: 6px; }
+.aide-ask-proposals { display: flex; flex-wrap: wrap; gap: 8px; }
+.aide-ask-done { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--md-sys-color-on-surface-variant); padding: 8px 4px; }
+@media (max-width: 760px) { .aide-ask-answer { padding-left: 0; } .aide-ask-form md-filled-button { --md-filled-button-leading-space: 14px; } }

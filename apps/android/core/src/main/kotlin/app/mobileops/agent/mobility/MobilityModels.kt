@@ -138,6 +138,46 @@ data class CallSummary(
     val followups: List<CallFollowup>,
 )
 
+/**
+ * A proposal My Aide made for the driver: a catalog control or a trip search. It runs only on tap.
+ */
+@Serializable
+data class AssistProposal(
+    val kind: String,
+    val action: String? = null,
+    val value: Double? = null,
+    val tripKind: String? = null,
+    val instruction: String? = null,
+) {
+    fun validate() {
+        require(
+            kind == "control" && action in CONTROL_ACTIONS && tripKind == null ||
+                kind == "trip" &&
+                    tripKind in setOf("restaurant", "charging", "poi") &&
+                    !instruction.isNullOrBlank(),
+        )
+        require(value == null || value in 16.0..100.0)
+    }
+}
+
+@Serializable
+data class AssistTurn(
+    val id: String,
+    val at: String,
+    val request: String,
+    val reply: String,
+    val proposals: List<AssistProposal>,
+    val language: String,
+    val engine: String,
+) {
+    fun validate() {
+        UUID.fromString(id)
+        Instant.parse(at)
+        require(proposals.size <= 3 && reply.length in 1..600)
+        proposals.forEach { it.validate() }
+    }
+}
+
 /** A simulated call with a fictional caller voiced by the model. It never reaches a real person. */
 @Serializable
 data class VehicleCall(
@@ -345,10 +385,12 @@ data class MobilityState(
     val cases: List<MobilityCase> = emptyList(),
     val call: VehicleCall? = null,
     val calls: List<VehicleCall> = emptyList(),
+    val assist: AssistTurn? = null,
 ) {
     fun validate() {
         vehicle?.validate()
         call?.validate()
+        assist?.validate()
         require(calls.size <= 10)
         calls.forEach { it.validate() }
         journey?.validate()
