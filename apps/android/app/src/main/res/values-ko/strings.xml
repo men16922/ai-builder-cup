@@ -242,7 +242,7 @@
     <string name="vehicle_idle" formatted="false">"대기"</string>
     <string name="vehicle_target">"목표 %1$d%%"</string>
     <string name="vehicle_location">"가상 위치 · %1$s, %2$s"</string>
-    <string name="vehicle_aide_help" formatted="false">"문제가 생기면, Aide"</string>
+    <string name="vehicle_aide_help" formatted="false">"My Aide 진단"</string>
     <string name="vehicle_remedy_confirmed" formatted="false">"조치 후 확인됨"</string>
     <string name="vehicle_needs_decision" formatted="false">"내 결정 필요"</string>
     <string name="vehicle_human_help" formatted="false">"사람 확인 필요"</string>

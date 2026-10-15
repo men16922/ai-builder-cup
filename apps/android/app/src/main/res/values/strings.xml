@@ -242,7 +242,7 @@
     <string name="vehicle_idle" formatted="false">"Idle"</string>
     <string name="vehicle_target">"Target %1$d%%"</string>
     <string name="vehicle_location">"Simulated location · %1$s, %2$s"</string>
-    <string name="vehicle_aide_help" formatted="false">"When something goes wrong"</string>
+    <string name="vehicle_aide_help" formatted="false">"My Aide diagnosis"</string>
     <string name="vehicle_remedy_confirmed" formatted="false">"Remedy confirmed"</string>
     <string name="vehicle_needs_decision" formatted="false">"Needs your decision"</string>
     <string name="vehicle_human_help" formatted="false">"Human assistance needed"</string>
