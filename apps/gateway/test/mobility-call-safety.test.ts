@@ -349,3 +349,15 @@ test('a complete future calendar remains an explicit, one-time simulated complet
   await assert.rejects(s.send(state, { operation: 'followup', callId, followupId, action: 'done' }));
   assert.equal(s.calls(), 1);
 });
+
+test('Vertex 429 refusals get at most two short retries; other failures are never retried', async () => {
+  const options = { projectId: 'synthetic-project', location: 'global', modelId: 'gemini-2.5-flash', principal: 'synthetic-runtime', sessionId: 'synthetic-session', credentials: { async current() { return { accessToken: 'synthetic-token', principal: 'synthetic-runtime', sessionId: 'synthetic-session' }; } } };
+  const ok = () => new Response(JSON.stringify({ candidates: [{ finishReason: 'STOP', content: { parts: [{ text: JSON.stringify({ reply: 'Ready.', proposals: [] }) }] } }] }));
+  const run = async (statuses: number[]) => { let calls = 0;
+    const reasoner = syntheticVehicleReasoner(options as never, async () => { const status = statuses[calls++]; return status === 200 ? ok() : new Response('{}', { status }); });
+    const result = await reasoner.assist!({ text: 'Synthetic request', language: 'en', context: 'Synthetic context' } as never, AbortSignal.timeout(10_000)).then(() => 'ok', (error: Error) => error.message);
+    return { result, calls }; };
+  assert.deepEqual(await run([429, 200]), { result: 'ok', calls: 2 });
+  assert.deepEqual(await run([429, 429, 429]), { result: 'google_mobility_busy', calls: 3 });
+  assert.deepEqual(await run([500, 200]), { result: 'google_mobility_unavailable', calls: 1 });
+});

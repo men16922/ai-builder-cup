@@ -87,11 +87,20 @@ function vehicleReasoner(options: VehicleReasonerOptions, fetcher: typeof fetch)
   /** One bounded JSON generation on the fixed Vertex endpoint, re-checking the runtime identity afterwards. */
   async function generate(signal:AbortSignal,instruction:string,payload:unknown,temperature:number,maxOutputTokens:number,responseSchema:unknown):Promise<unknown> {
     const credential=await current(signal),host=options.location==='global'?'aiplatform.googleapis.com':`${options.location}-aiplatform.googleapis.com`;
-    const body=await boundedJson(await fetcher(`https://${host}/v1/projects/${options.projectId}/locations/${options.location}/publishers/google/models/${options.modelId}:generateContent`,{
+    const request=()=>fetcher(`https://${host}/v1/projects/${options.projectId}/locations/${options.location}/publishers/google/models/${options.modelId}:generateContent`,{
       method:'POST',redirect:'error',cache:'no-store',signal,headers:{Authorization:`Bearer ${credential.accessToken}`,'Content-Type':'application/json'},
       body:JSON.stringify({systemInstruction:{parts:[{text:instruction}]},contents:[{role:'user',parts:[{text:JSON.stringify(payload)}]}],
         generationConfig:{...(options.modelId==='gemini-2.5-flash'?{thinkingConfig:{thinkingBudget:0}}:{}),temperature,maxOutputTokens,responseMimeType:'application/json',responseSchema}}),
-    }),signal);
+    });
+    // A 429 is a definite refusal before any generation, so a short bounded retry inside the
+    // caller's deadline cannot duplicate work. Any other failure or timeout is never retried.
+    let response=await request();
+    for(let attempt=1;response.status===429&&attempt<=2;attempt++){
+      void response.body?.cancel();
+      await new Promise<void>((resolve,reject)=>{const timer=setTimeout(resolve,attempt*1000);signal.addEventListener('abort',()=>{clearTimeout(timer);reject(signal.reason);},{once:true});});
+      response=await request();
+    }
+    const body=await boundedJson(response,signal);
     await current(signal);
     const parsed=z.object({candidates:z.array(z.object({finishReason:z.literal('STOP'),content:z.object({parts:z.array(z.object({text:z.string().max(8000)})).length(1)})})).length(1)}).parse(body);
     return JSON.parse(parsed.candidates[0].content.parts[0].text) as unknown;
