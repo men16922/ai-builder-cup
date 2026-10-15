@@ -1,5 +1,10 @@
 # Progress log
 
+## 2026-10-15 — Simulated movement and Stop stay usable during model latency
+- Reproduced: waiting for a call model blocked advance/Stop; concurrent movement also made a valid delayed answer fail vehicle-version checks. Separate call revisions, request lanes and state merging now preserve both streams, with session/permission and exact-call/lease checks retained.
+- Verified: canonical full web/API 225, delayed-model 390px/axe/no-revival browser flow, native core 74/app 3, assembly/lint and emulator 20 passed/one opt-in Maps skip. Native Stop remains enabled during the call wait; read/unknown and denial races do not rearm or restore private data.
+- Prepared: matching source checkpoint; original failure logs/captures retained privately. Next is the restricted-key APK, bounded provider smoke and image-only gateway rollout with immutable asset verification. Current authenticated app/phone, V2 reviewer, impact and actual demo remain open.
+
 ## 2026-10-15 — My Aide in-car features deployed (web/API)
 - Changed: simulated incoming calls answered by My Aide (Gemini-voiced fictional caller, autopilot simulation, phone badge, summary with message/calendar/reminder drafts that only a tap completes); Tesla-style controls (lock, climate preconditioning, charge limit/start/stop, flash/honk); straight-line energy/odometer; low-tire fault; diagnosis cluster with a car diagram highlighting the faulty part; error popup with per-code manual; Places (New) photos/address/rating with attribution and numbered markers; Ask your own Aide (Gemini proposals that run only on tap); Platform & A2A page with the live Chief Agent Card (endpoint hidden), guardrails and hourly usage.
 - Verified: `npm run check` (server 220; web, console, mobility, call-safety, My Aide and hosted browser gates; publishable), Android core gate. Private real-provider runs: Gemini call flow and summary, Ask-Aide proposals (KO/EN), Places photos for five Seoul results, live Chief card (`chief`, streaming, five skills). Deployed `2fb8d11` as gateway revision 00020; asset hashes matched for revision 00019, same service UID and runtime configuration.
@@ -98,29 +103,8 @@
 - Blockers/limits: owner confirmed physical phone and human comparison not run; private config handoff and teammate membership/sign-in still separate from certificate registration. Judge live access, eligibility evidence, new video/deck/links and submission receipt remain pending. No deployment, commit/push, upload or submission this session.
 - Next: convert the two approval probes into regressions; bind reviewed state and protect concurrent execution before deploying a candidate. Teammate can rebuild and try organization sign-in, then the physical-phone checklist; owner and teammate run the paired human pilot.
 
-## 2026-10-12 — Android teammate access prepared
-- Status: teammate account (Google, given by the owner) is to be a member of `cloudops-demo/gcp-operations` (operator, reviewer); it does not exist in Firebase yet. Not committed: ONBOARDING change.
-- Changed: `apps/android/ONBOARDING.md` now says the teammate uses the organization workspace and signs in once on the web console first (uncommitted). A background watcher (local scratchpad script, 30 s polling, 2 h) waits for the account in Firebase Auth, then runs `scripts/provision-gcp-membership.ts` and appends the user to `.data/gcp/users.json`. Actor-id formula verified against the two existing users.
-- Verified: nothing run against the live store yet (the account was not found at 2026-10-12); `check:publishable` passed.
-- Blockers (owner): send `mobileops-agent.json` (local, Git-ignored) privately; push ONBOARDING (needs the owner's request); register the teammate's debug SHA-1 in Firebase once received (cannot be done by the teammate).
-- Next: after the teammate's web sign-in, confirm membership; register SHA-1; then the device run (ONBOARDING step 7).
-
-## 2026-10-12 — Submission surface refreshed (P4.3, P5.1, P5.3, P5.4)
-- Changed: deck builder states single-use approvals, the held-out first run (13/18, read from the recorded results) and the first user; deck rebuilt. Devpost and Medium text updated for the five execution states, single-use approvals, held-out score, the live-run bug in our own fix and the live restart result; stale "next" items removed. README names the first user and has an "After the submission" roadmap (Dev agent, multi-cloud, more operations, durable task store). `submission/SUBMISSION.md` separates implemented from published. Test env var removed from `agent-chief`.
-- Verified: `make check-all` exit 0 (gateway, crew 54, browser flows, hosted artifact, publish gate).
-- Open (not engineering): physical device and phone backgrounding (Android teammate), human comparison (two people), judge access and video upload (owner), live replay of one approval (needs the owner's tap). Uncommitted.
-
-## 2026-10-12 — P3 restart behaviour, live with real data
-- Status: P3.1 settled with no deployment change (gateway already `cpu-throttling=false`; task record in Firestore; app only reads). P3.2(b) run live.
-- Verified: real crew run on `shop-api-bad` (300 generated requests), approval card shown; `agent-chief` redeployed (`agent-chief-00011-vpn`, env `AIDE_RESTART_TEST` added) while pending; owner approved; Chief `TaskNotFoundError`, no Ops `/execute`, task `unknown` "not retried", traffic read back 100 % `shop-api-bad`.
-- Decision: keep `unknown` (A2A wraps the missing task as a generic internal error mid-stream, so "nothing was sent" cannot be proven by the gateway).
-- Next: phone backgrounding (P3.2a) and physical device (P3.3) by the Android teammate; README/STATUS refresh; human comparison.
-
-## 2026-10-12 — Android teammate onboarding
-- Status: team registration and invitations done (owner). Added `apps/android/ONBOARDING.md`, `apps/android/scripts/doctor.sh` (read-only environment check, prints the debug SHA-1 to send the owner) and the missing `deploy/android-mobile.example.json`; Android README refreshed.
-- Verified: `make check-android-core` (49), `assembleDebug` + `lintDebug` pass; fresh APK installed and launched on the emulator; doctor passes on the owner's machine.
-- Blockers (owner): hand over `mobileops-agent.json`; register the teammate's SHA-1 in Firebase; allow their Google account on the registered service; put `shop-api` in the faulty state before their run. Uncommitted.
-- Next: teammate runs the device checklist in ONBOARDING.md step 7 and records it in `docs/EVALUATION.md`.
+## 2026-10-12 — Earlier onboarding, submission and restart checks
+- [Original four entries](archive/progress-2026-10-12.md). Teammate access and source-publication snapshots are historical; current acceptance requirements are in STATUS.
 
 ## 2026-10-11 — Earlier implementation and live checks
 - Execution-state/single-use approval work, held-out evaluations, console redesign and original live demo remain historical evidence. [Original entries](archive/progress-2026-10-11.md). Current V2, publication and acceptance status supersede their open-work snapshots.

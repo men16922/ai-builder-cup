@@ -12,7 +12,7 @@ export function CallScenarios({ client, compact = false }: { client: MobilityCli
   const label = { meeting_reschedule: t('팀장님 · 회의 일정', 'Team lead · meeting'), family_pickup: t('엄마 · 아이 픽업', 'Mom · school pickup'), delivery: t('택배 기사 · 배송', 'Courier · delivery') };
   const live = board.state?.call && ['ringing', 'active'].includes(board.state.call.state);
   return <div className={`aide-call-scenarios${compact ? ' is-compact' : ''}`}>{scenarios.map(scenario =>
-    <Button key={scenario} icon="phone" disabled={board.busy || !!live || !board.state?.vehicle} onClick={() => void client.command({ operation: 'call_incoming', scenario, language })}>{label[scenario]}</Button>)}</div>;
+    <Button key={scenario} icon="phone" disabled={(board.busy || !!board.callBusy) || !!live || !board.state?.vehicle} onClick={() => void client.command({ operation: 'call_incoming', scenario, language })}>{label[scenario]}</Button>)}</div>;
 }
 
 function speak(text: string, language: 'ko' | 'en', role: VehicleCall['turns'][number]['role']) {
@@ -51,9 +51,9 @@ export default function CallCenter({ client }: { client: MobilityClient }) {
     <div className="aide-call-avatar is-ringing"><Icon name="phone" size={26} /></div>
     <div className="aide-call-who"><span>{t('수신 전화 · 시뮬레이션', 'Incoming call · simulated')}</span><strong>{call.caller.name}</strong><small>{call.caller.relation}</small></div>
     <div className="aide-call-actions">
-      <Button variant="filled" icon="sparkle" loading={board.busy} onClick={() => void client.command({ operation: 'call_answer', callId: call.id, handledBy: 'aide' })}>{t('My Aide가 받기', 'Let My Aide answer')}</Button>
-      <Button icon="phone" disabled={board.busy} onClick={() => void client.command({ operation: 'call_answer', callId: call.id, handledBy: 'driver' })}>{t('직접 받기', 'Answer')}</Button>
-      <button type="button" className="aide-call-decline" aria-label={t('거절', 'Decline')} disabled={board.busy} onClick={() => void client.command({ operation: 'call_decline', callId: call.id })}><Icon name="call_end" size={22} /></button>
+      <Button variant="filled" icon="sparkle" loading={(board.busy || !!board.callBusy)} onClick={() => void client.command({ operation: 'call_answer', callId: call.id, handledBy: 'aide' })}>{t('My Aide가 받기', 'Let My Aide answer')}</Button>
+      <Button icon="phone" disabled={(board.busy || !!board.callBusy)} onClick={() => void client.command({ operation: 'call_answer', callId: call.id, handledBy: 'driver' })}>{t('직접 받기', 'Answer')}</Button>
+      <button type="button" className="aide-call-decline" aria-label={t('거절', 'Decline')} disabled={(board.busy || !!board.callBusy)} onClick={() => void client.command({ operation: 'call_decline', callId: call.id })}><Icon name="call_end" size={22} /></button>
     </div>
   </section>;
 
@@ -63,17 +63,18 @@ export default function CallCenter({ client }: { client: MobilityClient }) {
       <div className="aide-call-who"><strong>{call.caller.name}</strong><span>{call.handledBy === 'aide' ? t('My Aide가 대신 통화 중', 'My Aide is on the call') : t('통화 중', 'On the call')} · {clock}</span></div>
       {autopilot ? <StatusChip type="info">{t('자율주행 시뮬레이션', 'Autopilot simulation')}</StatusChip> : null}
       <button type="button" className="aide-icon-button" aria-pressed={voice} aria-label={voice ? t('음성 끄기', 'Mute voice') : t('음성 켜기', 'Play voice')} onClick={toggleVoice}><Icon name={voice ? 'volume' : 'volume_off'} size={20} /></button>
-      <button type="button" className="aide-call-decline" aria-label={t('통화 종료', 'End call')} disabled={board.busy} onClick={() => void client.command({ operation: 'call_end', callId: call.id })}><Icon name="call_end" size={22} /></button>
+      <button type="button" className="aide-call-decline" aria-label={t('통화 종료', 'End call')} disabled={(board.busy || !!board.callBusy)} onClick={() => void client.command({ operation: 'call_end', callId: call.id })}><Icon name="call_end" size={22} /></button>
     </header>
+    {board.state?.journey?.state === 'moving' ? <div className="ops-actions"><Button disabled={board.busy} onClick={() => void client.command({ operation: 'stop', journeyId: board.state!.journey!.id })}>{t('이동 시뮬레이션 중지', 'Stop simulated drive')}</Button></div> : null}
     <ol className="aide-call-log" ref={log} aria-live="polite" tabIndex={0} aria-label={t("통화 내용", "Call transcript")}>{call.turns.map((turn, index) => <li key={index} className={`is-${turn.role}`}><span>{who(turn.role)}</span><p>{turn.text}</p></li>)}
-      {board.busy ? <li className="is-typing" aria-label={t('응답 중', 'Responding')}><span>{t('응답 중', 'Responding')}</span><p><i /><i /><i /></p></li> : null}</ol>
-    <div className="aide-call-quick">{[t('네, 좋아요.', 'Sounds good.'), t('도착하면 다시 연락드릴게요.', "I'll call back when I arrive."), t('지금 운전 중이라 짧게 말할게요.', "I'm driving, so I'll keep it short.")].map(text =>
-      <button key={text} type="button" disabled={board.busy || call.turns.length > 13} onClick={() => void send(text)}>{text}</button>)}</div>
+      {(board.busy || !!board.callBusy) ? <li className="is-typing" aria-label={t('응답 중', 'Responding')}><span>{t('응답 중', 'Responding')}</span><p><i /><i /><i /></p></li> : null}</ol>
+    <div className="aide-call-quick" role="group" aria-label={t('빠른 답변', 'Quick replies')} tabIndex={0}>{[t('네, 좋아요.', 'Sounds good.'), t('도착하면 다시 연락드릴게요.', "I'll call back when I arrive."), t('지금 운전 중이라 짧게 말할게요.', "I'm driving, so I'll keep it short.")].map(text =>
+      <button key={text} type="button" disabled={(board.busy || !!board.callBusy) || call.turns.length > 13} onClick={() => void send(text)}>{text}</button>)}</div>
     <form className="aide-call-input" onSubmit={event => { event.preventDefault(); void send(draft); }}>
       <label className="aide-sr" htmlFor="call-reply">{t('직접 답하기', 'Reply yourself')}</label>
-      <input id="call-reply" value={draft} maxLength={300} placeholder={t('직접 답하기…', 'Reply yourself…')} disabled={board.busy} onChange={event => setDraft(event.target.value)} />
-      <Button variant="filled" icon="send" disabled={board.busy || !draft.trim()} onClick={() => void send(draft)}>{t('보내기', 'Send')}</Button>
-      <Button icon="sparkle" disabled={board.busy || call.turns.length > 13} onClick={() => void client.command({ operation: 'call_delegate', callId: call.id })}>{t('My Aide가 대신 답하기', 'Let My Aide reply')}</Button>
+      <input id="call-reply" value={draft} maxLength={300} placeholder={t('직접 답하기…', 'Reply yourself…')} disabled={(board.busy || !!board.callBusy)} onChange={event => setDraft(event.target.value)} />
+      <Button variant="filled" icon="send" disabled={(board.busy || !!board.callBusy) || !draft.trim()} onClick={() => void send(draft)}>{t('보내기', 'Send')}</Button>
+      <Button icon="sparkle" disabled={(board.busy || !!board.callBusy) || call.turns.length > 13} onClick={() => void client.command({ operation: 'call_delegate', callId: call.id })}>{t('My Aide가 대신 답하기', 'Let My Aide reply')}</Button>
     </form>
   </section>;
 
@@ -84,9 +85,9 @@ export default function CallCenter({ client }: { client: MobilityClient }) {
       <button type="button" className="aide-icon-button" aria-label={t('닫기', 'Close')} onClick={() => setClosed(call.id)}><Icon name="close" size={20} /></button></header>
     <p className="aide-call-summary-text">{summary.text}</p>
     {summary.actionItems.length ? <ul className="aide-call-items">{summary.actionItems.map(item => <li key={item}><Icon name="approvals" size={16} />{item}</li>)}</ul> : null}
-    <Followups call={call} client={client} busy={board.busy} />
+    <Followups call={call} client={client} busy={(board.busy || !!board.callBusy)} />
     <div className="ops-actions">{call.saved ? <StatusChip type="success">{t('통화 기록에 저장됨', 'Saved to call history')}</StatusChip>
-      : <Button variant="filled" icon="history" loading={board.busy} onClick={() => void client.command({ operation: 'call_save', callId: call.id })}>{t('요약 저장', 'Save summary')}</Button>}
+      : <Button variant="filled" icon="history" loading={(board.busy || !!board.callBusy)} onClick={() => void client.command({ operation: 'call_save', callId: call.id })}>{t('요약 저장', 'Save summary')}</Button>}
       <Button onClick={() => setClosed(call.id)}>{t('닫기', 'Close')}</Button></div>
   </section>;
 }
@@ -116,7 +117,7 @@ export function CallHistory({ client }: { client: MobilityClient }) {
       <span className="ops-caption">{t('체험용 수신 전화 · 가상 발신자', 'Try an incoming call · fictional callers')}</span><CallScenarios client={client} /></div></section>
     {calls.length ? <ol className="aide-call-records">{calls.map(call => <li key={call.id} className="ops-card">
       <header><div className="aide-call-avatar is-done"><Icon name="phone" size={18} /></div><div><strong>{call.caller.name}</strong><span>{new Date(call.startedAt).toLocaleString(locale, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })} · {call.handledBy === 'aide' ? t('My Aide가 받음', 'Handled by My Aide') : t('직접 통화', 'You answered')}</span></div></header>
-      <p>{call.summary?.text}</p><Followups call={call} client={client} busy={board.busy} /></li>)}</ol>
+      <p>{call.summary?.text}</p><Followups call={call} client={client} busy={(board.busy || !!board.callBusy)} /></li>)}</ol>
       : <p className="ops-caption">{t('저장한 통화 요약이 아직 없습니다.', 'No saved call summaries yet.')}</p>}
   </div>;
 }

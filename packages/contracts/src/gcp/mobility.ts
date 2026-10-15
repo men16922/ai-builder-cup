@@ -92,6 +92,8 @@ export const mobilityStateSchema = z.object({ vehicle: vehicleSchema.nullable(),
   policy: z.object({ enabled: z.boolean(), expiresAt: z.iso.datetime().nullable(), runbook: z.literal('charge-reconnect-v1') }).strict(),
   cases:z.array(mobilityCaseSchema).max(10).default([]),
   call: vehicleCallSchema.nullable().default(null), calls: z.array(vehicleCallSchema).max(10).default([]),
+  /** Independent monotonic call presentation version; legacy responses mean zero. */
+  callRevision: z.number().int().min(0).max(2147483647).optional(),
   assist: assistTurnSchema.nullable().default(null),
   mapsAvailable: z.boolean(), mapsBrowserKey: z.string().regex(/^[A-Za-z0-9_-]{20,128}$/).nullable().optional(),
 }).strict();

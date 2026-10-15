@@ -108,7 +108,7 @@ internal fun CallOverlay(
         ) {
             when (call.state) {
                 "unknown" -> CallUnconfirmed(call, onRefresh) { closed = call.id }
-                "ringing" -> CallRinging(call, board.busy, onCommand)
+                "ringing" -> CallRinging(call, (board.busy || board.callBusy), onCommand)
                 "active" ->
                     CallActive(
                         call,
@@ -122,7 +122,10 @@ internal fun CallOverlay(
                             spokenCount = count
                         },
                     )
-                else -> CallSummarySheet(call, board.busy, onCommand) { closed = call.id }
+                else ->
+                    CallSummarySheet(call, (board.busy || board.callBusy), onCommand) {
+                        closed = call.id
+                    }
             }
         }
     }
@@ -275,13 +278,23 @@ private fun ColumnScope.CallActive(
                 .filter { it.role != "driver" }
                 .forEach { voice.speak(it.text, call.language, it.role) }
     }
-    val busy = board.busy
+    val busy = (board.busy || board.callBusy)
     val clock = callClock(call)
     val journey = board.state?.journey
     val autopilot = journey?.state == "moving" && journey.autopilot
     val title = stringResource(R.string.call_on_call)
     var draft by rememberSaveable(call.id) { mutableStateOf("") }
     val exhausted = call.turns.size > TURN_LIMIT
+    // Stop is a vehicle intent. A pending model reply must never disable it.
+    if (journey?.state == "moving") {
+        OutlinedButton(
+            onClick = { onCommand(MobilityCommand.Stop(journey.id)) },
+            enabled = !board.busy,
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            Text(stringResource(R.string.call_stop_drive))
+        }
+    }
     val send: (String) -> Unit = { text ->
         if (text.isNotBlank()) {
             onCommand(MobilityCommand.CallSay(call.id, text.trim().take(300)))
@@ -706,7 +719,7 @@ internal fun CallsScreen(board: VehicleBoard, onCommand: (MobilityCommand) -> Un
             for ((scenario, label) in SCENARIOS) {
                 OutlinedButton(
                     onClick = { onCommand(MobilityCommand.CallIncoming(scenario, language)) },
-                    enabled = !board.busy && !live && state?.vehicle != null,
+                    enabled = !(board.busy || board.callBusy) && !live && state?.vehicle != null,
                     modifier = Modifier.fillMaxWidth(),
                 ) {
                     Icon(AideIcons.Phone, contentDescription = null, Modifier.size(18.dp))
@@ -716,7 +729,7 @@ internal fun CallsScreen(board: VehicleBoard, onCommand: (MobilityCommand) -> Un
             }
         }
     }
-    if (board.busy) LinearProgressIndicator(Modifier.fillMaxWidth())
+    if ((board.busy || board.callBusy)) LinearProgressIndicator(Modifier.fillMaxWidth())
     val calls = state?.calls.orEmpty()
     Text(
         stringResource(R.string.calls_history_title),
@@ -768,7 +781,7 @@ internal fun CallsScreen(board: VehicleBoard, onCommand: (MobilityCommand) -> Un
                     }
                 }
                 call.summary?.text?.let { Text(it, style = MaterialTheme.typography.bodyMedium) }
-                Followups(call, board.busy, onCommand)
+                Followups(call, (board.busy || board.callBusy), onCommand)
             }
         }
     }

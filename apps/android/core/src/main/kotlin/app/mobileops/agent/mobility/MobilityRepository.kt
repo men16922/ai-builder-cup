@@ -11,6 +11,7 @@ data class VehicleBoard(
     val failure: Failure? = null,
     val journeyRunning: Boolean = false,
     val failureCode: String? = null,
+    val callBusy: Boolean = false,
 )
 
 interface MobilityRepository {

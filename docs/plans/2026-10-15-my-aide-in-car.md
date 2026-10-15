@@ -69,6 +69,10 @@ Deploy, check real tiles/photos/call flow on the deployed site and a phone, re-r
 - D follow-ups: simulated drafts (default) or real Gmail/Calendar with new scopes.
 - Deployment timing after A–C or after D–E.
 
+## Delayed-model acceptance increment
+
+Codex reproduced and repaired blocked movement/Stop and false vehicle-version conflicts during a call wait. Conversation revisions and parallel request lanes now preserve newer vehicle/call state independently in web/native; a delayed reply cannot revive a read-paused, unknown or canceled journey. Canonical local web/API 225, core 74/app 3, emulator 20 pass/one Maps skip and native Stop control pass. Matching APK/provider and image-only rollout are next; authenticated deployed/phone and actual demo remain acceptance work.
+
 ## Concurrent ownership (15 Oct, evening)
 
 - Claude session: gateway mobility (calls, controls, place photos, tire fault), contracts, web driver UI (controls, places, call sheet, diagnosis cluster, error manual), Android core contract for these fields, Android UI parity for controls/calls/diagnosis/photos, and a web platform dashboard (A2A agent cards, guardrails, budgets).

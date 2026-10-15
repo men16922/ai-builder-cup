@@ -24,9 +24,10 @@
     "check:fixtures": "MOBILEOPS_OFFLINE_TEST=1 node --import tsx scripts/generate-mobile-fixtures.ts --check",
     "test:android-core": "MOBILEOPS_OFFLINE_TEST=1 MOBILEOPS_ANDROID_GRADLE_OFFLINE=1 node --import tsx scripts/check-android-core.ts",
     "prepare:evaluation": "MOBILEOPS_OFFLINE_TEST=1 node --import tsx scripts/prepare-gcp-evaluation.ts",
-    "check": "npm run build && npm run test:server && npm run check:tokens && npm run check:fixtures && npm run test:web && npm run test:agents && npm run test:mobility && npm run test:call-safety && npm run test:my-aide && npm run test:hosted && npm run check:publishable",
+    "check": "npm run build && npm run test:server && npm run check:tokens && npm run check:fixtures && npm run test:web && npm run test:agents && npm run test:mobility && npm run test:call-safety && npm run test:my-aide && npm run test:call-latency && npm run test:hosted && npm run check:publishable",
     "test:call-safety": "MOBILEOPS_OFFLINE_TEST=1 node --import tsx tests/browser/call-uncertainty.mjs",
-    "test:my-aide": "MOBILEOPS_OFFLINE_TEST=1 node --import tsx tests/browser/my-aide.mjs"
+    "test:my-aide": "MOBILEOPS_OFFLINE_TEST=1 node --import tsx tests/browser/my-aide.mjs",
+    "test:call-latency": "MOBILEOPS_OFFLINE_TEST=1 node --import tsx tests/browser/call-latency.mjs"
   },
   "dependencies": {
     "@google-cloud/firestore": "9.3.1",

@@ -67,7 +67,7 @@ export class GcpMobility {
     if (receipt?.state === 'working' && receipt.digest === claim.digest) tx.put(requestKey, { digest: receipt.digest, state: 'unknown' } satisfies Receipt);
     tx.put(key, { ...claim, state: 'unknown' } satisfies CallClaim);
     live.state = 'unknown';
-    if (record.state.vehicle) record.state.vehicle.version++;
+    record.state.callRevision = (record.state.callRevision ?? 0) + 1;
     if (record.state.journey) record.state.journey.autopilot = false;
     return true;
   }
@@ -225,7 +225,11 @@ export class GcpMobility {
         if (callStepKey && (callClaim?.state !== 'working' || callClaim.digest !== digest || this.now() > callClaim.deadline)) throw fail(409, 'mobility_outcome_unknown');
         if (investigates) await tx.get<Receipt>(this.key(session,'diagnosis',before!.episode));
         if (claim?.state !== 'working' || claim.digest !== digest) throw fail(409,'mobility_outcome_unknown');
-        if (appliedCommand.operation !== 'initialize' && current.state.vehicle?.version !== appliedCommand.expectedVersion) throw fail(409,'vehicle_changed');
+        if (callSteps.has(appliedCommand.operation)) {
+          // A call only appends conversation/drafts. Current vehicle progress is retained;
+          // authority, the exact captured call and its durable lease are checked independently.
+          if (!current.state.call || !record.state.call || cloudDigest(current.state.call) !== cloudDigest(record.state.call)) throw fail(409, 'call_changed');
+        } else if (appliedCommand.operation !== 'initialize' && current.state.vehicle?.version !== appliedCommand.expectedVersion) throw fail(409,'vehicle_changed');
         if (investigates && (this.now()-Date.parse(current.state.reports.find(report=>report.episode===before!.episode)?.at ?? '')>35000 || current.state.reports.find(report=>report.episode===before!.episode)?.state!=='investigating')) throw fail(409,'investigation_expired');
         const next = this.apply(structuredClone(current),appliedCommand,diagnosis,candidates,searchSummary,{step:callStep,digest:callDigest,assist:assistPlan});
         const state = mobilityStateSchema.parse(next.state);
@@ -255,7 +259,7 @@ export class GcpMobility {
           const captured = record.state.call, live = latest.state.call;
           if (live.id === captured.id && cloudDigest(live) === cloudDigest(captured)) {
             live.state = 'unknown';
-            if (latest.state.vehicle) latest.state.vehicle.version++;
+            latest.state.callRevision = (latest.state.callRevision ?? 0) + 1;
             if (latest.state.journey) latest.state.journey.autopilot = false;
             tx.put(storageKey, latest, latest.mapsExpiresAt ? new Date(latest.mapsExpiresAt) : undefined);
           }
@@ -471,7 +475,9 @@ export class GcpMobility {
         break;
       }
     }
-    vehicle.version++; vehicle.observedAt=at; return record;
+    if (!callSteps.has(command.operation)) { vehicle.version++; vehicle.observedAt = at; }
+    if (command.operation.startsWith('call_') || command.operation === 'followup') state.callRevision = (state.callRevision ?? 0) + 1;
+    return record;
   }
   /** Call steps must match the live call; checked before any claim or model spend. */
   private precheckCall(state: MobilityState, command: MobilityCommand) {

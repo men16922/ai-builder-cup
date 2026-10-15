@@ -6,6 +6,11 @@ Updated: 2026-10-15. Goal: award-ready Aide submission on 18 October. Current ow
 
 Execution status: owner resumed the goal on 15 October evening. Organization-login result is pending; browser control is not exposed in this resumed session, so the current authenticated page is unverified. Historical blocked checks remain recorded separately. Physical phone, real reviewer, paired impact, Korea-capable routing inputs and submission still require owner/external evidence; full goal is incomplete.
 
+## Delayed call and vehicle progress
+
+- Web/native now process conversation and vehicle requests independently. Monotonic call revisions prevent out-of-order replies erasing newer calls; current vehicle progress/Stop is retained. Identity, membership, exact-call snapshots and durable claim deadlines remain authoritative; a call reply cannot arm a paused journey.
+- Canonical local gate: web/API 225, browser delayed-model/390px/axe, core 74/app 3, assembly/lint and emulator 20 passed/one opt-in Maps skip. New APK/provider and image-only rollout are the next checks; these counts do not establish signed-in deployed or physical-device behavior.
+
 ## My Aide in-car features (deployed web/API)
 
 - Calls handled by My Aide, vehicle controls, diagnosis cluster, error manual, Places photos and numbered markers, Ask your own Aide, and the Platform & A2A page are live on gateway revision 00020 (`2fb8d11`). Real Gemini/Places/Chief-card checks ran privately with the runtime identity; an authenticated deployed browser walkthrough is still pending the owner's sign-in approval.
@@ -51,30 +56,9 @@ Execution status: owner resumed the goal on 15 October evening. Organization-log
 - Latest gate: gateway 206 / crew 97; browser/axe/hosted/publish pass. Android core 68 is current; latest app unit 3, lint/restricted-key APK and emulator 7 pass. Final browser re-login and current domain inspection now passed; this read-only verification is separate from the earlier provider/remedy runs.
 - Official MCP routes expose distance/duration without geometry; this session's Seoul MCP and Routes REST probes returned no routes. Movement remains explicitly straight-line simulation. Actual phone/native live tiles, human comparison, real V2 conflict/approval and fresh judging video/deck remain open.
 
-## Earlier 15 October unknown-case recovery snapshot (superseded by deployment above)
+## Earlier implementation snapshots
 
-- Fresh simulated faults trigger server-side, quota-bound Gemini investigation. Unknown charge-link symptoms escalate with five current safety checks; explicit reviewer-guided typed reconnection and read-back produce a seven-day candidate. Separate promotion executes nothing and does not enable autonomy. A current matching active case plus 24-hour policy permits one episode attempt; revocation/expiry/unsafe or different evidence escalates.
-- Web/native show guided recovery, separate promotion/revocation, trusted charging before/after and simulated 72 kW read-back. Mount/refresh no longer triggers diagnosis. Unknown/late replies and exhausted budgets retain incident evidence without automatic resend.
-- Latest local full gate: gateway 204 / crew 97, browser/axe/hosted/publish; Android core 67 including actual Kotlin HTTP workflow, app unit 3, restricted-key APK/lint and emulator 7 pass. Native screenshots cover synthetic component dialogs; web screenshots use synthetic authenticated HTTP, not real users or cars.
-- Direct real Gemini smoke: two calls, first unfamiliar symptom escalated, scripted guided resolution/promotion/policy, matching recurrence proposed and remediated in the local simulator. Immutable first results and source hashes remain private. This does not prove deployed behavior, human productivity or physical-device operation.
-- Owner now requests best effort within the remaining 2.5-hour window (target 15 October 05:37 KST). Prioritize usable login/driver access, verified candidate deployment and Maps/runtime checks; retain unfinished scope explicitly.
-
-## Earlier 15 October approval snapshot (superseded by deployment above)
-
-- V2 binds exact action/reviewer/five-minute lease/grant UUID to reviewed UID/etag/update time. Current traffic/time are displayed in web/native approval cards; missing reviewed state cannot be approved. Ops fresh-read comparison and one conditional etag PATCH replace the per-instance ledger/post-tap check.
-- Gateway creates and redeems private durable grants atomically, checks current membership/version/reviewer/target and never stores Firebase bearer sessions. Ops calls a fixed HTTPS broker, gains no Firestore/IAM permission and never retries ambiguous claims. Explicit `agents.executionTargets` keep observation registrations separate from allowed remediation destinations. The deployed config lacks these targets; a private candidate now validates with two scoped bindings.
-- Local `make check-all` passed: gateway 194, crew 96, browser/axe/hosted/publish. Added ADK model-context capability-isolation regression, then latest crew suite 97 passed. Android core 66; app unit 3, restricted-key APK/lint and emulator 4 passed. Kotlin formatter checked. No new real-model or physical-phone evidence.
-- Live isolated Firestore contention using the existing runtime identity: two SDK clients, one claim winner, recreated-client replay refused. Synthetic verification record only, TTL; no real approval or Cloud Run mutation. Cloud Run `validateOnly` fresh/modified etag requests both returned 200 and service read-back was unchanged; this does not prove real conflict rejection.
-- Deployment, actual V2 peer/broker behavior and read/PATCH conflict remain unverified. No human decision was manufactured, no IAM change/commit/push performed. Protocol and lease limits: `APPROVALS.md`.
-
-## 15 October mobility increment (source and provider smoke; not deployed)
-
-- Android is split into UI / ViewModel / Repository / platform data boundaries, with English/Korean device-selected resources, tutorial persistence/replay, formatter and comments. No product rehearsal launcher. Restricted Maps-key APK, app unit/lint and four emulator tests pass; core HTTP gate passes 64 tests. Physical phone remains unverified.
-- Actor-private Firestore twin, simulated EV telemetry, charge-session diagnosis/typed one-attempt remedy, explicit 24-hour policy and decision/report, scoped Favorite/context journey consent, cancel and domain screens implemented in web/Android. Vehicle/driving remain simulation; trajectory is currently straight-line, not a road route.
-- Gemini search planning → official Google Maps MCP `search_places` direct smoke returned five places with source links (6.734 seconds for that single provider sequence). This is not an end-to-end or productivity measurement. Web/Android show complete grounded output and adjacent links. See `MAPS.md` for quotas, fixed endpoints, OAuth, restricted keys and 29-day display retention.
-- Maps/Places/Routes/MCP APIs and interface enabled; restricted browser/Android keys read back; only dedicated runtime API-consumer permission added. Firestore TTL configuration completed. Private keys/config/provider output stay ignored. Metadata-scoped tokens, live tiles and deployed authenticated journey still need verification.
-- `npm run check` passes (gateway 187, browser/axe/hosted/publish); it includes mobility, Maps protocol, token-scope, retention, permission/late-response and Favorite regressions; signed-out entry has no sample actions or private API calls. Superseded by the approval increment above: the full local gate now passes; deployed V2 remains unverified.
-- Remaining product/evidence work: road-route provider feasibility, final authenticated domain visual/native dogfood and updated judging assets. The deployment increment above supersedes this earlier snapshot. Deployment is owner-authorized when ready; no commit/push/submission authorized.
+[Original source/approval/provider snapshots](archive/status-2026-10-15-superseded.md) are retained as history. The newer deployment and validation increments above supersede their source-only status.
 
 ## Historical baseline
 
@@ -108,7 +92,7 @@ The original synthetic probes produced two PATCH attempts for one signature acro
 - English README, architecture/evaluation and entry drafts are updated; the current 10-page PDF deck is regenerated with synthetic product images and current evidence limits.
 - The current local narrated presentation is 150.06 seconds and uses synthetic slide images; it is not a continuous live demonstration. The older 85.6-second recording is preserved, with internal identity/stale-screen issues requiring a fresh capture before upload: `docs/plans/2026-10-14-demo-review.md`.
 - The deployed signed-out entry is the mobility welcome, with no synthetic rehearsal controls. Live crew requires verified ownership/membership; judge access or a recorded real run must be arranged. Change permission stays private.
-- Upload, final URLs, deck attachment, publication and submission receipt remain pending. Owner instruction is required for commit/push, publication and submission.
+- Upload, final URLs, deck attachment, publication and submission receipt remain pending. Git commit/push is owner-authorized; private artifact publication and competition submission require separate instruction.
 
 ## Other limits and provenance
 

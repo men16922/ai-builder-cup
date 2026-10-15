@@ -508,4 +508,5 @@
     <string name="ask_stop_charging">충전 중지</string>
     <string name="ask_flash">라이트 깜빡이기</string>
     <string name="ask_honk">경적 울리기</string>
+    <string name="call_stop_drive">이동 시뮬레이션 중지</string>
 </resources>

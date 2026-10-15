@@ -385,13 +385,14 @@ data class MobilityState(
     val cases: List<MobilityCase> = emptyList(),
     val call: VehicleCall? = null,
     val calls: List<VehicleCall> = emptyList(),
+    val callRevision: Int = 0,
     val assist: AssistTurn? = null,
 ) {
     fun validate() {
         vehicle?.validate()
         call?.validate()
         assist?.validate()
-        require(calls.size <= 10)
+        require(calls.size <= 10 && callRevision >= 0)
         calls.forEach { it.validate() }
         journey?.validate()
         policy.validate()

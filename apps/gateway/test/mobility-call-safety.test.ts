@@ -3,10 +3,11 @@ import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
 import { SqliteCloudStore } from '../src/store/sqlite-store';
 import { GcpWebAccess } from '../src/auth/web-access';
-import { GcpMobility, type VehicleReasoner } from '../src/mobility/service';
+import { GcpMobility, type VehicleReasoner, type MobilityPlaces } from '../src/mobility/service';
+import { MobilityClient } from '../../web/src/mobility/mobility-client';
 import type { MobilityState, CallStep } from '@contracts/gcp/mobility';
 
-async function setup(t: TestContext, step: NonNullable<VehicleReasoner['call']>) {
+async function setup(t: TestContext, step: NonNullable<VehicleReasoner['call']>, places?: MobilityPlaces) {
   let clock = Date.parse('2026-10-15T11:00:00Z');
   const store = new SqliteCloudStore(':memory:', () => clock); t.after(() => store.close());
   const access = new GcpWebAccess({ async verify(token) { return { actorId: token, expiresAt: clock + 3600000 }; } }, store, () => clock);
@@ -19,7 +20,7 @@ async function setup(t: TestContext, step: NonNullable<VehicleReasoner['call']>)
     async call(input, signal) { calls++; return step(input, signal); },
     async summarizeCall() { return { text: 'Synthetic summary', actionItems: [], followups: [] }; },
   };
-  const create = () => new GcpMobility(store, access, () => true, reasoner, undefined, () => clock);
+  const create = () => new GcpMobility(store, access, () => true, reasoner, places, () => clock);
   const api = create();
   const send = (state: MobilityState, command: Record<string, unknown>, key = randomUUID()) => api.command(session, { ...command, expectedVersion: state.vehicle!.version }, key);
   const initial = await api.command(session, { operation: 'initialize' }, randomUUID());
@@ -118,4 +119,109 @@ test('an empty provider turn is unknown, not a confirmed empty conversation step
   assert.equal(latest.call?.state, 'unknown'); assert.deepEqual(latest.call?.turns, []);
   await assert.rejects(s.send(latest, { operation: 'call_answer', handledBy: 'aide', callId: s.ringing.call!.id }));
   assert.equal(s.calls(), 1);
+});
+
+
+const nearby: MobilityPlaces = { async nearby(location, kind) { return [{ id: 'synthetic-latency-destination', name: 'Synthetic nearby destination', address: '', kind, source: 'google-places', fetchedAt: '2026-10-15T11:00:00Z', location: { latitude: location.latitude + .002, longitude: location.longitude + .002 } }]; } };
+async function moving(s: Awaited<ReturnType<typeof setup>>) {
+  let state = await s.send(s.ringing, { operation: 'trip_request', instruction: 'Synthetic nearby destination', kind: 'poi', language: 'en' });
+  state = await s.send(state, { operation: 'select_destination', journeyId: state.journey!.id, placeId: state.journey!.candidates[0].id, remember: false });
+  return state;
+}
+
+test('a delayed call step preserves concurrent movement and an explicit journey stop', async t => {
+  let entered!: () => void, release!: () => void;
+  const start = new Promise<void>(resolve => { entered = resolve; }), barrier = new Promise<void>(resolve => { release = resolve; });
+  const s = await setup(t, async () => { entered(); await barrier; return greeting; }, nearby);
+  const drive = await moving(s);
+  const pending = s.send(drive, { operation: 'call_answer', callId: drive.call!.id, handledBy: 'aide' });
+  await start;
+  const advanced = await s.send(drive, { operation: 'advance', journeyId: drive.journey!.id });
+  const stopped = await s.send(advanced, { operation: 'stop', journeyId: drive.journey!.id });
+  release();
+  const answered = await pending;
+  assert.equal(answered.call?.state, 'active');
+  assert.equal(answered.vehicle?.parked, true); assert.equal(answered.journey?.state, 'cancelled');
+  assert.equal(answered.vehicle?.version, stopped.vehicle?.version, 'A call-only reply must not rewind or mutate vehicle progress');
+  assert.equal(s.calls(), 1);
+});
+
+test('the client advances and cancels the simulation while a model answer is pending', async t => {
+  let entered!: () => void, release!: () => void;
+  const start = new Promise<void>(resolve => { entered = resolve; }), barrier = new Promise<void>(resolve => { release = resolve; });
+  const s = await setup(t, async () => { entered(); await barrier; return greeting; }, nearby);
+  const drive = await moving(s), operations: string[] = [];
+  const client = new MobilityClient(async (_path, input) => {
+    if (!input) return s.api.read(s.session);
+    const body = input.body as Record<string, unknown>; operations.push(String(body.operation));
+    return s.api.command(s.session, body, input.key);
+  });
+  await client.load();
+  // Explicit Continue arms only the already selected simulated journey.
+  await client.command({ operation: 'advance', journeyId: drive.journey!.id });
+  const pending = client.command({ operation: 'call_answer', callId: drive.call!.id, handledBy: 'aide' });
+  await start;
+  await client.command({ operation: 'advance', journeyId: drive.journey!.id }, true);
+  await client.command({ operation: 'stop', journeyId: drive.journey!.id });
+  release(); await pending;
+  assert.equal(operations.filter(op => op === 'advance').length, 2, 'The AI wait must not suspend simulated movement');
+  assert.equal(operations.filter(op => op === 'stop').length, 1, 'The explicit stop must remain usable during model latency');
+  assert.equal(client.getSnapshot().state?.journey?.state, 'cancelled');
+  assert.equal(client.getSnapshot().journeyRunning, false); assert.equal(s.calls(), 1);
+});
+
+
+test('a delayed older vehicle reply cannot erase the newer confirmed call revision', async t => {
+  let entered!: () => void, release!: () => void, deliver!: () => void;
+  const start = new Promise<void>(resolve => { entered = resolve; }), model = new Promise<void>(resolve => { release = resolve; });
+  const transport = new Promise<void>(resolve => { deliver = resolve; });
+  const s = await setup(t, async () => { entered(); await model; return greeting; }, nearby);
+  const drive = await moving(s);
+  let delayAdvance = false;
+  const client = new MobilityClient(async (_path, input) => {
+    if (!input) return s.api.read(s.session);
+    const body = input.body as Record<string, unknown>;
+    const result = await s.api.command(s.session, body, input.key);
+    if (delayAdvance && body.operation === 'advance') await transport;
+    return result;
+  });
+  await client.load(); await client.command({ operation: 'advance', journeyId: drive.journey!.id });
+  const call = client.command({ operation: 'call_answer', handledBy: 'aide', callId: drive.call!.id }); await start;
+  delayAdvance = true;
+  const advance = client.command({ operation: 'advance', journeyId: drive.journey!.id }, true);
+  // Wait for the stored progress, not for a fixed sleep or the intentionally delayed HTTP response.
+  for (let attempt = 0; attempt < 20 && (await s.api.read(s.session)).journey!.progress < .2; attempt++) await new Promise(resolve => setImmediate(resolve));
+  assert.ok((await s.api.read(s.session)).journey!.progress >= .2);
+  release(); await call; deliver(); await advance;
+  assert.equal(client.getSnapshot().state?.call?.state, 'active');
+  assert.equal(client.getSnapshot().state?.journey?.autopilot, true);
+  assert.ok((client.getSnapshot().state?.callRevision ?? 0) >= 2);
+  assert.equal(client.getSnapshot().state?.journey?.progress, .2);
+});
+
+test('permission loss while a call waits prevents either request lane restoring private data', async t => {
+  let entered!: () => void, release!: () => void;
+  const start = new Promise<void>(resolve => { entered = resolve; }), barrier = new Promise<void>(resolve => { release = resolve; });
+  const s = await setup(t, async () => { entered(); await barrier; return greeting; });
+  let deny = false;
+  const client = new MobilityClient(async (_path, input) => {
+    if (deny) throw Object.assign(Error('mobility_not_entitled'), { status: 403 });
+    return input ? s.api.command(s.session, input.body, input.key) : s.api.read(s.session);
+  });
+  await client.load(); const pending = client.command({ operation: 'call_answer', handledBy: 'aide', callId: s.ringing.call!.id });
+  await start; deny = true; await client.load(); release(); await pending;
+  assert.equal(client.getSnapshot().state, undefined); assert.equal(client.getSnapshot().callBusy, false);
+});
+
+test('a read during a delayed call never rearms the selected journey', async t => {
+  let entered!: () => void, release!: () => void;
+  const start = new Promise<void>(resolve => { entered = resolve; }), barrier = new Promise<void>(resolve => { release = resolve; });
+  const s = await setup(t, async () => { entered(); await barrier; return greeting; }, nearby);
+  const drive = await moving(s);
+  const client = new MobilityClient(async (_path, input) => input ? s.api.command(s.session, input.body, input.key) : s.api.read(s.session));
+  await client.load(); await client.command({ operation: 'advance', journeyId: drive.journey!.id });
+  const pending = client.command({ operation: 'call_answer', handledBy: 'aide', callId: drive.call!.id });
+  await start; await client.load(); release(); await pending;
+  assert.equal(client.getSnapshot().state?.call?.state, 'active');
+  assert.equal(client.getSnapshot().journeyRunning, false);
 });
