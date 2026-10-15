@@ -46,6 +46,8 @@ Done when: real deployed search shows photos with attribution and markers; offli
 Defaults pending owner override: text plus TTS (no speech recognition); simulated follow-ups only, because real Gmail/Calendar sending is outward-facing and needs separate scopes and authorization; one server endpoint produces turns, summary and drafts so web and Android stay thin.
 Done when: web and Android complete the flow end to end against the deployed gateway with a real Gemini turn, and an unknown model reply never resends.
 
+Call uncertainty guard landed in `6720b20`: one durable call-snapshot step across keys/instances, 30-second unknown expiry and late-result fencing; six API regressions plus KO/EN/390px/axe/no-resend browser checks pass. Native DTO/core compatibility is verified separately from ongoing native UI parity. Deployment, physical use and delayed-model/movement acceptance remain open; see `docs/reviews/2026-10-15-call-safety.md`.
+
 ### E. Vehicle diagnosis dashboard (16 Oct)
 
 Rename "Aide Help" to **차량 진단 / Vehicle diagnosis**. Show an instrument-cluster style status (battery, range, charging power, temperature) and a top-down car diagram that highlights the affected part when a fault exists (charging port, battery, unknown). Existing guided recovery, case promotion and policy flows move under this view unchanged.

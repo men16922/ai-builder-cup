@@ -1,5 +1,11 @@
 # Progress log
 
+## 2026-10-15 — Calls cannot repeat after uncertain or vanished model work
+- Reproduced: a fresh key/recreated API called an uncertain answer twice. Fixed with a durable call-snapshot claim, 30-second unknown expiry, exact-snapshot cleanup, late-result fence and empty-turn rejection; the confirmed transcript is retained.
+- Verified: six API regressions; published `6720b20` server suite 219, unknown-call KO/EN/390px/axe/no-resend browser check, in-car fixture flow, Android core 69/app 3 and assembly/lint. Existing successful direct Gemini/Maps records inspected without rerunning paid calls. Limits and evidence: [call safety review](reviews/2026-10-15-call-safety.md).
+- Source: safety changes landed within the concurrent owner’s in-car commit; remote verified. Shared feature work preserved. These checks are synthetic/local plus separately scoped provider records; no physical phone, actual worker-kill/Firestore contention, deployment or submission claim.
+- Next: native UI parity, exact-candidate deployment/authenticated checks, delayed-model/movement behavior, then phone/reviewer/impact/current demo. Full award-readiness remains incomplete.
+
 ## 2026-10-15 — Native error manuals preserve uncertain outcomes
 - Changed: a modal explains native request failures and opens resource-based KO/EN next steps. Bounded protocol codes now survive HTTP categorization, so unknown HTTP 409 outcomes do not show stale-state advice. Raw provider messages stay private; the dialog has no command or retry callback.
 - Verified: isolated Android core 69 (including HTTP code/invalid-body/no-resend checks), app unit 3, lint/assembly and emulator manual 1 pass with no skips. Native unknown-result screenshot inspected. Opening, reading and dismissal are presentation only; a new failure reopens the guide.

@@ -6,6 +6,11 @@ Updated: 2026-10-15. Goal: award-ready Aide submission on 18 October. Current ow
 
 Execution status: owner resumed the goal on 15 October evening. Organization-login result is pending; browser control is not exposed in this resumed session, so the current authenticated page is unverified. Historical blocked checks remain recorded separately. Physical phone, real reviewer, paired impact, Korea-capable routing inputs and submission still require owner/external evidence; full goal is incomplete.
 
+## In-car call uncertainty
+
+- Published `6720b20` includes controls/call/diagnosis/photos/platform source and the owned call safety guard. A call-snapshot claim prevents duplicate provider steps across keys/instances; errors or 30-second expiry retain unknown, late responses cannot revive it, and newer confirmed calls survive old cleanup. Six negative API regressions and the read-only unknown-call browser panel pass.
+- Published-source web/API 219, Android core 69/app 3 and assembly/lint pass within those scopes; in-car UI checks are synthetic. Existing direct real Gemini/Maps records were inspected separately, not rerun. Native UI parity, exact deployment and authenticated/physical acceptance remain open. [Scope and evidence](reviews/2026-10-15-call-safety.md).
+
 ## Native request failure guidance
 
 - Native vehicle/map/assistance failures open a modal with KO/EN resource manuals. A bounded machine code is retained separately from the fixed HTTP failure category; ambiguous HTTP 409 now has outcome-unknown guidance instead of stale-state advice. Raw messages are not displayed. Reading/dismissing the manual has no network/command callback.
