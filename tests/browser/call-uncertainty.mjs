@@ -41,6 +41,18 @@ try {
   await page.goto(origin); await page.getByRole('button', { name: 'Create synthetic call', exact: true }).click();
   await Promise.all([page.waitForResponse(response => new URL(response.url()).pathname.endsWith('/gcp/mobility') && response.request().method() === 'POST'), page.getByRole('button', { name: 'Let My Aide answer', exact: true }).click()]);
   await expect.poll(() => models).toBe(1);
+  await expect(page.getByRole('dialog', { name: 'We could not confirm the result', exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'View manual', exact: true }).click();
+  await expect(page.getByText('Do not send the same action again while its result is unknown.', { exact: true })).toBeVisible();
+  await expect(page.getByText('If it did not, start a new request.', { exact: true })).toHaveCount(0);
+  const guideAxe = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze();
+  expect(guideAxe.violations.map(item => ({ id: item.id, nodes: item.nodes.map(node => node.html) }))).toEqual([]);
+  await mkdir(captures, { recursive: true });
+  await page.screenshot({ path: join(captures, 'call-error-manual-en-390.png'), fullPage: true });
+  const beforeRead = operations.length;
+  await page.getByRole('button', { name: 'Check latest state', exact: true }).click();
+  await expect(page.getByText('Call outcome unconfirmed', { exact: true })).toBeVisible();
+  assert.equal(operations.length, beforeRead); assert.equal(models, 1);
   await page.reload(); // A new client reads the durable unknown; no in-memory flag supplies it.
   await expect(page.getByText('Call outcome unconfirmed', { exact: true })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Let My Aide answer', exact: true })).toHaveCount(0);
@@ -59,7 +71,7 @@ try {
   await expect(page.getByText('통화 결과 미확인', { exact: true })).toHaveCount(0);
   assert.equal(models, 1); assert.equal(operations.filter(value => value === 'call_answer').length, 1);
   expect(errors).toEqual([]);
-  console.log('Call uncertainty browser check passed: authenticated synthetic API/provider failure, durable unknown after read, no repeated answer/model/follow-up, KO/EN, 390px/axe. No live provider or real call.');
+  console.log('Call uncertainty browser check passed: immediate HTTP unknown/manual without resend advice, explicit GET/durable unknown after reload, no repeated answer/model/follow-up, KO/EN, 390px/axe including the open manual. No live provider or real call.');
 } catch (error) {
   await mkdir(captures, { recursive: true });
   await browser?.contexts()[0]?.pages()[0]?.screenshot({ path: join(captures, 'call-uncertainty-failure.png'), fullPage: true });

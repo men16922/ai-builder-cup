@@ -14,7 +14,7 @@ Owner authorized this commit/push on 15 October; verify current Git refs rather 
 
 ## Final access checks and judging assets
 
-Current engineering next step: identify the intended APK/controller (device changed to a different local build and sign-in), then one distinct native draft check after provider availability changes. Deployed `a80225a` includes `88437ea` guards; fresh full API 240/browser/hosted and native core/app/build/lint/format pass. Actual old-APK login/Ask/Maps and later call summary/save exposed wrong time/empty body; one separate post-fix Gemini qualification received 429/no retry. See `docs/reviews/2026-10-15-native-live-call-output.md`. Preserve first outcomes; original invalid field and held-vehicle/input cause remain unproved.
+Current engineering next step: ship/deploy reviewed immediate call-unknown response/manual guidance (full API 245/browser/axe/hosted/publish), verify UID/config/assets, then identify the intended APK/controller before native input. Last verified runtime `a80225a`; distinct real-summary qualification reached its 25-second deadline with one transport attempt/no HTTP response, separately from the earlier one-call 429. Final live drafts remain unconfirmed. See `docs/reviews/2026-10-15-native-live-call-output.md`. Preserve first outcomes; original invalid field and held-vehicle/input cause remain unproved.
 
 Follow-up: complete the retained organization login manually before the current deployed read-only Chief check. Two automated organization re-logins ended popup-closed before any crew instruction; root cause remains unproven. Personal-domain login/inspection remains separately verified.
 

@@ -267,6 +267,48 @@ test('invalid generated call summaries are outcome-unknown, not invalid user req
   assert.equal(malformed.status, 400); assert.equal(summaries, 1);
 });
 
+test('post-admission provider failures report the durable unknown immediately over HTTP without resend', async t => {
+  for (const [name, failure] of [
+    ['deadline', new DOMException('DO_NOT_LEAK_PROVIDER_DETAIL', 'TimeoutError')],
+    ['capacity', Error('google_mobility_busy')],
+    ['transport', Error('DO_NOT_LEAK_PROVIDER_DETAIL')],
+  ] as const) await t.test(name, async t => {
+    const s = await setup(t, async () => greeting);
+    const active = await s.send(s.ringing, { operation: 'call_answer', callId: s.ringing.call!.id, handledBy: 'aide' });
+    let summaries = 0;
+    s.reasoner.summarizeCall = async () => { summaries++; throw failure; };
+    const services = { access: s.access, observations: new GcpObservations(s.store, s.access, []), mobility: s.api, publicOrigin: 'http://127.0.0.1' };
+    const server = createGcpApiServer(services); server.listen(0, '127.0.0.1'); await once(server, 'listening');
+    t.after(() => new Promise<void>(resolve => { server.closeAllConnections(); server.close(() => resolve()); }));
+    const address = server.address(); assert.ok(address && typeof address !== 'string');
+    const origin = `http://127.0.0.1:${address.port}`; services.publicOrigin = origin;
+    const response = await fetch(`${origin}/api/organizations/v1/synthetic-org/workspaces/synthetic-workspace/gcp/mobility`, {
+      method: 'POST', headers: { Origin: origin, Authorization: 'Bearer driver-a', 'Content-Type': 'application/json', 'Idempotency-Key': randomUUID() },
+      body: JSON.stringify({ operation: 'call_end', callId: active.call!.id, expectedVersion: active.vehicle!.version }),
+    });
+    const latest = await s.api.read(s.session);
+    assert.equal(latest.call?.state, 'unknown'); assert.deepEqual(latest.call?.turns, active.call!.turns);
+    assert.equal(latest.call?.summary, undefined); assert.equal(summaries, 1);
+    assert.equal(response.status, 502, 'The immediate response must match the durable uncertain call');
+    assert.deepEqual(await response.json(), { code: 'mobility_outcome_unknown', message: 'The mobility request could not be confirmed.' });
+    await assert.rejects(s.send(latest, { operation: 'call_end', callId: active.call!.id }));
+    assert.equal(summaries, 1);
+  });
+});
+
+test('membership revoked during a confirmed summary remains an access denial, not a provider failure', async t => {
+  const s = await setup(t, async () => greeting);
+  const active = await s.send(s.ringing, { operation: 'call_answer', callId: s.ringing.call!.id, handledBy: 'aide' });
+  let summaries = 0;
+  s.reasoner.summarizeCall = async () => {
+    summaries++;
+    await s.access.organization.provision({ organizationId: 'synthetic-org', workspaceId: 'synthetic-workspace', actorId: 'driver-a', version: 2, active: false, roles: ['operator', 'reviewer'], updatedAt: '2026-10-15T11:00:01Z' });
+    return { text: 'Synthetic result after revocation', actionItems: [], followups: [] };
+  };
+  await assert.rejects(s.send(active, { operation: 'call_end', callId: active.call!.id }), (error: { status?: number; code?: string }) => error.status === 403 && error.code === 'organization_access_denied');
+  await assert.rejects(s.api.read(s.session)); assert.equal(summaries, 1);
+});
+
 test('Vertex call validation exposes only fixed diagnostic labels and keeps live transports out of offline tests', async () => {
   const options = { projectId: 'synthetic-project', location: 'global', modelId: 'gemini-2.5-flash', principal: 'synthetic-runtime', sessionId: 'synthetic-session', credentials: { async current() { return { accessToken: 'synthetic-token', principal: 'synthetic-runtime', sessionId: 'synthetic-session' }; } } };
   const input = { scenario: 'meeting_reschedule' as const, language: 'en' as const, caller: { name: 'Synthetic caller', relation: 'Fixture' }, goal: 'Synthetic meeting', driverContext: 'Parked; synthetic context', handledBy: 'aide' as const, step: 'summary' as const, turns: [] };

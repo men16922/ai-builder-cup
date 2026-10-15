@@ -9,7 +9,7 @@ Execution status: owner resumed the goal on 15 October evening. Organization-log
 ## Actual native signed-in increment
 
 - Exact APK `34a14f1` passes real Google/Firebase/Firestore sign-in, Gemini proposals/explicit controls and five-place Maps/tiles/photo attribution on API 36 emulator. First summary 400 remained unknown; source `61a32cb` then deployed with unchanged UID/config/six hashes, and a distinct call summarized/saved. Its calendar time and empty message body were wrong; no follow-up was performed. All takes retained; no physical/human-impact claim.
-- `88437ea` readiness/midnight guards are included in deployed `a80225a`; current integration checks and parity are recorded above. Their isolated gate passed 237. A separate one-call real summary qualification received 429/no retry; final live date/body acceptance remains open. Emulator APK changed to a different local build and sign-in entry, so identify artifact/controller before further input. Original invalid field remains unproved. [Review](reviews/2026-10-15-native-live-call-output.md).
+- `88437ea` guards are in deployed `a80225a`. Distinct real-summary qualification hit its 25-second deadline (one transport attempt/no HTTP response); earlier one-call 429 preserved. Final live drafts remain open. This exposed generic 500 versus stored unknown; owned deadline/capacity/transport response/manual fix passes full API 245/browser/axe/hosted/publish, including immediate manual and unchanged 403 after revocation. Deployment pending; identify APK/controller before native input. [Review](reviews/2026-10-15-native-live-call-output.md).
 
 ## Current My Aide submission materials
 

@@ -5,6 +5,7 @@ import '../../apps/web/src/styles.css';
 import { LanguageProvider, LanguageSelector } from '../../apps/web/src/i18n';
 import { MobilityClient } from '../../apps/web/src/mobility/mobility-client';
 import CallCenter from '../../apps/web/src/mobility/CallCenter';
+import ErrorManual from '../../apps/web/src/mobility/ErrorManual';
 
 // Synthetic fixture only. The API still authenticates and checks its private membership.
 const client = new MobilityClient(async (path, input) => {
@@ -21,6 +22,7 @@ function Fixture() {
     <button disabled={board.busy || !board.state} onClick={async () => { await client.command({ operation: 'initialize' }); await client.command({ operation: 'call_incoming', scenario: 'meeting_reschedule', language: 'en' }); }}>Create synthetic call</button>
     <button disabled={board.busy} onClick={() => void client.load()}>Read server record</button>
     <CallCenter client={client}/>
+    <ErrorManual code={board.error} onDismiss={() => client.dismissError()} onRefresh={() => void client.load()}/>
   </main>;
 }
 ReactDOM.createRoot(document.getElementById('root')!).render(<LanguageProvider><Fixture/></LanguageProvider>);

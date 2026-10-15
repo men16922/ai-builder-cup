@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { mobilityCommandSchema, mobilityStateSchema, vehicleDiagnosisSchema, callStepSchema, callDigestSchema, assistPlanSchema, type AssistPlan, type AssistTurn, type CallStep, type CallDigest, type VehicleCall,
   journeySearchSchema, type JourneySearch, type MobilityCommand, type MobilityPlace, type MobilityReport, type MobilityState, type MobilityCase, type VehicleDiagnosis, type SimulatedVehicle } from '@contracts/gcp/mobility';
 import { CloudOperationError } from '@contracts/core/workflow';
+import { CloudAccessError } from '@contracts/core/operations';
 import type { GcpWebAccess, GcpWebSession } from '../auth/web-access';
 import type { CloudStore, CloudTransaction } from '../store/store';
 import { cloudDigest } from '../store/integrity';
@@ -282,9 +283,10 @@ export class GcpMobility {
       });
       // Fresh telemetry remains recorded even when its read-only investigation is uncertain.
       if (command.operation === 'telemetry' && investigates) return this.read(session);
-      // The client request was admitted before this provider/result failure. It is not a
-      // malformed user request, and must retain unknown/no-resend guidance after cleanup.
-      if (callOutput) throw fail(502, 'mobility_outcome_unknown');
+      // Provider/transport failures have already made this admitted call unknown. Report that
+      // immediately, including deadlines/capacity failures; preserve typed authority/conflict
+      // errors so a revoked session still follows the client's access-denial handling.
+      if (callSteps.has(command.operation) && !(error instanceof CloudOperationError) && !(error instanceof CloudAccessError)) throw fail(502, 'mobility_outcome_unknown');
       // A search or an assist proposal changes nothing, so the driver may simply ask again.
       if (!callSteps.has(command.operation) && !investigates) {
         if (providerBusy) throw fail(503, 'mobility_provider_busy');
