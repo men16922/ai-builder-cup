@@ -56,7 +56,7 @@ class MobilityTest {
                 override suspend fun mobilityCommand(body: String, key: String): MobilityState {
                     changes++
                     assertEquals("{\"operation\":\"initialize\"}", body)
-                    throw MobileFailure(Failure.UNAVAILABLE)
+                    throw MobileFailure(Failure.STALE, "mobility_outcome_unknown")
                 }
             }
         val repository = MobileMobility(backgroundScope)
@@ -64,11 +64,13 @@ class MobilityTest {
         runCurrent()
         repository.command(MobilityCommand.Initialize)
         runCurrent()
-        assertEquals(Failure.UNAVAILABLE, repository.state.value.failure)
+        assertEquals(Failure.STALE, repository.state.value.failure)
+        assertEquals("mobility_outcome_unknown", repository.state.value.failureCode)
         repository.refresh()
         runCurrent()
         assertEquals(1, changes)
         assertEquals(2, reads)
+        assertNull(repository.state.value.failureCode)
     }
 
     @Test

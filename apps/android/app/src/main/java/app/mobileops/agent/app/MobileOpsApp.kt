@@ -18,6 +18,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.mobileops.agent.*
 import app.mobileops.agent.app.mobility.JourneyScreen
 import app.mobileops.agent.app.mobility.VehicleAssistance
+import app.mobileops.agent.app.mobility.VehicleFailureDialog
 import app.mobileops.agent.app.mobility.VehicleScreen
 import app.mobileops.agent.app.mobility.VehicleSimulator
 import app.mobileops.agent.app.mobility.VehicleViewModel
@@ -175,6 +176,8 @@ fun MobileOpsApp(
                                 )
                             }
                     }
+                    if (tab < 3)
+                        VehicleFailureDialog(vehicleBoard.failure, vehicleBoard.failureCode)
                     when (tab) {
                         0 -> {
                             VehicleScreen(
@@ -199,12 +202,6 @@ fun MobileOpsApp(
                             return@Column
                         }
                         2 -> {
-                            vehicleBoard.failure?.let {
-                                Notice(
-                                    stringResource(R.string.vehicle_request_attention),
-                                    failureText(it),
-                                )
-                            }
                             VehicleAssistance(vehicleBoard, vehicleModel::command, requestLanguage)
                             vehicleBoard.state?.vehicle?.let { vehicle ->
                                 VehicleSimulator(vehicle, vehicleBoard.busy, vehicleModel::command)

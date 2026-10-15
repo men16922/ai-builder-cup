@@ -9,9 +9,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import app.mobileops.agent.app.Notice
 import app.mobileops.agent.app.R
-import app.mobileops.agent.app.failureText
 import app.mobileops.agent.mobility.*
 
 /** Driver home. All vehicle values are server-persisted simulation, never physical readings. */
@@ -26,9 +24,6 @@ internal fun VehicleScreen(
     val state = board.state
     val vehicle = state?.vehicle
     if (board.busy) LinearProgressIndicator(Modifier.fillMaxWidth())
-    board.failure?.let {
-        Notice(stringResource(R.string.vehicle_request_attention), failureText(it))
-    }
     if (vehicle == null) {
         Image(
             painterResource(R.drawable.aide_ev),

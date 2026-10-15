@@ -6,6 +6,11 @@ Updated: 2026-10-15. Goal: award-ready Aide submission on 18 October. Current ow
 
 Execution status: owner resumed the goal on 15 October evening. Organization-login result is pending; browser control is not exposed in this resumed session, so the current authenticated page is unverified. Historical blocked checks remain recorded separately. Physical phone, real reviewer, paired impact, Korea-capable routing inputs and submission still require owner/external evidence; full goal is incomplete.
 
+## Native request failure guidance
+
+- Native vehicle/map/assistance failures open a modal with KO/EN resource manuals. A bounded machine code is retained separately from the fixed HTTP failure category; ambiguous HTTP 409 now has outcome-unknown guidance instead of stale-state advice. Raw messages are not displayed. Reading/dismissing the manual has no network/command callback.
+- Verified on isolated baseline `82d1320` plus owned Android changes: core 69, app unit 3, emulator manual 1 (all no skips), assembly/lint and formatted source. Actual emulator capture inspected. This source increment is not deployed or verified on a physical phone; concurrent web/call/vehicle work stays separate.
+
 ## Height-aware vehicle home
 
 - Reproduced 1440×723 first-fold failure: battery/range/charging occupied 740–866px, fully below the viewport. Bound the vehicle image by viewport height; the same measurement is 563–689px and all metrics fit. Browser lifecycle/KO/EN/axe checks pass; isolated owned source also passes the complete web/API 206-test gate. Crew/Android source is unchanged.

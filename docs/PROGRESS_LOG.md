@@ -1,5 +1,11 @@
 # Progress log
 
+## 2026-10-15 — Native error manuals preserve uncertain outcomes
+- Changed: a modal explains native request failures and opens resource-based KO/EN next steps. Bounded protocol codes now survive HTTP categorization, so unknown HTTP 409 outcomes do not show stale-state advice. Raw provider messages stay private; the dialog has no command or retry callback.
+- Verified: isolated Android core 69 (including HTTP code/invalid-body/no-resend checks), app unit 3, lint/assembly and emulator manual 1 pass with no skips. Native unknown-result screenshot inspected. Opening, reading and dismissal are presentation only; a new failure reopens the guide.
+- Scope: only owned Android sources copied after unchanged-base comparisons. A separate web prototype passed full web/API and KO/EN/axe/no-request checks but is not integrated because another session owns the web ErrorManual and wider in-car work. No deployment, physical-phone or live-model claim.
+- Next: integrate the concurrent web/in-car candidate, reconcile its exact source/deployment, then phone/reviewer/impact/current demo. Full award-readiness remains incomplete.
+
 ## 2026-10-15 — Vehicle state visible on short desktop screens
 - Reproduced: at 1440×723, battery/range/charging were 740–866px below the first fold. Viewport-height image sizing changes the same measurement to 563–689px; all metrics are visible, with a meaningful first-fold browser assertion.
 - Verified: owned CSS/test and published `5931fa7`/`7e71e72` passed full isolated web/API gate (206 + lifecycle/KO/EN/axe/hosted); published Android app/unit/lint also passed. A separate opt-in native provider test passed (1, no skips): actual SDK load callback, genuine tiles/car/path inspected on API 36 emulator. Default invocation skips provider access; no phone/login/OEM claim. Earlier isolation errors/evidence retained.
@@ -104,16 +110,5 @@
 - Blockers (owner): hand over `mobileops-agent.json`; register the teammate's SHA-1 in Firebase; allow their Google account on the registered service; put `shop-api` in the faulty state before their run. Uncommitted.
 - Next: teammate runs the device checklist in ONBOARDING.md step 7 and records it in `docs/EVALUATION.md`.
 
-## 2026-10-11 — Execution states, single-use approvals, held-out evals, live approval run
-- Status: implemented, deployed (crew `crew:20261011-171831`, gateway `cloudops-auto-00014`); all changes uncommitted since `489eceb`.
-- Changed: five execution states (`refused|pending|applied|failed|unknown`, HTTP 403/202/200/502/504, never resend on unknown); approvals single-use per instance, refused when the service changed after approval or the window exceeds 5 min; Chief instruction rewritten (rollback offered with unconfirmed earlier revision); web state chip and Android state lines; evaluation extended (held-out 6, live finding case); README verification table; docs aligned.
-- Verified: `make check-all` exit 0 (crew 54 tests, gateway, browser flows); Android core test, assemble, lint; live run in the signed-in browser: `/execute` 200, `status=applied`, traffic read back, chip shown; evals 18/18 core and held-out after fixes (held-out first run 13/18, live finding 2/3 then 3/3).
-- Blockers: not seen live: same-approval replay, `pending`/`unknown`; Android reinstall on emulator; physical device. Commit/push needs the owner's request.
-- Next: see `docs/NEXT_PLAN.md`.
-
-## 2026-10-11 — Console redesign, repo restructure, live verification, demo video
-- Status: submission material done except owner actions; drafts for Devpost and Medium committed locally (not pushed).
-- Changed: crew access needs ownership of a registered service (`crew_not_entitled`); one console at `/` with Cloud Console style navigation and a right-hand Agent Chat; repo restructured into `apps/` and `packages/contracts` (Google Cloud only); history rewritten to drop committed caches and a local path; name Aide confirmed; female narration (ElevenLabs) and a two-pane demo video.
-- Verified: `make check-all` (gateway 167, crew 33, browser flows with axe), Android core test, assemble and lint; live web and Android crew runs on the deployed services (signed approval applied, honest report); publish gate passes.
-- Blockers: team registration, video upload and placeholders are owner actions.
-- Next: see `docs/NEXT_PLAN.md`.
+## 2026-10-11 — Earlier implementation and live checks
+- Execution-state/single-use approval work, held-out evaluations, console redesign and original live demo remain historical evidence. [Original entries](archive/progress-2026-10-11.md). Current V2, publication and acceptance status supersede their open-work snapshots.

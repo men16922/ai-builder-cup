@@ -7,9 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import app.mobileops.agent.app.Notice
 import app.mobileops.agent.app.R
-import app.mobileops.agent.app.failureText
 import app.mobileops.agent.mobility.*
 import kotlinx.coroutines.delay
 
@@ -55,9 +53,6 @@ internal fun JourneyScreen(
     }
     Text(stringResource(R.string.vehicle_where_to), style = MaterialTheme.typography.headlineMedium)
     Text(stringResource(R.string.vehicle_trip_intro), style = MaterialTheme.typography.bodyMedium)
-    board.failure?.let {
-        Notice(stringResource(R.string.vehicle_request_attention), failureText(it))
-    }
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         for ((value, label) in
             listOf(

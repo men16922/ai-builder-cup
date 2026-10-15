@@ -61,7 +61,13 @@ class MobileMobility(private val scope: CoroutineScope) : MobilityRepository {
 
     private fun run(running: Boolean, action: suspend () -> MobilityState) {
         val ticket = generation
-        mutableState.value = state.value.copy(busy = true, failure = null, journeyRunning = running)
+        mutableState.value =
+            state.value.copy(
+                busy = true,
+                failure = null,
+                failureCode = null,
+                journeyRunning = running,
+            )
         job = scope.launch {
             try {
                 val result = action().also { it.validate() }
@@ -85,6 +91,7 @@ class MobileMobility(private val scope: CoroutineScope) : MobilityRepository {
                                 if (failure in setOf(Failure.SIGN_IN, Failure.DENIED)) null
                                 else state.value.state,
                             failure = failure,
+                            failureCode = (error as? MobileFailure)?.protocolCode,
                         )
                 }
             }

@@ -352,4 +352,23 @@
     <string name="home_review_response">Review response and authority</string>
     <string name="journey_pause_boundary">Reading or refreshing does not resume movement. Check the current state, then continue or cancel.</string>
     <string name="journey_continue">Continue simulation</string>
+    <string name="mobility_error_manual">View manual</string>
+    <string name="mobility_error_close">Close</string>
+    <string name="mobility_error_next">What you can do</string>
+    <string name="mobility_error_sign_in">Sign out and sign in again to the intended account and workspace. Then read the latest state before making a decision.</string>
+    <string name="mobility_error_access">Check the signed-in account and workspace, then ask the administrator to confirm the required role. Signing certificates alone do not grant workspace access.</string>
+    <string name="mobility_error_changed">Refresh to read the latest state and review what changed. An earlier approval or destination may no longer be valid.</string>
+    <string name="mobility_error_offline">Restore the connection, then refresh to read the result. Do not send the same action again while its outcome is unclear.</string>
+    <string name="mobility_error_unknown">Refresh to read the latest state. If it remains unclear, check with a responder before submitting the same action.</string>
+    <string name="mobility_error_unknown_summary">The request outcome is unconfirmed. It was not resent automatically.</string>
+    <string name="mobility_error_config_summary">Maps or AI is not configured for this workspace.</string>
+    <string name="mobility_error_config">Ask the administrator to check the service configuration. Once it is ready, refresh to check the state.</string>
+    <string name="mobility_error_busy_summary">The server is still processing an earlier request.</string>
+    <string name="mobility_error_busy">Wait, then refresh to read the result. Do not submit the same action again.</string>
+    <string name="mobility_error_quota_summary">The current request allowance has been used.</string>
+    <string name="mobility_error_quota">Make a new request after the allowance recovers. Use Refresh to check the current state.</string>
+    <string name="mobility_error_safety_summary">The current conditions do not permit this action or case approval.</string>
+    <string name="mobility_error_safety">Refresh and check parking, temperature, symptoms and recovery evidence. Review unconfirmed conditions with a person.</string>
+    <string name="mobility_error_empty_summary">The provider returned no matching places for this location and request.</string>
+    <string name="mobility_error_empty">Make the request more specific and search explicitly. No destination was selected and no journey started.</string>
 </resources>

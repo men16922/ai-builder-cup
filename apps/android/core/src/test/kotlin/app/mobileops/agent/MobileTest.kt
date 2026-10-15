@@ -449,6 +449,40 @@ class MobileTest {
     }
 
     @Test
+    fun `bounded protocol code survives HTTP conflict without exposing raw error messages`() =
+        runTest {
+            val fixture = FixtureApi.load("personal")
+            val identity =
+                object : IdentityPort {
+                    override val actorId = fixture.scope.actorId
+
+                    override suspend fun tokenFor(actorId: String) = "synthetic"
+                }
+            var payload =
+                """{"code":"mobility_outcome_unknown","message":"private provider observation"}"""
+            val client =
+                GcpMobileClient(
+                    "https://mobile.example",
+                    fixture.scope,
+                    identity,
+                    HttpPort { _, _, _ -> HttpReply(409, "application/json", payload) },
+                )
+            val error = assertFailsWith<MobileFailure> { client.mobility() }
+            assertEquals(Failure.STALE, error.reason)
+            assertEquals("mobility_outcome_unknown", error.protocolCode)
+            assertFalse(error.toString().contains("private"))
+            for (body in
+                listOf(
+                    "not json",
+                    """{"code":"private provider observation"}""",
+                    " ".repeat(4097),
+                )) {
+                payload = body
+                assertNull(assertFailsWith<MobileFailure> { client.mobility() }.protocolCode)
+            }
+        }
+
+    @Test
     fun `transport never forwards bearer through redirects or emits raw error data`() = runTest {
         var forwarded = 0
         val target =

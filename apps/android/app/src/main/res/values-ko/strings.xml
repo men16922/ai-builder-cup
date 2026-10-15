@@ -352,4 +352,23 @@
     <string name="home_review_response">대응과 권한 확인</string>
     <string name="journey_pause_boundary">읽기·새로고침 후에는 자동으로 이동을 이어가지 않습니다. 현재 상태를 확인하고 계속하거나 취소하세요.</string>
     <string name="journey_continue">시뮬레이션 계속</string>
+    <string name="mobility_error_manual">설명서 보기</string>
+    <string name="mobility_error_close">닫기</string>
+    <string name="mobility_error_next">다음에 할 일</string>
+    <string name="mobility_error_sign_in">올바른 계정과 공간으로 다시 로그인하세요. 최신 상태를 읽고 나서 결정하세요.</string>
+    <string name="mobility_error_access">로그인한 계정과 공간을 확인한 뒤 관리자에게 필요한 역할을 문의하세요. 서명 인증서 등록만으로 업무 권한이 생기지는 않습니다.</string>
+    <string name="mobility_error_changed">새로고침으로 최신 상태를 읽고 바뀐 내용을 검토하세요. 앞선 승인이나 목적지는 더 이상 유효하지 않을 수 있습니다.</string>
+    <string name="mobility_error_offline">연결을 복구한 뒤 새로고침으로 결과를 읽으세요. 결과가 불명확한 동안 같은 조치를 다시 보내지 마세요.</string>
+    <string name="mobility_error_unknown">새로고침으로 최신 상태를 읽으세요. 계속 불명확하면 같은 조치를 다시 보내기 전에 담당자와 확인하세요.</string>
+    <string name="mobility_error_unknown_summary">요청 결과를 확인하지 못했습니다. 자동으로 다시 보내지 않았습니다.</string>
+    <string name="mobility_error_config_summary">이 공간의 지도 또는 AI 연결이 준비되지 않았습니다.</string>
+    <string name="mobility_error_config">관리자에게 연결 설정을 확인해 달라고 요청하세요. 설정 후 새로고침으로 상태를 확인하세요.</string>
+    <string name="mobility_error_busy_summary">서버가 앞선 요청을 처리 중입니다.</string>
+    <string name="mobility_error_busy">잠시 기다린 뒤 새로고침으로 결과만 확인하세요. 같은 조치를 다시 제출하지 마세요.</string>
+    <string name="mobility_error_quota_summary">현재 허용된 요청 횟수를 사용했습니다.</string>
+    <string name="mobility_error_quota">사용 한도가 회복된 뒤 직접 요청하세요. 상태 확인에는 새로고침을 사용하세요.</string>
+    <string name="mobility_error_safety_summary">현재 상태에서는 이 조치나 사례 승인을 허용할 수 없습니다.</string>
+    <string name="mobility_error_safety">새로고침한 뒤 정차·온도·증상과 복구 근거를 확인하세요. 확인되지 않은 조건은 사람과 검토하세요.</string>
+    <string name="mobility_error_empty_summary">지도 제공자가 현재 위치와 요청에 맞는 장소를 반환하지 않았습니다.</string>
+    <string name="mobility_error_empty">요청을 더 구체적으로 바꾸어 직접 검색하세요. 아직 목적지를 선택하거나 이동을 시작하지 않았습니다.</string>
 </resources>

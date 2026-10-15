@@ -22,7 +22,7 @@ enum class Failure {
     UNAVAILABLE,
 }
 
-class MobileFailure(val reason: Failure) : Exception(reason.name)
+class MobileFailure(val reason: Failure, val protocolCode: String? = null) : Exception(reason.name)
 
 /** Implemented by Firebase ID-token identity in a configured build. No credentials in DTO/state. */
 interface IdentityPort {
@@ -247,6 +247,21 @@ class GcpMobileClient(
                     410 -> Failure.STALE
                     else -> Failure.UNAVAILABLE
                 },
+                // A bounded machine code selects local guidance; raw server messages stay private.
+                if (
+                    reply.contentType?.substringBefore(';')?.trim() == "application/json" &&
+                        reply.body.length <= 4096
+                )
+                    runCatching {
+                        wireJson
+                            .parseToJsonElement(reply.body)
+                            .jsonObject["code"]
+                            ?.jsonPrimitive
+                            ?.content
+                            ?.takeIf { it.matches(Regex("[a-z_]{1,64}")) }
+                    }
+                        .getOrNull()
+                else null,
             )
         if (
             reply.contentType?.substringBefore(';')?.trim() != "application/json" ||

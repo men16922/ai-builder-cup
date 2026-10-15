@@ -28,6 +28,8 @@ Done when: no user-visible "crew"/"Agent crew"/"Ask the crew" remains in KO or E
 Remove the "When something goes wrong" card. A failed or unknown request opens a dialog with a short message and **View manual** (설명서 보기), which shows the explanation and next step for that error code (vehicle changed, maps not configured, outcome unknown, in progress, access denied, …). Unknown codes fall back to a generic, honest message. The dialog never retries automatically.
 Done when: each mapped code has KO/EN manual text and a browser test opens one.
 
+Native increment: resource manuals and bounded protocol-code forwarding are implemented; unknown HTTP 409 has explicit no-resend guidance. Core 69, app 3, emulator manual 1 and lint/assembly pass on the owned isolated source. Web ErrorManual/in-car work is concurrently owned and remains a separate integration/deployment check.
+
 ### C. Place photos and markers (15–16 Oct)
 
 Every map search result shows a Google Maps (Places) photo with the required author attribution, and each result gets a numbered marker on the map that matches its card. Missing photos show a neutral placeholder, never a substitute image. Photo requests use the restricted browser/Android key or a bounded server proxy; no key reaches the model.
