@@ -1,8 +1,8 @@
 # Aide
 
-> **Less friction for the driver. Less incident work for the responder.**
+> **Your day, handled. Ask your own Aide.**
 
-Aide combines a vehicle companion with an accountable Google Cloud response crew. Drivers see simulated EV battery, charging and location, ask Gemini to find real nearby places through official Google Maps MCP, and resolve charging interruptions through bounded assistance. Responders investigate registered Cloud Run services through private ADK/A2A agents and review risky cloud changes explicitly.
+Aide gives drivers a personal aide and responders an accountable Google Cloud crew. Ask in your own words, review proposed vehicle actions, discover real places, or let My Aide handle a fictional call and prepare follow-up drafts. A separate ADK/A2A crew investigates registered Cloud Run services and escalates real change decisions. Vehicle/call simulation and cloud operations retain independent data and authority.
 
 Vehicle and driving control are **simulated**. Known approved charging cases can act once under a current bounded policy; unfamiliar symptoms need guided human resolution and separate case approval. That vehicle policy grants no authority over real Cloud Run services.
 
@@ -14,6 +14,8 @@ Built for the AI Builder Cup 2026, theme *Future of Work & Enterprise Productivi
 2. Find a charger, dinner or a nearby place. Gemini plans a bounded query; Maps MCP supplies source-linked places. Choose the first destination. A Favorite or matching seven-day remembered choice may handle a later request. Movement is visibly straight-line simulation with cancellation.
 3. When an unfamiliar charging-link symptom arrives, review five current safety checks and authorize one existing typed simulated reconnection. Actual simulator read-back creates a candidate; separate reviewer promotion neither runs a remedy nor enables autonomy.
 4. An active seven-day case and explicitly enabled 24-hour policy can handle a fresh matching incident once, then report. Different/unsafe evidence, expiry or an unknown provider outcome escalates. Disable or revoke anytime.
+5. Ask "Cool the car to 20 before I leave." Gemini proposes; each server-validated tap acts on the simulated vehicle. Lock, climate, charge limit, lights and horn have focused controls.
+6. My Aide can answer a fictional caller, summarize the conversation and prepare message/calendar drafts. A completion tap is simulated; no real dialing, delivery or calendar write occurs. Missing content, recipient or future schedule cannot become a completed follow-up. Final live draft qualification remains open.
 
 ## For cloud responders
 
@@ -32,12 +34,13 @@ Android app (Compose Material 3)        Web console (Material Web, Cloud Console
         │   chat · approval cards             dashboard · Gemini-style assistant panel
         ▼
 Gateway  (TypeScript, Cloud Run)  Firebase identity · owner/workspace/role checks · task store (Firestore)
-        │   A2A JSON-RPC streaming, Cloud Run identity tokens
-        ▼
-Chief agent  (Python, ADK 2.11, Gemini)
-        ├── A2A ──► Ops agent        reads Cloud Run / Monitoring / Logging; /execute applies a signed, approved rollback
-        ├── A2A ──► Diagnosis agent  evidence → hypotheses, unknowns, next step
-        └── A2A ──► Guardian agent   allow / require_human / refuse (policy table)
+        ├── Driver: Gemini proposals/calls + Google Maps MCP + actor-private simulated vehicle
+        │
+        └── Responder: A2A JSON-RPC streaming, Cloud Run identity tokens
+              Chief agent  (Python, ADK 2.11, Gemini)
+                ├── A2A → Ops        reads registered evidence; redeems an approved typed rollback
+                ├── A2A → Diagnosis  hypotheses, unknowns, next step
+                └── A2A → Guardian   allow / require_human / refuse (policy outside the model)
 ```
 
 Every agent is its own private Cloud Run service with its own least-privilege service account. See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
@@ -98,9 +101,10 @@ How to build and deploy is in [docs/DEPLOY.md](docs/DEPLOY.md). Real identifiers
 | Area | State |
 | --- | --- |
 | Web console and crew on the deployed Cloud Run services: read, propose, signed approval, rollback, report | Run live on 2026-10-10 and 2026-10-11 (recorded in `docs/STATUS.md`) |
-| Execution states and V2 reviewed-state/durable claim protocol | Historical V1 applied/read-back run on 11 October. 15 October final local gateway 206 / crew 97; Android core 68, app 3 / emulator 7, APK/lint. Compatible V2 is deployed; invalid capability/Origin refused. Isolated live Firestore claim contention passes; actual human-approved V2 mutation and real etag conflict remain unverified. See `docs/APPROVALS.md` |
+| Execution states and V2 reviewed-state/durable claim protocol | Historical V1 applied/read-back on 11 October; compatible V2 deployed with negative broker probes and isolated Firestore claim contention. Actual human-approved V2 mutation and real conflict remain unverified. Current source/evidence scopes are in `docs/STATUS.md` and `docs/APPROVALS.md` |
 | Chief restarted while an approval is pending | Run live on 2026-10-12: the task ended as `unknown`, nothing was sent or retried, traffic unchanged (`docs/EVALUATION.md`) |
-| Android on an emulator against the deployed services | Run on 2026-10-11 |
+| Android on an emulator against the deployed services | 11 October crew flow; 15 October APK `34a14f1` real sign-in/Ask/controls/Maps and later call summary/save. Original failure/wrong drafts retained; final corrected draft acceptance open |
+| Latest integrated gateway | Public/deployed `a80225a` includes readiness/time guards and busy/range guidance. Fresh API 240/browser/axe/hosted/publish, native core 74/app 3, assembly/lint/format pass. Same UID/config, latest 100%, six current build hashes match; not remote CI |
 | Android on a physical device | Not verified |
 | Push notifications | Implemented, off in the deployment, no real FCM send verified |
 | Signed-out page | Clean mobility welcome and Google sign-in; no synthetic rehearsal or private reads |
@@ -110,6 +114,7 @@ How to build and deploy is in [docs/DEPLOY.md](docs/DEPLOY.md). Real identifiers
 
 ## Current limits
 
+- One separate post-fix real Gemini summary qualification received 429 after one call, with no retry. Final date/body acceptance is not proved. The emulator was subsequently on a different local APK; identify its artifact/controller before new UI tests. Private raw recordings are not a final public demo. See `docs/reviews/2026-10-15-native-live-call-output.md`.
 - The Android crew screen (instruction, progress, approval, report) is covered by unit tests against the real wire format, and on 2026-10-11 was driven on an emulator against the deployed services (Google sign-in, a task opened from the server, a signed approval applied, an honest report). It has not run on a physical device.
 - Push notifications are implemented on the server and in the app but are off in the deployed demo.
 - ADK's A2A support is marked experimental by Google.

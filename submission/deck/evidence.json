@@ -3,18 +3,18 @@
   "theme": "Future of Work & Enterprise Productivity",
   "source": {
     "android": "34a14f1",
-    "deployedWeb": "1742cfe"
+    "deployedWeb": "a80225a"
   },
   "local": {
-    "api": 225,
+    "api": 240,
     "androidCore": 74,
     "androidApp": 3,
     "emulatorPassed": 20,
     "emulatorMapsSkipped": 1
   },
   "separateProviders": {
-    "nativeMaps": "SDK load and settled product frame inspected on emulator; public synthetic coordinates",
-    "gemini": "One real provider call through a local synthetic-identity service retained Stop while pending",
+    "nativeMaps": "Actual signed-in API 36 emulator at APK 34a14f1: Firebase/Firestore, Ask, five places, native tiles and a photo with attribution",
+    "gemini": "Native real turns/summary/save separately recorded; later call-draft provider qualification refused with HTTP 429 after one call, no retry",
     "places": "One direct provider flow returned five places with five attributed photos"
   },
   "deployment": {
@@ -26,13 +26,15 @@
   "limits": [
     "No measured human productivity or MTTR improvement",
     "No physical-phone result",
-    "Current signed-in deployed walkthrough incomplete",
+    "Current web walkthrough and final native complete-draft qualification incomplete",
     "Actual V2 human approval/conflict incomplete",
     "Vehicle, driving, callers and follow-ups simulated",
     "Seoul road-route geometry unavailable in tested provider controls",
     "First recurrence unknown and independent provider 429 preserved",
     "Original held-out first run 13/18 uses a different fixture protocol",
-    "Eligibility and final submission receipt remain owner checks"
+    "Eligibility and final submission receipt remain owner checks",
+    "Native APK was replaced during concurrent work; identify the installed artifact before the next UI test",
+    "Successful native summary exposed wrong time/empty body; local guards pass, latest live draft qualification remains unconfirmed"
   ],
-  "review": "docs/reviews/2026-10-15-call-safety.md"
+  "review": "docs/reviews/2026-10-15-native-live-call-output.md"
 }

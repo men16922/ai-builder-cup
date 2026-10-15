@@ -2,14 +2,14 @@
 
 Updated: 2026-10-15. Goal: award-ready Aide submission on 18 October. Current owner scope: `docs/plans/2026-10-14-mobility-product.md`; rubric/evidence criteria: `docs/plans/2026-10-14-award-readiness.md`. Open work: `docs/NEXT_PLAN.md`.
 
-15 October Git shipping: owner explicitly authorized commit/push. Current refs (`git log -1`, `git ls-remote`) supersede historical uncommitted/remote-SHA descriptions below; source-publication proof is distinct from deployment/CI/submission. Fresh web/API gate 225 passes; separately recorded unchanged crew 97 and native core 74/app 3 remain scoped as below. Private handoff and held-back exports are documented in REMOTE_HANDOFF. Older entries retain their original verification scope; newer sections supersede them.
+15 October Git shipping: owner authorized commit/push. Current refs (`git log -1`, `git ls-remote`) supersede historical snapshots; publication differs from deployment/CI/submission. Fresh `a80225a` web/API 240/browser/axe/hosted/publish, native core 74/app 3, assembly/lint/format pass. Crew 97 and emulator results remain separately recorded. Fresh runtime read: same UID/config, latest 100%, six current build hashes match. REMOTE_HANDOFF covers private inputs/held-back exports; older entries retain their original scope.
 
 Execution status: owner resumed the goal on 15 October evening. Organization-login result is pending; browser control is not exposed in this resumed session, so the current authenticated page is unverified. Historical blocked checks remain recorded separately. Physical phone, real reviewer, paired impact, Korea-capable routing inputs and submission still require owner/external evidence; full goal is incomplete.
 
 ## Actual native signed-in increment
 
 - Exact APK `34a14f1` passes real Google/Firebase/Firestore sign-in, Gemini proposals/explicit controls and five-place Maps/tiles/photo attribution on API 36 emulator. First summary 400 remained unknown; source `61a32cb` then deployed with unchanged UID/config/six hashes, and a distinct call summarized/saved. Its calendar time and empty message body were wrong; no follow-up was performed. All takes retained; no physical/human-impact claim.
-- Reviewed local increment preserves the concurrent KST resolver, anchors relative days before model work and refuses incomplete/expired draft completion. Incomplete and midnight red→green regressions plus full isolated web/API 237/browser/axe/hosted/publish pass, as do root typecheck/publish. New generation fields require useful body/recipient and agreed schedule; no invented fallback. Ship/deploy/new-call qualification remains next; original invalid field is unproved. [Review](reviews/2026-10-15-native-live-call-output.md).
+- `88437ea` readiness/midnight guards are included in deployed `a80225a`; current integration checks and parity are recorded above. Their isolated gate passed 237. A separate one-call real summary qualification received 429/no retry; final live date/body acceptance remains open. Emulator APK changed to a different local build and sign-in entry, so identify artifact/controller before further input. Original invalid field remains unproved. [Review](reviews/2026-10-15-native-live-call-output.md).
 
 ## Current My Aide submission materials
 

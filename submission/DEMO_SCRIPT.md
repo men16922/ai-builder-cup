@@ -1,6 +1,6 @@
 # Current My Aide recording script - target 2:45, limit under 3:00
 
-This is a recording plan, not proof that the take exists. Use the deployed product in English. Web source is `1742cfe`; the matching private Android candidate is `34a14f1` (the follow-up changes web contrast only). Check the installed artifact and deployed origin before recording. The earlier charging-only actual video and narrated slide video remain historical artifacts.
+This is a recording plan, not proof that the take exists. Use the deployed product in English. Gateway source is `a80225a`, including the `88437ea` draft guards; APK `34a14f1` has earlier actual emulator evidence, but the device was later replaced with a different local build. Identify the intended installed artifact/controller before recording. Verify the final date/body flow after provider availability changes: the first post-fix separate qualification received 429/no retry. Earlier charging-only, narrated-slide and raw native takes remain historical/private evidence.
 
 ## Story and timing
 

@@ -10,11 +10,11 @@ Owner authorized this commit/push on 15 October; verify current Git refs rather 
 
 ## Current priority: My Aide in-car direction (owner, 15 October)
 
-`docs/plans/2026-10-15-my-aide-in-car.md` is the implementation pointer. Integrated features and delayed-call safety are public/deployed at runtime `34a14f1` plus web-only contrast `1742cfe`; the matching private APK is prepared. Remaining priority is actual signed-in/physical acceptance and recording, not another feature sampler.
+`docs/plans/2026-10-15-my-aide-in-car.md` is the implementation pointer. Gateway `a80225a` includes draft readiness/time guards, AI-busy guidance and out-of-range place handling; same UID/config and six assets match. Earlier actual native evidence is bound to private APK `34a14f1`. Remaining priority is current signed-in/physical acceptance and recording.
 
 ## Final access checks and judging assets
 
-Current engineering next step: ship/deploy reviewed draft-readiness/midnight guards, then one distinct native call. Classification `61a32cb` is deployed; actual login/Ask/Maps and a new call summary/save pass, but its calendar time/empty body are wrong and were not completed. Concurrent KST conversion is preserved; isolated full web/API 237 validates the additive guard and pre-model reference. See `docs/reviews/2026-10-15-native-live-call-output.md`. Preserve the first failed summary/unknown and do not infer its invalid field. A held-vehicle/input reproduction precedes dispatch changes.
+Current engineering next step: identify the intended APK/controller (device changed to a different local build and sign-in), then one distinct native draft check after provider availability changes. Deployed `a80225a` includes `88437ea` guards; fresh full API 240/browser/hosted and native core/app/build/lint/format pass. Actual old-APK login/Ask/Maps and later call summary/save exposed wrong time/empty body; one separate post-fix Gemini qualification received 429/no retry. See `docs/reviews/2026-10-15-native-live-call-output.md`. Preserve first outcomes; original invalid field and held-vehicle/input cause remain unproved.
 
 Follow-up: complete the retained organization login manually before the current deployed read-only Chief check. Two automated organization re-logins ended popup-closed before any crew instruction; root cause remains unproven. Personal-domain login/inspection remains separately verified.
 
