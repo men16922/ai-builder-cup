@@ -119,9 +119,9 @@
     <string name="ui_the_record_changed_or_expired" formatted="false">"The record changed or expired."</string>
     <string name="ui_the_response_does_not_match_the_expected" formatted="false">"The response does not match the expected target."</string>
     <string name="ui_the_request_could_not_be_confirmed_read" formatted="false">"The request could not be confirmed. Read the latest record first."</string>
-    <string name="ui_agent_crew" formatted="false">"Agent crew"</string>
-    <string name="ui_say_it_in_one_sentence_the_crew" formatted="false">"Say it in one sentence. The crew investigates and diagnoses and only asks you for the big decisions."</string>
-    <string name="ui_ask_the_crew" formatted="false">"Ask the crew"</string>
+    <string name="ui_agent_crew" formatted="false">"My Aide"</string>
+    <string name="ui_say_it_in_one_sentence_the_crew" formatted="false">"Say it in one sentence. My Aide works with its specialist team to investigate and diagnose, and only asks you for the big decisions."</string>
+    <string name="ui_ask_the_crew" formatted="false">"Ask your own Aide"</string>
     <string name="ui_check_shop_api_and_summarize_its_health" formatted="false">"Check shop-api and summarize its health."</string>
     <string name="ui_send" formatted="false">"Send"</string>
     <string name="ui_needs_a_look" formatted="false">"Needs a look"</string>
@@ -296,7 +296,7 @@
     <string name="vehicle_tab" formatted="false">"My vehicle"</string>
     <string name="journey_tab" formatted="false">"Charging &amp; map"</string>
     <string name="assistance_tab" formatted="false">"Aide help"</string>
-    <string name="operations_tab" formatted="false">"Operations"</string>
+    <string name="operations_tab" formatted="false">"My Aide"</string>
     <string name="vehicle_map_position">Simulated vehicle position</string>
     <string name="vehicle_map_destination">Destination</string>
     <string name="vehicle_drive_live">DRIVING</string>

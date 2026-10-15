@@ -27,7 +27,7 @@ function Frame({ href, children, slots, assistantOpen, setAssistantOpen, setDraf
     small.addEventListener('change', update); large.addEventListener('change', update); return () => { small.removeEventListener('change', update); large.removeEventListener('change', update); };
   }, []);
   useEffect(() => { const key = (event: KeyboardEvent) => { if (event.key === '/' && !(event.target instanceof HTMLElement && /^(INPUT|TEXTAREA|SELECT)$/.test(event.target.tagName) || (event.target as HTMLElement | null)?.isContentEditable)) { event.preventDefault(); ask.current?.focus(); } }; window.addEventListener('keydown', key); return () => window.removeEventListener('keydown', key); }, []);
-  const nav = slots.nav, assistantLabel = slots.assistantLabel ?? 'Gemini';
+  const nav = slots.nav, assistantLabel = slots.assistantLabel ?? 'My Aide';
   const submit = (event: FormEvent) => { event.preventDefault(); if (!slots.assistant) return; setDraft(ask.current?.value.trim() ?? ''); if (ask.current) ask.current.value = ''; setAssistantOpen(true); };
   const pick = (item: NavItem) => { if (item.action) setAssistantOpen(true); else nav?.onSelect(item.id); setDrawer(false); };
   const compact = rail && !mobile;
@@ -65,7 +65,7 @@ function Frame({ href, children, slots, assistantOpen, setAssistantOpen, setDraf
         <a href={href} className="ops-brand" aria-label={t(`${productName} 홈`, `${productName} home`)}><img src="/mark.svg" alt="" /><span>{productName}</span></a>
       </nav>
       {slots.assistant ? <form className="ops-askbar" role="search" onSubmit={submit}>
-        <Icon name="sparkle" size={18} /><input ref={ask} type="text" maxLength={300} aria-label={t('에이전트에게 지시', 'Ask the crew')} placeholder={t('에이전트에게 지시하세요 — 예: shop-api 점검해 줘', 'Ask the crew — e.g. check shop-api')} /><kbd aria-hidden="true">/</kbd>
+        <Icon name="sparkle" size={18} /><input ref={ask} type="text" maxLength={300} aria-label={t('나만의 Aide에게 부탁하세요', 'Ask your own Aide')} placeholder={t('나만의 Aide에게 부탁하세요 — 예: shop-api 점검해 줘', 'Ask your own Aide — e.g. check shop-api')} /><kbd aria-hidden="true">/</kbd>
       </form> : <span className="ops-bar-spacer" />}
       <div className="ops-bar-right">
         {slots.assistant && mobile ? <button type="button" className="ops-gemini-button" aria-label={geminiLabel} aria-pressed={assistantOpen} onClick={() => setAssistantOpen(!assistantOpen)}>{gemini}</button> : null}
@@ -79,11 +79,11 @@ function Frame({ href, children, slots, assistantOpen, setAssistantOpen, setDraf
     <div className="ops-body">
       {mobile || !nav ? null : <aside className="ops-sidebar">{navigation}</aside>}
       <main className="ops-main"><div className="module-content">{children}</div></main>
-      {showAssistant ? <aside className="ops-assistant" aria-label={t('에이전트 패널', 'Crew assistant')}>
+      {showAssistant ? <aside className="ops-assistant" aria-label={t('My Aide 패널', 'My Aide panel')}>
         <div className="ops-assistant-head"><Icon name="sparkle" size={20} /><strong>{assistantLabel}</strong><span className="ops-flex" /><IconButton icon="close" label={t('에이전트 패널 닫기', 'Close the assistant')} onClick={() => setAssistantOpen(false)} /></div>
         <div className="ops-assistant-body">{slots.assistant}</div>
       </aside> : null}
-      {slots.assistant && !mobile ? <aside className="ops-side-rail" aria-label={t('에이전트 도구', 'Agent tools')}>
+      {slots.assistant && !mobile ? <aside className="ops-side-rail" aria-label={t('My Aide 도구', 'My Aide tools')}>
         <button type="button" className="ops-side-button" aria-pressed={assistantOpen} aria-label={t(`${assistantLabel}에게 묻기`, `Ask ${assistantLabel}`)} title={t(`${assistantLabel}에게 묻기`, `Ask ${assistantLabel}`)} onClick={() => setAssistantOpen(!assistantOpen)}>
           <Icon name="sparkle" size={24} />{slots.pendingDecisions ? <span className="ops-badge ops-badge-inline" aria-hidden="true">{slots.pendingDecisions}</span> : null}
         </button>

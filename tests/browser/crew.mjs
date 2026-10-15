@@ -83,7 +83,7 @@ try {
   await expect(page.getByRole('heading',{name:'One step ahead of your journey.'})).toBeVisible();
   const navigation = page.getByRole('navigation', { name: 'Main navigation' });
   await expect(navigation).toHaveCount(0);
-  await expect(page.getByRole('complementary', { name: 'Agent tools' })).toHaveCount(0);
+  await expect(page.getByRole('complementary', { name: 'My Aide tools' })).toHaveCount(0);
   await expect(page.getByRole('img', { name: 'Google Cloud' })).toHaveCount(0);
   await page.screenshot({ path: join(directory, 'console-signed-out.png'), fullPage: true });
   await page.getByRole('button', { name: 'Continue with Google', exact: true }).click();
@@ -98,12 +98,12 @@ try {
   await expect(kpis.getByRole('group', { name: 'Serving revision' })).toContainText('shop-api-bad');
   await expect(page.getByRole('img', { name: 'shop-api-bad 100%' })).toBeVisible();
   await expect(page.getByText('checkout failed: payment gateway timeout after 5000ms')).toBeVisible();
-  await expect(page.getByLabel('Crew assistant')).toHaveCount(0);
+  await expect(page.getByLabel('My Aide panel')).toHaveCount(0);
   await page.screenshot({ path: join(directory, 'console-dashboard.png'), fullPage: true });
   // An instruction typed into the top bar opens the assistant and is sent at once.
-  await page.getByRole('textbox', { name: 'Ask the crew' }).first().fill('Customers report that shop-api checkout is failing. Investigate and handle it.');
+  await page.getByRole('textbox', { name: 'Ask your own Aide' }).first().fill('Customers report that shop-api checkout is failing. Investigate and handle it.');
   await page.keyboard.press('Enter');
-  const assistant = page.getByRole('complementary', { name: 'Crew assistant' });
+  const assistant = page.getByRole('complementary', { name: 'My Aide panel' });
   await expect(assistant).toBeVisible();
   await expect(assistant.getByText('Customers report that shop-api checkout is failing. Investigate and handle it.')).toBeVisible();
   await expect(assistant.getByText('shop-api-bad has a 55% 5xx rate and p95 1.3 s; shop-api-good had 0 errors.')).toBeVisible();
@@ -125,8 +125,8 @@ try {
   // Collapsing the navigation to a rail and closing/reopening the assistant keep the page usable.
   await page.getByRole('button', { name: 'Collapse navigation' }).click();
   await assistant.getByRole('button', { name: 'Close the assistant' }).click(); await expect(assistant).toHaveCount(0);
-  await page.getByRole('button', { name: 'Ask Gemini' }).click(); await expect(assistant).toBeVisible();
-  await page.getByRole('button', { name: 'Ask Gemini' }).click(); await expect(assistant).toHaveCount(0);
+  await page.getByRole('button', { name: 'Ask My Aide' }).click(); await expect(assistant).toBeVisible();
+  await page.getByRole('button', { name: 'Ask My Aide' }).click(); await expect(assistant).toHaveCount(0);
   await page.getByRole('button', { name: 'Expand navigation' }).click();
   // Navigation entries change the page; the agent entries open the right-hand panel instead.
   await navigation.getByRole('button', { name: 'Plans', exact: true }).click(); await expect(page.getByText('No plan is open')).toBeVisible();

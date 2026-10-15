@@ -66,7 +66,7 @@ export default function Dashboard({ client, agents, onOpenPlans }: { client: Ove
         {overview.data ? <span className="ops-caption" aria-live="polite">{t('갱신', 'Updated')} {clock(overview.data.generatedAt)}</span> : null}
         <Button icon="refresh" loading={overview.loading} onClick={() => void overview.refresh()}>{t('새로고침', 'Refresh')}</Button></div></header>
     {overview.error ? <Banner type="error" action={<Button onClick={() => void overview.refresh()}>{t('다시 시도', 'Try again')}</Button>}>{overview.error === 'overview_not_configured' ? t('대시보드에 등록된 서비스가 없습니다.', 'No services are registered for the dashboard.') : t('개요를 읽지 못했습니다. 이전 값이 있으면 그대로 표시합니다.', 'The overview could not be read. Earlier values stay on screen if there are any.')}</Banner> : null}
-    {pending.length ? <Banner type="warning" header={t(`결정 ${pending.length}건이 기다리고 있습니다`, `${pending.length} decision${pending.length > 1 ? 's are' : ' is'} waiting for you`)} action={<Button variant="filled" onClick={() => consoleContext?.setAssistantOpen(true)}>{t('에이전트에서 검토', 'Review with the crew')}</Button>}>
+    {pending.length ? <Banner type="warning" header={t(`결정 ${pending.length}건이 기다리고 있습니다`, `${pending.length} decision${pending.length > 1 ? 's are' : ' is'} waiting for you`)} action={<Button variant="filled" onClick={() => consoleContext?.setAssistantOpen(true)}>{t('My Aide와 검토', 'Review with My Aide')}</Button>}>
       {pending[0].approval ? t(`${pending[0].approval.action.service}의 트래픽을 ${pending[0].approval.action.revision}으로 되돌리자는 제안입니다.`, `Proposal: send ${pending[0].approval.action.service} traffic back to ${pending[0].approval.action.revision}.`) : ''}</Banner> : null}
     {!service ? (overview.loading ? <p className="ops-caption" role="status">{t('불러오는 중…', 'Loading…')}</p> : null) : <>
       <section className="ops-kpis" aria-label={t('핵심 지표', 'Key metrics')}>
@@ -74,7 +74,7 @@ export default function Dashboard({ client, agents, onOpenPlans }: { client: Ove
         <Kpi label={t('5xx 오류율', '5xx error rate')} tone={rateTone} value={stats?.rate === undefined ? '—' : `${stats.rate.toFixed(1)}%`} caption={stats?.rate === undefined ? noMetrics : t(`트래픽을 받는 리비전 ${number(stats.liveTotal)}건 중 ${number(stats.errors)}건`, `${number(stats.errors)} of ${number(stats.liveTotal)} on the serving revision`)} />
         <Kpi label={t('p95 지연', 'p95 latency')} tone={stats?.p95 === undefined ? 'info' : stats.p95 > 1000 ? 'bad' : stats.p95 > 300 ? 'warn' : 'ok'} value={stats?.p95 === undefined ? '—' : `${number(Math.round(stats.p95))} ms`} caption={stats?.p95 === undefined ? noMetrics : t('트래픽을 받는 리비전 기준', 'For the revision serving traffic')} />
         <Kpi label={t('트래픽 받는 리비전', 'Serving revision')} value={stats?.serving.map(item => item.name).join(', ') || '—'} caption={service.coverage.service === 'ok' ? t(`리비전 ${service.revisions.length}개 배포됨`, `${service.revisions.length} revisions deployed`) : t('서비스 상태를 읽지 못했습니다', 'Service state unavailable')} />
-        <Kpi label={t('내 결정 대기', 'Waiting for you')} tone={pending.length ? 'warn' : 'ok'} value={String(pending.length)} caption={pending.length ? t('눌러서 에이전트 패널 열기', 'Open the assistant to decide') : t('지금은 없습니다', 'Nothing right now')} onClick={pending.length ? () => consoleContext?.setAssistantOpen(true) : undefined} />
+        <Kpi label={t('내 결정 대기', 'Waiting for you')} tone={pending.length ? 'warn' : 'ok'} value={String(pending.length)} caption={pending.length ? t('눌러서 My Aide 열기', 'Open My Aide to decide') : t('지금은 없습니다', 'Nothing right now')} onClick={pending.length ? () => consoleContext?.setAssistantOpen(true) : undefined} />
       </section>
       <div className="ops-grid-2">
         <Card title={t('트래픽 분배', 'Traffic split')} description={service.name}><Stack>
@@ -93,7 +93,7 @@ export default function Dashboard({ client, agents, onOpenPlans }: { client: Ove
             <div className="ops-barrow-track"><div className="ops-latency" role="img" aria-label={`${item.revision}: ${Math.round(item.p95Ms)} ms`} style={{ width: `${Math.max(2, item.p95Ms / stats.maxLatency * 100)}%`, background: item.p95Ms > 1000 ? 'var(--md-sys-color-error)' : item.p95Ms > 300 ? 'var(--md-sys-color-warning)' : 'var(--md-sys-color-success)' }} /></div></div>) : <p className="ops-caption">{noMetrics}</p>}
           <p className="ops-caption">{t('분·응답 코드별 p95가 아니라 15분 구간의 리비전별 p95 근삿값입니다.', 'An approximate p95 per revision over the 15-minute window.')}</p>
         </Stack></Card>
-        <Card title={t('에이전트 활동', 'Crew activity')} actions={<Button variant="text" onClick={() => consoleContext?.setAssistantOpen(true)}>{t('패널 열기', 'Open the assistant')}</Button>}>
+        <Card title={t('My Aide 활동', 'My Aide activity')} actions={<Button variant="text" onClick={() => consoleContext?.setAssistantOpen(true)}>{t('패널 열기', 'Open the assistant')}</Button>}>
           {board.items.length ? <ul className="ops-activity">{board.items.slice(0, 5).map(item => <li key={item.id}><Icon name="sparkle" size={18} /><span className="ops-activity-text">{item.instruction}</span><StatusChip type={chipFor[item.state]}>{states[item.state]}</StatusChip></li>)}</ul>
             : <p className="ops-caption">{t('아직 지시한 작업이 없습니다. 오른쪽 패널이나 상단 입력줄에서 맡겨 보세요.', 'No instructions yet. Use the assistant or the top bar to hand something over.')}</p>}
         </Card>

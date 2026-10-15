@@ -31,7 +31,7 @@ export default function ConnectedObservation({ client, label }: { client: GcpObs
   const services = state.items.map(item => ({ id: item.id, label: item.label }));
   const active = tab === 'evidence' && selected ? `${SERVICE_PREFIX}${selected.id}` : tab;
   const open = (id: string) => { if (id.startsWith(SERVICE_PREFIX)) { setTab('evidence'); client.select(id.slice(SERVICE_PREFIX.length)); } else setTab(id); };
-  useConsoleSlots(consoleMode ? { assistant: state.agentsAvailable ? <Assistant agents={agents} /> : undefined, assistantLabel: 'Gemini', user: state.identity?.label, onSignOut: () => void client.signOut(), pendingDecisions: pending,
+  useConsoleSlots(consoleMode ? { assistant: state.agentsAvailable ? <Assistant agents={agents} /> : undefined, assistantLabel: 'My Aide', user: state.identity?.label, onSignOut: () => void client.signOut(), pendingDecisions: pending,
     nav: { active, onSelect: open, groups: consoleNav(t, { pending, plans: !!state.workflowAvailable, services, mobility: !!state.mobilityAvailable, operations: !!state.agentsAvailable || state.items.length > 0 }) } } : undefined,
     `${consoleMode}|${active}|${pending}|${state.identity?.key}|${state.workflowAvailable}|${state.mobilityAvailable}|${language}|${services.map(item => item.id).join(',')}`);
   async function analyze() { await client.analyze(language); if (client.getSnapshot().operation) setTab('workflow'); }

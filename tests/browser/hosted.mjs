@@ -66,7 +66,7 @@ try {
   await page.goto(origin); await expect(page.getByRole('heading', {name:'당신의 이동에, 한발 먼저.'})).toBeVisible();
   await expect(page.getByText('차량·운전은 시뮬레이션 · 실제 차량 제어 없음')).toBeVisible();
   await expect(page.getByText('체험 모드 · 합성 데이터')).toHaveCount(0);
-  await expect(page.getByRole('textbox',{name:'Ask the crew'})).toHaveCount(0);
+  await expect(page.getByRole('textbox',{name:'Ask your own Aide'})).toHaveCount(0);
   await expect(page.getByRole('navigation',{name:'주 메뉴'})).toHaveCount(0);
   await page.getByLabel('Language / 언어').selectOption('en');
   await expect(page.getByRole('heading', {name:'One step ahead of your journey.'})).toBeVisible();

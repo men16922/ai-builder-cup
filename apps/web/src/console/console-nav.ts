@@ -24,8 +24,8 @@ export function consoleNav(t: Translate, options: { pending: number; plans: bool
       { id: 'workflow', label: t('계획', 'Plans'), icon: 'list' as const },
       ...(options.plans ? [{ id: 'saved', label: t('저장된 계획', 'Saved plans'), icon: 'history' as const }] : []),
     ] },
-    { id: 'crew', label: t('에이전트', 'Agents'), items: [
-      { id: 'ask', label: t('에이전트에게 지시', 'Ask the crew'), icon: 'sparkle' as const, action: true },
+    { id: 'crew', label: 'My Aide', items: [
+      { id: 'ask', label: t('나만의 Aide에게 부탁하세요', 'Ask your own Aide'), icon: 'sparkle' as const, action: true },
       { id: 'decisions', label: t('결정 대기', 'Decisions'), icon: 'approvals' as const, action: true, badge: options.pending || undefined },
     ] },
     ]),

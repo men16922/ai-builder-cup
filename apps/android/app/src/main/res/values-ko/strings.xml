@@ -119,9 +119,9 @@
     <string name="ui_the_record_changed_or_expired" formatted="false">"기록이 변경되었거나 만료되었습니다."</string>
     <string name="ui_the_response_does_not_match_the_expected" formatted="false">"대상과 응답을 확인하지 못했습니다."</string>
     <string name="ui_the_request_could_not_be_confirmed_read" formatted="false">"요청을 확인하지 못했습니다. 최신 기록부터 조회하세요."</string>
-    <string name="ui_agent_crew" formatted="false">"에이전트 팀"</string>
-    <string name="ui_say_it_in_one_sentence_the_crew" formatted="false">"한 문장으로 지시하세요. 조사와 진단은 팀이 하고, 큰 결정만 당신에게 묻습니다."</string>
-    <string name="ui_ask_the_crew" formatted="false">"에이전트에게 지시"</string>
+    <string name="ui_agent_crew" formatted="false">"My Aide"</string>
+    <string name="ui_say_it_in_one_sentence_the_crew" formatted="false">"한 문장으로 부탁하세요. My Aide가 전문 팀과 조사·진단하고, 큰 결정만 당신에게 묻습니다."</string>
+    <string name="ui_ask_the_crew" formatted="false">"나만의 Aide에게 부탁하세요"</string>
     <string name="ui_check_shop_api_and_summarize_its_health" formatted="false">"shop-api 상태를 점검하고 요약해 줘."</string>
     <string name="ui_send" formatted="false">"지시하기"</string>
     <string name="ui_needs_a_look" formatted="false">"확인이 필요합니다"</string>
@@ -296,7 +296,7 @@
     <string name="vehicle_tab" formatted="false">"내 차량"</string>
     <string name="journey_tab" formatted="false">"충전·지도"</string>
     <string name="assistance_tab" formatted="false">"Aide 도움"</string>
-    <string name="operations_tab" formatted="false">"서비스 운영"</string>
+    <string name="operations_tab" formatted="false">"My Aide"</string>
     <string name="vehicle_map_position">가상 차량 위치</string>
     <string name="vehicle_map_destination">목적지</string>
     <string name="vehicle_drive_live">주행 중</string>

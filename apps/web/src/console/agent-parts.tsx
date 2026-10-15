@@ -45,10 +45,10 @@ export function Timeline({ steps, working, labels }: { steps: AgentStep[]; worki
 }
 
 
-export const agentLabels = (t: (ko: string, en: string) => string): Record<string, string> => ({ timeline: t('에이전트 진행 단계', 'Crew progress'), ops: 'Ops', diagnosis: 'Diagnosis', guardian: 'Guardian', chief: 'Chief',
-  ...Object.fromEntries(Object.entries(executionLabels(t)).map(([key, value]) => [`exec_${key}`, value])), asked: t('요청', 'asked'), answered: t('응답', 'answered'), working: t('팀이 일하는 중…', 'The crew is working…') });
+export const agentLabels = (t: (ko: string, en: string) => string): Record<string, string> => ({ timeline: t('My Aide 진행 단계', 'My Aide progress'), ops: t('실행', 'Execution'), diagnosis: t('진단', 'Diagnosis'), guardian: t('안전 확인', 'Safety check'), chief: 'My Aide',
+  ...Object.fromEntries(Object.entries(executionLabels(t)).map(([key, value]) => [`exec_${key}`, value])), asked: t('요청', 'asked'), answered: t('응답', 'answered'), working: t('My Aide가 전문 팀과 처리하는 중…', 'My Aide is on it with its specialist team…') });
 export const stateLabels = (t: (ko: string, en: string) => string): Record<AgentTaskState, string> => ({ working: t('일하는 중', 'Working'), awaiting_approval: t('내 결정 필요', 'Needs your decision'), deciding: t('결정을 전달하는 중', 'Applying your decision'),
   completed: t('완료', 'Done'), rejected: t('거절함', 'Rejected'), failed: t('실패', 'Failed'), unknown: t('결과 미확인', 'Outcome unknown') });
 export const agentErrors = (t: (ko: string, en: string) => string): Record<string, string> => ({ reviewer_required: t('승인은 검토자 역할이 필요합니다.', 'Approving needs the reviewer role.'), operator_required: t('지시에는 운영자 역할이 필요합니다.', 'Sending an instruction needs the operator role.'),
   approval_expired: t('승인 시간이 지났습니다. 다시 지시하세요.', 'The approval window passed. Ask again.'), not_awaiting_approval: t('이미 처리된 요청입니다.', 'This request was already handled.'),
-  agents_not_configured: t('에이전트 팀이 연결되어 있지 않습니다.', 'The agent crew is not connected.') });
+  agents_not_configured: t('My Aide가 연결되어 있지 않습니다.', 'My Aide is not connected.') });

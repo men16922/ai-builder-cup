@@ -29,7 +29,7 @@ export default function Assistant({ agents }: { agents: AgentClient }) {
     return <article className="ops-turn" aria-label={task.instruction.slice(0, 60)}>
       <div className="ops-bubble ops-user">{task.instruction}</div>
       <div className="ops-reply">
-        <div className="ops-reply-head"><span className="ops-gem"><Icon name="sparkle" size={16} /></span><strong>{t('에이전트 팀', 'Agent crew')}</strong><StatusChip type={chipFor[task.state]}>{states[task.state]}</StatusChip><span className="ops-caption">{time(task.updatedAt)}</span></div>
+        <div className="ops-reply-head"><span className="ops-gem"><Icon name="sparkle" size={16} /></span><strong>{'My Aide'}</strong><StatusChip type={chipFor[task.state]}>{states[task.state]}</StatusChip><span className="ops-caption">{time(task.updatedAt)}</span></div>
         {task.steps.length || active ? <Details summary={active ? t(`진행 중 · 단계 ${task.steps.length}`, `Working · ${task.steps.length} steps`) : t(`단계 ${task.steps.length}개 · ${seconds}초`, `${task.steps.length} steps · ${seconds}s`)} open={active || task.state === 'awaiting_approval'}><Timeline steps={task.steps} working={active} labels={labels} /></Details> : null}
         {approval && task.state === 'awaiting_approval' ? <section className="ops-approval ops-approval-compact" aria-label={t('승인 요청', 'Approval request')}>
           <div className="ops-approval-head"><Icon name="warning" size={20} /><strong>{t('당신의 결정이 필요합니다', 'Your decision is needed')}</strong><StatusChip type="warning">{t('위험도', 'Risk')}: {approval.risk}</StatusChip></div>
@@ -47,18 +47,18 @@ export default function Assistant({ agents }: { agents: AgentClient }) {
   }
 
   return <div className="ops-chat">
-    <div className="ops-thread" ref={thread} role="log" aria-live="polite" aria-label={t('에이전트 대화', 'Crew conversation')}>
+    <div className="ops-thread" ref={thread} role="log" aria-live="polite" aria-label={t('My Aide 대화', 'Conversation with My Aide')}>
       {tasks.length ? tasks.map(task => <Turn key={task.id} task={task} />) : <div className="ops-welcome">
         <span className="ops-gem ops-gem-large"><Icon name="sparkle" size={30} /></span>
-        <h2>{t('무엇을 맡길까요?', 'What should the crew handle?')}</h2>
-        <p>{t('한 문장으로 지시하세요. 조사와 진단은 팀이 하고, 큰 결정만 당신에게 묻습니다.', 'Say it in one sentence. The crew investigates and diagnoses and only asks you for the big decisions.')}</p>
+        <h2>{t('무엇을 챙겨 드릴까요?', 'What can your Aide take care of?')}</h2>
+        <p>{t('한 문장으로 부탁하세요. My Aide가 전문 팀과 조사·진단하고, 큰 결정만 당신에게 묻습니다.', 'Say it in one sentence. My Aide works with its specialist team to investigate and diagnose, and only asks you for the big decisions.')}</p>
         <div className="ops-suggestions" role="group" aria-label={t('지시 예시', 'Example instructions')}>{examples.map(example => <Button key={example} variant="tonal" onClick={() => { setText(example); field.current?.focus(); }}>{example}</Button>)}</div>
       </div>}
       {board.error ? <Banner type="error">{errors[board.error] ?? t('요청을 처리하지 못했습니다. 잠시 뒤 다시 시도하세요.', 'The request could not be completed. Try again shortly.')}</Banner> : null}
     </div>
     <form className="ops-composer" onSubmit={submit}>
-      <textarea ref={field} rows={1} value={text} maxLength={1000} placeholder={t('에이전트에게 지시…', 'Ask the crew…')} aria-label={t('지시', 'Instruction')} onChange={event => setText(event.target.value)} onKeyDown={key} />
-      <IconButton icon="send" label={t('팀에 맡기기', 'Send to the crew')} onClick={event => { event.preventDefault(); send(text); }} />
+      <textarea ref={field} rows={1} value={text} maxLength={1000} placeholder={t('나만의 Aide에게 부탁하세요…', 'Ask your own Aide…')} aria-label={t('지시', 'Instruction')} onChange={event => setText(event.target.value)} onKeyDown={key} />
+      <IconButton icon="send" label={t('부탁하기', 'Ask Aide')} onClick={event => { event.preventDefault(); send(text); }} />
     </form>
   </div>;
 }

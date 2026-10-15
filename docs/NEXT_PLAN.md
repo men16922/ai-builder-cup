@@ -4,11 +4,15 @@ Updated 2026-10-15. Open work only. Detailed rubric assessment, owners and compl
 
 Current acceptance audit: `docs/plans/2026-10-15-final-readiness-audit.md`. Private source-review ZIP/link sheet and artifact text/hash audit are prepared. They do not satisfy public-code parity, actual demo, impact measurement, eligibility or submission receipt.
 
-Current execution is blocked on manual organization login/result, confirmed in three consecutive goal turns. Resume with that exact access check; do not start another automatic login/model attempt or infer completed acceptance from the prepared artifacts.
+Owner resumed the goal on 15 October evening. Obtain the current manual organization-login result; browser control is not exposed in this resumed session. Do not infer completed acceptance from prepared artifacts. Height-aware vehicle metrics are verified/deployed separately; concurrent map/welcome/shell/CSS work remains preserved and outside that unit.
 
 Owner authorized this commit/push on 15 October; verify current Git refs rather than older snapshots. `docs/REMOTE_HANDOFF.md` lists the private runtime inputs and local exports needed by a remote developer. Video upload/submission and actual user/reviewer checks remain open.
 
-## Current priority: final access checks and judging assets
+## Current priority: My Aide in-car direction (owner, 15 October)
+
+`docs/plans/2026-10-15-my-aide-in-car.md` is the active implementation pointer: My Aide naming ("Ask your own Aide"), error popup with manual, place photos and markers, in-car call handled by My Aide, vehicle diagnosis dashboard, then deploy and re-record. Animated car marker and simplified sign-in landed in `5931fa7` (not deployed).
+
+## Final access checks and judging assets
 
 Follow-up: complete the retained organization login manually before the current deployed read-only Chief check. Two automated organization re-logins ended popup-closed before any crew instruction; root cause remains unproven. Personal-domain login/inspection remains separately verified.
 
