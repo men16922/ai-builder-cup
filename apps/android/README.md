@@ -46,6 +46,21 @@ ANDROID_HOME="$PWD/.tools/android-sdk" GRADLE_USER_HOME="$PWD/.tools/gradle-home
 
 `make check-android-core`는 실제 로컬 gateway와 Kotlin native HTTP 계약을 합성 신원/관측으로 연결한다. 직접 `:core:test`만 실행하면 서버 통합 네 개는 주소가 없어 skip될 수 있다. 웹/서버 게이트는 Android 빌드·기기 검증을 대신하지 않는다.
 
+통화 초안의 시간·본문 회귀는 `CallDraftRenderingTest`에서 확인한다. 고정 합성 자료의 금요일 07:30 UTC가 서울 시간 `Fri 16:30` / `금 16:30`으로 보이는지, 본문·수신자가 유지되는지, 버튼이 정확한 명령만 내보내는지 검사한다. 로그인·네트워크·실제 전송은 하지 않는다. 기본 합성 자료와 별도로 받은 Gemini 요약 재생은 서로 다른 검증이며, 전체 앱이나 실물폰 검증을 대신하지 않는다.
+
+공유 기기의 앱을 덮어쓰지 않도록 새 전용 에뮬레이터에서 실행한다. 준비된 SDK·Gradle 의존성으로 테스트 APK를 빌드한 뒤, 명시한 기기에만 설치한다. 이 화면 검증에는 비공개 앱 설정이나 지도 키가 필요하지 않다.
+
+```sh
+ANDROID_HOME="$PWD/.tools/android-sdk" GRADLE_USER_HOME="$PWD/.tools/gradle-home" apps/android/gradlew -p apps/android --offline :app:assembleDebug :app:assembleDebugAndroidTest
+# AIDE_ANDROID_TEST_SERIAL에 직접 만든 전용 에뮬레이터의 serial을 지정한다.
+: "${AIDE_ANDROID_TEST_SERIAL:?Set the exclusive test emulator serial}"
+.tools/android-sdk/platform-tools/adb -s "$AIDE_ANDROID_TEST_SERIAL" install -t apps/android/app/build/outputs/apk/debug/app-debug.apk
+.tools/android-sdk/platform-tools/adb -s "$AIDE_ANDROID_TEST_SERIAL" install -t apps/android/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
+.tools/android-sdk/platform-tools/adb -s "$AIDE_ANDROID_TEST_SERIAL" shell am instrument -w -r -e class app.mobileops.agent.app.CallDraftRenderingTest app.mobileops.agent.test/androidx.test.runner.AndroidJUnitRunner
+```
+
+선택 인수 `aideSummaryFixtureBase64`는 합성 입력으로 따로 받은 `CallSummary` JSON만 재생한다. 계정·설정·실제 통화 자료를 전달하지 않는다. 캡처는 앱 외부 파일 디렉터리의 `verification/summary-draft-{en,ko}-{message,calendar}.png`에 남는다. 15 October 검증은 실제 Gemini 요약 재생 두 개와 기본 합성 자료 두 개가 각각 통과했으며, 전용 에뮬레이터만 사용했다. 추가 모델 호출은 없었다.
+
 ### 실제 Maps SDK 확인 — 별도 opt-in
 
 `NativeMapProviderSmokeTest`는 기본 실행에서 skip한다. 승인된 제한 키를 `AIDE_ANDROID_MAPS_KEY`에 설정하고 시험용 에뮬레이터 한 대를 연결한 뒤에만 아래 명령으로 실제 Google 지도 로딩을 확인한다. SDK의 로딩 완료 콜백을 기다린 후 제품의 `VehicleMap`을 렌더링한다. 좌표·목적지는 공개된 합성 시험 위치이며 로그인, GPS 조회, Gateway 요청과 차량·클라우드 조치는 하지 않는다. `--offline`은 Gradle 의존성 해석에만 적용되며, 이 시험은 Google 지도 네트워크를 사용한다.
