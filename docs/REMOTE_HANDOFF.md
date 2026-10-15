@@ -6,7 +6,7 @@ Git contains the implementation, contracts, tests, example configuration, origin
 
 1. Check the branch/commit with `git status -sb`, `git log -1` and `git ls-remote origin refs/heads/main`. The owner authorized commit and push on 15 October; the current Git refs, rather than older snapshot SHAs in historical notes, identify what was published.
 2. Read `AGENTS.md`, `docs/AGENT_BRIEF.md`, `docs/STATUS.md`, `docs/NEXT_PLAN.md` and `docs/plans/2026-10-15-final-readiness-audit.md`. The brief's first resume action wins over older plans.
-3. Current first action is the pending manual organization Google login/result, followed by one registered-service read-only Chief investigation. The successful personal vehicle/map/help inspection is separate from two later organization popup-closed outcomes. The popup cause remains unproven; do not infer a membership failure.
+3. Current first action is a signed-in walkthrough of the deployed My Aide flows (Ask, places/photos, call, Stop and diagnosis) and the physical-phone checklist. Confirm the pending manual organization login separately before a registered-service read-only Chief investigation. The earlier personal vehicle/map/help inspection is separate from two later organization popup-closed outcomes. The popup cause remains unproven; do not infer a membership failure.
 
 ## Private information required for live work
 
@@ -47,7 +47,7 @@ Rebuild the current deck from its committed source and selected synthetic image 
 node --import tsx submission/deck/build.mjs
 ```
 
-The current local PDF has ten pages; the narrated presentation is a 150-second synthetic slide presentation, not a continuous actual demo. Request frozen qualification records privately if auditing the first outcomes, including failures and source hashes. Do not rerun a model evaluation and relabel it as the original first run.
+The refreshed My Aide PDF has ten pages. Its committed source, aggregate `evidence.json`, capture wrapper and three selected synthetic components are sufficient to rebuild it; inspect every rendered page. Optional recapture: `node --import tsx submission/deck/capture.mjs` (offline fixture, no provider calls). Generated HTML/PDF stay local, and an older tracked export in a fresh checkout is not current. The existing 150-second narrated slide video uses the previous PDF; it is now stale and is not a continuous actual demo. Use `submission/DEMO_SCRIPT.md` for the planned new take. Request frozen qualification records privately if auditing first outcomes, including failures and source hashes. Do not rerun a model evaluation and relabel it as the original first run.
 
 ## Limits to preserve on resume
 

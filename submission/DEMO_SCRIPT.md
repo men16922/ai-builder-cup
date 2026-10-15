@@ -1,18 +1,30 @@
-# Current Aide recording script — target 2:20, limit 3:00
+# Current My Aide recording script - target 2:45, limit under 3:00
 
-Record the current deployed product with English UI/captions. Preserve the older 85.6-second file; it has an identifier and inconsistent/stale screens. Do not upload it as-is. Vehicle and driving are simulated. A scripted UI approval is not a human trial. Actual cloud changes require the person's real decision; never reset/mutate a target just to manufacture a scene.
+This is a recording plan, not proof that the take exists. Use the deployed product in English. Web source is `1742cfe`; the matching private Android candidate is `34a14f1` (the follow-up changes web contrast only). Check the installed artifact and deployed origin before recording. The earlier charging-only actual video and narrated slide video remain historical artifacts.
 
-| Time | Screen | Narration |
+## Story and timing
+
+| Target | Screen and action | Spoken line |
 | --- | --- | --- |
-| 0:00–0:12 | Vehicle home, simulated battery/charging/location | “Charging stops. An incident interrupts a journey. Aide gives the driver a useful next step, and the responder a controlled way to help.” |
-| 0:12–0:32 | Maps: dinner request, genuine places/source links, choose destination | “Gemini plans the search. Official Google Maps MCP supplies real nearby places. The first choice is yours; a Favorite can help next time. Movement here is a clearly labelled simulation. Reading or refreshing pauses continuation until an explicit Continue action.” |
-| 0:32–0:50 | Aide assistance: unfamiliar charge-link symptom, no remedy, five checks | “Unfamiliar symptoms are reported. The model cannot invent a repair or give itself permission.” |
-| 0:50–1:10 | Review guide, one simulated reconnect, trusted 72 kW read-back, candidate | “Review current safety conditions, authorize one typed recovery, then verify the result. Only a successful read-back becomes a candidate case.” |
-| 1:10–1:30 | Separate promotion, policy still off; separate 24-hour policy review | “Remembering the case is separate from permission. Promotion does not execute anything or enable autonomy.” |
-| 1:30–1:48 | Fresh matching symptom, one remedy/report; disable policy | “An approved case and current bounded policy can handle a matching incident once and report back. Disable or revoke at any time.” |
-| 1:48–2:05 | Architecture/authority graphic, optionally current read-only cloud proposal | “Cloud operations use a separate private ADK/A2A crew. Real changes require an actual reviewer, reviewed state and a durable one-use claim.” |
-| 2:05–2:20 | Evidence/limits closing card | “We verified Maps and the simulated workflow in deployment. Our first recurrence failed safely during provider capacity trouble; later distinct evidence is retained separately. Physical-device and human productivity studies remain open.” |
+| 0:00-0:10 | Vehicle home; sign-in/account chooser completed off camera | "My Aide handles interruptions on the move. The car, caller and follow-ups are simulated. Gemini and Google Maps are real." |
+| 0:10-0:35 | Ask: "Cool the car to 20 before I leave." Show proposals, tap temperature and climate; show changed cabin state | "I ask in my own words. Gemini proposes; nothing runs until I tap. The server checks the action against my current vehicle state." |
+| 0:35-0:55 | Charging & map: request a charger, show Google results/photos/attribution and matching markers, choose Go here | "Google Maps grounds the search. The first destination is my choice; a Favorite can help next time. Travel here is a straight-line simulation, with an explicit Stop." |
+| 0:55-1:55 | One continuous call take: start fictional Team lead call, let My Aide answer, make one reply or delegate, end, show summary and one draft | "My Aide handles a fictional conversation while the simulated drive continues. Model work and vehicle progress are independent. After the call I review the summary and drafts. This message or calendar action is simulated and still needs my tap." Say the final sentence before tapping a follow-up. |
+| 1:55-2:15 | Vehicle diagnosis: explicitly open simulator, select low tire, show highlighted wheel and service search; optional second shot of a retained charging report | "The cluster locates a warning. An unfamiliar symptom gets guidance, not an invented repair. A separately verified charging case can act once only under its current bounded policy, then report the read-back." |
+| 2:15-2:35 | Platform & A2A, current read-only Agent Card or architecture view; optional native screen on a separately verified emulator | "Cloud response has a separate ADK/A2A crew. Real Cloud Run changes need Guardian, exact reviewed state and an actual human decision. A simulation policy grants no cloud authority." |
+| 2:35-2:45 | Closing card and original vehicle view | "Ask your own Aide. Physical-phone and paired human trials are still open; we do not claim measured time savings." |
 
-Before recording, confirm the final candidate, language, actor scope, current case/policy and expiry. Existing active cases change the unknown-symptom scene: use a separately revoked/candidate pattern and label the take honestly. Never hide a failed first outcome or repeatedly resend unknown work. Keep Google attribution/source links visible. Inspect every frame for account emails, raw approver IDs, resource IDs, key text and address-bar identifiers. Private actual captures stay ignored; repository/deck screenshots are explicitly synthetic.
+The intervals are an editing budget, not a promise of provider response time. Preserve one uncut call flow with actual waits. Prefer one reply; omit optional shots if needed. Cuts between scenes are acceptable when they do not imply hidden actions happened. If the real call exceeds the budget, keep the full take privately and record a shorter honest successful flow later; do not speed up the model, replace it with fixture output or retry an unknown operation as the same work. Show actual failure/unknown guidance if that is the observed outcome.
 
-After recording, review full duration and audio/captions, inspect privacy and freshness, verify under three minutes, and record the exact candidate/evidence. Upload/publication/submission needs the owner's instruction.
+## Before the take
+
+- Confirm English UI, the correct source/APK, approved public origin, actor/workspace and membership. Signing fingerprints alone do not establish app access. Do not record account choosers, credentials, app configuration, address-bar project identifiers or raw approver IDs.
+- Keep visible SIM labels and Google/photo attribution. Use a 1440x900 browser; if Android is shown, identify emulator versus physical phone accurately. The driver flow does not invoke the Cloud Chief crew; show the two domains separately.
+- Use the existing simulator explicitly. Do not silently replace genuine provider data or change location to manufacture road coverage. Do not fault/reset a real Cloud Run target to create a scene.
+- Check the charging case/policy state before any optional report shot. A retained report must be identified as an earlier run. For a fresh known-case run, review the exact case/policy, expiry and safety conditions, then disable the test policy afterward. Promotion alone cannot execute or enable autonomy.
+- If latency naturally allows it, demonstrate Stop while the model is pending and show that the late answer leaves the drive stopped. Do not insert an artificial provider delay into the actual-product recording; the synthetic delayed-response regression is separate evidence.
+- Use `docs/plans/2026-10-15-human-comparison.md` separately for real participants. A scripted take or local fixture is not a human pilot or actual V2 reviewer decision.
+
+## After the take
+
+Review the complete picture, captions and audio for identifiers, misleading cuts, stale state and undocumented simulation. Verify duration below 180 seconds, decode without errors, and record the file hash, date, web/APK source and provider outcomes privately. Inspect failures before choosing a take; preserve first unknown/429 records. Upload and submission require the owner's explicit instruction. No current public demo link exists merely because this script or a slide presentation exists.

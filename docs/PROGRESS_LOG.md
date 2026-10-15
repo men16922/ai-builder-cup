@@ -1,5 +1,11 @@
 # Progress log
 
+## 2026-10-15 — Current My Aide deck, entry and recording handoff
+- Changed: ten English slides use shared tokens/original EV art, reviewed evidence and three 2x offline components; source/capture/image hashes retained. Entry, checklist, canonical 2:45 actual recording script and remote handoff now reflect Ask/calls/diagnosis and separate cloud authority.
+- Verified: complete web gate passes (225 API, browser/axe/hosted/publish); offline capture fixture, all ten final PDF renders, text/footer clearance, HTML keyboard navigation, image/fixture hashes and decoded text scan (eight patterns/six private identifiers). No live provider call or runtime source change; native/crew results remain separately recorded.
+- Scope: generated HTML/PDF, private APK and raw evaluation outputs are held back. Previous 150-second narrated presentation refers to the previous PDF and is stale, not a current actual demo. No deployment, upload or submission in this unit.
+- Next: current authenticated Ask/call/photo/Stop/diagnosis run and exact physical APK check, real V2 reviewer/conflict, paired pilot, actual recording and owner eligibility/submission. Full award-readiness remains incomplete.
+
 ## 2026-10-15 — Simulated movement and Stop stay usable during model latency
 - Reproduced: waiting for a call model blocked advance/Stop; concurrent movement also made a valid delayed answer fail vehicle-version checks. Separate call revisions, request lanes and state merging now preserve both streams, with session/permission and exact-call/lease checks retained.
 - Verified: canonical full web/API 225, delayed-model 390px/axe/no-revival browser flow, native core 74/app 3, assembly/lint and emulator 20 passed/one opt-in Maps skip. Native Stop remains enabled during the call wait; read/unknown and denial races do not rearm or restore private data.

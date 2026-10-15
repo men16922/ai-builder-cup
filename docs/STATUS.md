@@ -2,9 +2,14 @@
 
 Updated: 2026-10-15. Goal: award-ready Aide submission on 18 October. Current owner scope: `docs/plans/2026-10-14-mobility-product.md`; rubric/evidence criteria: `docs/plans/2026-10-14-award-readiness.md`. Open work: `docs/NEXT_PLAN.md`.
 
-15 October Git shipping: owner explicitly authorized commit/push. Current refs (`git log -1`, `git ls-remote`) supersede historical uncommitted/remote-SHA descriptions below; source-publication proof is distinct from deployment/CI/submission. Fresh web/API gate 206, crew 97 and Android core 68 pass. Private handoff and held-back generated exports are documented in REMOTE_HANDOFF.
+15 October Git shipping: owner explicitly authorized commit/push. Current refs (`git log -1`, `git ls-remote`) supersede historical uncommitted/remote-SHA descriptions below; source-publication proof is distinct from deployment/CI/submission. Fresh web/API gate 225 passes; separately recorded unchanged crew 97 and native core 74/app 3 remain scoped as below. Private handoff and held-back exports are documented in REMOTE_HANDOFF. Older entries retain their original verification scope; newer sections supersede them.
 
 Execution status: owner resumed the goal on 15 October evening. Organization-login result is pending; browser control is not exposed in this resumed session, so the current authenticated page is unverified. Historical blocked checks remain recorded separately. Physical phone, real reviewer, paired impact, Korea-capable routing inputs and submission still require owner/external evidence; full goal is incomplete.
+
+## Current My Aide submission materials
+
+- Refreshed the ten-page English deck around Ask, grounded discovery, fictional calls, diagnosis and independent cloud authority. Shared tokens/original EV art and three 2x synthetic component captures have source/fixture/image provenance. Final ten rendered pages inspected, text/footer clearance and HTML navigation pass; decoded text has no eight-pattern/six-private-identifier match.
+- English entry/checklist, canonical 2:45 actual recording script and REMOTE_HANDOFF now reflect current runtime sources and missing evidence. The previous 150-second narrated video references the previous PDF and is stale, not a current actual demo. Generated HTML/PDF, private APK and three raw evaluation outputs stay out of this source commit. No provider call, deployment, upload or submission in this artifact unit.
 
 ## Delayed call and vehicle progress
 
@@ -13,8 +18,8 @@ Execution status: owner resumed the goal on 15 October evening. Organization-log
 
 ## My Aide in-car features (deployed web/API)
 
-- Calls handled by My Aide, vehicle controls, diagnosis cluster, error manual, Places photos and numbered markers, Ask your own Aide, and the Platform & A2A page are live on gateway revision 00020 (`2fb8d11`). Real Gemini/Places/Chief-card checks ran privately with the runtime identity; an authenticated deployed browser walkthrough is still pending the owner's sign-in approval.
-- Gates: server 220, browser gates (web, console + Platform, mobility, call-safety, My Aide), hosted, publishable, Android core. Android parity is committed in `14e034d` (assemble/unit/lint, core, ktfmt, instrumented 21 run/0 failed/1 opt-in skip); the map overlays and live photos/TTS still need a signed-in device check.
+- Calls handled by My Aide, vehicle controls, diagnosis cluster, error manual, Places photos/numbered markers, Ask your own Aide and Platform & A2A are included in the gateway source/deployment above. Separate real Gemini/Places/Chief-card checks are recorded privately; current authenticated deployed walkthrough remains pending.
+- Native parity and independent Stop are included in the private `34a14f1` candidate (MVVM/resources/ktfmt, core 74/app 3, emulator 20 passes/one opt-in skip and separate SDK qualification). This does not prove current physical-phone login, photos, calls or TTS.
 
 ## In-car call uncertainty
 
@@ -24,7 +29,7 @@ Execution status: owner resumed the goal on 15 October evening. Organization-log
 ## Native request failure guidance
 
 - Native vehicle/map/assistance failures open a modal with KO/EN resource manuals. A bounded machine code is retained separately from the fixed HTTP failure category; ambiguous HTTP 409 now has outcome-unknown guidance instead of stale-state advice. Raw messages are not displayed. Reading/dismissing the manual has no network/command callback.
-- Verified on isolated baseline `82d1320` plus owned Android changes: core 69, app unit 3, emulator manual 1 (all no skips), assembly/lint and formatted source. Actual emulator capture inspected. This source increment is not deployed or verified on a physical phone; concurrent web/call/vehicle work stays separate.
+- Original isolated check at `82d1320` plus owned changes: core 69, app 3, emulator manual 1 (no skips), assembly/lint/format and actual emulator capture. Later integrated source/deployment above supersedes this source-only snapshot; physical-phone verification remains open.
 
 ## Height-aware vehicle home
 

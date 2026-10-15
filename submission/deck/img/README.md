@@ -1,3 +1,7 @@
 # Product screenshot provenance
 
 The mobility images are original offline synthetic UI captures from `tests/browser/mobility.mjs` on 15 October 2026. They contain fictional vehicle state and fixture identity, no real cloud IDs, credentials, accounts or Google provider content. The EV asset attribution is in `design/assets/aide-ev.md`. Every deck slide using these images labels them synthetic; deployed provider/workflow observations are separately described with their limits. Private actual browser captures remain ignored in `.data/`.
+
+The current My Aide deck uses three additional component captures from `tests/browser/my-aide.mjs`: `my-aide-ask.png` (proposals before any tap), `my-aide-call.png` (fictional conversation) and `my-aide-diagnosis.png` (synthetic tire warning). `my-aide-provenance.json` records the fixture/source revision, selectors and image hashes. They contain no provider imagery; the fixture's unrelated mock photo cards are not exported. The call name is fictional.
+
+Run `node --import tsx submission/deck/capture.mjs` to recapture the three components at a 390px viewport and 2x pixel density. This runs the existing offline My Aide browser fixture with synthetic identity/model/Maps, requires the prepared local Chromium dependency and makes no paid provider call. The wrapper stops if an expected capture point changes. Rebuild and visually review the PDF after recapturing; hashes alone do not prove layout quality.

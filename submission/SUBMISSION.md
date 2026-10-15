@@ -1,29 +1,33 @@
-# Submission checklist (deadline 18 Oct 2026)
+# Submission checklist - deadline 18 Oct 2026
 
-What the competition asks for, and where this repository stands. Items marked **owner** can only be done by a person.
+Updated 15 October 2026. Official [requirements and rubric](https://aibuildercup.com/themes.html) and [FAQ](https://aibuildercup.com/Faqs.html) were reread: one theme, working Google AI/GCP prototype, deployed link, public code, English PDF and public actual demo under three minutes. Check exact dashboard fields/cutoff with the owner. The entry has **not** been submitted.
 
-| Requirement | Implemented | Published / submitted | Notes |
-| --- | --- | --- | --- |
-| Team of 2–4, registered | Done (2026-10-12) | Done | Registration and invitations confirmed by the owner. |
-| Deployed link (Cloud Run) | Done | Link not yet in Devpost | Console and the five services run on Cloud Run. The signed-out mobility welcome has no demo actions. Personal drivers sign in with Google; cloud operations need current registered ownership/membership (see decision 2). |
-| Public GitHub repository | Public baseline exists; current candidate not published | Remote `main` rechecked at `5ac003a` on 2026-10-15; this session's changes local | Current deployment and public repository are not reconciled. Run `make check` and `npm run check:publishable` before an owner-authorized push. |
-| Demo video under 3 minutes | Recorded (`submission/aide-demo-final.mp4`, local, ignored by Git), 85.6 seconds | 150-second narrated product presentation prepared separately (synthetic screenshots, not continuous live capture). Re-record actual demo before upload; then **owner**: upload | 14 October spot check found a visible internal approver ID, older execution wording and dashboard/read-back disagreement. See `docs/plans/2026-10-14-demo-review.md`; preserve the original. |
-| PDF deck, English | Mobility/authority/evidence deck rebuilt locally on 15 October; 10-page PDF visual QA and text-bound checks passed | **owner**: attach in Devpost | `node --import tsx submission/deck/build.mjs`. |
-| Devpost and Medium text | Devpost refreshed for mobility on 15 October; Medium historical narrative explicitly dated | **owner**: fill `<DEPLOYED_URL>`, `<VIDEO_URL>`, `<REPO_URL>`, `<CONTACT>` and submit | After the Android teammate's physical-device run, update the "emulator, not a physical device" lines in both. |
-| English submission package | Deck and entry draft ready; actual demo pending | — | Product localization remains Korean/English; internal Korean onboarding is separate. Audit the final submitted files against the organizer's English-materials requirement. |
-| One problem statement/theme | Future of Work & Enterprise Productivity | **owner**: confirm the same category in the dashboard | Vehicle assistance and cloud response illustrate interrupted work; no implemented vehicle-to-backend causal correlation is claimed. |
-| Built inside the window (7 Sep – 18 Oct) | Unproven for every extracted/dirty file | **owner**: reconcile source evidence against the official rules | Inspected Git history starts 2026-10-09; that does not date all mixed-worktree files. The immutable extraction manifest is not an eligibility certificate. |
+| Requirement | Current evidence | Remaining action |
+| --- | --- | --- |
+| Registered team, 2-4 members | Owner confirmed registration/invitations on 12 October | Owner confirms final team and eligibility in organizer dashboard |
+| One theme | Future of Work & Enterprise Productivity across entry and deck | Owner selects the same theme; older category examples on the site do not change this choice |
+| Functional Google Cloud/AI prototype | Gateway and four private crew services on Cloud Run; Gemini, Firebase/Firestore and Maps integrations exercised within recorded scopes | Current authenticated end-to-end My Aide walkthrough remains open |
+| Working deployed link | Configured public origin serves the verified gateway image; personal sign-in and organization membership have separate boundaries | Fill actual link privately; verify judge path from a clean profile. The nonconfigured platform alias intentionally returns `403 host_required` |
+| Public GitHub code | Runtime source `34a14f1` and web-only contrast `1742cfe` published; remote/main verified at checkpoint `0b1ccb8` before the submission-only refresh | Use current `git ls-remote` for the final submitted commit; do not infer remote CI |
+| Prototype/source parity | Image-only gateway retains UID/runtime config, latest traffic 100%, all six uploaded public assets match. Private Android candidate is from `34a14f1` | Current signed-in app and physical phone are separate acceptance checks; later submission-only commits do not redeploy runtime |
+| English PDF | Refreshed ten-page My Aide source uses original art and three explicitly synthetic components, with dated evidence | Rebuild, inspect all final rendered pages and attach the reviewed PDF; generated exports are held back from Git |
+| Public actual demo under three minutes | No current qualifying take. Old 85.6-second actual recording has privacy/staleness defects. Existing 150-second narrated slides use the previous PDF | Follow `DEMO_SCRIPT.md`, record current actual flow and real waits, review every frame/audio, obtain owner instruction before upload |
+| Entry text and links | Current English `DEVPOST.md`; historical `MEDIUM.md` is labeled separately | Owner reviews and fills deployed/video/repo/contact links in organizer dashboard |
+| Human/phone evidence | Current API/native/emulator/provider scopes documented; physical phone and paired pilot not completed | Record exact device/date/APK, actual reviewer decision/conflict and paired human results without inventing impact |
+| Fresh project, program window | Inspected source history starts 9 October; extraction manifest describes a mixed worktree | Owner reconciles file-level creation/provenance with 7 September-18 October rules. A new history is not an eligibility certificate |
+| Final submission receipt | None | Owner submits reviewed links/PDF and records receipt |
 
-## Open decisions for the owner
+## Final owner decisions
 
-1. **Product name.** Decided: **Aide** (confirmed 2026-10-11). It is applied in the console, the Android app, the deck and the documents. Deployed resource names and the Android package id keep their original identifiers on purpose. `node scripts/apply-brand.mjs "<Name>"` would change the name everywhere if that ever changes.
-2. **Judge access.** Signed-out visitors see the mobility welcome and Google sign-in. There is no public rehearsal or anonymous control. Personal simulation is actor-private; cloud operations require current membership and registered ownership. Coordinate any allowed judge account and a reviewed actual-run video with the owner; never expose mutation rights publicly.
-3. **Repository name.** Created as `ai-builder-cup`, public. It is deliberately not tied to the product name, so a rename does not need a new repository.
-4. **Push notifications.** Off in the deployment. Enabling needs the FCM configuration and a signed-in device.
+1. **Judge access:** signed-out visitors get the welcome and Google sign-in; personal vehicle state is actor private. Cloud operations need current server membership and registered resources. Arrange scoped judge access or a reviewed actual-run video. Never expose public mutation rights.
+2. **Phone candidate:** use the private APK from `34a14f1` or explicitly qualify a newer one. A different debug certificate needs its own approved Firebase/OAuth/Maps registration; fingerprints do not grant workspace roles.
+3. **Real cloud approval:** current V2 needs an actual person, exact reviewed state and a one-use durable claim. Never manufacture approval to record a scene. Simulated charging policy has separate authority.
+4. **Publication:** source commit/push is authorized. Video upload, private APK/configuration publication, broader IAM, deletion and final competition submission require separate instruction. Push remains off; no actual device delivery is verified.
 
-## Final pass before submitting
+## Final package checks
 
-- `make check` green, `npm run check:publishable` green.
-- No project number, project ID, account email or token in the repository, deck, video or screenshots.
-- The deployed source/artifact record and submitted repository revision are reconciled. Current deployment is from uncommitted source; public hashes match, but remote Git parity is not established.
-- Judges' path tested from a clean browser profile.
+- Run relevant local gates and `npm run check:publishable`; record exact source and scope. Green tests are not remote CI or deployed acceptance.
+- No credentials, project/account identifiers, raw approver IDs or private addresses in deck, video, screenshots or submitted text. Review full audio and frames; a text scan alone cannot clear a video.
+- Keep Google/photo attribution and SIM labels visible. No road-navigation, OEM control, real calling, outward messaging/calendar or measured productivity claim.
+- Preserve original failures, including unknown recurrence and separate provider 429. Original held-out 13/18 and later tuned results use different protocols and are not a comparative benchmark.
+- Verify links from a clean profile, exact deck/video source/date, actual duration below 180 seconds and the final submission receipt.

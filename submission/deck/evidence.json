@@ -1,0 +1,38 @@
+{
+  "asOf": "2026-10-15",
+  "theme": "Future of Work & Enterprise Productivity",
+  "source": {
+    "android": "34a14f1",
+    "deployedWeb": "1742cfe"
+  },
+  "local": {
+    "api": 225,
+    "androidCore": 74,
+    "androidApp": 3,
+    "emulatorPassed": 20,
+    "emulatorMapsSkipped": 1
+  },
+  "separateProviders": {
+    "nativeMaps": "SDK load and settled product frame inspected on emulator; public synthetic coordinates",
+    "gemini": "One real provider call through a local synthetic-identity service retained Stop while pending",
+    "places": "One direct provider flow returned five places with five attributed photos"
+  },
+  "deployment": {
+    "kind": "Image-only gateway rollout",
+    "uploadedAssetsVerified": 6,
+    "latestTrafficPercent": 100,
+    "runtimeConfigurationChanged": false
+  },
+  "limits": [
+    "No measured human productivity or MTTR improvement",
+    "No physical-phone result",
+    "Current signed-in deployed walkthrough incomplete",
+    "Actual V2 human approval/conflict incomplete",
+    "Vehicle, driving, callers and follow-ups simulated",
+    "Seoul road-route geometry unavailable in tested provider controls",
+    "First recurrence unknown and independent provider 429 preserved",
+    "Original held-out first run 13/18 uses a different fixture protocol",
+    "Eligibility and final submission receipt remain owner checks"
+  ],
+  "review": "docs/reviews/2026-10-15-call-safety.md"
+}

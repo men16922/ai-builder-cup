@@ -2,24 +2,24 @@
 
 Updated 2026-10-15. Open work only. Detailed rubric assessment, owners and completion criteria: `docs/plans/2026-10-14-award-readiness.md`. Freeze on 17 October; submit by 18 October. Owner expanded the product scope on 14 October: `docs/plans/2026-10-14-mobility-product.md` is the current implementation pointer. V2 approval local regressions now pass; verify candidate/deployed behavior before real-cloud mutation claims.
 
-Current acceptance audit: `docs/plans/2026-10-15-final-readiness-audit.md`. Private source-review ZIP/link sheet and artifact text/hash audit are prepared. They do not satisfy public-code parity, actual demo, impact measurement, eligibility or submission receipt.
+Current acceptance audit: `docs/plans/2026-10-15-final-readiness-audit.md`. Published runtime/deployed asset parity is verified separately from private archives. Current actual demo, phone/human acceptance, impact, eligibility and submission receipt remain open.
 
-Owner resumed the goal on 15 October evening. Obtain the current manual organization-login result; browser control is not exposed in this resumed session. Do not infer completed acceptance from prepared artifacts. Height-aware vehicle metrics are verified/deployed separately; concurrent map/welcome/shell/CSS work remains preserved and outside that unit.
+Owner resumed the goal on 15 October evening. Browser control is not exposed here: obtain the current sign-in result and perform the current Ask/call/photo/Stop/diagnosis walkthrough. Confirm organization login independently before a Chief read. Do not infer acceptance from prepared artifacts.
 
 Owner authorized this commit/push on 15 October; verify current Git refs rather than older snapshots. `docs/REMOTE_HANDOFF.md` lists the private runtime inputs and local exports needed by a remote developer. Video upload/submission and actual user/reviewer checks remain open.
 
 ## Current priority: My Aide in-car direction (owner, 15 October)
 
-`docs/plans/2026-10-15-my-aide-in-car.md` is the active implementation pointer: My Aide naming ("Ask your own Aide"), error popup with manual, place photos and markers, in-car call handled by My Aide, vehicle diagnosis dashboard, then deploy and re-record. Animated car marker and simplified sign-in landed in `5931fa7` (not deployed).
+`docs/plans/2026-10-15-my-aide-in-car.md` is the implementation pointer. Integrated features and delayed-call safety are public/deployed at runtime `34a14f1` plus web-only contrast `1742cfe`; the matching private APK is prepared. Remaining priority is actual signed-in/physical acceptance and recording, not another feature sampler.
 
 ## Final access checks and judging assets
 
 Follow-up: complete the retained organization login manually before the current deployed read-only Chief check. Two automated organization re-logins ended popup-closed before any crew instruction; root cause remains unproven. Personal-domain login/inspection remains separately verified.
 
-Mobility domains, MVVM/resources/tutorial, bounded guided recovery/case promotion and fresh-event response are implemented. Compatible gateway and four crew roles are deployed; public hashes match. Actual authenticated browser Maps/Firestore and fresh policy-bound learned-case remedy are verified, including a retained first unknown outcome and separately reproduced provider 429. Test policy is disabled. Final browser re-login and vehicle/map/assistance inspection now passed. Native live tiles/car marker/straight-line path now pass a separate opt-in API 36 emulator probe (one test, no skips) on published `5931fa7`; default invocation skips provider access. Finish physical-phone login/journeys and the current actual judging demonstration. Preserve the distinctions in STATUS; no physical or productivity claim.
+Earlier authenticated browser Maps/Firestore and policy-bound charging read-back are verified, with the first unknown and separate 429 retained; test policy is disabled. Newer Ask/call/photo features have separate provider/local evidence. Current native tiles/car/straight-line path pass one opt-in API 36 emulator probe at `34a14f1`; default offline checks skip it. Finish current signed-in/physical acceptance and the actual judging demonstration. No physical or productivity claim follows from these checks.
 
 1. Follow `apps/android/ONBOARDING.md`'s Mobility candidate checklist with the private prepared APK. Owner-authorized Git shipping excludes private APK/configuration/keys; record the exact installed candidate before treating phone results as current.
-2. The deck/entry drafts and 150-second narrated slide presentation are refreshed; re-record the obsolete actual demo for the current domains and verified case lifecycle. First provider/incident outcomes remain immutable.
+2. Use the refreshed ten-slide My Aide PDF/entry and canonical `submission/DEMO_SCRIPT.md` for a new actual take. The previous narrated presentation uses the previous PDF and is stale. Preserve first provider/incident outcomes; obtain owner instruction before upload.
 3. Road route geometry: official Maps MCP supplies metrics, not navigation geometry. Same-identity public-coordinate control now confirms Seoul REST/MCP empty versus California REST polyline/MCP route; the official coverage table marks Korean driving availability as limited. A Korea-capable provider needs separate explicit configuration/credentials/terms, or an explicitly chosen supported simulation region. Existing movement stays straight-line; never change origin or fabricate a road fallback. See MAPS.
 
 ## Real-cloud prerequisite: actual V2 approval/conflict verification
