@@ -69,6 +69,13 @@ try {
   await expect.poll(()=>operations.filter(op=>op==='advance').length).toBeGreaterThan(advanced);
   await page.setViewportSize({width:390,height:844});
   const stop=sheet.getByRole('button',{name:'Stop simulated drive',exact:true});await expect(stop).toBeEnabled();
+  const contrast=await stop.evaluate(button=>{
+    const luminance=color=>{const values=color.match(/\d+(?:\.\d+)?/g).slice(0,3).map(Number).map(v=>v/255).map(v=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4);return values.reduce((sum,v,i)=>sum+v*[.2126,.7152,.0722][i],0);};
+    const values=[luminance(getComputedStyle(button).color),luminance(getComputedStyle(document.querySelector('.aide-call-sheet')).backgroundColor)].sort((a,b)=>a-b);
+    return (values[1]+.05)/(values[0]+.05);
+  });
+  assert.ok(contrast>=4.5,`The enabled Stop label needs readable contrast; observed ${contrast.toFixed(2)}:1`);
+  console.log('Enabled Stop contrast:',contrast.toFixed(2)+':1');
   await axe(page);await page.screenshot({path:join(directory,'call-delayed-model-stop-390.png')});
   await stop.click();await expect(page.getByText('Cancelled',{exact:true})).toBeVisible();
   releaseReply();

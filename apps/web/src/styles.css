@@ -482,6 +482,7 @@ a.ops-utility { color: var(--md-sys-color-primary); }
 .aide-call { position: fixed; z-index: 30; left: 50%; transform: translateX(-50%); width: min(560px, calc(100vw - 32px)); border-radius: 24px; color: var(--md-sys-color-inverse-on-surface); background: var(--md-sys-color-inverse-surface); box-shadow: 0 18px 50px rgb(0 0 0 / .35); }
 .aide-call-ringing { top: 84px; display: flex; flex-wrap: wrap; align-items: center; gap: 14px; padding: 16px 18px; animation: aide-drop .35s ease-out; }
 .aide-call-sheet, .aide-call-summary { bottom: 16px; display: flex; flex-direction: column; gap: 12px; padding: 16px 18px; max-height: min(72vh, 640px); animation: aide-rise .3s ease-out; }
+.aide-call-sheet { --md-sys-color-primary: var(--md-sys-color-inverse-primary); --md-sys-color-on-primary: var(--md-sys-color-inverse-surface); --md-sys-color-outline: color-mix(in srgb, var(--md-sys-color-inverse-on-surface) 40%, transparent); }
 .aide-call-summary { background: var(--md-sys-color-surface); color: var(--md-sys-color-on-surface); border: 1px solid var(--md-sys-color-outline-variant); overflow: auto; }
 @keyframes aide-drop { from { transform: translate(-50%, -20px); opacity: 0; } }
 @keyframes aide-rise { from { transform: translate(-50%, 24px); opacity: 0; } }
