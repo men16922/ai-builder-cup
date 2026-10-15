@@ -9,7 +9,7 @@ Execution status: owner resumed the goal on 15 October evening. Organization-log
 ## My Aide in-car features (deployed web/API)
 
 - Calls handled by My Aide, vehicle controls, diagnosis cluster, error manual, Places photos and numbered markers, Ask your own Aide, and the Platform & A2A page are live on gateway revision 00020 (`2fb8d11`). Real Gemini/Places/Chief-card checks ran privately with the runtime identity; an authenticated deployed browser walkthrough is still pending the owner's sign-in approval.
-- Gates: server 220, browser gates (web, console + Platform, mobility, call-safety, My Aide), hosted, publishable, Android core. Android UI parity is in progress; the last built APK predates these features.
+- Gates: server 220, browser gates (web, console + Platform, mobility, call-safety, My Aide), hosted, publishable, Android core. Android parity is committed in `14e034d` (assemble/unit/lint, core, ktfmt, instrumented 21 run/0 failed/1 opt-in skip); the map overlays and live photos/TTS still need a signed-in device check.
 
 ## In-car call uncertainty
 
