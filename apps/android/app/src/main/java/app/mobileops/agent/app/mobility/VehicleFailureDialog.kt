@@ -49,6 +49,11 @@ internal fun VehicleFailureDialog(failure: Failure?, code: String? = null) {
             "case_not_promotable" ->
                 R.string.mobility_error_safety_summary to R.string.mobility_error_safety
             "places_empty" -> R.string.mobility_error_empty_summary to R.string.mobility_error_empty
+            "places_out_of_range" ->
+                R.string.mobility_error_range_summary to R.string.mobility_error_range
+            "mobility_provider_busy" ->
+                R.string.mobility_error_provider_busy_summary to
+                    R.string.mobility_error_provider_busy
             "vehicle_changed",
             "report_changed",
             "journey_changed",

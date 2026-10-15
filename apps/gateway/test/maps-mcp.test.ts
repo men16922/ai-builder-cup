@@ -41,3 +41,12 @@ test('MCP errors, unsafe source URLs, invalid coordinates and oversized payloads
   assert.throws(()=>googleMapsMcpPlaces(options),/live_mobility_disabled/);
   assert.throws(()=>syntheticMapsMcpPlaces(options,globalThis.fetch),/synthetic_mobility_disabled/);
 });
+
+test('MCP results beyond the simulated journey range are dropped, with the index-citing summary',async()=>{
+  const far={...content.places[0],id:'synthetic-far',location:{latitude:location.latitude-0.2,longitude:location.longitude}};
+  const mixed=syntheticMapsMcpPlaces(options,async()=>response({...content,places:[content.places[0],far]}));
+  const kept=await mixed.nearby(location,'restaurant',AbortSignal.timeout(1000));
+  assert.ok(!Array.isArray(kept));assert.deepEqual(kept.places.map(place=>place.id),['synthetic-place']);assert.equal(kept.summary,undefined);
+  const allFar=syntheticMapsMcpPlaces(options,async()=>response({...content,places:[far]}));
+  await assert.rejects(allFar.nearby(location,'restaurant',AbortSignal.timeout(1000)),/maps_search_out_of_range/);
+});

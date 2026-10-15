@@ -167,13 +167,18 @@ function mapsMcpPlaces(options:{projectId:string; token(signal:AbortSignal):Prom
     const envelope=z.object({jsonrpc:z.literal('2.0'),id:z.literal(1),result:z.object({isError:z.boolean().optional(),structuredContent:mcpSearch.optional()})}).parse(body);
     if(envelope.result.isError || !envelope.result.structuredContent)throw Error('maps_search_unavailable');
     const result=envelope.result.structuredContent,fetchedAt=new Date().toISOString();
-    const places=result.places.map(place=>placeSchema.parse({
+    const found=result.places.map(place=>placeSchema.parse({
       id:place.id,name:place.attribution.title.replace(/\s+-\s+Google Maps$/,''),address:'',location:place.location,kind,
       source:'google-maps-mcp',fetchedAt,mapsUrl:place.googleMapsLinks.placeUrl,
     }));
+    // locationBias is a preference, not a restriction: drop places beyond the simulated journey range.
+    // The provider summary cites results by index, so it is kept only when nothing was dropped.
+    const places=found.filter(place=>Math.hypot((place.location.latitude-location.latitude)*111_000,(place.location.longitude-location.longitude)*88_000)<=10_000);
+    if(found.length&&!places.length)throw Error('maps_search_out_of_range');
+    const summary=places.length===found.length?result.summary:undefined;
     // Places API (New) details use a separate cloud-platform token; the Maps MCP token keeps its narrow scope.
     const details=detailToken?await detailToken(signal).catch(()=>undefined):undefined;
-    return {summary:result.summary,places:details?await Promise.all(places.map(place=>enrichPlace(place,options,details,fetcher,signal))):places};
+    return {summary,places:details?await Promise.all(places.map(place=>enrichPlace(place,options,details,fetcher,signal))):places};
   }};
 }
 const googlePlace=z.object({id:z.string(),displayName:z.object({text:z.string()}),formattedAddress:z.string().optional(),location:z.object({latitude:z.number(),longitude:z.number()}),rating:z.number().optional(),

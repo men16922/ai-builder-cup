@@ -371,6 +371,10 @@
     <string name="mobility_error_safety">새로고침한 뒤 정차·온도·증상과 복구 근거를 확인하세요. 확인되지 않은 조건은 사람과 검토하세요.</string>
     <string name="mobility_error_empty_summary">지도 제공자가 현재 위치와 요청에 맞는 장소를 반환하지 않았습니다.</string>
     <string name="mobility_error_empty">요청을 더 구체적으로 바꾸어 직접 검색하세요. 아직 목적지를 선택하거나 이동을 시작하지 않았습니다.</string>
+    <string name="mobility_error_range_summary">찾은 장소가 모두 시뮬레이션 주행 범위(10 km) 밖입니다.</string>
+    <string name="mobility_error_range">더 가까운 지역으로 다시 요청하세요. 목적지는 선택되지 않았고 이동도 시작하지 않았습니다.</string>
+    <string name="mobility_error_provider_busy_summary">Google AI 서비스가 잠시 바쁩니다. 아무것도 바뀌지 않았습니다.</string>
+    <string name="mobility_error_provider_busy">잠시 후 다시 요청하세요.</string>
     <string name="calls_tab">통화</string>
     <string name="controls_title">차량 제어</string>
     <string name="controls_locked">잠김</string>

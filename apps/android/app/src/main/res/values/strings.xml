@@ -371,6 +371,10 @@
     <string name="mobility_error_safety">Refresh and check parking, temperature, symptoms and recovery evidence. Review unconfirmed conditions with a person.</string>
     <string name="mobility_error_empty_summary">The provider returned no matching places for this location and request.</string>
     <string name="mobility_error_empty">Make the request more specific and search explicitly. No destination was selected and no journey started.</string>
+    <string name="mobility_error_range_summary">Every place found is beyond the 10 km simulated driving range.</string>
+    <string name="mobility_error_range">Ask for somewhere closer. No destination was selected and no journey started.</string>
+    <string name="mobility_error_provider_busy_summary">The Google AI service is busy right now. Nothing changed.</string>
+    <string name="mobility_error_provider_busy">Wait a moment, then ask again.</string>
     <string name="calls_tab">Calls</string>
     <string name="controls_title">Vehicle controls</string>
     <string name="controls_locked">Locked</string>

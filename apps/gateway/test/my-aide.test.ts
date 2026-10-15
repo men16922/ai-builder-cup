@@ -136,3 +136,8 @@ test('follow-up times resolve on the server from the agreed KST day and clock ti
   assert.equal(followupWhen({ minutesFromNow: 30 }, evening).when, '2026-10-15T13:18:00.000Z');
   assert.deepEqual(followupWhen({}, evening), {});
 });
+
+test('a busy AI provider on a side-effect-free request reports a retryable busy code', async t => {
+  const s = await setup(t, { async assist() { throw Error('google_mobility_busy'); } });
+  await assert.rejects(s.send(s.initial, { operation: 'assist', text: 'Cool the car', language: 'en' }), (error: { status?: number; code?: string }) => error.status === 503 && error.code === 'mobility_provider_busy');
+});

@@ -285,6 +285,11 @@ export class GcpMobility {
       // The client request was admitted before this provider/result failure. It is not a
       // malformed user request, and must retain unknown/no-resend guidance after cleanup.
       if (callOutput) throw fail(502, 'mobility_outcome_unknown');
+      // A search or an assist proposal changes nothing, so the driver may simply ask again.
+      if (!callSteps.has(command.operation) && !investigates) {
+        if (providerBusy) throw fail(503, 'mobility_provider_busy');
+        if (error instanceof Error && error.message === 'maps_search_out_of_range') throw fail(422, 'places_out_of_range');
+      }
       throw error;
     }
   }
