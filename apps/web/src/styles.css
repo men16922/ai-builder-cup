@@ -544,6 +544,8 @@ a.ops-utility { color: var(--md-sys-color-primary); }
   .aide-places article > .ops-actions { grid-column: 1 / -1; }
   .aide-place-photo, .aide-place-photo img, .aide-place-photo-empty { width: 96px; } .aide-place-photo img, .aide-place-photo-empty { height: 80px; }
   .aide-call-ringing { top: 68px; }
+  .aide-call-head { flex-wrap: wrap; } .aide-call-head .aide-call-who { min-width: 150px; } .aide-call-head .ops-chip { order: 10; }
+  .aide-call-sheet .aide-call-avatar { width: 40px; height: 40px; }
 }
 @media (prefers-reduced-motion: reduce) { .aide-call, .aide-call-avatar.is-ringing, .aide-part.is-fault, .aide-tire.is-fault, .aide-cluster-dot.is-fault { animation: none; } }
 

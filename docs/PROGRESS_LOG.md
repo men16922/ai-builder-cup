@@ -1,5 +1,11 @@
 # Progress log
 
+## 2026-10-15 — My Aide in-car features deployed (web/API)
+- Changed: simulated incoming calls answered by My Aide (Gemini-voiced fictional caller, autopilot simulation, phone badge, summary with message/calendar/reminder drafts that only a tap completes); Tesla-style controls (lock, climate preconditioning, charge limit/start/stop, flash/honk); straight-line energy/odometer; low-tire fault; diagnosis cluster with a car diagram highlighting the faulty part; error popup with per-code manual; Places (New) photos/address/rating with attribution and numbered markers; Ask your own Aide (Gemini proposals that run only on tap); Platform & A2A page with the live Chief Agent Card (endpoint hidden), guardrails and hourly usage.
+- Verified: `npm run check` (server 220; web, console, mobility, call-safety, My Aide and hosted browser gates; publishable), Android core gate. Private real-provider runs: Gemini call flow and summary, Ask-Aide proposals (KO/EN), Places photos for five Seoul results, live Chief card (`chief`, streaming, five skills). Deployed `2fb8d11` as gateway revision 00020; asset hashes matched for revision 00019, same service UID and runtime configuration.
+- Not verified: an authenticated deployed browser run (Google sign-in needs the owner's approval), physical phone, Android UI parity (in progress), refreshed demo video and deck.
+- Next: Android parity for controls/calls/diagnosis/photos/Ask Aide, authenticated deployed walkthrough, demo re-record.
+
 ## 2026-10-15 — Calls cannot repeat after uncertain or vanished model work
 - Reproduced: a fresh key/recreated API called an uncertain answer twice. Fixed with a durable call-snapshot claim, 30-second unknown expiry, exact-snapshot cleanup, late-result fence and empty-turn rejection; the confirmed transcript is retained.
 - Verified: six API regressions; published `6720b20` server suite 219, unknown-call KO/EN/390px/axe/no-resend browser check, in-car fixture flow, Android core 69/app 3 and assembly/lint. Existing successful direct Gemini/Maps records inspected without rerunning paid calls. Limits and evidence: [call safety review](reviews/2026-10-15-call-safety.md).

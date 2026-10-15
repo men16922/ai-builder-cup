@@ -6,6 +6,11 @@ Updated: 2026-10-15. Goal: award-ready Aide submission on 18 October. Current ow
 
 Execution status: owner resumed the goal on 15 October evening. Organization-login result is pending; browser control is not exposed in this resumed session, so the current authenticated page is unverified. Historical blocked checks remain recorded separately. Physical phone, real reviewer, paired impact, Korea-capable routing inputs and submission still require owner/external evidence; full goal is incomplete.
 
+## My Aide in-car features (deployed web/API)
+
+- Calls handled by My Aide, vehicle controls, diagnosis cluster, error manual, Places photos and numbered markers, Ask your own Aide, and the Platform & A2A page are live on gateway revision 00020 (`2fb8d11`). Real Gemini/Places/Chief-card checks ran privately with the runtime identity; an authenticated deployed browser walkthrough is still pending the owner's sign-in approval.
+- Gates: server 220, browser gates (web, console + Platform, mobility, call-safety, My Aide), hosted, publishable, Android core. Android UI parity is in progress; the last built APK predates these features.
+
 ## In-car call uncertainty
 
 - Published `6720b20` includes controls/call/diagnosis/photos/platform source and the owned call safety guard. A call-snapshot claim prevents duplicate provider steps across keys/instances; errors or 30-second expiry retain unknown, late responses cannot revive it, and newer confirmed calls survive old cleanup. Six negative API regressions and the read-only unknown-call browser panel pass.
