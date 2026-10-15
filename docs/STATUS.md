@@ -8,8 +8,8 @@ Execution status: owner resumed the goal on 15 October evening. Organization-log
 
 ## Actual native signed-in increment
 
-- Exact private APK `34a14f1` now passes actual Google/Firebase/Firestore sign-in, real Gemini proposals/explicit temperature+climate actions and five-place Maps/tiles/photo-attribution checks on API 36 emulator. Native answer/delegate pass; end/summary returned 400 and remained unknown with confirmed transcript/no follow-up after read. Original failed take retained; no resend. This is not physical-phone, complete call acceptance or human impact proof.
-- Local classification fix: generated call-output validation now yields unknown/502 rather than invalid user request/400; fixed diagnostic labels expose no output content. HTTP red→green and full web/API 227/browser/axe/hosted/publish pass. Deployment and a distinct new call remain next; exact original invalid field is unproved. [Review](reviews/2026-10-15-native-live-call-output.md).
+- Exact APK `34a14f1` passes real Google/Firebase/Firestore sign-in, Gemini proposals/explicit controls and five-place Maps/tiles/photo attribution on API 36 emulator. First summary 400 remained unknown; source `61a32cb` then deployed with unchanged UID/config/six hashes, and a distinct call summarized/saved. Its calendar time and empty message body were wrong; no follow-up was performed. All takes retained; no physical/human-impact claim.
+- Reviewed local increment preserves the concurrent KST resolver, anchors relative days before model work and refuses incomplete/expired draft completion. Incomplete and midnight red→green regressions plus full isolated web/API 237/browser/axe/hosted/publish pass, as do root typecheck/publish. New generation fields require useful body/recipient and agreed schedule; no invented fallback. Ship/deploy/new-call qualification remains next; original invalid field is unproved. [Review](reviews/2026-10-15-native-live-call-output.md).
 
 ## Current My Aide submission materials
 

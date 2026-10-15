@@ -11,6 +11,7 @@ import { chargeReconnectVerdict, safeChargeConditions } from './runbooks';
 import { chargingEvidence, matchingCases, recoveryGuidance, verifiedCase } from './case-learning';
 import { callPersona, driverContext, followupWhen, settleVehicle, type CallInput } from './calls';
 import { MobilityCallOutputError } from './google-ports';
+import { callDraftReady } from './call-drafts';
 
 export interface VehicleReasoner {
   readonly engine: 'gemini' | 'offline-fixture';
@@ -186,6 +187,8 @@ export class GcpMobility {
     });
     if ('replay' in admitted) return this.view(admitted.replay!);
     const record = admitted.record!, before = record.state.vehicle, callStepKey = admitted.callStepKey;
+    // Relative calendar days refer to the context sent to the model, even across midnight.
+    const callReferenceAt = this.now();
     let diagnosis: VehicleDiagnosis | undefined, candidates: MobilityPlace[] | undefined, searchSummary: string | undefined, callStep: CallStep | undefined, callDigest: CallDigest | undefined, assistPlan: AssistPlan | undefined;
     const investigationLanguage = 'language' in command ? command.language : 'en';
     let appliedCommand: MobilityCommand = command.operation === 'telemetry' && investigates ? {operation:'diagnose',expectedVersion:before!.version,language:investigationLanguage} : command;
@@ -196,7 +199,7 @@ export class GcpMobility {
       }
       if (command.operation === 'assist') assistPlan = assistPlanSchema.parse(await this.reasoner!.assist!({ text: command.text, language: command.language, context: driverContext(record.state, command.language, this.now()) }, AbortSignal.timeout(20_000)));
       if (callSteps.has(command.operation)) {
-        const input = this.callInput(record.state, command);
+        const input = this.callInput(record.state,command,callReferenceAt);
         if (command.operation === 'call_end') callDigest = callDigestSchema.parse(await this.reasoner!.summarizeCall!(input, AbortSignal.timeout(25_000)));
         else callStep = callStepSchema.parse(await this.reasoner!.call!(input, AbortSignal.timeout(20_000)));
         if (callStep && !callStep.aide?.trim() && !callStep.caller?.trim()) throw fail(502, 'call_response_invalid');
@@ -232,7 +235,7 @@ export class GcpMobility {
           if (!current.state.call || !record.state.call || cloudDigest(current.state.call) !== cloudDigest(record.state.call)) throw fail(409, 'call_changed');
         } else if (appliedCommand.operation !== 'initialize' && current.state.vehicle?.version !== appliedCommand.expectedVersion) throw fail(409,'vehicle_changed');
         if (investigates && (this.now()-Date.parse(current.state.reports.find(report=>report.episode===before!.episode)?.at ?? '')>35000 || current.state.reports.find(report=>report.episode===before!.episode)?.state!=='investigating')) throw fail(409,'investigation_expired');
-        const next = this.apply(structuredClone(current),appliedCommand,diagnosis,candidates,searchSummary,{step:callStep,digest:callDigest,assist:assistPlan});
+        const next = this.apply(structuredClone(current),appliedCommand,diagnosis,candidates,searchSummary,{step:callStep,digest:callDigest,assist:assistPlan,referenceAt:callReferenceAt});
         const state = mobilityStateSchema.parse(next.state);
         tx.put(storageKey,next,next.mapsExpiresAt ? new Date(next.mapsExpiresAt) : undefined);
         tx.put(receiptKey,{ digest, state:'finished' } satisfies Receipt);
@@ -285,7 +288,7 @@ export class GcpMobility {
       throw error;
     }
   }
-  private apply(record: RecordState, command: MobilityCommand, diagnosis?: VehicleDiagnosis, candidates?: MobilityPlace[], searchSummary?: string, call: { step?: CallStep; digest?: CallDigest; assist?: AssistPlan } = {}): RecordState {
+  private apply(record: RecordState, command: MobilityCommand, diagnosis?: VehicleDiagnosis, candidates?: MobilityPlace[], searchSummary?: string, call: { step?: CallStep; digest?: CallDigest; assist?: AssistPlan; referenceAt?: number } = {}): RecordState {
     const state = record.state, now = this.now(), at = new Date(now).toISOString();
     state.cases ??= [];
     if (command.operation === 'initialize') {
@@ -461,7 +464,7 @@ export class GcpMobility {
         const live=state.call!, digest=call.digest!;
         live.state='ended';live.endedAt=at;
         live.summary={text:digest.text,actionItems:digest.actionItems,followups:digest.followups.map(item=>({id:randomUUID(),kind:item.kind,title:item.title,status:'draft' as const,
-          ...(item.body?{body:item.body}:{}),...(item.to?{to:item.to}:{}),...followupWhen(item,now)}))};
+          ...(item.body?{body:item.body}:{}),...(item.to?{to:item.to}:{}),...followupWhen(item,call.referenceAt ?? now)}))};
         if (state.journey) state.journey.autopilot=false;
         break;
       }
@@ -477,6 +480,7 @@ export class GcpMobility {
         const targets=[state.call,...state.calls].filter((item): item is VehicleCall=>item?.id===command.callId);
         const found=targets.flatMap(item=>item.summary?.followups.filter(entry=>entry.id===command.followupId)??[]);
         if (!found.length||found.some(entry=>entry.status!=='draft')) throw fail(409,'followup_changed');
+        if (command.action==='done' && found.some(entry=>!callDraftReady(entry,now))) throw fail(409,'followup_not_ready');
         for (const entry of found) { entry.status=command.action==='done'?'done':'dismissed'; if (command.action==='done') entry.doneAt=at; }
         break;
       }
@@ -493,10 +497,10 @@ export class GcpMobility {
     if (!live||live.id!==command.callId||live.state!==wanted) throw fail(409,'call_changed');
     if ((command.operation==='call_say'||command.operation==='call_delegate') && live.turns.length>13) throw fail(409,'call_turn_limit');
   }
-  private callInput(state: MobilityState, command: MobilityCommand): CallInput {
+  private callInput(state: MobilityState, command: MobilityCommand, referenceAt: number): CallInput {
     const live=state.call!, persona=callPersona(live.scenario,live.language);
     const step=command.operation==='call_answer'?'open':command.operation==='call_say'?'reply':command.operation==='call_delegate'?'delegate':'summary';
-    return { scenario:live.scenario,language:live.language,caller:live.caller,goal:persona.goal,driverContext:driverContext(state,live.language,this.now()),
+    return { scenario:live.scenario,language:live.language,caller:live.caller,goal:persona.goal,driverContext:driverContext(state,live.language,referenceAt),
       handledBy:command.operation==='call_answer'?command.handledBy:command.operation==='call_delegate'?'aide':live.handledBy,step,
       turns:[...live.turns.map(turn=>({role:turn.role,text:turn.text})),...(command.operation==='call_say'?[{role:'driver' as const,text:command.text}]:[])] };
   }

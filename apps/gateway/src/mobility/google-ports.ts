@@ -3,6 +3,7 @@ import { assistPlanSchema, callDigestSchema, callStepSchema, coordinateSchema, j
 import type { CallInput } from './calls';
 import type { CloudRunCredentials } from '../cloud-run/transport';
 import type { MobilityPlaces, VehicleReasoner } from './service';
+import { callDraftResponseSchema } from './call-drafts';
 
 /** Fixed endpoints and bounded JSON. Neither model output nor client text can select a host. */
 async function boundedJson(response: Response, signal: AbortSignal): Promise<unknown> {
@@ -76,7 +77,7 @@ function vehicleReasoner(options: VehicleReasonerOptions, fetcher: typeof fetch)
     try {
       return callDigestSchema.parse(await generate(signal,summaryInstruction(input),{input:callView(input)},0.2,2048,{type:'OBJECT',required:['text','actionItems','followups'],properties:{
       text:{type:'STRING'},actionItems:{type:'ARRAY',items:{type:'STRING'}},
-      followups:{type:'ARRAY',items:{type:'OBJECT',required:['kind','title'],properties:{kind:{type:'STRING',enum:['message','calendar','reminder']},title:{type:'STRING'},body:{type:'STRING'},dayOffset:{type:'INTEGER'},localTime:{type:'STRING'},to:{type:'STRING'}}}},
+      followups:callDraftResponseSchema,
       }}));
     } catch (error) {
       if (error instanceof z.ZodError || error instanceof SyntaxError) throw new MobilityCallOutputError('summary', error);
@@ -113,7 +114,7 @@ const callInstruction=(input:CallInput)=>callRules(input)+' Produce the next lin
   +'Set callerEnds=true only when the caller\'s goal is settled and the caller says goodbye.';
 const summaryInstruction=(input:CallInput)=>callRules(input)+' The call has ended. Summarize it for the driver as JSON: "text" in two or three sentences, up to five short "actionItems", '
   +'and up to three follow-up drafts the transcript clearly supports: kind "message" (a short reply to the caller in "body", recipient name in "to"), "calendar" (event "title"), or "reminder". '
-  +'For a calendar or reminder with an agreed time, give "dayOffset" (0 today, 1 tomorrow, relative to the current time in driverContext) and "localTime" as 24-hour HH:mm in KST exactly as agreed in the transcript; omit both when no time was agreed. '
+  +'For a calendar or reminder with an agreed time, give "dayOffset" (0 today, 1 tomorrow, relative to the current time in driverContext) and "localTime" as 24-hour HH:mm in KST exactly as agreed in the transcript; omit that entire calendar or reminder draft when no time was agreed. Every message draft needs a nonempty body and recipient. '
   +'Never claim anything was sent, booked or decided unless the transcript says so.';
 
 const mcpPlace = z.object({

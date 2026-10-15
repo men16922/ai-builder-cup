@@ -7,13 +7,13 @@ import { GcpMobility, type VehicleReasoner, type MobilityPlaces } from '../src/m
 import { MobilityClient } from '../../web/src/mobility/mobility-client';
 import { createGcpApiServer } from '../src/http/api';
 import { syntheticVehicleReasoner, vertexVehicleReasoner, MobilityCallOutputError } from '../src/mobility/google-ports';
-import { callDigestSchema } from '@contracts/gcp/mobility';
+import { callDigestSchema, type CallDigest } from '@contracts/gcp/mobility';
 import { once } from 'node:events';
 import { GcpObservations } from '../src/workflow/observations';
 import type { MobilityState, CallStep } from '@contracts/gcp/mobility';
 
-async function setup(t: TestContext, step: NonNullable<VehicleReasoner['call']>, places?: MobilityPlaces) {
-  let clock = Date.parse('2026-10-15T11:00:00Z');
+async function setup(t: TestContext, step: NonNullable<VehicleReasoner['call']>, places?: MobilityPlaces, startAt = Date.parse('2026-10-15T11:00:00Z')) {
+  let clock = startAt;
   const store = new SqliteCloudStore(':memory:', () => clock); t.after(() => store.close());
   const access = new GcpWebAccess({ async verify(token) { return { actorId: token, expiresAt: clock + 3600000 }; } }, store, () => clock);
   const scope = { edition: 'organization' as const, organizationId: 'synthetic-org', workspaceId: 'synthetic-workspace', label: 'Synthetic' };
@@ -284,4 +284,68 @@ test('Vertex call validation exposes only fixed diagnostic labels and keeps live
   assert.equal(calls, 1);
   assert.throws(() => vertexVehicleReasoner(options), /live_mobility_disabled/);
   assert.throws(() => syntheticVehicleReasoner(options, globalThis.fetch), /synthetic_mobility_disabled/);
+});
+
+
+test('incomplete legacy follow-ups cannot be completed, but a deliberate dismiss remains available', async t => {
+  const drafts: CallDigest['followups'] = [
+    { kind: 'message', title: 'Synthetic reply', to: 'Synthetic caller' },
+    { kind: 'message', title: 'Synthetic reply', to: 'Synthetic caller', body: '   ' },
+    { kind: 'message', title: 'Synthetic reply', body: 'A complete synthetic reply' },
+    { kind: 'calendar', title: 'Synthetic meeting' },
+    { kind: 'reminder', title: 'Synthetic reminder' },
+  ];
+  for (const draft of drafts) await t.test('incomplete draft', async t => {
+    const s = await setup(t, async () => greeting);
+    let summaries = 0;
+    s.reasoner.summarizeCall = async () => { summaries++; return { text: 'Synthetic summary', actionItems: [], followups: [draft] }; };
+    let state = await s.send(s.ringing, { operation: 'call_answer', callId: s.ringing.call!.id, handledBy: 'aide' });
+    state = await s.send(state, { operation: 'call_end', callId: state.call!.id });
+    state = await s.send(state, { operation: 'call_save', callId: state.call!.id });
+    const callId = state.call!.id, followupId = state.call!.summary!.followups[0].id;
+    await assert.rejects(s.send(state, { operation: 'followup', callId, followupId, action: 'done' }), error => error instanceof Error && 'code' in error && error.code === 'followup_not_ready');
+    const latest = await s.api.read(s.session);
+    assert.equal(latest.call!.summary!.followups[0].status, 'draft');
+    assert.equal(latest.calls[0].summary!.followups[0].status, 'draft');
+    const dismissed = await s.send(latest, { operation: 'followup', callId, followupId, action: 'dismiss' });
+    assert.equal(dismissed.call!.summary!.followups[0].status, 'dismissed');
+    assert.equal(dismissed.calls[0].summary!.followups[0].status, 'dismissed');
+    assert.equal(s.calls(), 1); assert.equal(summaries, 1);
+  });
+});
+
+test('a scheduled draft is checked again at completion and expiry cannot become a completed action', async t => {
+  const s = await setup(t, async () => greeting);
+  s.reasoner.summarizeCall = async () => ({ text: 'Synthetic summary', actionItems: [], followups: [{ kind: 'calendar', title: 'Synthetic meeting', minutesFromNow: 1 }] });
+  let state = await s.send(s.ringing, { operation: 'call_answer', callId: s.ringing.call!.id, handledBy: 'aide' });
+  state = await s.send(state, { operation: 'call_end', callId: state.call!.id });
+  const callId = state.call!.id, followupId = state.call!.summary!.followups[0].id;
+  s.advance(120000);
+  await assert.rejects(s.send(state, { operation: 'followup', callId, followupId, action: 'done' }), error => error instanceof Error && 'code' in error && error.code === 'followup_not_ready');
+  assert.equal((await s.api.read(s.session)).call!.summary!.followups[0].status, 'draft');
+});
+
+
+test('an agreed local day is anchored before model work even when the summary finishes after KST midnight', async t => {
+  const s = await setup(t, async () => greeting, undefined, Date.parse('2026-10-15T14:59:55Z'));
+  let state = await s.send(s.ringing, { operation: 'call_answer', callId: s.ringing.call!.id, handledBy: 'aide' });
+  s.reasoner.summarizeCall = async () => {
+    s.advance(20000); // Model finishes on Fri 00:00:15; "tomorrow" still referred to Friday.
+    return { text: 'Synthetic tomorrow 16:30 agreement', actionItems: [], followups: [{ kind: 'calendar', title: 'Synthetic meeting', dayOffset: 1, localTime: '16:30' }] };
+  };
+  state = await s.send(state, { operation: 'call_end', callId: state.call!.id });
+  assert.equal(state.call!.summary!.followups[0].when, '2026-10-16T07:30:00.000Z');
+});
+
+test('a complete future calendar remains an explicit, one-time simulated completion', async t => {
+  const s = await setup(t, async () => greeting);
+  s.reasoner.summarizeCall = async () => ({ text: 'Synthetic summary', actionItems: [], followups: [{ kind: 'calendar', title: 'Synthetic meeting', dayOffset: 1, localTime: '16:30' }] });
+  let state = await s.send(s.ringing, { operation: 'call_answer', callId: s.ringing.call!.id, handledBy: 'aide' });
+  state = await s.send(state, { operation: 'call_end', callId: state.call!.id });
+  const callId = state.call!.id, followupId = state.call!.summary!.followups[0].id;
+  assert.equal(state.call!.summary!.followups[0].status, 'draft');
+  state = await s.send(state, { operation: 'followup', callId, followupId, action: 'done' });
+  assert.equal(state.call!.summary!.followups[0].status, 'done');
+  await assert.rejects(s.send(state, { operation: 'followup', callId, followupId, action: 'done' }));
+  assert.equal(s.calls(), 1);
 });

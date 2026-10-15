@@ -1,9 +1,9 @@
 # Progress log
 
 ## 2026-10-15 — Actual native sign-in, proposals and Maps; call-output classification
-- Changed: a valid summary's output-validation failure now reports unknown/502 instead of a user-input 400, with fixed diagnostic labels and unchanged durable no-resend semantics. Scope: [native live review](reviews/2026-10-15-native-live-call-output.md).
-- Verified: actual prepared APK, Google/Firebase/Firestore, real Gemini proposals and explicit controls, five Maps places/tiles/photo attribution; native answer/delegate 200, summary 400 then unknown/no follow-up. HTTP reproduction changes 400→502; full local web/API 227/browser/axe/hosted/publish pass. Exact original invalid field is unavailable; no summary-generation fix claimed.
-- Next: image-only deploy and distinct new call qualification, then held-vehicle input race, current phone/web acceptance, real reviewer/impact/actual video. Original failures/recordings retained; no old unknown step resent, no physical or human-productivity claim.
+- Changed: output-validation errors become unknown/502 with fixed labels; deployed `61a32cb` preserves UID/config/six hashes. Additive follow-up guard now requires usable content/future time at completion and anchors the concurrent KST resolver to the pre-model context. Scope: [native live review](reviews/2026-10-15-native-live-call-output.md).
+- Verified: actual APK/login/Ask/Maps, native answer/delegate and failed summary retained unknown; a distinct later actual call summarized/saved but exposed wrong calendar time/empty body. Concurrent date fix independently passes 228; own incomplete/expired and midnight red→green checks pass with full isolated API 237/browser/axe/hosted/publish. Original invalid field remains unproved; no failure erased or resent.
+- Next: ship/deploy the reviewed readiness/midnight increment, then one distinct actual call and complete-draft check; held-vehicle input race, phone/web, real reviewer/impact and actual final video remain. Recordings stay private; no physical or human-productivity claim.
 
 ## 2026-10-15 — Current My Aide deck, entry and recording handoff
 - Changed: ten English slides use shared tokens/original EV art, reviewed evidence and three 2x offline components; source/capture/image hashes retained. Entry, checklist, canonical 2:45 actual recording script and remote handoff now reflect Ask/calls/diagnosis and separate cloud authority.
