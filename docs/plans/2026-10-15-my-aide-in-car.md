@@ -71,7 +71,7 @@ Deploy, check real tiles/photos/call flow on the deployed site and a phone, re-r
 
 ## Delayed-model acceptance increment
 
-Codex reproduced and repaired blocked movement/Stop and false vehicle-version conflicts during a call wait. Conversation revisions and parallel request lanes now preserve newer vehicle/call state independently in web/native; a delayed reply cannot revive a read-paused, unknown or canceled journey. Canonical local web/API 225, core 74/app 3, emulator 20 pass/one Maps skip and native Stop control pass. Matching APK/provider and image-only rollout are next; authenticated deployed/phone and actual demo remain acceptance work.
+Codex reproduced and repaired blocked movement/Stop and false vehicle-version conflicts during a call wait. Conversation revisions and parallel request lanes now preserve newer vehicle/call state independently in web/native; a delayed reply cannot revive a read-paused, unknown or canceled journey. Canonical local web/API 225, core 74/app 3, emulator 20 pass/one Maps skip and native Stop control pass. Matching private APK from `34a14f1` and image-only gateway `1742cfe` rollout are complete; UID/config unchanged, latest traffic 100% and six asset hashes verified. A separate SDK probe and settled native map frame pass, and one real Gemini local-service call preserves Stop during response latency. Stop label contrast is 7.75:1. Authenticated deployed/phone and actual demo remain acceptance work.
 
 ## Concurrent ownership (15 Oct, evening)
 

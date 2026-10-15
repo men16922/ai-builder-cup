@@ -9,7 +9,7 @@ Execution status: owner resumed the goal on 15 October evening. Organization-log
 ## Delayed call and vehicle progress
 
 - Web/native now process conversation and vehicle requests independently. Monotonic call revisions prevent out-of-order replies erasing newer calls; current vehicle progress/Stop is retained. Identity, membership, exact-call snapshots and durable claim deadlines remain authoritative; a call reply cannot arm a paused journey.
-- Canonical local gate: web/API 225, browser delayed-model/390px/axe, core 74/app 3, assembly/lint and emulator 20 passed/one opt-in Maps skip. New APK/provider and image-only rollout are the next checks; these counts do not establish signed-in deployed or physical-device behavior.
+- Canonical local gate: web/API 225, delayed-model/390px/axe, core 74/app 3, assembly/lint and emulator 20 passed/one Maps skip. Separate restricted-key SDK probe passes (one, no skips); product tiles/car/path inspected after settling. One real Gemini local-service call preserved an explicit Stop while pending. Source `34a14f1` + contrast `1742cfe` is deployed image-only: UID/config unchanged, latest traffic 100%, six immutable uploaded hashes match. Matching private APK prepared; authenticated app/phone remains unverified.
 
 ## My Aide in-car features (deployed web/API)
 

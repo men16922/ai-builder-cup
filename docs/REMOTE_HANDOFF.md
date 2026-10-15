@@ -22,6 +22,8 @@ Git contains the implementation, contracts, tests, example configuration, origin
 
 Ask for references and the minimum scoped configuration, not a dump of `.data`, `.env`, signing keys or a personal CLI session. Access to a public repository does not grant GCP IAM, workspace membership or mutation permission. Runtime authentication uses approved existing identities; no extra IAM or public mutation route should be created to bypass the handoff.
 
+The current private phone candidate is built from `34a14f1`; the web-only contrast follow-up is `1742cfe`. Its signed APK is separate from Git. Match the installed APK/source before testing: the expanded strict native contract includes `callRevision`, so an earlier APK is not evidence of current compatibility. The matching image-only gateway rollout has unchanged runtime configuration and six uploaded asset hashes verified. The configured public origin is authoritative; its nonconfigured Cloud Run alias intentionally returns `403 host_required`.
+
 ## Toolchain and checks
 
 Node 24+, Python 3.11+, and the Android versions in `apps/android/README.md` are required. SDKs, Gradle dependencies and `.tools/venv-agents` need their own first-time preparation; Git does not supply the owner's caches. Install dependencies before running the offline gates:
