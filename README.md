@@ -114,7 +114,7 @@ How to build and deploy is in [docs/DEPLOY.md](docs/DEPLOY.md). Real identifiers
 
 ## Current limits
 
-- Separate post-fix summary qualifications retain one 429/no retry and a later `a80225a` attempt reaching its 25-second deadline without an HTTP response. Final date/body acceptance remains unproved. Private configured APK `51cfa9d` is prepared, not installed; the device still has the earlier unidentified artifact. Confirm its controller/intended installation before UI tests. Raw recordings are not a final public demo. See `docs/reviews/2026-10-15-native-live-call-output.md`.
+- Separate qualifications retain the first 429/no retry and `a80225a` 25-second deadline. After a minimal availability control, one distinct `fe69923` real summary passes in 2,149 ms with correct KST time, usable message/recipient, save and two explicit local simulated completions. Its setup turns/identity are synthetic; final native date/body acceptance remains unproved. Private configured APK `51cfa9d` is prepared, not installed; the device still has the earlier unidentified artifact. Confirm its controller/intended installation before UI tests. Raw recordings are not a final public demo. See `docs/reviews/2026-10-15-native-live-call-output.md`.
 - The Android crew screen (instruction, progress, approval, report) is covered by unit tests against the real wire format, and on 2026-10-11 was driven on an emulator against the deployed services (Google sign-in, a task opened from the server, a signed approval applied, an honest report). It has not run on a physical device.
 - Push notifications are implemented on the server and in the app but are off in the deployed demo.
 - ADK's A2A support is marked experimental by Google.
