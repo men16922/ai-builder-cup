@@ -10,6 +10,7 @@ import OperationsOverview from './OperationsOverview';
 import PlanLibrary from './PlanLibrary';
 import Assistant from './Assistant';
 import Dashboard from './Dashboard';
+import PlatformPanel from './PlatformPanel';
 import { AgentClient } from './agent-client';
 import { consoleNav, SERVICE_PREFIX } from './console-nav';
 import MobilityWelcome from '../mobility/MobilityWelcome';
@@ -64,8 +65,9 @@ export default function ConnectedObservation({ client, label }: { client: GcpObs
       {selected?.binding.target.provider === 'gcp' ? <p className="gcp-wrap">{selected.binding.target.projectId} · {selected.binding.target.location} · {selected.binding.target.revision}</p> : null}
     </Stack></Card>;
     return <Stack gap="l">
-      {state.mobilityAvailable && ['vehicle','journey','assistance'].includes(panelTab) ? <MobilityWorkspace client={mobility} page={panelTab as 'vehicle'|'journey'|'assistance'} journeyKind={journeyKind} onNavigate={(page,kind)=>{if(kind)setJourneyKind(kind);open(page);}} /> : null}
+      {state.mobilityAvailable && ['vehicle','journey','calls','assistance'].includes(panelTab) ? <MobilityWorkspace client={mobility} page={panelTab as 'vehicle'|'journey'|'calls'|'assistance'} journeyKind={journeyKind} onNavigate={(page,kind)=>{if(kind)setJourneyKind(kind);open(page);}} /> : null}
       {panelTab === 'overview' ? <Dashboard client={client} agents={agents} /> : null}
+      {panelTab === 'platform' ? <PlatformPanel client={client} /> : null}
       {panelTab === 'evidence' ? <><OperationsOverview state={state} />{connection}<div className="gcp-console-workspace gcp-console-single"><div className="gcp-console-main">{state.observation ? <ObservationPanel snapshot={state.observation.snapshot} /> : emptyEvidence}</div>{analysisPanel}</div></> : null}
       {panelTab === 'workflow' ? <>{state.error ? <Banner type="error">{message}</Banner> : null}{planView}</> : null}
       {panelTab === 'saved' ? <PlanLibrary key={state.identity?.key} items={state.planItems ?? []} resources={state.items} selectedId={state.operation?.plan.payload.planId} busy={state.busy} onOpen={openPlan} /> : null}

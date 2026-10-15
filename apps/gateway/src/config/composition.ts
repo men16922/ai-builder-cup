@@ -18,6 +18,7 @@ import { GcpAgentTasks, type ChiefPort } from '../crew/agent-tasks';
 import { GcpOverview, type OverviewPorts } from '../crew/overview';
 import { GcpMobility, type VehicleReasoner, type MobilityPlaces } from '../mobility/service';
 import { approvalReviewPort } from '../crew/approval-review';
+import { GcpPlatform, type AgentCardSource } from '../platform/platform';
 /** Fixed composition contract; only the platform entry constructs real credentials and SDK clients. */
 export function composeGcpServices(input: unknown, ports: {
   identity: WebIdentityVerifier; store: CloudStore; mode: 'live' | 'synthetic'; principal: string; sessionId: string;
@@ -25,7 +26,7 @@ export function composeGcpServices(input: unknown, ports: {
   telemetry?(binding: CloudBinding): CloudRunTelemetryTransport;
   notifications?: GcpPushPorts;
   mobility?: { reasoner?: VehicleReasoner; places?: MobilityPlaces; browserMapKey?: string };
-  agents?: { chief: ChiefPort; approvalKey: Buffer; overview?: OverviewPorts };
+  agents?: { chief: ChiefPort; approvalKey: Buffer; overview?: OverviewPorts; card?: AgentCardSource };
 }): GcpApiServices {
   const config = gcpServerConfiguration.parse(input);
   if (ports.principal !== config.credentials.serviceAccountEmail || ports.model.engine !== (ports.mode === 'live' ? 'gemini' : 'synthetic-fixture')
@@ -50,7 +51,10 @@ export function composeGcpServices(input: unknown, ports: {
   const observations = new GcpObservations(ports.store, access, registrations);
   const workflow = new CloudWorkflow(ports.store, createCloudRunAdapters(registrations, ports.mode, async () => { throw Error('Only the authenticated execution facade may dispatch.'); }));
   const analyses = new GcpAnalyses(ports.store, access, observations, workflow, ports.model);
-  return { access, observations, analyses, mobility: config.mobility?.enabled ? new GcpMobility(ports.store, access, mobilityEntitled, ports.mobility?.reasoner, config.mobility.placesEnabled ? ports.mobility?.places : undefined, Date.now, ports.mobility?.browserMapKey ?? null) : undefined, operations: new GcpOperations(ports.store, access, analyses, registrations), notifications: new GcpNotifications(ports.store, access, ports.notifications), agents: ports.agents ? new GcpAgentTasks(ports.store, access, ports.agents.chief, ports.agents.approvalKey, entitled, Date.now,approvalReviewPort(config.agents?.executionTargets ?? [],ports.transport)) : undefined,
+  const mobility = config.mobility?.enabled ? new GcpMobility(ports.store, access, mobilityEntitled, ports.mobility?.reasoner, config.mobility.placesEnabled ? ports.mobility?.places : undefined, Date.now, ports.mobility?.browserMapKey ?? null) : undefined;
+  const platform = new GcpPlatform(access, { modelId: config.model.modelId, modelLocation: config.model.location, crew: config.agents?.enabled ? ['chief','diagnosis','guardian','ops'] : [],
+    mapsMcp: !!config.mobility?.placesEnabled, placesPhotos: !!config.mobility?.placesEnabled, agents: !!config.agents?.enabled }, ports.agents?.card, mobility);
+  return { access, observations, analyses, mobility, platform, operations: new GcpOperations(ports.store, access, analyses, registrations), notifications: new GcpNotifications(ports.store, access, ports.notifications), agents: ports.agents ? new GcpAgentTasks(ports.store, access, ports.agents.chief, ports.agents.approvalKey, entitled, Date.now,approvalReviewPort(config.agents?.executionTargets ?? [],ports.transport)) : undefined,
     overview: ports.agents?.overview && config.agents?.services.length ? new GcpOverview(access, config.agents.services.map(item => ({ name: item.name, project: config.projectId, region: item.region })), ports.agents.overview, entitled) : undefined, publicOrigin: config.publicOrigin,
     web: Object.fromEntries(config.scopes.map(scope => [scope.edition, { configured: true, scope, identity: { method: 'firebase-google', firebase: config.firebase } }])) };
 }

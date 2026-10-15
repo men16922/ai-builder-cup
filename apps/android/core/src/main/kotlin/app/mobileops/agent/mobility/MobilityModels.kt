@@ -2,6 +2,7 @@ package app.mobileops.agent.mobility
 
 import java.time.Instant
 import java.util.UUID
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -36,6 +37,11 @@ data class SimulatedVehicle(
     val attempts: Int,
     val location: Coordinate,
     val diagnosticSignal: String = "unclassified",
+    val locked: Boolean = true,
+    val climate: Climate = Climate(),
+    val tiresBar: List<Double> = listOf(2.5, 2.5, 2.5, 2.5),
+    val odometerKm: Int = 12840,
+    val chargeSession: ChargeSession? = null,
 ) {
     fun validate() {
         require(diagnosticSignal in DIAGNOSTIC_SIGNALS)
@@ -59,9 +65,113 @@ data class SimulatedVehicle(
         )
         require(
             charging in setOf("idle", "charging", "interrupted") &&
-                fault in setOf("none", "charge_handshake", "battery_hot", "unknown") &&
+                fault in setOf("none", "charge_handshake", "battery_hot", "tire_low", "unknown") &&
                 attempts in 0..1,
         )
+        require(
+            tiresBar.size == 4 &&
+                tiresBar.all { it.isFinite() && it in 0.0..4.0 } &&
+                odometerKm >= 0,
+        )
+        climate.validate()
+        chargeSession?.let { Instant.parse(it.startedAt) }
+    }
+}
+
+/** Simulated cabin climate; cabin temperature converges on the target while it is on. */
+@Serializable
+data class Climate(
+    val on: Boolean = false,
+    val targetCelsius: Double = 21.0,
+    val cabinCelsius: Double = 24.0,
+    val changedAt: String? = null,
+) {
+    fun validate() {
+        require(
+            targetCelsius in 16.0..28.0 && cabinCelsius.isFinite() && cabinCelsius in -20.0..60.0,
+        )
+        changedAt?.let(Instant::parse)
+    }
+}
+
+@Serializable
+data class ChargeSession(val startedAt: String, val startPercent: Double, val powerKw: Double)
+
+/** A short-lived Google photo URI (no key) and the author attributions Google requires. */
+@Serializable
+data class PlacePhoto(val uri: String, val attributions: List<PhotoAttribution> = emptyList()) {
+    fun validate() {
+        val parsed = java.net.URI(uri)
+        require(
+            parsed.scheme == "https" &&
+                (parsed.host == "googleusercontent.com" ||
+                    parsed.host.endsWith(".googleusercontent.com")) &&
+                uri.length <= 2048 &&
+                attributions.size <= 3,
+        )
+    }
+}
+
+@Serializable data class PhotoAttribution(val name: String, val uri: String? = null)
+
+@Serializable data class CallParty(val name: String, val relation: String)
+
+@Serializable data class CallTurn(val role: String, val text: String, val at: String)
+
+/** A drafted follow-up. "done" records a simulated send or booking; nothing leaves the app. */
+@Serializable
+data class CallFollowup(
+    val id: String,
+    val kind: String,
+    val title: String,
+    val status: String,
+    val body: String? = null,
+    @SerialName("when") val whenAt: String? = null,
+    val to: String? = null,
+    val doneAt: String? = null,
+)
+
+@Serializable
+data class CallSummary(
+    val text: String,
+    val actionItems: List<String>,
+    val followups: List<CallFollowup>,
+)
+
+/** A simulated call with a fictional caller voiced by the model. It never reaches a real person. */
+@Serializable
+data class VehicleCall(
+    val id: String,
+    val scenario: String,
+    val state: String,
+    val caller: CallParty,
+    val turns: List<CallTurn>,
+    val startedAt: String,
+    val language: String,
+    val handledBy: String = "driver",
+    val endedAt: String? = null,
+    val summary: CallSummary? = null,
+    val saved: Boolean = false,
+    val engine: String? = null,
+) {
+    fun validate() {
+        UUID.fromString(id)
+        Instant.parse(startedAt)
+        endedAt?.let(Instant::parse)
+        require(
+            scenario in setOf("meeting_reschedule", "family_pickup", "delivery") &&
+                state in setOf("ringing", "active", "ended", "declined", "unknown") &&
+                handledBy in setOf("driver", "aide") &&
+                turns.size <= 16 &&
+                turns.all { it.role in setOf("caller", "driver", "aide") },
+        )
+        summary?.followups?.forEach {
+            UUID.fromString(it.id)
+            require(
+                it.kind in setOf("message", "calendar", "reminder") &&
+                    it.status in setOf("draft", "done", "dismissed"),
+            )
+        }
     }
 }
 
@@ -78,6 +188,7 @@ data class MobilityPlace(
     val chargingPorts: Int? = null,
     val availablePorts: Int? = null,
     val mapsUrl: String? = null,
+    val photo: PlacePhoto? = null,
 ) {
     fun validate() {
         require(
@@ -106,6 +217,7 @@ data class MobilityPlace(
         }
         Instant.parse(fetchedAt)
         location.validate()
+        photo?.validate()
     }
 }
 
@@ -172,6 +284,7 @@ data class SimulatedJourney(
     val source: String,
     val destination: MobilityPlace? = null,
     val searchSummary: String? = null,
+    val autopilot: Boolean = false,
 ) {
     fun validate() {
         require(searchSummary == null || searchSummary.length <= 8000)
@@ -230,9 +343,14 @@ data class MobilityState(
     val mapsAvailable: Boolean,
     val mapsBrowserKey: String? = null,
     val cases: List<MobilityCase> = emptyList(),
+    val call: VehicleCall? = null,
+    val calls: List<VehicleCall> = emptyList(),
 ) {
     fun validate() {
         vehicle?.validate()
+        call?.validate()
+        require(calls.size <= 10)
+        calls.forEach { it.validate() }
         journey?.validate()
         policy.validate()
         require(reports.size <= 20 && favorites.size <= 10 && cases.size <= 10)

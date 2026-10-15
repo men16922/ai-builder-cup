@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useLanguage } from '../i18n';
+import { Icon } from '../ui';
 import type { MobilityPlace, SimulatedJourney } from '@contracts/gcp/mobility';
 
 type Point={lat:number;lng:number};
@@ -10,7 +11,7 @@ type LineInstance={setPath(points:Point[]):void;setMap(map:MapInstance|null):voi
 type MapsSdk={Map:new(node:HTMLElement,options:Record<string,unknown>)=>MapInstance;Marker:new(options:Record<string,unknown>)=>MarkerInstance;Polyline:new(options:Record<string,unknown>)=>LineInstance;
   LatLngBounds:new()=>Bounds;Size:new(width:number,height:number)=>unknown;Point:new(x:number,y:number)=>unknown;SymbolPath:{CIRCLE:number}};
 type MapsWindow=Window&{google?:{maps:MapsSdk};aideMapsReady?:()=>void};
-type Scene={map:MapInstance;car:MarkerInstance;travelled:LineInstance;remaining:LineInstance;pins:MarkerInstance[];shown?:Point;heading?:number;frame?:number;framed?:string};
+type Scene={map:MapInstance;car:MarkerInstance;phone:MarkerInstance;travelled:LineInstance;remaining:LineInstance;pins:MarkerInstance[];shown?:Point;heading?:number;frame?:number;framed?:string};
 let loaded:Promise<MapsSdk>|undefined;
 function loadMaps(key:string):Promise<MapsSdk> {
   if(loaded)return loaded;
@@ -52,9 +53,15 @@ function kilometres(from:Point,to:Point) {
   const rad=Math.PI/180,a=Math.sin((to.lat-from.lat)*rad/2)**2+Math.cos(from.lat*rad)*Math.cos(to.lat*rad)*Math.sin((to.lng-from.lng)*rad/2)**2;
   return 12742*Math.asin(Math.sqrt(a));
 }
+/** A ringing-phone badge that rides above the car while My Aide is on a call. */
+function phoneIcon(sdk:MapsSdk) {
+  const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="40" height="48" viewBox="0 0 40 48"><path d="M20 47 13 37H8a8 8 0 0 1-8-8V8a8 8 0 0 1 8-8h24a8 8 0 0 1 8 8v21a8 8 0 0 1-8 8h-5z" fill="#1e8e3e"/>`
+    +`<path transform="translate(8 6) scale(1)" fill="#fff" d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>`;
+  return {url:`data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`,scaledSize:new sdk.Size(40,48),anchor:new sdk.Point(20,78)};
+}
 const point=(location:{latitude:number;longitude:number}):Point=>({lat:location.latitude,lng:location.longitude});
 /** Google tiles, private simulated coordinates and read-only markers. No browser key reaches the model. */
-export default function GoogleJourneyMap({apiKey,latitude,longitude,journey,places=[]}:{apiKey:string;latitude:number;longitude:number;journey?:SimulatedJourney|null;places?:MobilityPlace[]}) {
+export default function GoogleJourneyMap({apiKey,latitude,longitude,journey,places=[],batteryPercent,onCall=false}:{apiKey:string;latitude:number;longitude:number;journey?:SimulatedJourney|null;places?:MobilityPlace[];batteryPercent?:number;onCall?:boolean}) {
   const {t,locale}=useLanguage(),node=useRef<HTMLDivElement>(null),scene=useRef<Scene|undefined>(undefined),[error,setError]=useState(false),[ready,setReady]=useState(false);
   useEffect(()=>{
     let cancelled=false;
@@ -65,10 +72,11 @@ export default function GoogleJourneyMap({apiKey,latitude,longitude,journey,plac
       scene.current={map,pins:[],
         travelled:new sdk.Polyline({map,strokeColor:color,strokeOpacity:.95,strokeWeight:6,zIndex:2}),
         remaining:new sdk.Polyline({map,strokeOpacity:0,zIndex:1,icons:[{icon:{path:'M 0,-1 0,1',strokeColor:color,strokeOpacity:.7,strokeWeight:4,scale:3},offset:'0',repeat:'14px'}]}),
-        car:new sdk.Marker({map,position:{lat:latitude,lng:longitude},icon:carIcon(sdk,0),zIndex:10,title:t('가상 차량 위치','Simulated vehicle position')})};
+        car:new sdk.Marker({map,position:{lat:latitude,lng:longitude},icon:carIcon(sdk,0),zIndex:10,title:t('가상 차량 위치','Simulated vehicle position')}),
+        phone:new sdk.Marker({map:null,position:{lat:latitude,lng:longitude},icon:phoneIcon(sdk),zIndex:11,title:t('My Aide 통화 중','My Aide on a call')})};
       setReady(true);
     }).catch(()=>{if(!cancelled)setError(true);});
-    return()=>{cancelled=true;const current=scene.current;if(current?.frame)cancelAnimationFrame(current.frame);current?.car.setMap(null);current?.travelled.setMap(null);current?.remaining.setMap(null);current?.pins.forEach(marker=>marker.setMap(null));scene.current=undefined;};
+    return()=>{cancelled=true;const current=scene.current;if(current?.frame)cancelAnimationFrame(current.frame);current?.car.setMap(null);current?.phone.setMap(null);current?.travelled.setMap(null);current?.remaining.setMap(null);current?.pins.forEach(marker=>marker.setMap(null));scene.current=undefined;};
   },[apiKey]); // The scene follows coordinates without loading another map each simulation tick.
   useEffect(()=>{
     const current=scene.current, sdk=(window as MapsWindow).google?.maps;
@@ -77,17 +85,18 @@ export default function GoogleJourneyMap({apiKey,latitude,longitude,journey,plac
     const heading=origin&&destination?Math.round(bearing(origin,destination)):current.heading??0;
     if(heading!==current.heading){current.car.setIcon(carIcon(sdk,heading));current.heading=heading;}
     current.pins.forEach(marker=>marker.setMap(null));
-    current.pins=[...(journey?.state==='choosing'?places:[]).map(place=>new sdk.Marker({map:current.map,position:point(place.location),title:place.name})),
+    current.pins=[...(journey?.state==='choosing'?places:[]).map((place,index)=>new sdk.Marker({map:current.map,position:point(place.location),title:place.name,label:{text:String(index+1),color:'#fff',fontWeight:'700'}})),
       ...(origin&&destination?[new sdk.Marker({map:current.map,position:origin,zIndex:3,icon:{path:sdk.SymbolPath.CIRCLE,scale:6,fillColor:'#fff',fillOpacity:1,strokeColor:primary(),strokeWeight:3}}),
         new sdk.Marker({map:current.map,position:destination,zIndex:4,title:journey?.destination?.name})]:[])];
     const frameKey=origin&&destination?`${journey?.id}|${journey?.destination?.id}`:undefined;
     if(frameKey&&current.framed!==frameKey){const bounds=new sdk.LatLngBounds();bounds.extend(origin!);bounds.extend(destination!);current.map.fitBounds(bounds,{top:150,right:56,bottom:48,left:56}); /* Keep the route clear of the driving HUD. */current.framed=frameKey;}
     else if(!frameKey){current.framed=undefined;current.map.panTo(target);}
     const draw=(position:Point)=>{
-      current.car.setPosition(position);current.shown=position;
+      current.car.setPosition(position);current.phone.setPosition(position);current.shown=position;
       current.travelled.setPath(origin&&destination?[origin,position]:[]);current.remaining.setPath(destination&&journey?.state!=='arrived'?[position,destination]:[]);
       if(frameKey&&current.map.getBounds()?.contains(position)===false)current.map.panTo(position);
     };
+    current.phone.setMap(onCall?current.map:null);
     if(current.frame)cancelAnimationFrame(current.frame);
     const from=current.shown??target,still=window.matchMedia('(prefers-reduced-motion: reduce)').matches||journey?.state!=='moving'&&journey?.state!=='arrived';
     if(still||(from.lat===target.lat&&from.lng===target.lng)){draw(target);return;}
@@ -99,14 +108,15 @@ export default function GoogleJourneyMap({apiKey,latitude,longitude,journey,plac
       current.frame=k<1?requestAnimationFrame(step):undefined;
     };
     current.frame=requestAnimationFrame(step);
-  },[latitude,longitude,journey,places,ready]);
+  },[latitude,longitude,journey,places,ready,onCall]);
   const origin=journey?point(journey.origin):undefined,destination=journey?.destination,moving=journey?.state==='moving';
   const total=origin&&destination?kilometres(origin,point(destination.location)):0,left=destination?kilometres({lat:latitude,lng:longitude},point(destination.location)):0;
   const km=(value:number)=>value.toLocaleString(locale,{maximumFractionDigits:value<10?1:0});
   const hud=journey&&destination&&(moving||journey.state==='arrived')?<div className="aide-drive-hud" role="status" aria-label={t('주행 시뮬레이션 상태','Driving simulation status')}>
     <div className="aide-drive-hud-head"><span className={`aide-drive-dot${moving?' is-live':''}`}/><strong>{moving?t('주행 중','Driving'):t('도착','Arrived')}</strong><span className="aide-drive-dest">{destination.name}</span><span className="aide-drive-sim">SIM</span></div>
     <div className="aide-drive-track"><span style={{width:`${Math.round(journey.progress*100)}%`}}/></div>
-    <dl><div><dt>{t('진행','Progress')}</dt><dd>{Math.round(journey.progress*100)}%</dd></div><div><dt>{t('남은 거리','Remaining')}</dt><dd>{km(left)} km</dd></div><div><dt>{t('직선 거리','Straight line')}</dt><dd>{km(total)} km</dd></div></dl>
+    <dl><div><dt>{t('진행','Progress')}</dt><dd>{Math.round(journey.progress*100)}%</dd></div><div><dt>{t('남은 거리','Remaining')}</dt><dd>{km(left)} km</dd></div>{batteryPercent!==undefined&&moving?<div><dt>{t('도착 시 배터리','On arrival')}</dt><dd>{Math.max(0,batteryPercent-Math.max(1,Math.round(total/5.2)))}%</dd></div>:<div><dt>{t('직선 거리','Straight line')}</dt><dd>{km(total)} km</dd></div>}</dl>
+    {journey.autopilot&&moving?<p className="aide-drive-autopilot"><Icon name="phone" size={14}/>{t('My Aide 통화 중 · 자율주행 시뮬레이션','My Aide on a call · autopilot simulation')}</p>:null}
   </div>:null;
-  return <div className="aide-google-map">{hud}<div ref={node} className="aide-google-map-canvas" aria-label={t('Google 지도와 가상 차량 위치','Google map and simulated vehicle position')}/>{error?<p role="status">{t('Google 지도를 불러오지 못했습니다. 위치 좌표는 차량 상태에서 확인할 수 있습니다.','Google map could not load. Coordinates remain in the vehicle status.')}</p>:null}</div>;
+  return <div className="aide-google-map">{hud}<div ref={node} className="aide-google-map-canvas" role="region" aria-label={t('Google 지도와 가상 차량 위치','Google map and simulated vehicle position')}/>{error?<p role="status">{t('Google 지도를 불러오지 못했습니다. 위치 좌표는 차량 상태에서 확인할 수 있습니다.','Google map could not load. Coordinates remain in the vehicle status.')}</p>:null}</div>;
 }

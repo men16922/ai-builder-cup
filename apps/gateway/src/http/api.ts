@@ -11,6 +11,7 @@ import type { GcpNotifications } from '../notifications/notifications';
 import type { GcpAgentTasks } from '../crew/agent-tasks';
 import type { GcpOverview } from '../crew/overview';
 import type { GcpMobility } from '../mobility/service';
+import type { GcpPlatform } from '../platform/platform';
 export type GcpApiServices = { access: GcpWebAccess; observations: GcpObservations; publicOrigin: string;
   analyses?: GcpAnalyses;
   operations?: GcpOperations;
@@ -18,6 +19,7 @@ export type GcpApiServices = { access: GcpWebAccess; observations: GcpObservatio
   agents?: GcpAgentTasks;
   overview?: GcpOverview;
   mobility?: GcpMobility;
+  platform?: GcpPlatform;
   web?: Partial<Record<'personal' | 'organization', GcpWebConfiguration>> };
 export const isGcpApiPath = (path: string) => path.startsWith('/api/gcp/') || path.startsWith('/api/mobile/v1/') || /^\/api\/(?:personal|organizations)\/v1\/.*\/gcp(?:\/|$)/.test(path);
 export async function handleGcpApi(request: IncomingMessage, response: ServerResponse, services?: GcpApiServices) {
@@ -54,8 +56,8 @@ export async function handleGcpApi(request: IncomingMessage, response: ServerRes
       send(200,await services.agents.claimExecution(body.approval));return;
     }
     const path = mobile ? url.pathname.replace('/api/mobile/v1/personal/', '/api/personal/v1/').replace('/api/mobile/v1/organizations/', '/api/organizations/v1/') : url.pathname;
-    const personal = /^\/api\/personal\/v1\/workspaces\/([A-Za-z0-9_.:-]{1,128})\/gcp\/(inbox|resources|observations|analyses|plans|executions|devices|notifications|agent-tasks|overview|mobility)(?:\/([a-f0-9-]{36})(?:\/(review|decision|execute|handoff|cancel|revoke|retire))?)?$/.exec(path);
-    const organization = /^\/api\/organizations\/v1\/([A-Za-z0-9_.:-]{1,128})\/workspaces\/([A-Za-z0-9_.:-]{1,128})\/gcp\/(inbox|resources|observations|analyses|plans|executions|devices|notifications|agent-tasks|overview|mobility)(?:\/([a-f0-9-]{36})(?:\/(review|decision|execute|handoff|cancel|revoke|retire))?)?$/.exec(path);
+    const personal = /^\/api\/personal\/v1\/workspaces\/([A-Za-z0-9_.:-]{1,128})\/gcp\/(inbox|resources|observations|analyses|plans|executions|devices|notifications|agent-tasks|overview|mobility|platform)(?:\/([a-f0-9-]{36})(?:\/(review|decision|execute|handoff|cancel|revoke|retire))?)?$/.exec(path);
+    const organization = /^\/api\/organizations\/v1\/([A-Za-z0-9_.:-]{1,128})\/workspaces\/([A-Za-z0-9_.:-]{1,128})\/gcp\/(inbox|resources|observations|analyses|plans|executions|devices|notifications|agent-tasks|overview|mobility|platform)(?:\/([a-f0-9-]{36})(?:\/(review|decision|execute|handoff|cancel|revoke|retire))?)?$/.exec(path);
     if (!personal && !organization) throw fail(404, 'not_found');
     const scope: GcpScope = personal ? { edition: 'personal', workspaceId: personal[1], label: 'Personal' }
       : { edition: 'organization', organizationId: organization![1], workspaceId: organization![2], label: 'Organization' };
@@ -85,6 +87,11 @@ export async function handleGcpApi(request: IncomingMessage, response: ServerRes
       if (request.method !== 'POST') throw fail(405, 'method_not_allowed');
       const { key, input } = await readJson();
       send(200, await services.mobility.command(session, input, key)); return;
+    }
+    if (part === 'platform') {
+      if (!services.platform) throw fail(503, 'platform_not_configured');
+      if (request.method !== 'GET' || id || action) throw fail(405, 'method_not_allowed');
+      send(200, await services.platform.read(session)); return;
     }
     if (part === 'overview') {
       if (!services.overview) throw fail(503, 'overview_not_configured');

@@ -42,6 +42,7 @@
     "apps/gateway/test/agent-tasks.test.ts",
     "apps/gateway/test/approval-review.test.ts",
     "apps/gateway/test/mobility.test.ts",
+    "apps/gateway/test/my-aide.test.ts",
     "apps/gateway/test/maps-mcp.test.ts",
     "apps/gateway/test/mobility-client.test.ts",
     "apps/gateway/test/analysis.test.ts",
@@ -68,6 +69,8 @@
     "scripts/prepare-gcp-evaluation.ts",
     "tests/browser/workflow.mjs",
     "tests/browser/hosted.mjs",
-    "apps/web/src/mobility/GroundedText.tsx"
+    "apps/web/src/mobility/GroundedText.tsx",
+    "apps/gateway/test/mobility-call-safety.test.ts",
+    "tests/support/call-uncertainty-harness.tsx"
   ]
 }

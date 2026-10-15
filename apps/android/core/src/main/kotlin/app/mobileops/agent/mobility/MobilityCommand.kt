@@ -41,6 +41,26 @@ sealed interface MobilityCommand {
 
     data class Favorite(val journeyId: String, val placeId: String) : MobilityCommand
 
+    /** Simulated remote control of the twin: lock, climate, charging and locate signals. */
+    data class Control(val action: String, val value: Double? = null) : MobilityCommand
+
+    data class CallIncoming(val scenario: String, val language: String) : MobilityCommand
+
+    data class CallAnswer(val callId: String, val handledBy: String) : MobilityCommand
+
+    data class CallSay(val callId: String, val text: String) : MobilityCommand
+
+    data class CallDelegate(val callId: String) : MobilityCommand
+
+    data class CallEnd(val callId: String) : MobilityCommand
+
+    data class CallDecline(val callId: String) : MobilityCommand
+
+    data class CallSave(val callId: String) : MobilityCommand
+
+    data class Followup(val callId: String, val followupId: String, val done: Boolean) :
+        MobilityCommand
+
     fun body(version: Int?) = buildJsonObject {
         if (this@MobilityCommand != Initialize) {
             require(version != null && version > 0)
@@ -52,7 +72,7 @@ sealed interface MobilityCommand {
                 require(
                     command.batteryPercent in 0..100 &&
                         command.fault in
-                            setOf("none", "charge_handshake", "battery_hot", "unknown"),
+                            setOf("none", "charge_handshake", "battery_hot", "tire_low", "unknown"),
                 )
                 put("operation", "telemetry")
                 put("batteryPercent", command.batteryPercent)
@@ -124,7 +144,69 @@ sealed interface MobilityCommand {
                 put("journeyId", command.journeyId)
                 put("placeId", command.placeId)
             }
+            is Control -> {
+                require(command.action in CONTROL_ACTIONS)
+                require(command.value == null || command.value in 16.0..100.0)
+                put("operation", "control")
+                put("action", command.action)
+                command.value?.let { put("value", it) }
+            }
+            is CallIncoming -> {
+                require(command.scenario in CALL_SCENARIOS && command.language in setOf("ko", "en"))
+                put("operation", "call_incoming")
+                put("scenario", command.scenario)
+                put("language", command.language)
+            }
+            is CallAnswer -> {
+                require(command.handledBy in setOf("driver", "aide"))
+                put("operation", "call_answer")
+                put("callId", command.callId)
+                put("handledBy", command.handledBy)
+            }
+            is CallSay -> {
+                require(command.text.trim().length in 1..300)
+                put("operation", "call_say")
+                put("callId", command.callId)
+                put("text", command.text.trim())
+            }
+            is CallDelegate -> {
+                put("operation", "call_delegate")
+                put("callId", command.callId)
+            }
+            is CallEnd -> {
+                put("operation", "call_end")
+                put("callId", command.callId)
+            }
+            is CallDecline -> {
+                put("operation", "call_decline")
+                put("callId", command.callId)
+            }
+            is CallSave -> {
+                put("operation", "call_save")
+                put("callId", command.callId)
+            }
+            is Followup -> {
+                put("operation", "followup")
+                put("callId", command.callId)
+                put("followupId", command.followupId)
+                put("action", if (command.done) "done" else "dismiss")
+            }
         }
     }
         .toString()
 }
+
+internal val CONTROL_ACTIONS =
+    setOf(
+        "lock",
+        "unlock",
+        "climate_on",
+        "climate_off",
+        "set_temperature",
+        "set_charge_limit",
+        "start_charging",
+        "stop_charging",
+        "flash",
+        "honk",
+    )
+internal val CALL_SCENARIOS = setOf("meeting_reschedule", "family_pickup", "delivery")

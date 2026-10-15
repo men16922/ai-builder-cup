@@ -3,7 +3,7 @@ import type { NavGroup } from '../shell/console-slots';
 type Translate = (korean: string, english: string) => string;
 
 /** The pages of the console. `service:<id>` opens the evidence page for one registered service. */
-export type ConsoleView = 'overview' | 'evidence' | 'workflow' | 'saved' | 'vehicle' | 'journey' | 'assistance';
+export type ConsoleView = 'overview' | 'evidence' | 'workflow' | 'saved' | 'vehicle' | 'journey' | 'calls' | 'assistance' | 'platform';
 export const SERVICE_PREFIX = 'service:';
 
 /**
@@ -13,12 +13,13 @@ export const SERVICE_PREFIX = 'service:';
 export function consoleNav(t: Translate, options: { pending: number; plans: boolean; mobility?: boolean; operations?: boolean; services: { id: string; label: string }[] }): NavGroup[] {
   return [
     ...(options.mobility ? [{ id: 'mobility', label: t('나의 이동', 'My mobility'), items: [
-      { id: 'vehicle', label: t('내 차량', 'My vehicle'), icon: 'target' as const },
-      { id: 'journey', label: t('충전·지도', 'Charging & map'), icon: 'cloud' as const },
-      { id: 'assistance', label: t('Aide 도움', 'Aide assistance'), icon: 'sparkle' as const },
+      { id: 'vehicle', label: t('내 차량', 'My vehicle'), icon: 'car' as const },
+      { id: 'journey', label: t('충전·지도', 'Charging & map'), icon: 'map' as const },
+      { id: 'calls', label: t('통화', 'Calls'), icon: 'phone' as const },
+      { id: 'assistance', label: t('차량 진단', 'Vehicle diagnosis'), icon: 'wrench' as const },
     ] }] : []),
     ...(options.operations === false ? [] : [
-    { id: 'home', items: [{ id: 'overview', label: t('개요', 'Overview'), icon: 'dashboard' as const }] },
+    { id: 'home', items: [{ id: 'overview', label: t('개요', 'Overview'), icon: 'dashboard' as const }, { id: 'platform', label: t('플랫폼·A2A', 'Platform & A2A'), icon: 'hub' as const }] },
     { id: 'run', label: t('운영', 'Operations'), items: [
       { id: 'evidence', label: t('서비스', 'Services'), icon: 'services' as const, children: options.services.map(service => ({ id: `${SERVICE_PREFIX}${service.id}`, label: service.label, icon: 'cloud' as const })) },
       { id: 'workflow', label: t('계획', 'Plans'), icon: 'list' as const },

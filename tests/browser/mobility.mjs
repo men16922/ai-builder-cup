@@ -50,7 +50,7 @@ try {
   await page.screenshot({path:join(directory,'mobility-home-short-desktop.png'),fullPage:false});
   await page.setViewportSize({width:1280,height:1000});
   await page.screenshot({path:join(directory,'mobility-home-desktop.png'),fullPage:true});
-  await page.getByRole('button',{name:'Aide assistance',exact:true}).click();
+  await page.getByRole('button',{name:'Vehicle diagnosis',exact:true}).click();
   await page.getByText('Vehicle simulator',{exact:true}).click();
   await page.getByRole('button',{name:'Unfamiliar charging symptom',exact:true}).click();
   await expect(page.getByRole('button',{name:'Review recovery guide',exact:true})).toBeVisible();assert.equal(modelCalls,1);
@@ -72,7 +72,7 @@ try {
   const violations=async()=>{const result=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa']).analyze();expect(result.violations.map(v=>({id:v.id,nodes:v.nodes.map(n=>n.html)}))).toEqual([]);};
   await violations();
   await page.setViewportSize({width:390,height:844});await page.reload();
-  await page.getByRole('button',{name:'Aide assistance',exact:true}).click();
+  await page.getByRole('button',{name:'Vehicle diagnosis',exact:true}).click();
   await expect(page.getByText('Available for recurrence',{exact:true})).toBeVisible();assert.equal(modelCalls,2);await expect.poll(()=>page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await violations();
   await page.getByLabel('Language / 언어').selectOption('ko');await expect(page.getByRole('heading',{name:'함께 해결한 경험'})).toBeVisible();
   await page.screenshot({path:join(directory,'mobility-case-recurrence-ko-390.png'),fullPage:true});

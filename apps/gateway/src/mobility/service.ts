@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { z } from 'zod';
-import { mobilityCommandSchema, mobilityStateSchema, vehicleDiagnosisSchema,
+import { mobilityCommandSchema, mobilityStateSchema, vehicleDiagnosisSchema, callStepSchema, callDigestSchema, type CallStep, type CallDigest, type VehicleCall,
   journeySearchSchema, type JourneySearch, type MobilityCommand, type MobilityPlace, type MobilityReport, type MobilityState, type MobilityCase, type VehicleDiagnosis, type SimulatedVehicle } from '@contracts/gcp/mobility';
 import { CloudOperationError } from '@contracts/core/workflow';
 import type { GcpWebAccess, GcpWebSession } from '../auth/web-access';
@@ -9,11 +9,15 @@ import { cloudDigest } from '../store/integrity';
 import { cloudRecordKey } from '../workflow/workflow';
 import { chargeReconnectVerdict, safeChargeConditions } from './runbooks';
 import { chargingEvidence, matchingCases, recoveryGuidance, verifiedCase } from './case-learning';
+import { callPersona, driverContext, settleVehicle, type CallInput } from './calls';
 
 export interface VehicleReasoner {
   readonly engine: 'gemini' | 'offline-fixture';
   diagnose(vehicle: SimulatedVehicle, language: 'ko'|'en', signal: AbortSignal, learnedCases?: readonly MobilityCase[]): Promise<VehicleDiagnosis>;
   planJourney?(instruction: string, kind: JourneySearch['kind'], language: 'ko'|'en', signal: AbortSignal): Promise<JourneySearch>;
+  /** Voices a synthetic caller or drafts My Aide's reply. It never sends, books or controls anything. */
+  call?(input: CallInput, signal: AbortSignal): Promise<CallStep>;
+  summarizeCall?(input: CallInput, signal: AbortSignal): Promise<CallDigest>;
 }
 export type MobilitySearchResult = { places: MobilityPlace[]; summary?: string };
 export interface MobilityPlaces {
@@ -25,8 +29,11 @@ type RecordState = { state: MobilityState; consents: Consent[]; mapsExpiresAt?: 
 type Budget = { hour: number; model: number; places: number };
 // Receipts contain no Google Maps content. A replay returns the current view without rerunning work.
 type Receipt = { digest: string; state: 'working'|'finished'|'unknown' };
+// A call snapshot has one durable provider step, including across different request keys.
+type CallClaim = Receipt & { requestId: string; deadline: number };
 const fail = (status: number, code: string) => new CloudOperationError(status, code, 'The mobility request could not be confirmed.');
 const distance = (a: SimulatedVehicle['location'], b: SimulatedVehicle['location']) => Math.hypot((a.latitude-b.latitude)*111_000, (a.longitude-b.longitude)*88_000);
+const callSteps = new Set(['call_answer','call_say','call_delegate','call_end']);
 
 /** Actor-private serverless twin with version fences and durable one-request claims. */
 export class GcpMobility {
@@ -45,10 +52,31 @@ export class GcpMobility {
     return cloudRecordKey({ owner: session.context.owner, workspaceId: session.context.workspaceId },
       `mobility-${part}`, cloudDigest([session.context.actorId, id]));
   }
-  private empty(): RecordState { return { state: { vehicle: null, reports: [], journey: null, favorites: [], cases: [],
+  private callKey(session: GcpWebSession, call: VehicleCall) {
+    return this.key(session, 'call-step', cloudDigest(call));
+  }
+  /** A vanished worker cannot leave a call answerable or "in progress" forever. No provider retry. */
+  private async expireCall(tx: CloudTransaction, session: GcpWebSession, record: RecordState): Promise<boolean> {
+    const live = record.state.call;
+    if (!live || !['ringing', 'active'].includes(live.state)) return false;
+    const key = this.callKey(session, live), claim = await tx.get<CallClaim>(key);
+    if (!claim || claim.state !== 'working' || this.now() <= claim.deadline) return false;
+    const requestKey = this.key(session, 'request', claim.requestId), receipt = await tx.get<Receipt>(requestKey);
+    if (receipt?.state === 'working' && receipt.digest === claim.digest) tx.put(requestKey, { digest: receipt.digest, state: 'unknown' } satisfies Receipt);
+    tx.put(key, { ...claim, state: 'unknown' } satisfies CallClaim);
+    live.state = 'unknown';
+    if (record.state.vehicle) record.state.vehicle.version++;
+    if (record.state.journey) record.state.journey.autopilot = false;
+    return true;
+  }
+  private empty(): RecordState { return { state: { vehicle: null, reports: [], journey: null, favorites: [], cases: [], call: null, calls: [],
     policy: { enabled: false, expiresAt: null, runbook: 'charge-reconnect-v1' }, mapsAvailable: !!this.places, mapsBrowserKey:null }, consents: [] }; }
+  /** Stored twins written before newer fields existed take the contract defaults. */
+  private normalize(record: RecordState): RecordState { record.state = mobilityStateSchema.parse(record.state); return record; }
   private view(state: MobilityState): MobilityState {
-    return mobilityStateSchema.parse({ ...state, mapsAvailable: !!this.places, mapsBrowserKey: this.mapsBrowserKey });
+    const shown = mobilityStateSchema.parse({ ...structuredClone(state), mapsAvailable: !!this.places, mapsBrowserKey: this.mapsBrowserKey });
+    if (shown.vehicle) settleVehicle(shown.vehicle, this.now());
+    return mobilityStateSchema.parse(shown);
   }
   private async admit(tx: CloudTransaction, session: GcpWebSession, mutation = false) {
     await this.access.assertCurrentIn(tx, session);
@@ -66,9 +94,19 @@ export class GcpMobility {
   async read(session: GcpWebSession): Promise<MobilityState> {
     await this.access.current(session);
     return this.store.transact(async tx => {
-      await this.admit(tx,session);const key=this.key(session,'twin'),record=await tx.get<RecordState>(key) ?? this.empty();
-      if(this.expireInvestigations(record))tx.put(key,record,record.mapsExpiresAt?new Date(record.mapsExpiresAt):undefined);
+      await this.admit(tx,session);const key=this.key(session,'twin'),record=this.normalize(await tx.get<RecordState>(key) ?? this.empty());
+      const callExpired = await this.expireCall(tx, session, record);
+      if(this.expireInvestigations(record) || callExpired)tx.put(key,record,record.mapsExpiresAt?new Date(record.mapsExpiresAt):undefined);
       return this.view(record.state);
+    });
+  }
+  /** The caller's own hourly AI and Maps usage against the fixed server ceilings. */
+  async usage(session: GcpWebSession) {
+    await this.access.current(session);
+    return this.store.transact(async tx => {
+      await this.admit(tx, session);
+      const hour = Math.floor(this.now()/3600000), stored = await tx.get<Budget>(this.key(session,'budget')), budget = stored?.hour === hour ? stored : { hour, model: 0, places: 0 };
+      return { model: budget.model, places: budget.places, modelLimit: 30, placesLimit: 30, resetsAt: new Date((hour+1)*3600000).toISOString() };
     });
   }
   async command(session: GcpWebSession, raw: unknown, requestId: string): Promise<MobilityState> {
@@ -80,11 +118,12 @@ export class GcpMobility {
     // Reserve before external calls. A replay of an uncertain model/Places call never spends again.
     const admitted = await this.store.transact(async tx => {
       await this.admit(tx, session, true);
-      const record = await tx.get<RecordState>(storageKey) ?? this.empty();
+      const record = this.normalize(await tx.get<RecordState>(storageKey) ?? this.empty());
       this.expireInvestigations(record);
       const receipt = await tx.get<Receipt>(receiptKey);
       const budgetKey = this.key(session, 'budget');
-      const storedBudget = investigates || command.operation === 'trip_request' ? await tx.get<Budget>(budgetKey) : undefined;
+      const callModel = callSteps.has(command.operation);
+      const storedBudget = investigates || callModel || command.operation === 'trip_request' ? await tx.get<Budget>(budgetKey) : undefined;
       if (receipt) {
         if (receipt.digest !== digest) throw fail(409,'mobility_request_changed');
         if (receipt.state === 'finished') return { replay: record.state };
@@ -92,6 +131,12 @@ export class GcpMobility {
       }
       if (command.operation !== 'initialize' && (!record.state.vehicle || record.state.vehicle.version !== command.expectedVersion)) throw fail(409,'vehicle_changed');
       if (['policy','approve','resolve_unknown','promote_case','revoke_case'].includes(command.operation) && !session.context.roles.includes('reviewer')) throw fail(403,'reviewer_required');
+      // Reject an impossible call step before spending a model call or a request claim.
+      if (callModel && (!this.reasoner?.call || !this.reasoner.summarizeCall)) throw fail(503,'call_ai_not_configured');
+      this.precheckCall(record.state, command);
+      const callStepKey = callModel && record.state.call ? this.callKey(session, record.state.call) : undefined;
+      const callClaim = callStepKey ? await tx.get<CallClaim>(callStepKey) : undefined;
+      if (callClaim) throw fail(409, callClaim.state === 'working' && this.now() <= callClaim.deadline ? 'mobility_in_progress' : 'mobility_outcome_unknown');
       // Stage fresh telemetry first; use its new episode/version as the investigation fence.
       // A store retry may recompute this pure simulator state, but never calls a provider.
       const staged = command.operation === 'telemetry' && investigates ? this.apply(structuredClone(record),command) : record;
@@ -105,10 +150,10 @@ export class GcpMobility {
         }
         throw fail(409, diagnosisClaim.state === 'working' ? 'mobility_in_progress' : 'mobility_outcome_unknown');
       }
-      if (investigates || command.operation === 'trip_request') {
+      if (investigates || callModel || command.operation === 'trip_request') {
         const hour = Math.floor(this.now()/3600000);
         const budget = storedBudget?.hour === hour ? storedBudget : { hour, model: 0, places: 0 };
-        const usesModel = investigates || !!this.reasoner?.planJourney;
+        const usesModel = investigates || callModel || !!this.reasoner?.planJourney;
         if (usesModel && budget.model >= 30 || command.operation === 'trip_request' && budget.places >= 30) {
           if(command.operation!=='telemetry')throw fail(429,'mobility_budget_exceeded');
           // Preserve fresh incident evidence even when autonomous investigation has exhausted its budget.
@@ -132,17 +177,24 @@ export class GcpMobility {
         tx.put(diagnosisKey,{ digest, state:'working' } satisfies Receipt);
       }
       tx.put(receiptKey, { digest, state: 'working' } satisfies Receipt);
-      return { record: staged };
+      if (callStepKey) tx.put(callStepKey, { digest, state: 'working', requestId, deadline: this.now() + 30_000 } satisfies CallClaim);
+      return { record: staged, callStepKey };
     });
     if ('replay' in admitted) return this.view(admitted.replay!);
-    const record = admitted.record!, before = record.state.vehicle;
-    let diagnosis: VehicleDiagnosis | undefined, candidates: MobilityPlace[] | undefined, searchSummary: string | undefined;
+    const record = admitted.record!, before = record.state.vehicle, callStepKey = admitted.callStepKey;
+    let diagnosis: VehicleDiagnosis | undefined, candidates: MobilityPlace[] | undefined, searchSummary: string | undefined, callStep: CallStep | undefined, callDigest: CallDigest | undefined;
     const investigationLanguage = 'language' in command ? command.language : 'en';
     let appliedCommand: MobilityCommand = command.operation === 'telemetry' && investigates ? {operation:'diagnose',expectedVersion:before!.version,language:investigationLanguage} : command;
     try {
       if (investigates) {
         if (!this.reasoner) throw fail(503,'vehicle_ai_not_configured');
         diagnosis = vehicleDiagnosisSchema.parse(await this.reasoner.diagnose(before!,investigationLanguage,AbortSignal.timeout(25_000),matchingCases(before!,record.state.cases ?? [],this.now())));
+      }
+      if (callSteps.has(command.operation)) {
+        const input = this.callInput(record.state, command);
+        if (command.operation === 'call_end') callDigest = callDigestSchema.parse(await this.reasoner!.summarizeCall!(input, AbortSignal.timeout(25_000)));
+        else callStep = callStepSchema.parse(await this.reasoner!.call!(input, AbortSignal.timeout(20_000)));
+        if (callStep && !callStep.aide?.trim() && !callStep.caller?.trim()) throw fail(502, 'call_response_invalid');
       }
       if (command.operation === 'trip_request') {
         if (!this.places) throw fail(503,'maps_not_configured');
@@ -163,16 +215,19 @@ export class GcpMobility {
       await this.access.current(session);
       const finished = await this.store.transact(async tx => {
         await this.admit(tx,session,true);
-        const current = await tx.get<RecordState>(storageKey) ?? this.empty();
+        const current = this.normalize(await tx.get<RecordState>(storageKey) ?? this.empty());
         const claim = await tx.get<Receipt>(receiptKey);
+        const callClaim = callStepKey ? await tx.get<CallClaim>(callStepKey) : undefined;
+        if (callStepKey && (callClaim?.state !== 'working' || callClaim.digest !== digest || this.now() > callClaim.deadline)) throw fail(409, 'mobility_outcome_unknown');
         if (investigates) await tx.get<Receipt>(this.key(session,'diagnosis',before!.episode));
         if (claim?.state !== 'working' || claim.digest !== digest) throw fail(409,'mobility_outcome_unknown');
         if (appliedCommand.operation !== 'initialize' && current.state.vehicle?.version !== appliedCommand.expectedVersion) throw fail(409,'vehicle_changed');
         if (investigates && (this.now()-Date.parse(current.state.reports.find(report=>report.episode===before!.episode)?.at ?? '')>35000 || current.state.reports.find(report=>report.episode===before!.episode)?.state!=='investigating')) throw fail(409,'investigation_expired');
-        const next = this.apply(structuredClone(current),appliedCommand,diagnosis,candidates,searchSummary);
+        const next = this.apply(structuredClone(current),appliedCommand,diagnosis,candidates,searchSummary,{step:callStep,digest:callDigest});
         const state = mobilityStateSchema.parse(next.state);
         tx.put(storageKey,next,next.mapsExpiresAt ? new Date(next.mapsExpiresAt) : undefined);
         tx.put(receiptKey,{ digest, state:'finished' } satisfies Receipt);
+        if (callStepKey && callClaim) tx.put(callStepKey, { ...callClaim, state: 'finished' } satisfies CallClaim);
         if (investigates) tx.put(this.key(session,'diagnosis',before!.episode),{digest,state:'finished'} satisfies Receipt);
         return state;
       });
@@ -184,10 +239,23 @@ export class GcpMobility {
       // This is only a storage update: never retry the model, Places or a control action here.
       await this.store.transact(async tx => {
         const claim = await tx.get<Receipt>(receiptKey);
-        const latest = investigates ? await tx.get<RecordState>(storageKey) : undefined;
+        const callClaim = callStepKey ? await tx.get<CallClaim>(callStepKey) : undefined;
+        const raw = investigates || callSteps.has(command.operation) ? await tx.get<RecordState>(storageKey) : undefined, latest = raw ? this.normalize(raw) : undefined;
         if (investigates && before) await tx.get<Receipt>(this.key(session,'diagnosis',before.episode));
         if (claim?.state !== 'working') return;
         tx.put(receiptKey,{digest,state:'unknown'} satisfies Receipt);
+        if (callStepKey && callClaim?.state === 'working' && callClaim.digest === digest) tx.put(callStepKey, { ...callClaim, state: 'unknown' } satisfies CallClaim);
+        // A fresh request key or recreated service must not repeat an ambiguous call step.
+        // Fence cleanup to the captured transcript so a late failure cannot erase a newer turn.
+        if (callSteps.has(command.operation) && latest?.state.call && record.state.call) {
+          const captured = record.state.call, live = latest.state.call;
+          if (live.id === captured.id && cloudDigest(live) === cloudDigest(captured)) {
+            live.state = 'unknown';
+            if (latest.state.vehicle) latest.state.vehicle.version++;
+            if (latest.state.journey) latest.state.journey.autopilot = false;
+            tx.put(storageKey, latest, latest.mapsExpiresAt ? new Date(latest.mapsExpiresAt) : undefined);
+          }
+        }
         if (investigates && before) {
           tx.put(this.key(session,'diagnosis',before.episode),{digest,state:'unknown'} satisfies Receipt);
           if (latest && !latest.state.reports.some(report=>report.episode===before.episode && report.state !== 'investigating')) {
@@ -203,16 +271,17 @@ export class GcpMobility {
       throw error;
     }
   }
-  private apply(record: RecordState, command: MobilityCommand, diagnosis?: VehicleDiagnosis, candidates?: MobilityPlace[], searchSummary?: string): RecordState {
+  private apply(record: RecordState, command: MobilityCommand, diagnosis?: VehicleDiagnosis, candidates?: MobilityPlace[], searchSummary?: string, call: { step?: CallStep; digest?: CallDigest } = {}): RecordState {
     const state = record.state, now = this.now(), at = new Date(now).toISOString();
     state.cases ??= [];
     if (command.operation === 'initialize') {
       if (!state.vehicle) state.vehicle = { id: randomUUID(), version:1, source:'simulation', model:'Aide EV', observedAt:at,
         batteryPercent:68,targetPercent:80,batteryCelsius:28,rangeKm:354,parked:true,charging:'idle',powerKw:0,fault:'none',diagnosticSignal:'none',episode:randomUUID(),attempts:0,
-        location:{latitude:37.5665,longitude:126.978} };
+        location:{latitude:37.5665,longitude:126.978},locked:true,climate:{on:false,targetCelsius:21,cabinCelsius:24},tiresBar:[2.5,2.5,2.5,2.5],odometerKm:12840 };
       return record;
     }
     const vehicle = state.vehicle!;
+    settleVehicle(vehicle, now);
     const reconnect = (report: MobilityReport, authorization: MobilityReport['authorization'], guided = false) => {
       const matched = matchingCases(vehicle,state.cases,now);
       const allowed = guided ? recoveryGuidance(vehicle,now).canResolve : chargeReconnectVerdict(vehicle,report.runbook,matched.length===1) === 'allow';
@@ -226,7 +295,8 @@ export class GcpMobility {
         if (!vehicle.parked) throw fail(409,'vehicle_moving');
         vehicle.batteryPercent = command.batteryPercent; vehicle.rangeKm = Math.round(command.batteryPercent*5.2);
         vehicle.fault = command.fault; vehicle.batteryCelsius = command.fault === 'battery_hot' ? 52 : 28;
-        vehicle.diagnosticSignal = command.fault === 'charge_handshake' ? 'charge_handshake_timeout' : command.fault === 'battery_hot' ? 'battery_thermal_limit' : command.fault === 'unknown' ? command.signal ?? 'unclassified' : 'none';
+        vehicle.diagnosticSignal = command.fault === 'charge_handshake' ? 'charge_handshake_timeout' : command.fault === 'battery_hot' ? 'battery_thermal_limit' : command.fault === 'tire_low' ? 'tire_pressure_low' : command.fault === 'unknown' ? command.signal ?? 'unclassified' : 'none';
+        vehicle.tiresBar = command.fault === 'tire_low' ? [2.5,2.5,1.6,2.5] : [2.5,2.5,2.5,2.5]; delete vehicle.chargeSession;
         vehicle.charging = command.fault === 'charge_handshake' || command.fault === 'unknown' && vehicle.diagnosticSignal === 'charge_link_timeout' ? 'interrupted' : 'idle'; vehicle.powerKw = 0;
         vehicle.episode = randomUUID(); vehicle.attempts = 0; break;
       case 'policy':
@@ -287,7 +357,7 @@ export class GcpMobility {
         // Multiple favorites are ambiguous. A previous explicit choice wins only within its exact context.
         const destination = remembered ? candidates!.find(place=>place.id===remembered.placeId) : candidates!.filter(place=>state.favorites.some(saved=>saved.id===place.id && saved.kind===command.kind)).length === 1 ? favorite : undefined;
         state.journey = { id:randomUUID(),state:destination ? 'moving':'choosing',kind:command.kind,origin:{...vehicle.location},position:{...vehicle.location},candidates:candidates!,destination,progress:0,
-          consent:remembered ? 'remembered-context' : destination ? 'favorite':'selection-required',createdAt:at,expiresAt:new Date(now+30*60_000).toISOString(),source:'simulation',searchSummary };
+          consent:remembered ? 'remembered-context' : destination ? 'favorite':'selection-required',createdAt:at,expiresAt:new Date(now+30*60_000).toISOString(),source:'simulation',searchSummary,autopilot:false };
         // Keep the context server-private; navigation consent is never a bearer credential.
         (record as RecordState & { pendingContext?: string }).pendingContext=context;
         if (destination) vehicle.parked=false; break;
@@ -307,20 +377,100 @@ export class GcpMobility {
         const p=journey.progress, dest=journey.destination.location;
         journey.position={latitude:journey.origin.latitude+(dest.latitude-journey.origin.latitude)*p,longitude:journey.origin.longitude+(dest.longitude-journey.origin.longitude)*p};
         vehicle.location={...journey.position};
-        if (p>=0.999) { journey.state='arrived';journey.progress=1;journey.position={...dest};vehicle.location={...dest};vehicle.parked=true; }
+        if (p>=0.999) {
+          journey.state='arrived';journey.progress=1;journey.position={...dest};vehicle.location={...dest};vehicle.parked=true;journey.autopilot=false;
+          // Straight-line simulation: energy and odometer follow the simulated distance, not a road route.
+          const km=distance(journey.origin,dest)/1000;
+          vehicle.batteryPercent=Math.max(0,vehicle.batteryPercent-Math.max(1,Math.round(km/5.2)));vehicle.rangeKm=Math.round(vehicle.batteryPercent*5.2);vehicle.odometerKm+=Math.max(1,Math.round(km));
+        }
         break;
       }
       case 'stop':
         if (!state.journey || state.journey.id!==command.journeyId) throw fail(409,'journey_changed');
-        state.journey.state='cancelled';vehicle.parked=true;break;
+        state.journey.state='cancelled';state.journey.autopilot=false;vehicle.parked=true;break;
       case 'favorite': {
         const journey=state.journey;
         if (!journey || journey.id!==command.journeyId) throw fail(409,'journey_changed');
         const place=journey.candidates.find(item=>item.id===command.placeId); if (!place) throw fail(400,'destination_not_offered');
         state.favorites=[{id:place.id,kind:place.kind},...state.favorites.filter(item=>item.id!==place.id)].slice(0,10);break;
       }
+      case 'control': {
+        const action=command.action;
+        if (action==='lock'||action==='unlock') vehicle.locked=action==='lock';
+        else if (action==='climate_on'||action==='climate_off') vehicle.climate={...vehicle.climate,on:action==='climate_on',changedAt:at};
+        else if (action==='set_temperature') {
+          if (command.value===undefined||command.value>28) throw fail(400,'control_value_invalid');
+          vehicle.climate={...vehicle.climate,targetCelsius:Math.round(command.value*2)/2,changedAt:at};
+        } else if (action==='set_charge_limit') {
+          if (command.value===undefined||command.value<50) throw fail(400,'control_value_invalid');
+          vehicle.targetPercent=Math.round(command.value);
+        } else if (action==='start_charging') {
+          if (!vehicle.parked) throw fail(409,'vehicle_moving');
+          if (vehicle.fault!=='none') throw fail(409,'vehicle_fault_active');
+          if (vehicle.batteryPercent>=vehicle.targetPercent) throw fail(409,'charge_limit_reached');
+          const journey=state.journey, atCharger=journey?.state==='arrived'&&journey.kind==='charging'&&!!journey.destination&&distance(journey.destination.location,vehicle.location)<300;
+          vehicle.charging='charging';vehicle.powerKw=atCharger?150:11;vehicle.chargeSession={startedAt:at,startPercent:vehicle.batteryPercent,powerKw:vehicle.powerKw};
+        } else if (action==='stop_charging') {
+          if (vehicle.charging!=='charging') throw fail(409,'not_charging');
+          vehicle.charging='idle';vehicle.powerKw=0;delete vehicle.chargeSession;
+        }
+        // flash and honk are acknowledged simulated signals with no stored effect beyond the version.
+        break;
+      }
+      case 'call_incoming': {
+        const persona=callPersona(command.scenario,command.language);
+        state.call={id:randomUUID(),scenario:command.scenario,state:'ringing',caller:{name:persona.name,relation:persona.relation},handledBy:'driver',turns:[],startedAt:at,language:command.language,saved:false};
+        break;
+      }
+      case 'call_answer': case 'call_say': case 'call_delegate': {
+        const live=state.call!;
+        if (command.operation==='call_answer') { live.state='active';live.handledBy=command.handledBy;live.engine=this.reasoner!.engine;if (state.journey?.state==='moving') state.journey.autopilot=true; }
+        if (command.operation==='call_say') live.turns.push({role:'driver',text:command.text,at});
+        if (command.operation==='call_delegate') live.handledBy='aide';
+        if (call.step?.aide) live.turns.push({role:'aide',text:call.step.aide,at});
+        if (call.step?.caller) live.turns.push({role:'caller',text:call.step.caller,at});
+        break;
+      }
+      case 'call_end': {
+        const live=state.call!, digest=call.digest!;
+        live.state='ended';live.endedAt=at;
+        live.summary={text:digest.text,actionItems:digest.actionItems,followups:digest.followups.map(item=>({id:randomUUID(),kind:item.kind,title:item.title,status:'draft' as const,
+          ...(item.body?{body:item.body}:{}),...(item.to?{to:item.to}:{}),...(item.minutesFromNow!==undefined?{when:new Date(now+item.minutesFromNow*60_000).toISOString()}:{})}))};
+        if (state.journey) state.journey.autopilot=false;
+        break;
+      }
+      case 'call_decline': {
+        const live=state.call!; live.state='declined';live.endedAt=at;break;
+      }
+      case 'call_save': {
+        const live=state.call;
+        if (!live||live.id!==command.callId||live.state!=='ended'||!live.summary) throw fail(409,'call_changed');
+        live.saved=true;state.calls=[structuredClone(live),...state.calls.filter(item=>item.id!==live.id)].slice(0,10);break;
+      }
+      case 'followup': {
+        const targets=[state.call,...state.calls].filter((item): item is VehicleCall=>item?.id===command.callId);
+        const found=targets.flatMap(item=>item.summary?.followups.filter(entry=>entry.id===command.followupId)??[]);
+        if (!found.length||found.some(entry=>entry.status!=='draft')) throw fail(409,'followup_changed');
+        for (const entry of found) { entry.status=command.action==='done'?'done':'dismissed'; if (command.action==='done') entry.doneAt=at; }
+        break;
+      }
     }
     vehicle.version++; vehicle.observedAt=at; return record;
+  }
+  /** Call steps must match the live call; checked before any claim or model spend. */
+  private precheckCall(state: MobilityState, command: MobilityCommand) {
+    if (command.operation==='call_incoming' && state.call && ['ringing','active'].includes(state.call.state)) throw fail(409,'call_active');
+    if (!['call_answer','call_say','call_delegate','call_end','call_decline'].includes(command.operation) || !('callId' in command)) return;
+    const live=state.call, wanted=command.operation==='call_answer'||command.operation==='call_decline'?'ringing':'active';
+    if (!live||live.id!==command.callId||live.state!==wanted) throw fail(409,'call_changed');
+    if ((command.operation==='call_say'||command.operation==='call_delegate') && live.turns.length>13) throw fail(409,'call_turn_limit');
+  }
+  private callInput(state: MobilityState, command: MobilityCommand): CallInput {
+    const live=state.call!, persona=callPersona(live.scenario,live.language);
+    const step=command.operation==='call_answer'?'open':command.operation==='call_say'?'reply':command.operation==='call_delegate'?'delegate':'summary';
+    return { scenario:live.scenario,language:live.language,caller:live.caller,goal:persona.goal,driverContext:driverContext(state,live.language,this.now()),
+      handledBy:command.operation==='call_answer'?command.handledBy:command.operation==='call_delegate'?'aide':live.handledBy,step,
+      turns:[...live.turns.map(turn=>({role:turn.role,text:turn.text})),...(command.operation==='call_say'?[{role:'driver' as const,text:command.text}]:[])] };
   }
   private evidence(vehicle: SimulatedVehicle): Record<string,string> {
     return { signal:vehicle.diagnosticSignal,fault:vehicle.fault,battery:`${vehicle.batteryPercent}%`,temperature:`${vehicle.batteryCelsius} C`,charging:vehicle.charging,parked:String(vehicle.parked),attempts:String(vehicle.attempts) };

@@ -11,6 +11,7 @@ internal val DIAGNOSTIC_SIGNALS =
         "charge_handshake_timeout",
         "charge_link_timeout",
         "battery_thermal_limit",
+        "tire_pressure_low",
         "unclassified",
     )
 

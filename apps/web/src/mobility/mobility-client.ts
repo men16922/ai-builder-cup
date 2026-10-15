@@ -14,6 +14,7 @@ export class MobilityClient {
   getSnapshot = () => this.value;
   subscribe = (fn: () => void) => { this.listeners.add(fn); return () => { this.listeners.delete(fn); }; };
   open() { this.closed = false; }
+  dismissError() { if (this.value.error) this.set({ ...this.value, error: undefined }); }
   close() {
     this.generation++; this.sequence++; this.value={busy:false,journeyRunning:false}; this.closed = true;
     this.listeners.forEach(fn=>fn());

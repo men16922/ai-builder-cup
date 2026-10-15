@@ -14,6 +14,7 @@ import { GcpObservations } from '../../apps/gateway/src/workflow/observations.ts
 import { GcpAgentTasks } from '../../apps/gateway/src/crew/agent-tasks.ts';
 import { GcpOverview } from '../../apps/gateway/src/crew/overview.ts';
 import { handleGcpApi } from '../../apps/gateway/src/http/api.ts';
+import { GcpPlatform } from '../../apps/gateway/src/platform/platform.ts';
 
 if (process.env.MOBILEOPS_OFFLINE_TEST !== '1') throw Error('Agent dashboard fixture must remain offline.');
 const root = await mkdtemp(join(tmpdir(), 'mobileops-gcp-agents-'));
@@ -63,6 +64,10 @@ try {
   const registrations = [{ id: 'shop-api', label: 'Synthetic shop-api', binding, dataMode: 'synthetic', telemetryEnabled: false, collector: { async collect() { throw Error('The agent dashboard never collects by itself.'); } } }];
   const services = { access, observations: new GcpObservations(store, access, registrations), agents: new GcpAgentTasks(store, access, chief, Buffer.from('fixture-approval-key-0123456789abcdef'), () => true, Date.now, {allows:()=>true,async read(){const observed_at=new Date().toISOString();return {state:{uid:'synthetic-uid',etag:'synthetic-etag',update_time:'2026-10-10T00:00:00Z',observed_at},display:{observedAt:observed_at,traffic:[{revision:'shop-api-bad',percent:100}]}};}}),
     overview: new GcpOverview(access, [{ name: 'shop-api', project: 'example-project', region: 'asia-northeast3' }], { token: async () => 'synthetic-token', fetcher: google }, () => true), publicOrigin: 'http://127.0.0.1',
+    // Synthetic A2A card; the url must never reach the page.
+    platform: new GcpPlatform(access, { modelId: 'synthetic-model', modelLocation: 'global', crew: ['chief','diagnosis','guardian','ops'], mapsMcp: true, placesPhotos: true, agents: true },
+      async () => ({ name: 'mobileops_chief', description: 'Synthetic chief agent card.', version: '0.1.0', protocolVersion: '0.3.0', preferredTransport: 'JSONRPC', url: 'https://synthetic-chief.invalid/',
+        capabilities: { streaming: true }, defaultInputModes: ['text/plain'], defaultOutputModes: ['text/plain'], skills: [{ id: 'triage', name: 'Incident triage', description: 'Coordinates diagnosis, safety review and execution.', tags: ['a2a', 'adk'] }] })),
     web: { organization: { configured: true, scope, identity: { method: 'company' } }, personal: { configured: false } } };
   server = createServer(async (request, response) => {
     const path = new URL(request.url, 'http://127.0.0.1').pathname;
@@ -131,6 +136,11 @@ try {
   // Navigation entries change the page; the agent entries open the right-hand panel instead.
   await navigation.getByRole('button', { name: 'Plans', exact: true }).click(); await expect(page.getByText('No plan is open')).toBeVisible();
   await navigation.getByRole('button', { name: 'Overview', exact: true }).click(); await expect(page.getByRole('heading', { name: 'Overview', level: 1 })).toBeVisible();
+  await navigation.getByRole('button', { name: 'Platform & A2A', exact: true }).click(); await expect(page.getByRole('heading', { name: 'Platform and protocols', level: 1 })).toBeVisible();
+  await expect(page.getByText('mobileops_chief', { exact: true })).toBeVisible(); await expect(page.getByText('Incident triage', { exact: true })).toBeVisible();
+  await expect(page.getByText(/synthetic-chief\.invalid/)).toHaveCount(0); await expect(page.getByText('0 / 30')).toHaveCount(0);
+  expect((await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze()).violations.map(item => item.id)).toEqual([]);
+  await page.screenshot({ path: join(directory, 'console-platform.png'), fullPage: true });
   await navigation.getByRole('button', { name: /^Decisions/ }).click(); await expect(assistant).toBeVisible();
   await page.setViewportSize({ width: 390, height: 844 });
   await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);

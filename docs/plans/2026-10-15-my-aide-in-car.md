@@ -66,3 +66,9 @@ Deploy, check real tiles/photos/call flow on the deployed site and a phone, re-r
 - D input mode: text + TTS (default) or speech recognition.
 - D follow-ups: simulated drafts (default) or real Gmail/Calendar with new scopes.
 - Deployment timing after A–C or after D–E.
+
+## Concurrent ownership (15 Oct, evening)
+
+- Claude session: gateway mobility (calls, controls, place photos, tire fault), contracts, web driver UI (controls, places, call sheet, diagnosis cluster, error manual), Android core contract for these fields, Android UI parity for controls/calls/diagnosis/photos, and a web platform dashboard (A2A agent cards, guardrails, budgets).
+- Codex: Android native error manuals (`VehicleFailureDialog`) and call-uncertainty hardening (durable `unknown` call state, `CallUnconfirmed`, `test:call-safety`).
+- Shared files (`service.ts`, `CallCenter.tsx`, `MobilityModels.kt`): small, additive edits only; run the other side's tests before committing.
