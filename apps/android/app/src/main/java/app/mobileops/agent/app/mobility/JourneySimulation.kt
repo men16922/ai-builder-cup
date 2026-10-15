@@ -24,7 +24,11 @@ import kotlin.math.sqrt
  * A clearly labelled straight-line twin trajectory. It is not a road route or physical autonomy.
  */
 @Composable
-internal fun JourneySimulation(journey: SimulatedJourney) {
+internal fun JourneySimulation(
+    journey: SimulatedJourney,
+    batteryPercent: Int? = null,
+    onCall: Boolean = false,
+) {
     val primary = MaterialTheme.colorScheme.primary
     val grid = MaterialTheme.colorScheme.outlineVariant
     Card(Modifier.fillMaxWidth()) {
@@ -34,6 +38,8 @@ internal fun JourneySimulation(journey: SimulatedJourney) {
                 journey.destination?.location,
                 journey.origin,
                 moving = journey.state == "moving",
+                candidates = if (journey.state == "choosing") journey.candidates else emptyList(),
+                onCall = onCall,
             )
         else
             Canvas(Modifier.fillMaxWidth().height(200.dp).padding(20.dp)) {
@@ -62,7 +68,7 @@ internal fun JourneySimulation(journey: SimulatedJourney) {
                 )
             }
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-            journey.destination?.let { DriveStatus(journey, it.location) }
+            journey.destination?.let { DriveStatus(journey, it.location, batteryPercent) }
             Text(
                 stringResource(R.string.vehicle_journey_progress, (journey.progress * 100).toInt()),
                 style = MaterialTheme.typography.labelLarge,
@@ -77,7 +83,7 @@ internal fun JourneySimulation(journey: SimulatedJourney) {
 
 /** Cluster-style strip: status, destination, progress and straight-line distances. */
 @Composable
-private fun DriveStatus(journey: SimulatedJourney, destination: Coordinate) {
+private fun DriveStatus(journey: SimulatedJourney, destination: Coordinate, batteryPercent: Int?) {
     val moving = journey.state == "moving"
     Row(verticalAlignment = Alignment.CenterVertically) {
         Text(
@@ -102,7 +108,27 @@ private fun DriveStatus(journey: SimulatedJourney, destination: Coordinate) {
     Row(Modifier.fillMaxWidth()) {
         DriveFigure(R.string.vehicle_drive_remaining, kilometres(journey.position, destination))
         DriveFigure(R.string.vehicle_drive_straight, kilometres(journey.origin, destination))
+        if (moving && batteryPercent != null)
+            Column(Modifier.weight(1f)) {
+                Text(
+                    stringResource(R.string.vehicle_drive_arrival),
+                    style = MaterialTheme.typography.labelSmall,
+                )
+                Text(
+                    stringResource(
+                        R.string.vehicle_percent,
+                        arrivalBattery(batteryPercent, kilometres(journey.origin, destination)),
+                    ),
+                    style = MaterialTheme.typography.titleMedium,
+                )
+            }
     }
+    if (moving && journey.autopilot)
+        Text(
+            stringResource(R.string.vehicle_drive_autopilot),
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.tertiary,
+        )
 }
 
 @Composable

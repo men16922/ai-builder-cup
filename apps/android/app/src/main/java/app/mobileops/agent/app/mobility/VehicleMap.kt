@@ -20,13 +20,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.asAndroidPath
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.graphics.vector.addPathNodes
+import androidx.compose.ui.graphics.vector.toPath
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.mobileops.agent.app.BuildConfig
 import app.mobileops.agent.app.R
 import app.mobileops.agent.mobility.Coordinate
+import app.mobileops.agent.mobility.MobilityPlace
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
@@ -55,6 +59,8 @@ internal fun VehicleMap(
     destination: Coordinate? = null,
     origin: Coordinate? = null,
     moving: Boolean = false,
+    candidates: List<MobilityPlace> = emptyList(),
+    onCall: Boolean = false,
 ) {
     if (!BuildConfig.MAPS_CONFIGURED) return
     val target = LatLng(position.latitude, position.longitude)
@@ -146,6 +152,36 @@ internal fun VehicleMap(
                 zIndex = 4f,
             )
         }
+        // Numbers match the candidate cards (1-based) while the driver is choosing.
+        candidates.forEachIndexed { index, place ->
+            val pin =
+                remember(index, primary, density) {
+                    BitmapDescriptorFactory.fromBitmap(
+                        numberBitmap(index + 1, primary.toArgb(), density),
+                    )
+                }
+            Marker(
+                state =
+                    rememberUpdatedMarkerState(
+                        LatLng(place.location.latitude, place.location.longitude),
+                    ),
+                title = stringResource(R.string.vehicle_map_candidate, index + 1, place.name),
+                icon = pin,
+                anchor = Offset(.5f, .5f),
+                zIndex = 5f,
+            )
+        }
+        if (onCall) {
+            val phone =
+                remember(density) { BitmapDescriptorFactory.fromBitmap(phoneBitmap(density)) }
+            Marker(
+                state = rememberUpdatedMarkerState(position = shown),
+                title = stringResource(R.string.vehicle_map_on_call),
+                icon = phone,
+                anchor = Offset(.5f, 1f),
+                zIndex = 11f,
+            )
+        }
         Marker(
             state = rememberUpdatedMarkerState(position = shown),
             title = stringResource(R.string.vehicle_map_position),
@@ -215,6 +251,55 @@ private fun carBitmap(color: Int, density: Float): Bitmap {
     paint.color = 0xFFFFF6C2.toInt()
     canvas.drawCircle(25.5f, 15f, 1.6f, paint)
     canvas.drawCircle(38.5f, 15f, 1.6f, paint)
+    return bitmap
+}
+
+/** Numbered pin matching the candidate card badge. */
+private fun numberBitmap(number: Int, color: Int, density: Float): Bitmap {
+    val size = (30 * density).toInt()
+    val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
+    val canvas = Canvas(bitmap)
+    val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    paint.color = android.graphics.Color.WHITE
+    canvas.drawCircle(size / 2f, size / 2f, size / 2f, paint)
+    paint.color = color
+    canvas.drawCircle(size / 2f, size / 2f, size / 2f - 2.5f * density, paint)
+    paint.color = android.graphics.Color.WHITE
+    paint.textAlign = Paint.Align.CENTER
+    paint.textSize = 15 * density
+    paint.isFakeBoldText = true
+    val baseline = size / 2f - (paint.descent() + paint.ascent()) / 2
+    canvas.drawText(number.toString(), size / 2f, baseline, paint)
+    return bitmap
+}
+
+/**
+ * Green speech bubble with a handset. The transparent lower part puts the bubble tip just above the
+ * car marker when anchored at the bottom centre on the car position.
+ */
+private fun phoneBitmap(density: Float): Bitmap {
+    val width = (40 * density).toInt()
+    val height = (74 * density).toInt()
+    val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+    val canvas = Canvas(bitmap)
+    canvas.scale(density, density)
+    val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    paint.color = 0xFF1E8E3E.toInt()
+    canvas.drawRoundRect(RectF(0f, 0f, 40f, 37f), 8f, 8f, paint)
+    canvas.drawPath(
+        Path().apply {
+            moveTo(13f, 36f)
+            lineTo(20f, 47f)
+            lineTo(27f, 36f)
+            close()
+        },
+        paint,
+    )
+    paint.color = android.graphics.Color.WHITE
+    canvas.save()
+    canvas.translate(8f, 6f)
+    canvas.drawPath(addPathNodes(AideIcons.PHONE_PATH).toPath().asAndroidPath(), paint)
+    canvas.restore()
     return bitmap
 }
 

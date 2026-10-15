@@ -16,12 +16,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.mobileops.agent.*
+import app.mobileops.agent.app.mobility.CallOverlay
+import app.mobileops.agent.app.mobility.CallsScreen
+import app.mobileops.agent.app.mobility.DiagnosisCluster
+import app.mobileops.agent.app.mobility.JourneyAutoAdvance
 import app.mobileops.agent.app.mobility.JourneyScreen
 import app.mobileops.agent.app.mobility.VehicleAssistance
 import app.mobileops.agent.app.mobility.VehicleFailureDialog
 import app.mobileops.agent.app.mobility.VehicleScreen
 import app.mobileops.agent.app.mobility.VehicleSimulator
 import app.mobileops.agent.app.mobility.VehicleViewModel
+import app.mobileops.agent.mobility.MobilityCommand
 import kotlinx.serialization.json.*
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -81,6 +86,11 @@ fun MobileOpsApp(
                         }
                     },
                 )
+            },
+            // The call surface stays visible on every mobility tab, outside the scrolling page.
+            bottomBar = {
+                if (!onboardingState.visible && state.scope != null && tab < MOBILITY_TABS)
+                    CallOverlay(vehicleBoard, vehicleModel::command, vehicleModel::refresh)
             },
         ) { padding ->
             if (onboardingState.visible) {
@@ -157,10 +167,11 @@ fun MobileOpsApp(
                             )
                         }
                     }
-                    PrimaryTabRow(selectedTabIndex = tab) {
+                    PrimaryScrollableTabRow(selectedTabIndex = tab, edgePadding = 0.dp) {
                         listOf(
                                 R.string.vehicle_tab,
                                 R.string.journey_tab,
+                                R.string.calls_tab,
                                 R.string.assistance_tab,
                             )
                             .let { labels ->
@@ -176,8 +187,10 @@ fun MobileOpsApp(
                                 )
                             }
                     }
-                    if (tab < 3)
+                    if (tab < MOBILITY_TABS) {
                         VehicleFailureDialog(vehicleBoard.failure, vehicleBoard.failureCode)
+                        JourneyAutoAdvance(vehicleBoard, vehicleModel::advanceAutomatically)
+                    }
                     when (tab) {
                         0 -> {
                             VehicleScreen(
@@ -188,20 +201,37 @@ fun MobileOpsApp(
                                     journeyKind = kind
                                     tab = 1
                                 },
-                                onAssistance = { tab = 2 },
+                                onAssistance = { tab = 3 },
+                                // A tapped trip proposal is the driver's explicit trip request.
+                                onTrip = { kind, instruction ->
+                                    journeyKind = kind
+                                    tab = 1
+                                    vehicleModel.command(
+                                        MobilityCommand.RequestTrip(
+                                            kind,
+                                            instruction.ifBlank { kind }.take(300),
+                                            requestLanguage,
+                                        ),
+                                    )
+                                },
                             )
                             return@Column
                         }
                         1 -> {
-                            JourneyScreen(
-                                vehicleBoard,
-                                vehicleModel::command,
-                                journeyKind,
-                                vehicleModel::advanceAutomatically,
-                            )
+                            JourneyScreen(vehicleBoard, vehicleModel::command, journeyKind)
                             return@Column
                         }
                         2 -> {
+                            CallsScreen(vehicleBoard, vehicleModel::command)
+                            return@Column
+                        }
+                        3 -> {
+                            vehicleBoard.state?.vehicle?.let { vehicle ->
+                                DiagnosisCluster(vehicle) {
+                                    journeyKind = "poi"
+                                    tab = 1
+                                }
+                            }
                             VehicleAssistance(vehicleBoard, vehicleModel::command, requestLanguage)
                             vehicleBoard.state?.vehicle?.let { vehicle ->
                                 VehicleSimulator(vehicle, vehicleBoard.busy, vehicleModel::command)
@@ -278,3 +308,6 @@ fun MobileOpsApp(
         }
     }
 }
+
+/** Vehicle, journey, calls and diagnosis; the operations tab follows them. */
+private const val MOBILITY_TABS = 4

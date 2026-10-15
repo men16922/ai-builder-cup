@@ -39,6 +39,7 @@ internal fun VehicleSimulator(
                     "none" to R.string.vehicle_apply_state,
                     "charge_handshake" to R.string.vehicle_charge_fault,
                     "battery_hot" to R.string.vehicle_hot_fault,
+                    "tire_low" to R.string.vehicle_tire_fault,
                     "unknown" to R.string.vehicle_unknown_fault,
                 )) {
                 OutlinedButton(

@@ -20,6 +20,7 @@ internal fun VehicleScreen(
     onRefresh: () -> Unit,
     onJourney: (String) -> Unit,
     onAssistance: () -> Unit,
+    onTrip: (kind: String, instruction: String) -> Unit,
 ) {
     val state = board.state
     val vehicle = state?.vehicle
@@ -57,6 +58,17 @@ internal fun VehicleScreen(
         return
     }
     VehicleHero(vehicle)
-    VehicleMap(vehicle.location)
+    AskAide(board, onCommand, onTrip)
+    VehicleControls(board, onCommand)
+    LowBatteryNudge(vehicle) { onJourney("charging") }
+    // While a journey moves, the home map follows the simulated car and its call badge.
+    val journey = state.journey?.takeIf { it.state == "moving" }
+    VehicleMap(
+        journey?.position ?: vehicle.location,
+        destination = journey?.destination?.location,
+        origin = journey?.origin,
+        moving = journey != null,
+        onCall = state.call?.state == "active",
+    )
     VehicleHomeActions(board, onCommand, onJourney, onAssistance)
 }
