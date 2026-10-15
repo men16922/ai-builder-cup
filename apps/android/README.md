@@ -46,6 +46,25 @@ ANDROID_HOME="$PWD/.tools/android-sdk" GRADLE_USER_HOME="$PWD/.tools/gradle-home
 
 `make check-android-core`는 실제 로컬 gateway와 Kotlin native HTTP 계약을 합성 신원/관측으로 연결한다. 직접 `:core:test`만 실행하면 서버 통합 네 개는 주소가 없어 skip될 수 있다. 웹/서버 게이트는 Android 빌드·기기 검증을 대신하지 않는다.
 
+### 실제 Maps SDK 확인 — 별도 opt-in
+
+`NativeMapProviderSmokeTest`는 기본 실행에서 skip한다. 승인된 제한 키를 `AIDE_ANDROID_MAPS_KEY`에 설정하고 시험용 에뮬레이터 한 대를 연결한 뒤에만 아래 명령으로 실제 Google 지도 로딩을 확인한다. SDK의 로딩 완료 콜백을 기다린 후 제품의 `VehicleMap`을 렌더링한다. 좌표·목적지는 공개된 합성 시험 위치이며 로그인, GPS 조회, Gateway 요청과 차량·클라우드 조치는 하지 않는다. `--offline`은 Gradle 의존성 해석에만 적용되며, 이 시험은 Google 지도 네트워크를 사용한다.
+
+```sh
+ANDROID_HOME="$PWD/.tools/android-sdk" GRADLE_USER_HOME="$PWD/.tools/gradle-home" \
+  apps/android/gradlew -p apps/android --offline \
+  -Pandroid.testInstrumentationRunnerArguments.aideLiveMaps=true \
+  -Pandroid.testInstrumentationRunnerArguments.class=app.mobileops.agent.app.NativeMapProviderSmokeTest \
+  -Pandroid.injected.androidTest.leaveApksInstalledAfterRun=true \
+  :app:connectedDebugAndroidTest
+mkdir -p .data/captures
+.tools/android-sdk/platform-tools/adb pull \
+  /sdcard/Android/data/app.mobileops.agent/files/verification/native-google-maps-provider.png \
+  .data/captures/native-google-maps-provider.png
+```
+
+테스트 APK를 남기는 옵션이 없으면 Gradle의 종료 정리가 캡처도 삭제할 수 있다. XML의 `tests=1`, `failures=0`, `errors=0`, `skipped=0`과 실제 캡처를 함께 확인한다. 15 October 2026에는 API 36 에뮬레이터에서 SDK 로딩, 실제 타일, 차량 마커와 직선 시뮬레이션 경로를 확인했다. 이 결과는 실물 폰 로그인·주행·차량 제어 검증을 대신하지 않는다. 키·APK·캡처는 Git에 넣지 않는다.
+
 `.editorconfig`는 4칸 들여쓰기를 지정한다. 공식 ktfmt 0.65 jar를 별도로 준비한 뒤 `scripts/format-kotlin.sh` 또는 `--check`를 사용한다. SHA-256을 검증하며 formatter 명령은 다운로드하지 않는다. `Theme.kt`는 `design/tokens.json`의 생성 파일이므로 formatter에서 제외한다.
 
 ## 비공개 설정과 지도 키

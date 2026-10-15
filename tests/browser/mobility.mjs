@@ -40,6 +40,15 @@ try {
   await page.goto(origin);await page.getByRole('button',{name:'Connect simulated vehicle',exact:true}).click();
   await expect(page.getByRole('heading',{name:'Aide EV',exact:true})).toBeVisible();
   await expect(page.getByRole('button',{name:'Diagnose now',exact:true})).toHaveCount(0);
+  // A typical laptop must show battery, range and charging without scrolling.
+  // Wait for the real product image/font layout before measuring the first fold.
+  await page.setViewportSize({width:1440,height:723});
+  await page.getByAltText('Aide electric vehicle',{exact:true}).evaluate(image=>image.decode());
+  await page.evaluate(()=>document.fonts.ready);
+  console.log('Short desktop vehicle metrics:',await page.locator('.aide-vehicle-stats').evaluate(element=>({top:Math.round(element.getBoundingClientRect().top),bottom:Math.round(element.getBoundingClientRect().bottom),viewport:innerHeight})));
+  await expect(page.locator('.aide-vehicle-stats')).toBeInViewport({ratio:1});
+  await page.screenshot({path:join(directory,'mobility-home-short-desktop.png'),fullPage:false});
+  await page.setViewportSize({width:1280,height:1000});
   await page.screenshot({path:join(directory,'mobility-home-desktop.png'),fullPage:true});
   await page.getByRole('button',{name:'Aide assistance',exact:true}).click();
   await page.getByText('Vehicle simulator',{exact:true}).click();

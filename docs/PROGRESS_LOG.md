@@ -1,17 +1,16 @@
 # Progress log
 
+## 2026-10-15 — Vehicle state visible on short desktop screens
+- Reproduced: at 1440×723, battery/range/charging were 740–866px below the first fold. Viewport-height image sizing changes the same measurement to 563–689px; all metrics are visible, with a meaningful first-fold browser assertion.
+- Verified: owned CSS/test and published `5931fa7`/`7e71e72` passed full isolated web/API gate (206 + lifecycle/KO/EN/axe/hosted); published Android app/unit/lint also passed. A separate opt-in native provider test passed (1, no skips): actual SDK load callback, genuine tiles/car/path inspected on API 36 emulator. Default invocation skips provider access; no phone/login/OEM claim. Earlier isolation errors/evidence retained.
+- Deployed: same gateway UID/runtime configuration, new revision ready; six immutable submitted-build asset hashes match. Later concurrent map/welcome/shell/CSS edits and their local rebuild were excluded. Original worktree edits remain preserved; authenticated browser review is unverified in this tool-limited session.
+- Next: preserve concurrent My Aide work; owner’s current organization login, physical phone, actual V2 reviewer/conflict, impact and current demo. Remote handoff includes the repeatable live SDK command; obsolete Android rehearsal-button, inline-translation and unpublished-source instructions corrected; private captures/config remain excluded. Goal resumed; earlier blocks are historical. No cloud remediation or submission was performed.
+
 ## 2026-10-15 — Authorized Git shipping and remote handoff
 - Owner authorized commit/push; current implementation/docs/assets prepared with private handoff checklist. Fresh make check (gateway 206 + browser/axe/hosted/publish), crew 97 and Android core 68 pass. Generated PDF/HTML and three new qualification run JSON outputs held locally; token CSS/Android theme remain required tracked source. Exact commit/publication is established by Git refs after shipping, not older uncommitted snapshots. Manual organization login, phone/reviewer/impact and submission remain incomplete; no new deployment/upload/submission authorized.
 
-## 2026-10-15 — Blocked acceptance checkpoint
-- Revalidated: same retained organization page still shows popup-closed sign-in welcome; no auth popup or crew task exists. Manual result is unanswered in three consecutive goal turns. Last recheck is no progress, not a live-job wait.
-- Audit: remaining real phone/reviewer/impact/route-provider/publication requirements cannot be established by scripted substitutes or additional offline tests. Prepared deployment/APK/deck/presentation/source ZIP and successful personal inspection remain preserved, distinct from missing acceptance evidence.
-- Status: goal execution blocked, objective unachieved. First resume action is manual organization-login result, then the bounded registered-service read-only Chief check; no new login/model attempt, cloud decision, push/upload/submission performed.
-
-## 2026-10-15 — Organization login prerequisite for current crew check
-- Attempted: current deployed bounded read-only Chief check after the final personal-domain inspection. Organization scope/page required reauthentication; two automated Google logins ended popup-closed before any crew instruction or cloud decision was sent. No model/traffic mutation was started, no membership verdict inferred.
-- Evidence: source confirms per-scope in-memory identity; this explains reauthentication, not the unproven popup failure. Previous successful personal login/captures preserved. Actual current sign-in outcome captured privately; retained organization page and manual-result question handed to the owner.
-- Next: confirm manual organization login, then one read-only registered-service investigation. Physical/human V2/impact/demo/publication gaps remain. First consecutive goal turn with this new prerequisite; do not mark full goal complete or blocked yet.
+## 2026-10-15 — Earlier organization login and blocked acceptance
+- Two automated organization logins ended popup-closed before a Chief instruction or cloud decision. Per-scope in-memory identity explains reauthentication; the popup cause/membership verdict remain unproved. Three subsequent goal turns confirmed unchanged manual-login dependency, so that phase was marked blocked. The successful personal-domain inspection and all artifacts were preserved; physical/reviewer/impact/provider/publication checks remained open. [Full original entries](archive/progress-2026-10-15-login-attempts.md).
 
 ## 2026-10-15 — Final authenticated deployed domain inspection
 - Verified: Google re-login through the existing registered account; final vehicle, map and assistance domains show actual tiles, stored five-place source-linked output and persisted learned-case one-attempt read-back (simulated battery 67%, charging 72 kW). Current policy remains disabled. Navigation/read inspection started no new diagnosis or journey; no cloud grant or mutation.

@@ -18,7 +18,7 @@ The actor's permanent request receipts contain only digest/status, not provider 
 - `AIDE_MAPS_BROWSER_KEY`: API restricted to Maps JavaScript, referrers restricted to the deployed origin and explicitly allowed local development origins. Returned only as authenticated SDK metadata; absent from stored twins, reports, receipts and model inputs.
 - `AIDE_ANDROID_MAPS_KEY`: build-time Manifest placeholder, Maps SDK for Android only, restricted to the app package and approved signing SHA-1 fingerprints. Never commit the key or generated credential configuration.
 
-Direct provider smoke and the deployed authenticated browser now confirm Gemini planning, five-place MCP results/source links, runtime scoped tokens, genuine browser tiles, Favorite/selection and simulated arrival. Native live tiles and physical-phone journeys remain unverified.
+Direct provider smoke and the deployed authenticated browser now confirm Gemini planning, five-place MCP results/source links, runtime scoped tokens, genuine browser tiles, Favorite/selection and simulated arrival. On 15 October, the opt-in native provider smoke on an API 36 emulator passed (one test, no skips): the restricted SDK completed its load callback and the actual product map showed genuine tiles, the car marker and a straight-line synthetic path. The tested source baseline was `5931fa7`; see the repeatable command in `apps/android/README.md`. Physical-phone login/journeys, road navigation and physical-vehicle control remain unverified.
 
 ## Display and retention
 

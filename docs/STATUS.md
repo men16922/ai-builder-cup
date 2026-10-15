@@ -4,7 +4,13 @@ Updated: 2026-10-15. Goal: award-ready Aide submission on 18 October. Current ow
 
 15 October Git shipping: owner explicitly authorized commit/push. Current refs (`git log -1`, `git ls-remote`) supersede historical uncommitted/remote-SHA descriptions below; source-publication proof is distinct from deployment/CI/submission. Fresh web/API gate 206, crew 97 and Android core 68 pass. Private handoff and held-back generated exports are documented in REMOTE_HANDOFF.
 
-Execution status: blocked pending manual organization login/result after the same prerequisite was revalidated in three consecutive goal turns. No live auth popup or crew task is running. Physical-phone, real reviewer, paired impact, Korea-capable routing credentials and publication/submission also require owner/external input. Engineering/artifacts remain preserved; full goal is not complete.
+Execution status: owner resumed the goal on 15 October evening. Organization-login result is pending; browser control is not exposed in this resumed session, so the current authenticated page is unverified. Historical blocked checks remain recorded separately. Physical phone, real reviewer, paired impact, Korea-capable routing inputs and submission still require owner/external evidence; full goal is incomplete.
+
+## Height-aware vehicle home
+
+- Reproduced 1440×723 first-fold failure: battery/range/charging occupied 740–866px, fully below the viewport. Bound the vehicle image by viewport height; the same measurement is 563–689px and all metrics fit. Browser lifecycle/KO/EN/axe checks pass; isolated owned source also passes the complete web/API 206-test gate. Crew/Android source is unchanged.
+- Gateway-only image rollout is ready on the same UID with identical runtime configuration; all six immutable submitted-build public hashes match. Later concurrent map/welcome/shell/CSS edits were excluded from that upload. Published `5931fa7`, then My Aide naming baseline `7e71e72`, passed the full isolated web/API gate and Android app assembly/unit/lint. Actual authenticated visual review of this increment is pending browser access; web captures are synthetic.
+- Native live-provider check on published `5931fa7` (map code unchanged by `7e71e72`): one opt-in test passed with no skips, restricted Maps SDK load callback completed, genuine tiles/car marker/straight-line path visually inspected on an API 36 emulator. Default invocation skips the provider test. Repeatable command is in `apps/android/README.md`; private report/screenshot/source hashes retained. This is not physical-phone, Firebase-login, road-navigation or vehicle-control proof.
 
 ## Final acceptance and artifact audit
 

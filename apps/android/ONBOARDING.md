@@ -1,8 +1,8 @@
 # Android 온보딩 (Aide)
 
-Android 팀원을 위한 안내서입니다. 1~5단계는 소유자에게 받을 것 없이 바로 시작할 수 있고, 6단계(실서버 로그인)는 소유자에게 세 가지를 받아야 합니다("소유자에게 받을 것" 참고).
+Android 팀원을 위한 안내서입니다. 1~5단계는 소유자에게 받을 것 없이 시작할 수 있고, 6단계부터는 비공개 앱 설정과 계정 등록이 필요합니다("소유자에게 받을 것" 참고). 지도 검증에는 별도로 제한된 Android Maps 키가 필요합니다.
 
-**일정:** 제출물은 **2026-10-17에 동결**하고, 18일은 업로드와 접근 확인에 씁니다. 실기기 점검은 **14일까지** 끝내고, 15~16일은 수정에 쓰는 것을 목표로 합니다.
+**일정:** 제출물은 **2026-10-17에 동결**하고, 18일은 업로드와 접근 확인에 씁니다. 15일 현재 실물 폰 검증은 미완료입니다. 설치한 후보의 커밋과 APK SHA-256을 기록하고 아래 점검을 진행하세요.
 
 **2026-10-14 업데이트:** 팀원의 SHA-1과 SHA-256을 Firebase에 등록하고 재조회로 확인했습니다. Google 로그인으로 계정이 생성됐으며, 없었던 조직 멤버십도 `operator`·`reviewer`로 등록하고 Firestore에서 확인했습니다. 앱을 완전히 닫았다 열고 **CloudOps demo team 조직 워크스페이스**로 다시 로그인한 뒤 6~7단계를 진행하세요. 실제 앱 접근과 실기기 흐름은 아직 별도 검증이 필요합니다.
 
@@ -10,7 +10,7 @@ Android 팀원을 위한 안내서입니다. 1~5단계는 소유자에게 받을
 
 **실제 Android 폰**에서 처음 쓰는 당직자처럼 Aide를 사용합니다. Google 로그인부터 승인 후 결과 확인까지, 앱을 닫았다 다시 열기와 승인 버튼 더블탭을 포함해 끝까지 해 보고, 막히는 것은 고치고, 본 것을 기록합니다.
 
-15일에는 차량·지도 도메인으로 확장한 소스가 로컬에 있습니다. 원격에 아직 게시하지 않았으며 실서버 배포도 별도입니다. 검증 후보를 받을 때 revision과 APK를 함께 확인하세요.
+차량·지도 및 V2 승인 구현은 원격에 게시됐습니다. 현재 브랜치·커밋은 Git에서 확인하고, 배포와 APK가 같은 소스인지 따로 확인하세요. 원격 인수인계의 비공개 입력은 [REMOTE_HANDOFF](../../docs/REMOTE_HANDOFF.md)에 있습니다.
 
 ## Aide가 무엇인가 (2분)
 
@@ -25,7 +25,7 @@ Android 팀원을 위한 안내서입니다. 1~5단계는 소유자에게 받을
 ## 1. 코드 받기와 오프라인 점검 (계정 불필요)
 
 ```sh
-git clone <REPO_URL>      # 소유자가 링크를 알려 줍니다 (저장소 이름: ai-builder-cup)
+git clone <REPO_URL>      # 소유자가 전달한 원격 저장소 주소
 cd ai-builder-cup
 npm ci
 apps/android/scripts/doctor.sh      # 무엇이 부족한지 정확히 알려 줍니다
@@ -69,14 +69,14 @@ APK 위치: `apps/android/app/build/outputs/apk/debug/app-debug.apk`. 15일 후�
 
 `make check-android-core`는 Gradle 의존성이 미리 받아져 있어야 합니다. 처음에는 네트워크가 되는 상태에서 `assemble` 줄을 한 번 먼저 실행하세요. `build/`, `.gradle/`, `local.properties`, 키스토어, 비공개 설정 파일은 Git에서 제외되어 있으니 커밋하지 마세요.
 
-## 5. 합성 시연을 폰에서 실행 (로그인·서버 불필요)
+## 5. 첫 실행과 합성 UI 검사 (로그인·서버 불필요)
 
 1. 폰: 설정 > 휴대전화 정보 > 빌드 번호를 7번 탭 → 개발자 옵션 > **USB 디버깅** 켜기.
 2. USB로 연결하고 폰의 허용 창을 수락합니다. `$ANDROID_HOME/platform-tools/adb devices`에 `device`로 보여야 합니다.
 3. `apps/android/gradlew -p apps/android :app:installDebug`
-4. Aide를 열고 **개인 시연 시작**을 누릅니다. 스크립트로 짠 가짜 crew가 롤백 승인 1건을 보여 줍니다. UI가 동작함을 보여 줄 뿐 실서버에 대해서는 아무것도 증명하지 않습니다.
+4. Aide를 열어 최초 안내의 다음·이전·건너뛰기, 화면 회전과 기기 언어에 따른 한국어/영어 표시를 확인합니다. 비공개 설정이 없으면 서버 로그인이 비활성화됩니다. 제품 화면에는 합성 시연 시작 버튼이 없습니다.
 
-에뮬레이터로도 이 단계는 가능합니다. 소유자 머신의 `.tools/android-avd`는 공유되지 않으니 Android Studio에서 API 36 이미지를 직접 만드세요.
+합성 업무·승인 검사는 `RehearsalTest`가 ViewModel에 시험 데이터를 주입해서 실행합니다. [README의 connected test 명령](README.md)을 사용하세요. 이 결과는 실제 로그인·클라우드 조치 증거가 아닙니다. 에뮬레이터에서도 가능하며 소유자 머신의 `.tools/android-avd`는 공유되지 않으니 Android Studio에서 API 36 이미지를 직접 만드세요. 실제 Maps SDK 시험은 별도 opt-in이며 README에 명령이 있습니다.
 
 ## 6. 실서버 로그인 (소유자에게 세 가지가 필요)
 
@@ -84,7 +84,7 @@ APK 위치: `apps/android/app/build/outputs/apk/debug/app-debug.apk`. 15일 후�
 
 1. **`mobileops-agent.json`**: 비공개 앱 설정(서버 주소, Firebase 앱 ID와 키, 웹 클라이언트 ID)입니다. `apps/android/app/src/main/assets/mobileops-agent.json`에 넣으세요. Git에서 제외되어 있으며, 커밋하거나 채팅에 붙여 넣거나 첫 화면 스크린샷(서버 주소가 보입니다)을 공유하지 마세요. `deploy/android-mobile.example.json`은 자리표시자라 **동작하지 않습니다**.
 2. **내 debug 인증서의 Firebase 등록.** 구글은 앱 패키지 `app.mobileops.agent`**와 서명 인증서 SHA-1**이 등록되어 있어야 토큰을 발급합니다. 팀원 PC의 debug 키스토어는 소유자 것과 다릅니다. 첫 빌드 후 `apps/android/scripts/doctor.sh`를 실행해 출력되는 `SHA1`, `SHA256` 줄을 소유자에게 보내세요. 공개 지문이라 비밀이 아닙니다. 키스토어 파일 자체는 절대 보내지 마세요. 등록 전에는 "This android application is not registered to use OAuth2.0" 오류가 납니다.
-3. **내 Google 계정의 서비스 접근 허용.** 접근은 서버가 "등록된 Cloud Run 서비스의 소유 여부"로 결정합니다(`crew_not_entitled`는 아직 허용되지 않았다는 뜻). 팀원은 조직 워크스페이스(**CloudOps demo team**)의 멤버(operator, reviewer)로 허용됩니다. 개인 워크스페이스는 소유자 계정 전용이라 쓰지 않습니다. 허용은 계정이 Firebase에 한 번 생긴 뒤에만 가능하므로, 먼저 웹 콘솔(소유자가 알려 주는 배포 주소)에서 사용할 Google 계정으로 **한 번 로그인**하고 소유자에게 알리세요.
+3. **내 Google 계정의 서비스 접근 허용.** 개인 차량은 로그인한 사용자별 데이터이며 Cloud Run 소유 여부와 별개입니다. 조직의 클라우드 조사는 서버가 확인한 멤버십과 서비스 등록 범위가 필요합니다(`crew_not_entitled`는 해당 조사 권한이 없다는 뜻). 팀원은 조직 워크스페이스(**CloudOps demo team**)의 operator·reviewer로 등록됐지만 실제 앱 접근은 따로 확인해야 합니다. 새 계정은 먼저 웹 콘솔에서 사용할 Google 계정으로 **한 번 로그인**하고 소유자에게 알리세요. APK 서명 등록만으로 업무 권한이 생기지는 않습니다.
 
 ### 그다음
 
@@ -106,7 +106,7 @@ APK 위치: `apps/android/app/build/outputs/apk/debug/app-debug.apk`. 15일 후�
 | 7 | 화면을 1분간 끄고 복귀 | 같음 |
 | 8 | 앱을 스와이프로 종료 후 다시 열기 | 조회로 작업을 다시 찾고 정확한 상태를 보여 줌 |
 | 9 | 작업 중 비행기 모드 켰다 끄기 | 연결 문제로 표시하고, 추측으로 상태를 보여 주지 않음 |
-| 10 | 한국어/영어 전환 | 상태 줄과 승인 카드가 모두 번역됨 |
+| 10 | 기기의 앱 언어 또는 시스템 언어 변경 후 다시 열기 | 한국어는 한국어, 영어·미지원 언어는 기본 영어 리소스 사용. 앱 안에는 수동 언어 선택기가 없음 |
 | 11 | 글꼴 크기 최대, 화면 회전 | 승인 버튼에 닿을 수 있고 잘린 곳이 없음 |
 | 12 | 로그아웃 | 데이터가 사라지고, 다른 계정으로 로그인해도 이전 계정의 것이 안 보임 |
 
@@ -126,7 +126,7 @@ APK 위치: `apps/android/app/build/outputs/apk/debug/app-debug.apk`. 15일 후�
 | 실행 상태 파싱과 표시 | `apps/android/core/.../Agent.kt`(`executionState`), `apps/android/app/.../AgentScreen.kt` |
 | 재전송하지 않는 작업 폴링 | `Agent.kt`의 polling coordinator |
 | 로그인과 토큰 처리 | `AndroidFirebaseIdentity.kt`, `core/.../FirebaseIdentity.kt`, `LiveAccess.kt` |
-| 문자열(한국어/영어) | `strings.xml`이 아니라 Kotlin 화면 코드 안(`MobileOpsApp.kt`, `AgentScreen.kt`)에 있음. 두 언어를 같이 고치세요 |
+| 문자열(한국어/영어) | `app/src/main/res/values/strings.xml`(기본 영어), `values-ko/strings.xml`(한국어). UI는 리소스를 참조하고 기기 언어를 따름 |
 | 색과 타이포(웹과 공유) | `design/tokens.json` → `npm run generate:tokens` |
 | 서버 계약 | `packages/contracts`, `apps/gateway/src` |
 
@@ -164,7 +164,7 @@ Google Cloud, Firebase, 대회 포털의 변경이 필요한 일은 직접 하�
 
 ## Mobility candidate check (15 October)
 
-The current private debug APK is built from uncommitted source; the remote checkout does not yet contain all of this work. Do not put Firebase settings, the Maps key or the APK into Git. The owner can hand over the APK privately. The package and registered signing restrictions are unchanged.
+Mobility source is published; the installed private APK can still represent an earlier candidate. Record its source revision and SHA-256 before testing rather than assuming it matches current main. Do not put Firebase settings, the Maps key or the APK into Git. The owner can hand over the APK privately. A separately verified API 36 emulator provider test proves native SDK loading and actual tiles/car/path, not physical-phone login or the full workflow.
 
 1. Install the candidate, open it and complete or skip the three-page introduction. Use the phone language to verify Korean/English resources; the app has no manual language selector.
 2. Sign in to the personal vehicle workspace, connect the simulated Aide EV, and reopen the app to check server persistence after signing in again. The private actor twin is distinct from organization work and other accounts.

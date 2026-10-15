@@ -16,9 +16,9 @@ Owner authorized this commit/push on 15 October; verify current Git refs rather 
 
 Follow-up: complete the retained organization login manually before the current deployed read-only Chief check. Two automated organization re-logins ended popup-closed before any crew instruction; root cause remains unproven. Personal-domain login/inspection remains separately verified.
 
-Mobility domains, MVVM/resources/tutorial, bounded guided recovery/case promotion and fresh-event response are implemented. Compatible gateway and four crew roles are deployed; public hashes match. Actual authenticated browser Maps/Firestore and fresh policy-bound learned-case remedy are verified, including a retained first unknown outcome and separately reproduced provider 429. Test policy is disabled. Final browser re-login and vehicle/map/assistance inspection now passed. Finish native live tiles/physical phone and current actual judging demonstration. Preserve the distinctions in STATUS; no physical or productivity claim.
+Mobility domains, MVVM/resources/tutorial, bounded guided recovery/case promotion and fresh-event response are implemented. Compatible gateway and four crew roles are deployed; public hashes match. Actual authenticated browser Maps/Firestore and fresh policy-bound learned-case remedy are verified, including a retained first unknown outcome and separately reproduced provider 429. Test policy is disabled. Final browser re-login and vehicle/map/assistance inspection now passed. Native live tiles/car marker/straight-line path now pass a separate opt-in API 36 emulator probe (one test, no skips) on published `5931fa7`; default invocation skips provider access. Finish physical-phone login/journeys and the current actual judging demonstration. Preserve the distinctions in STATUS; no physical or productivity claim.
 
-1. Follow `apps/android/ONBOARDING.md`'s new Mobility candidate checklist with the private prepared APK. No Git push or publication is authorized; do not expose packaged configuration or keys.
+1. Follow `apps/android/ONBOARDING.md`'s Mobility candidate checklist with the private prepared APK. Owner-authorized Git shipping excludes private APK/configuration/keys; record the exact installed candidate before treating phone results as current.
 2. The deck/entry drafts and 150-second narrated slide presentation are refreshed; re-record the obsolete actual demo for the current domains and verified case lifecycle. First provider/incident outcomes remain immutable.
 3. Road route geometry: official Maps MCP supplies metrics, not navigation geometry. Same-identity public-coordinate control now confirms Seoul REST/MCP empty versus California REST polyline/MCP route; the official coverage table marks Korean driving availability as limited. A Korea-capable provider needs separate explicit configuration/credentials/terms, or an explicitly chosen supported simulation region. Existing movement stays straight-line; never change origin or fabricate a road fallback. See MAPS.
 
@@ -45,7 +45,7 @@ Mobility domains, MVVM/resources/tutorial, bounded guided recovery/case promotio
 
 1. Confirm team status and exact cutoffs in the organizer dashboard. Official team formation closes 14 October; prototype deadline is 18 October.
 2. Reconcile the fresh-project rule against original file evidence. Verified source Git dates start 9 October, but a new history and the manifest do not establish when dirty-worktree files were built.
-3. Fill actual deployed/video/repo/contact links; upload the reviewed video; attach the PDF; check access from a clean browser; confirm the final submission receipt. Commit/push, publication and submission still require the owner's instruction.
+3. Fill actual deployed/video/repo/contact links; upload the reviewed video; attach the PDF; check access from a clean browser; confirm the final submission receipt. Git commit/push is owner-authorized; private artifact publication and submission still require separate instruction.
 
 ## Verification already recorded (do not rerun without a reason)
 
