@@ -147,7 +147,8 @@ export type CallStep = z.infer<typeof callStepSchema>;
 /** Model-drafted summary and follow-up proposals; the server assigns ids and draft status. */
 export const callDigestSchema = z.object({ text: z.string().min(1).max(1200), actionItems: z.array(z.string().min(1).max(200)).max(5),
   followups: z.array(z.object({ kind: z.enum(['message','calendar','reminder']), title: z.string().min(1).max(120), body: z.string().max(600).optional(),
-    minutesFromNow: z.number().int().min(0).max(10080).optional(), to: z.string().max(80).optional() }).strict()).max(3) }).strict();
+    minutesFromNow: z.number().int().min(0).max(10080).optional(), dayOffset: z.number().int().min(0).max(7).optional(),
+    localTime: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/).optional(), to: z.string().max(80).optional() }).strict()).max(3) }).strict();
 export type CallDigest = z.infer<typeof callDigestSchema>;
 
 /** What the model may return for a driver request: a short reply and up to three catalog proposals. */

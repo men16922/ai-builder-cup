@@ -4,6 +4,7 @@ import { randomUUID } from 'node:crypto';
 import { SqliteCloudStore } from '../src/store/sqlite-store';
 import { GcpWebAccess } from '../src/auth/web-access';
 import { GcpMobility, type VehicleReasoner, type MobilityPlaces } from '../src/mobility/service';
+import { followupWhen } from '../src/mobility/calls';
 import { mobilityStateSchema, type MobilityState } from '@contracts/gcp/mobility';
 
 async function setup(t: TestContext, custom: Partial<VehicleReasoner> = {}) {
@@ -20,7 +21,7 @@ async function setup(t: TestContext, custom: Partial<VehicleReasoner> = {}) {
         : input.step === 'delegate' ? { aide: '4:30 works; the driver will send the deck on arrival.', caller: 'Great, see you then.', callerEnds: true } : { caller: 'Thanks, noted.', callerEnds: false }; },
     async assist(input) { modelCalls++; if (custom.assist) return custom.assist(input, AbortSignal.timeout(1000)); return { reply: 'Ready.', proposals: [] }; },
     async summarizeCall() { modelCalls++; return { text: 'The review moved to 4:30 pm; the deck follows on arrival.', actionItems: ['Send the deck'], followups: [
-      { kind: 'calendar', title: 'Design review', minutesFromNow: 90 }, { kind: 'message', title: 'Confirm the new time', body: '4:30 works for me.', to: 'Jordan Kim' }] }; } };
+      { kind: 'calendar', title: 'Design review', dayOffset: 1, localTime: '16:30' }, { kind: 'message', title: 'Confirm the new time', body: '4:30 works for me.', to: 'Jordan Kim' }] }; } };
   const places: MobilityPlaces = { async nearby(location, kind) { return [{ id: 'synthetic-charger', name: 'Synthetic charger', address: 'Fixture only', location: { latitude: location.latitude + .01, longitude: location.longitude }, kind, source: 'google-places', fetchedAt: new Date(clock).toISOString() }]; } };
   const api = new GcpMobility(store, access, () => true, reasoner, places, () => clock);
   const send = (state: MobilityState, command: Record<string, unknown>, key = randomUUID()) => api.command(session, { ...command, expectedVersion: state.vehicle!.version }, key);
@@ -88,7 +89,7 @@ test('My Aide handles a simulated call while autopilot keeps the journey moving,
   state = await s.send(state, { operation: 'call_end', callId });
   assert.equal(state.call?.state, 'ended'); assert.equal(state.journey?.autopilot, false);
   const [calendar, message] = state.call!.summary!.followups;
-  assert.equal(calendar.status, 'draft'); assert.equal(calendar.when, new Date(Date.parse('2026-10-15T06:00:00Z') + 90 * 60_000).toISOString()); assert.equal(message.to, 'Jordan Kim');
+  assert.equal(calendar.status, 'draft'); assert.equal(calendar.when, '2026-10-16T07:30:00.000Z'); assert.equal(message.to, 'Jordan Kim');
   state = await s.send(state, { operation: 'call_save', callId }); assert.equal(state.calls.length, 1);
   state = await s.send(state, { operation: 'followup', callId, followupId: message.id, action: 'done' });
   assert.equal(state.calls[0].summary?.followups[1].status, 'done'); assert.equal(state.call?.summary?.followups[1].status, 'done');
@@ -125,4 +126,13 @@ test('Ask your own Aide keeps only catalog proposals and runs nothing until the 
   const state = await s.send(before, { operation: 'assist', text: 'Cool it down to 20 and find a charger', language: 'en' });
   assert.deepEqual(state.assist?.proposals, [{ kind: 'control', action: 'set_temperature', value: 20 }, { kind: 'trip', tripKind: 'charging', instruction: 'Cool it down to 20 and find a charger' }]);
   assert.equal(state.vehicle?.climate.targetCelsius, 21); assert.equal(state.vehicle?.climate.on, false); assert.equal(state.journey, null);
+});
+
+test('follow-up times resolve on the server from the agreed KST day and clock time', () => {
+  const evening = Date.parse('2026-10-15T12:48:00Z'); // Thu 21:48 KST
+  assert.equal(followupWhen({ dayOffset: 1, localTime: '16:30' }, evening).when, '2026-10-16T07:30:00.000Z');
+  assert.equal(followupWhen({ localTime: '23:00' }, evening).when, '2026-10-15T14:00:00.000Z');
+  assert.equal(followupWhen({ dayOffset: 0, localTime: '09:00' }, Date.parse('2026-10-15T16:00:00Z')).when, '2026-10-16T00:00:00.000Z'); // 01:00 KST Fri
+  assert.equal(followupWhen({ minutesFromNow: 30 }, evening).when, '2026-10-15T13:18:00.000Z');
+  assert.deepEqual(followupWhen({}, evening), {});
 });

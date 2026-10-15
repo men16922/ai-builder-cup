@@ -51,3 +51,12 @@ export function settleVehicle(vehicle: SimulatedVehicle, now: number) {
     vehicle.climate = { on: climate.on, targetCelsius: climate.targetCelsius, cabinCelsius: Math.round(cabin * 10) / 10, ...(cabin === goal ? {} : { changedAt: new Date(now).toISOString() }) };
   }
 }
+
+/** Resolves a model-drafted follow-up time on the server: the model names the agreed KST day and clock time, never does date arithmetic. */
+export function followupWhen(item: { minutesFromNow?: number; dayOffset?: number; localTime?: string }, now: number): { when?: string } {
+  if (item.localTime) {
+    const kst = new Date(now + 9 * 3_600_000), [hour, minute] = item.localTime.split(':').map(Number);
+    return { when: new Date(Date.UTC(kst.getUTCFullYear(), kst.getUTCMonth(), kst.getUTCDate() + (item.dayOffset ?? 0), hour, minute) - 9 * 3_600_000).toISOString() };
+  }
+  return item.minutesFromNow === undefined ? {} : { when: new Date(now + item.minutesFromNow * 60_000).toISOString() };
+}

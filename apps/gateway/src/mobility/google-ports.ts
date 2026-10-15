@@ -23,7 +23,7 @@ export class MobilityCallOutputError extends Error {
     super('mobility_call_invalid_output');
     this.name = 'MobilityCallOutputError';
     this.phase = phase;
-    const labels = new Map(Object.entries({ text:'summary_text', actionItems:'action_items', followups:'followups', title:'followup_title', body:'followup_body', to:'followup_recipient', minutesFromNow:'followup_time', aide:'aide_turn', caller:'caller_turn', callerEnds:'call_end_flag' }));
+    const labels = new Map(Object.entries({ text:'summary_text', actionItems:'action_items', followups:'followups', title:'followup_title', body:'followup_body', to:'followup_recipient', minutesFromNow:'followup_time', dayOffset:'followup_time', localTime:'followup_time', aide:'aide_turn', caller:'caller_turn', callerEnds:'call_end_flag' }));
     this.fields = error instanceof z.ZodError ? [...new Set(error.issues.map(issue => [...issue.path].reverse().map(part => typeof part === 'string' ? labels.get(part) : undefined).find(Boolean) ?? 'response_shape'))].slice(0,8) : ['response_json'];
     const known = new Set(['invalid_type','too_big','too_small','invalid_format','invalid_value','unrecognized_keys']);
     this.constraints = error instanceof z.ZodError ? [...new Set(error.issues.map(issue => known.has(issue.code) ? issue.code : 'schema'))].slice(0,8) : ['invalid_json'];
@@ -76,7 +76,7 @@ function vehicleReasoner(options: VehicleReasonerOptions, fetcher: typeof fetch)
     try {
       return callDigestSchema.parse(await generate(signal,summaryInstruction(input),{input:callView(input)},0.2,2048,{type:'OBJECT',required:['text','actionItems','followups'],properties:{
       text:{type:'STRING'},actionItems:{type:'ARRAY',items:{type:'STRING'}},
-      followups:{type:'ARRAY',items:{type:'OBJECT',required:['kind','title'],properties:{kind:{type:'STRING',enum:['message','calendar','reminder']},title:{type:'STRING'},body:{type:'STRING'},minutesFromNow:{type:'INTEGER'},to:{type:'STRING'}}}},
+      followups:{type:'ARRAY',items:{type:'OBJECT',required:['kind','title'],properties:{kind:{type:'STRING',enum:['message','calendar','reminder']},title:{type:'STRING'},body:{type:'STRING'},dayOffset:{type:'INTEGER'},localTime:{type:'STRING'},to:{type:'STRING'}}}},
       }}));
     } catch (error) {
       if (error instanceof z.ZodError || error instanceof SyntaxError) throw new MobilityCallOutputError('summary', error);
@@ -112,7 +112,8 @@ const callInstruction=(input:CallInput)=>callRules(input)+' Produce the next lin
   +'step=reply: only "caller" responds to the driver\'s last line. step=delegate: "aide" answers the caller\'s last line on the driver\'s behalf using only the driver context, then "caller" responds. '
   +'Set callerEnds=true only when the caller\'s goal is settled and the caller says goodbye.';
 const summaryInstruction=(input:CallInput)=>callRules(input)+' The call has ended. Summarize it for the driver as JSON: "text" in two or three sentences, up to five short "actionItems", '
-  +'and up to three follow-up drafts the transcript clearly supports: kind "message" (a short reply to the caller in "body", recipient name in "to"), "calendar" (event "title", "minutesFromNow" from now), or "reminder". '
+  +'and up to three follow-up drafts the transcript clearly supports: kind "message" (a short reply to the caller in "body", recipient name in "to"), "calendar" (event "title"), or "reminder". '
+  +'For a calendar or reminder with an agreed time, give "dayOffset" (0 today, 1 tomorrow, relative to the current time in driverContext) and "localTime" as 24-hour HH:mm in KST exactly as agreed in the transcript; omit both when no time was agreed. '
   +'Never claim anything was sent, booked or decided unless the transcript says so.';
 
 const mcpPlace = z.object({

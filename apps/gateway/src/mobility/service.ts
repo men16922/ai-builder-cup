@@ -9,7 +9,7 @@ import { cloudDigest } from '../store/integrity';
 import { cloudRecordKey } from '../workflow/workflow';
 import { chargeReconnectVerdict, safeChargeConditions } from './runbooks';
 import { chargingEvidence, matchingCases, recoveryGuidance, verifiedCase } from './case-learning';
-import { callPersona, driverContext, settleVehicle, type CallInput } from './calls';
+import { callPersona, driverContext, followupWhen, settleVehicle, type CallInput } from './calls';
 import { MobilityCallOutputError } from './google-ports';
 
 export interface VehicleReasoner {
@@ -461,7 +461,7 @@ export class GcpMobility {
         const live=state.call!, digest=call.digest!;
         live.state='ended';live.endedAt=at;
         live.summary={text:digest.text,actionItems:digest.actionItems,followups:digest.followups.map(item=>({id:randomUUID(),kind:item.kind,title:item.title,status:'draft' as const,
-          ...(item.body?{body:item.body}:{}),...(item.to?{to:item.to}:{}),...(item.minutesFromNow!==undefined?{when:new Date(now+item.minutesFromNow*60_000).toISOString()}:{})}))};
+          ...(item.body?{body:item.body}:{}),...(item.to?{to:item.to}:{}),...followupWhen(item,now)}))};
         if (state.journey) state.journey.autopilot=false;
         break;
       }
