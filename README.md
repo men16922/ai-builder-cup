@@ -104,7 +104,7 @@ How to build and deploy is in [docs/DEPLOY.md](docs/DEPLOY.md). Real identifiers
 | Execution states and V2 reviewed-state/durable claim protocol | Historical V1 applied/read-back on 11 October; compatible V2 deployed with negative broker probes and isolated Firestore claim contention. Actual human-approved V2 mutation and real conflict remain unverified. Current source/evidence scopes are in `docs/STATUS.md` and `docs/APPROVALS.md` |
 | Chief restarted while an approval is pending | Run live on 2026-10-12: the task ended as `unknown`, nothing was sent or retried, traffic unchanged (`docs/EVALUATION.md`) |
 | Android on an emulator against the deployed services | 11 October crew flow; 15 October APK `34a14f1` real sign-in/Ask/controls/Maps and later call summary/save. Original failure/wrong drafts retained; final corrected draft acceptance open |
-| Latest integrated gateway | Public/deployed `a80225a` includes readiness/time guards and busy/range guidance. Fresh API 240/browser/axe/hosted/publish, native core 74/app 3, assembly/lint/format pass. Same UID/config, latest 100%, six current build hashes match; not remote CI |
+| Latest integrated gateway | Public/deployed `fe69923` includes readiness/time guards and busy/range guidance. Fresh API 245/browser/axe/hosted/publish, native core 74/app 3, assembly/lint/format pass. Same UID/config, latest 100%, six current build hashes match; not remote CI |
 | Android on a physical device | Not verified |
 | Push notifications | Implemented, off in the deployment, no real FCM send verified |
 | Signed-out page | Clean mobility welcome and Google sign-in; no synthetic rehearsal or private reads |
@@ -114,7 +114,7 @@ How to build and deploy is in [docs/DEPLOY.md](docs/DEPLOY.md). Real identifiers
 
 ## Current limits
 
-- One separate post-fix real Gemini summary qualification received 429 after one call, with no retry. Final date/body acceptance is not proved. The emulator was subsequently on a different local APK; identify its artifact/controller before new UI tests. Private raw recordings are not a final public demo. See `docs/reviews/2026-10-15-native-live-call-output.md`.
+- Separate post-fix summary qualifications retain one 429/no retry and a later `a80225a` attempt reaching its 25-second deadline without an HTTP response. Final date/body acceptance remains unproved. Private configured APK `51cfa9d` is prepared, not installed; the device still has the earlier unidentified artifact. Confirm its controller/intended installation before UI tests. Raw recordings are not a final public demo. See `docs/reviews/2026-10-15-native-live-call-output.md`.
 - The Android crew screen (instruction, progress, approval, report) is covered by unit tests against the real wire format, and on 2026-10-11 was driven on an emulator against the deployed services (Google sign-in, a task opened from the server, a signed approval applied, an honest report). It has not run on a physical device.
 - Push notifications are implemented on the server and in the app but are off in the deployed demo.
 - ADK's A2A support is marked experimental by Google.

@@ -10,11 +10,11 @@ Owner authorized this commit/push on 15 October; verify current Git refs rather 
 
 ## Current priority: My Aide in-car direction (owner, 15 October)
 
-`docs/plans/2026-10-15-my-aide-in-car.md` is the implementation pointer. Gateway `a80225a` includes draft readiness/time guards, AI-busy guidance and out-of-range place handling; same UID/config and six assets match. Earlier actual native evidence is bound to private APK `34a14f1`. Remaining priority is current signed-in/physical acceptance and recording.
+`docs/plans/2026-10-15-my-aide-in-car.md` is the implementation pointer. Gateway `fe69923` includes immediate call-unknown guidance, draft/time guards and busy/range handling; UID/config and six assets match. Private configured APK `51cfa9d` is prepared, not installed; actual native evidence stays bound to `34a14f1`. Remaining priority is current signed-in/physical acceptance and recording.
 
 ## Final access checks and judging assets
 
-Current engineering next step: ship/deploy reviewed immediate call-unknown response/manual guidance (full API 245/browser/axe/hosted/publish), verify UID/config/assets, then identify the intended APK/controller before native input. Last verified runtime `a80225a`; distinct real-summary qualification reached its 25-second deadline with one transport attempt/no HTTP response, separately from the earlier one-call 429. Final live drafts remain unconfirmed. See `docs/reviews/2026-10-15-native-live-call-output.md`. Preserve first outcomes; original invalid field and held-vehicle/input cause remain unproved.
+Current engineering next step: confirm device controller and install the intended private `51cfa9d` APK, then qualify a distinct native draft after provider availability changes. Gateway `fe69923` is deployed with UID/config/assets matched and full API 245/browser/axe/hosted/publish; uploaded build source and running digest match the gated artifacts. The new configured APK passes signing/config/key/app 3/build/lint, not device input. Read-only device pull still matches the earlier unidentified APK. Real-summary probe on `a80225a` hit its 25-second deadline with one attempt/no response; earlier one-call 429 unchanged. Final live drafts remain unconfirmed. See `docs/reviews/2026-10-15-native-live-call-output.md`.
 
 Follow-up: complete the retained organization login manually before the current deployed read-only Chief check. Two automated organization re-logins ended popup-closed before any crew instruction; root cause remains unproven. Personal-domain login/inspection remains separately verified.
 

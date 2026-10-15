@@ -3,10 +3,12 @@
   "theme": "Future of Work & Enterprise Productivity",
   "source": {
     "android": "34a14f1",
-    "deployedWeb": "a80225a"
+    "deployedWeb": "fe69923",
+    "preparedAndroid": "51cfa9d",
+    "testedWeb": "fe69923"
   },
   "local": {
-    "api": 240,
+    "api": 245,
     "androidCore": 74,
     "androidApp": 3,
     "emulatorPassed": 20,
@@ -14,7 +16,7 @@
   },
   "separateProviders": {
     "nativeMaps": "Actual signed-in API 36 emulator at APK 34a14f1: Firebase/Firestore, Ask, five places, native tiles and a photo with attribution",
-    "gemini": "Native real turns/summary/save separately recorded; later call-draft provider qualification refused with HTTP 429 after one call, no retry",
+    "gemini": "Native real turns/summary/save separately recorded; later independent qualification refused with 429 once, and a distinct a80225a summary attempt reached its 25-second deadline without an HTTP response. Neither unknown call was replayed.",
     "places": "One direct provider flow returned five places with five attributed photos"
   },
   "deployment": {
@@ -34,7 +36,8 @@
     "Original held-out first run 13/18 uses a different fixture protocol",
     "Eligibility and final submission receipt remain owner checks",
     "Native APK was replaced during concurrent work; identify the installed artifact before the next UI test",
-    "Successful native summary exposed wrong time/empty body; local guards pass, latest live draft qualification remains unconfirmed"
+    "Successful native summary exposed wrong time/empty body; local guards pass, latest live draft qualification remains unconfirmed",
+    "Private configured APK 51cfa9d prepared, signed and checked; installed device still matches the earlier unidentified artifact, with no new input or installation"
   ],
   "review": "docs/reviews/2026-10-15-native-live-call-output.md"
 }

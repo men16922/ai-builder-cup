@@ -1,6 +1,6 @@
 # Current My Aide recording script - target 2:45, limit under 3:00
 
-This is a recording plan, not proof that the take exists. Use the deployed product in English. Gateway source is `a80225a`, including the `88437ea` draft guards; APK `34a14f1` has earlier actual emulator evidence, but the device was later replaced with a different local build. Identify the intended installed artifact/controller before recording. Verify the final date/body flow after provider availability changes: the first post-fix separate qualification received 429/no retry. Earlier charging-only, narrated-slide and raw native takes remain historical/private evidence.
+This is a recording plan, not proof that the take exists. Use the deployed product in English. Gateway source is `fe69923`, including the `88437ea` draft guards; Private configured APK `51cfa9d` is prepared but not installed; actual emulator evidence remains bound to `34a14f1`, while the device still has the earlier unidentified artifact. Confirm controller/intended installation before recording. Verify the final date/body flow after provider availability changes: the first post-fix separate qualification received 429/no retry, and a distinct `a80225a` attempt reached its 25-second deadline without an HTTP response. Earlier charging-only, narrated-slide and raw native takes remain historical/private evidence.
 
 ## Story and timing
 

@@ -56,7 +56,7 @@ const slides = [
   {
     topic: 'Evidence, with scope', title: 'Proof with the gaps visible.',
     content: `<div class="proof-grid"><article><span class="tag">NATIVE + SEPARATE PROVIDER CHECKS</span><h3>Real AI, identity and Maps</h3><p>Native sign-in, Ask and Maps passed. A call summarized/saved; final draft checks remain open.</p></article><article><span class="tag">LOCAL + ONE REAL PROVIDER PROBE</span><h3>Stop survives a model wait</h3><p>Vehicle/call versions stay independent. Late replies cannot undo Stop or restore revoked data.</p></article><article><span class="tag">EARLIER DEPLOYED WORKFLOW</span><h3>Verified charging read-back</h3><p>One simulated 72 kW recovery, with separate case promotion and bounded policy.</p></article><article class="pending"><span class="tag muted">STILL OPEN</span><h3>People and final acceptance</h3><p>Phone and paired human trial. Current web/final native drafts. Actual V2 reviewer/conflict.</p></article></div><p class="test-line"><b>${evidence.local.api}</b> API · <b>${evidence.local.androidCore}</b> Android core · <b>${evidence.local.androidApp}</b> app unit · <b>${evidence.local.emulatorPassed}</b> emulator passes · Maps SDK qualified separately</p>`,
-    note: 'First unknown and separate 429 retained. Original held-out 13/18 is not comparable to tuned runs. No measured productivity or MTTR gain.',
+    note: 'Unknown, separate 429 and deadline retained. Held-out first run 13/18 is not comparable to tuned runs. No measured productivity or MTTR gain.',
   },
   {
     topic: 'Aide', style: 'closing',
