@@ -1,5 +1,10 @@
 # Progress log
 
+## 2026-10-17 — Hack2skill rules, template deck and a new 3:52 demo take
+- Owner pasted the real form: Hack2skill (not Devpost), prescribed template deck PDF ≤5 MB, 3–4 minute video, ≤1024-character description, close 19 Oct 03:29 IST (06:59 KST). Template deck source `submission/deck-template/build.py` (15 pages, exports Git-ignored) and `submission/HACK2SKILL.md` (1018 characters) added; README gains a rendered Mermaid architecture diagram.
+- Fixed: the 16 Oct private APK lacked `AIDE_ANDROID_MAPS_KEY` (map fell back to a grid); rebuilt with the same signing/config/key. My Aide called the driver by the caller's name on a live take; prompt fix `ee24150` deployed as revision 00032 (config/UID unchanged).
+- Recorded: signed-in emulator takes (Ask, Hongdae dinner search → Go here → call while driving → summary → tire diagnosis) plus the web console with the same account; assembled into `.data/releases/Aide-demo-20261017.mp4` (232 s). Earlier takes in the same session showed a call-step unknown after my script kept delegating past goodbye, and a 429 from the 30/hour model budget that the app labelled "unconfirmed"; both retained privately and listed as follow-ups. Audio not machine-reviewed; upload, deck video link and submission are owner steps.
+
 ## 2026-10-16 — Submission check, demo candidate review and icon buttons
 - Checked: `make check` green twice (publishable 436 files); `origin/main` equals HEAD; public repository; gateway and four crew services Ready at 100%. Private 172-second emulator demo `.data/releases/Aide-My-Aide-PR-20261015.mp4` frame-reviewed: no server address/account visible, but the driver's call reply is typed by hand (caller lines are Gemini-played) and Add to calendar ends in the unconfirmed-outcome dialog near 126 s. Audio not reviewed. Owner decides re-cut versus re-take.
 - Changed: driver action buttons on web and Android carry leading icons (labels unchanged and still the accessible name); Ask proposals reuse the matching control glyph. Android assemble/unit/lint/ktfmt and 22 emulator tests pass (Maps opt-in skipped); owned AVD stopped.

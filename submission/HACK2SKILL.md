@@ -8,7 +8,7 @@ The entry is submitted on Hack2skill (not Devpost). The form closes **19 October
 | Prototype Link Deployed on GCP or Cloud Run | `product_url` in `.data/releases/submission-links-private.json` (the deployed Cloud Run gateway) |
 | Final Prototype PPT/Deck converted into PDF (≤ 5 MB) | `submission/deck-template/Aide-AI-Builder-Cup.pdf`, built from the prescribed template by `submission/deck-template/build.py` (Git-ignored) |
 | GitHub Repository Link (Public Access) | `public_baseline_repo_url` in the same link sheet |
-| Demo Video Link (3–4 minutes) | Pending: the new take must run **3 to 4 minutes** and show working functionality; also replace `[video link]` on the deck's links slide and rebuild the PDF |
+| Demo Video Link (3–4 minutes) | Candidate `.data/releases/Aide-demo-20261017.mp4` (3:52, signed-in emulator app + web console on the deployed service, ElevenLabs narration/dub). Owner reviews audio, uploads (e.g. unlisted YouTube) and pastes the link; then replace `[video link]` in the deck and rebuild the PDF |
 | Brief Description (≤ 1024 characters) | Text below |
 
 ## Brief description (1018 characters)
