@@ -1,6 +1,6 @@
 # Agent brief
 
-▶ NEXT SESSION: Confirm controller/install private `51cfa9d`, then verify one distinct signed-in native call; shared device still has the earlier unidentified artifact. Separate real summary passes in 2,149 ms; its actual output also renders correct time/body/recipient in EN/KO on a new isolated emulator (two selected tests; default synthetic variant also passes). Setup identity/turns synthetic; callbacks are not server receipts. Shared device untouched; owned emulator stopped. Earlier 429/deadline preserved. Runtime `fe69923` matches API 245 gate. Web/phone, human V2/impact/video remain open. Review: `docs/reviews/2026-10-15-native-live-call-output.md`.
+▶ NEXT SESSION: Submission freeze 17 Oct, deadline 18 Oct. Deployed `22fa44c` (rev 00031, icon buttons) matches public main; private APK `22fa44c` prepared, not installed. Owner chooses demo fix (caption/re-cut the 172 s candidate or re-take the call with Let My Aide answer/reply only), reviews audio, then uploads and submits; see `submission/SUBMISSION.md`.
 
 - Product: Aide, a GCP-only mobile/web agent crew for drivers and responders across simulated vehicle incidents and real registered Cloud Run services. Deadline 18 October 2026; freeze 17 October.
 - Current execution: owner resumed the goal; manual organization-login result is pending and browser control is unavailable in this resumed session. Prior blocked checks are historical. Physical phone, reviewer/impact, routing-provider inputs and submission are unproved; full objective remains incomplete.
