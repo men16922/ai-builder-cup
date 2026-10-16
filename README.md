@@ -29,19 +29,53 @@ Built for the AI Builder Cup 2026, theme *Future of Work & Enterprise Productivi
 
 ## Architecture
 
+```mermaid
+flowchart TB
+  subgraph Clients["Clients"]
+    android["Aide Android app<br/>Kotlin · Compose · Material 3 · KO/EN"]
+    web["Aide web console<br/>React · Material Web"]
+  end
+
+  auth["Firebase Authentication<br/>Google sign-in"]
+
+  subgraph Gateway["Gateway"]
+    gw["Aide gateway on Cloud Run (TypeScript)<br/>verified identity · owner / workspace / role checks<br/>typed actions only · hourly AI and Maps budgets"]
+  end
+
+  fs[("Cloud Firestore<br/>actor-private vehicle twin · calls · tasks · grants")]
+
+  subgraph Driver["Driver domain"]
+    gemini["Gemini on Vertex AI<br/>Ask proposals · trip plans · calls · summaries · diagnosis"]
+    maps["Google Maps<br/>official Maps MCP · Places photos"]
+  end
+
+  subgraph Crew["Responder crew"]
+    chief["Chief agent<br/>private Cloud Run · Python · Google ADK"]
+    ops["Ops<br/>typed read-only evidence · approved rollback"]
+    diag["Diagnosis<br/>hypotheses · unknowns"]
+    guardian["Guardian<br/>allow / require_human / refuse"]
+  end
+
+  target["Registered Cloud Run service<br/>fixed UID · bounded telemetry"]
+  human(["Human decision on the phone"])
+
+  android --> auth
+  web --> auth
+  android -->|ID token| gw
+  web -->|ID token| gw
+  gw <--> fs
+  gw --> gemini
+  gw --> maps
+  gw -->|"A2A JSON-RPC · Cloud Run identity token"| chief
+  chief -->|A2A| ops
+  chief -->|A2A| diag
+  chief -->|A2A| guardian
+  ops --> target
+  guardian -.->|risky change| human
+  human -.->|signed, one-use approval| ops
 ```
-Android app (Compose Material 3)        Web console (Material Web, Cloud Console style)
-        │   chat · approval cards             dashboard · Gemini-style assistant panel
-        ▼
-Gateway  (TypeScript, Cloud Run)  Firebase identity · owner/workspace/role checks · task store (Firestore)
-        ├── Driver: Gemini proposals/calls + Google Maps MCP + actor-private simulated vehicle
-        │
-        └── Responder: A2A JSON-RPC streaming, Cloud Run identity tokens
-              Chief agent  (Python, ADK 2.11, Gemini)
-                ├── A2A → Ops        reads registered evidence; redeems an approved typed rollback
-                ├── A2A → Diagnosis  hypotheses, unknowns, next step
-                └── A2A → Guardian   allow / require_human / refuse (policy outside the model)
-```
+
+The driver domain and the responder domain keep separate data and authority: a simulated vehicle policy grants nothing on real Cloud Run services. Agents choose typed tools; they never receive credentials, generate execution code or change IAM.
 
 Every agent is its own private Cloud Run service with its own least-privilege service account. See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 

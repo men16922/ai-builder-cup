@@ -22,3 +22,7 @@ apps/android/app/src/main/assets/mobileops-agent.json
 *.jks
 *.keystore
 submission/*.mp4
+
+# Filled submission deck exports carry the deployed product URL (project number).
+submission/deck-template/*.pptx
+submission/deck-template/*.pdf
