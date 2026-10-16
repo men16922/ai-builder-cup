@@ -1,5 +1,12 @@
 # Progress log
 
+## 2026-10-17 — Submission assets finalized, Medium article published
+- Status: owner says the Hack2skill form is ready (video https://youtu.be/oi7qsd9OR8o, 3:52); submission receipt not yet reported to this session. Medium article published by the owner; its link not yet recorded.
+- Changed: `submission/` holds only the final deck PDF/PPTX (template-based, video link filled, 2.2 MB, 15 pages), `Aide-demo.mp4`, thumbnail, `HACK2SKILL.md`, `MEDIUM.md` + `medium-img/`; custom deck, Devpost/Medium drafts and old script removed from Git (old video archived under `.data/releases/archive/`). Eval JSONs published (`9e9c6a3`). Commits through `c0f7cc6` pushed.
+- Verified: `check:publishable` passes (436 files); YouTube oEmbed, product URL and GitHub return 200; deck PDF text/links inspected. Medium draft images checked in the browser; audio of the video not machine-reviewed.
+- Blockers: none; owner steps only (form receipt, LinkedIn post).
+- Next: keep Cloud Run services untouched through evaluation (19 Oct–6 Nov); record the receipt and Medium link when given.
+
 ## 2026-10-17 — Hack2skill rules, template deck and a new 3:52 demo take
 - Owner pasted the real form: Hack2skill (not Devpost), prescribed template deck PDF ≤5 MB, 3–4 minute video, ≤1024-character description, close 19 Oct 03:29 IST (06:59 KST). Template deck source `submission/deck-template/build.py` (15 pages, exports Git-ignored) and `submission/HACK2SKILL.md` (1018 characters) added; README gains a rendered Mermaid architecture diagram.
 - Fixed: the 16 Oct private APK lacked `AIDE_ANDROID_MAPS_KEY` (map fell back to a grid); rebuilt with the same signing/config/key. My Aide called the driver by the caller's name on a live take; prompt fix `ee24150` deployed as revision 00032 (config/UID unchanged).

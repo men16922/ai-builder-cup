@@ -1,6 +1,6 @@
 # Agent brief
 
-▶ NEXT SESSION: Hack2skill closes 19 Oct 06:59 KST. Ready: deployed rev 00032 (`ee24150`), template deck PDF (`submission/deck-template`, `[video link]` pending), description in `submission/HACK2SKILL.md`, demo `.data/releases/Aide-demo-20261017.mp4` (3:52). Owner: review audio, upload video, then rebuild the deck with the link and submit. Follow-ups: 429 shown as "unconfirmed", callerEnds unused.
+▶ NEXT SESSION: Submission assets are final in `submission/` (see its README). Owner submits/has submitted on Hack2skill (closes 19 Oct 06:59 KST); record the receipt and Medium link when given. Do not redeploy or change Cloud Run services during evaluation (19 Oct–6 Nov). Follow-ups: 429 shown as "unconfirmed", callerEnds unused, physical phone and paired trial.
 
 - Product: Aide, a GCP-only mobile/web agent crew for drivers and responders across simulated vehicle incidents and real registered Cloud Run services. Deadline 18 October 2026; freeze 17 October.
 - Current execution: owner resumed the goal; manual organization-login result is pending and browser control is unavailable in this resumed session. Prior blocked checks are historical. Physical phone, reviewer/impact, routing-provider inputs and submission are unproved; full objective remains incomplete.
