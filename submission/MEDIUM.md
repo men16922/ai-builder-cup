@@ -70,4 +70,6 @@ We recorded the demo on the real, signed-in app against the deployed service, an
 
 *Team Aide: Byung Min Choi and Jae Hyuk Choi. Aide is not affiliated with any vehicle manufacturer.*
 
+Images (frames of the final demo, in `submission/medium-img/`): `cover.jpg` under the subtitle, then the YouTube embed; `ask.jpg`, `places.jpg`, `call.jpg`, `care.jpg` and `web.jpg` after the matching paragraphs in "What Aide does"; `arch.jpg` after the "How it's built" list.
+
 Medium tags: Artificial Intelligence, Google Cloud Platform, Gemini, AI Agents, Hackathon
