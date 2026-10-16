@@ -39,15 +39,7 @@ The Python target expects `.tools/venv-agents`; see `apps/crew/README.md` for it
 
 ## Local exports and measured results
 
-This ship unit holds back `submission/deck/deck.html`, `submission/deck/deck.pdf` and the three new 14 October qualification JSON run outputs. Older tracked exports/results can still exist in a fresh checkout; their presence does not make them current. The reviewed current APK, narrated slide video and actual private screenshots are also outside Git.
-
-Rebuild the current deck from its committed source and selected synthetic image assets:
-
-```sh
-node --import tsx submission/deck/build.mjs
-```
-
-The refreshed My Aide PDF has ten pages. Its committed source, aggregate `evidence.json`, capture wrapper and three selected synthetic components are sufficient to rebuild it; inspect every rendered page. Optional recapture: `node --import tsx submission/deck/capture.mjs` (offline fixture, no provider calls). Generated HTML/PDF stay local, and an older tracked export in a fresh checkout is not current. The existing 150-second narrated slide video uses the previous PDF; it is now stale and is not a continuous actual demo. Use `submission/DEMO_SCRIPT.md` for the planned new take. Request frozen qualification records privately if auditing first outcomes, including failures and source hashes. Do not rerun a model evaluation and relabel it as the original first run.
+Submission assets live in `submission/` (see its README). The template deck is rebuilt with `submission/deck-template/build.py` (python-pptx) and exported to PDF in Keynote or PowerPoint; the filled PPTX/PDF and the demo video stay local because they carry the deployed URL. The 14 October qualification JSON run outputs, the private APK and private screenshots are also outside Git.
 
 ## Limits to preserve on resume
 

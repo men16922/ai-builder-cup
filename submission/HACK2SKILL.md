@@ -6,9 +6,9 @@ The entry is submitted on Hack2skill (not Devpost). The form closes **19 October
 | --- | --- |
 | Challenges | Future of Work & Enterprise Productivity (repository wording; pick the matching option in the dropdown) |
 | Prototype Link Deployed on GCP or Cloud Run | `product_url` in `.data/releases/submission-links-private.json` (the deployed Cloud Run gateway) |
-| Final Prototype PPT/Deck converted into PDF (≤ 5 MB) | `submission/deck-template/Aide-AI-Builder-Cup.pdf`, built from the prescribed template by `submission/deck-template/build.py` (Git-ignored) |
+| Final Prototype PPT/Deck converted into PDF (≤ 5 MB) | `submission/Aide-AI-Builder-Cup.pdf` (2.1 MB), built from the prescribed template by `submission/deck-template/build.py` (Git-ignored) |
 | GitHub Repository Link (Public Access) | `public_baseline_repo_url` in the same link sheet |
-| Demo Video Link (3–4 minutes) | Candidate `.data/releases/Aide-demo-20261017.mp4` (3:52, signed-in emulator app + web console on the deployed service, ElevenLabs narration/dub). Owner reviews audio, uploads (e.g. unlisted YouTube) and pastes the link; then replace `[video link]` in the deck and rebuild the PDF |
+| Demo Video Link (3–4 minutes) | https://youtu.be/oi7qsd9OR8o (3:52; local copy `submission/Aide-demo.mp4`); the deck's links slide carries the same URL |
 | Brief Description (≤ 1024 characters) | Text below |
 
 ## Brief description (1018 characters)
@@ -18,5 +18,4 @@ Aide is a Gemini-powered aide for drivers and cloud responders. On Android or th
 ## Before submitting
 
 - Open both links from a signed-out browser profile; the prototype must stay up through evaluation.
-- Replace `[video link]` in `build.py` (links slide), rebuild, export the PDF and check it is under 5 MB.
 - Confirm the challenge option, team members and eligibility in the Hack2skill dashboard.

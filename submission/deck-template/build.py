@@ -1,7 +1,7 @@
 """Fill the prescribed AI Builder Cup submission template with Aide content.
 
 Usage: python build.py  (needs python-pptx and Pillow). Reads the untouched template beside
-`submission/`, writes `Aide-AI-Builder-Cup.pptx` here (ignored by Git: it carries the
+`submission/`, writes `submission/Aide-AI-Builder-Cup.pptx` (ignored by Git: it carries the
 private product URL). Export the PDF with Keynote afterwards.
 Images in img/ are original art or offline synthetic captures (see img/README.md).
 """
@@ -21,7 +21,8 @@ from pptx.util import Inches, Pt
 
 HERE = Path(__file__).resolve().parent
 TEMPLATE = HERE.parent / "Submission Template _ AI Builder Cup.pptx"
-OUT = HERE / "Aide-AI-Builder-Cup.pptx"
+VIDEO_URL = "https://youtu.be/oi7qsd9OR8o"
+OUT = HERE.parent / "Aide-AI-Builder-Cup.pptx"
 IMG = HERE / "img"
 # The deployed URL and repository owner are private identifiers here, so they stay in the ignored link sheet.
 _LINKS = json.loads((HERE.parents[1] / ".data/releases/submission-links-private.json").read_text())
@@ -465,7 +466,7 @@ s = slides[13]
 tf = heading_box(s).text_frame
 links = {
     "GitHub Public Repository": (REPO_URL, REPO_URL),
-    "Demo Video Link (3 Minutes)": ("[video link]", None),
+    "Demo Video Link (3 Minutes)": (VIDEO_URL, VIDEO_URL),
     "Final Product Link": (PRODUCT_URL, PRODUCT_URL),
 }
 added = None
@@ -487,7 +488,7 @@ card(s, 0.4, 2.55, 9.2, 1.75, "Try it on the product link", [
     "Sign in with Google under My GCP workspace: you get your own simulated Aide EV.",
     "My vehicle: ask your own Aide. Charging & map: let Aide find a charger or dinner, then choose Go here.",
     "Calls: try an incoming call and let My Aide answer. Vehicle diagnosis: open the simulator and pick a warning.",
-    "Cloud operations need organisation membership of a registered Cloud Run service, so they are shown in the video.",
+    "Cloud operations need organisation membership of a registered Cloud Run service; the architecture slide shows how that agent crew works.",
 ], size=12, title_size=13)
 
 # ---- 15. Authority (spare content slide) ------------------------------------------------------

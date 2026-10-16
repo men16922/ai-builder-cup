@@ -31,7 +31,7 @@ Status confirmed by the owner on 2026-10-14: not yet run. Physical-device testin
 
 ## Reporting
 
-Add a section "Human comparison" to `docs/EVALUATION.md` with the table, the sample size (expected 2 participants × 2 modes) and one sentence of limits: small sample, one incident type, participants are team members. Then update the "Impact we can show" slide in `submission/deck/build.mjs`, the Devpost "Accomplishments" and the Medium article, and rebuild the deck.
+Add a section "Human comparison" to `docs/EVALUATION.md` with the table, the sample size (expected 2 participants × 2 modes) and one sentence of limits: small sample, one incident type, participants are team members. Then update the performance slide in `submission/deck-template/build.py` and the description in `submission/HACK2SKILL.md`, and rebuild the deck.
 
 ## Recording form (not results)
 
