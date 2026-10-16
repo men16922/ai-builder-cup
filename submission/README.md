@@ -5,6 +5,7 @@ Hack2skill entry for the AI Builder Cup 2026 (closes 19 October 2026, 03:29 IST 
 | File | Purpose |
 | --- | --- |
 | [HACK2SKILL.md](HACK2SKILL.md) | Form fields and the 1018-character brief description |
+| [MEDIUM.md](MEDIUM.md) | Medium article for the launch post; `{{PRODUCT_URL}}`/`{{REPO_URL}}` are filled from the private link sheet when pasted |
 | [SUBMISSION.md](SUBMISSION.md) | Requirement checklist and remaining owner steps |
 | `Aide-AI-Builder-Cup.pdf` | Final deck from the prescribed template (local, Git-ignored: it carries the deployed URL) |
 | `Aide-AI-Builder-Cup.pptx` | Editable deck built by `deck-template/build.py` (local, Git-ignored) |
