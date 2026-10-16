@@ -5,11 +5,13 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.liveRegion
@@ -98,7 +100,7 @@ internal fun AskAide(
                 enabled = !board.busy && text.isNotBlank() && board.state?.vehicle != null,
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                Text(stringResource(R.string.ask_button))
+                IconLabel(AideIcons.Sparkle, stringResource(R.string.ask_button))
             }
             if (assist != null) {
                 Column(
@@ -154,7 +156,7 @@ internal fun AskAide(
                                 enabled = !board.busy,
                                 modifier = Modifier.fillMaxWidth(),
                             ) {
-                                Text(label)
+                                IconLabel(proposalIcon(proposal), label)
                             }
                     }
                     Text(
@@ -194,6 +196,28 @@ private fun proposalLabel(proposal: AssistProposal): String {
         else -> stringResource(R.string.ask_honk)
     }
 }
+
+/** Same glyphs as the matching vehicle controls, so a proposal reads as the control it will run. */
+private fun proposalIcon(proposal: AssistProposal): ImageVector =
+    if (proposal.kind == "trip")
+        when (proposal.tripKind) {
+            "charging" -> AideIcons.Bolt
+            "restaurant" -> AideIcons.Restaurant
+            else -> AideIcons.Navigation
+        }
+    else
+        when (proposal.action) {
+            "lock" -> Icons.Filled.Lock
+            "unlock" -> AideIcons.LockOpen
+            "climate_on",
+            "climate_off",
+            "set_temperature" -> AideIcons.Climate
+            "set_charge_limit",
+            "start_charging" -> AideIcons.Bolt
+            "stop_charging" -> AideIcons.Stop
+            "flash" -> AideIcons.Flash
+            else -> AideIcons.VolumeUp
+        }
 
 private fun plainNumber(value: Double): String =
     if (value % 1.0 == 0.0) value.toInt().toString()

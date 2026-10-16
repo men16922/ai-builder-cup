@@ -1,6 +1,8 @@
 package app.mobileops.agent.app.mobility
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -22,10 +24,10 @@ internal fun VehicleHomeActions(
     // Navigation changes presentation only. Searches and authority remain explicit server intents.
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
         Button(onClick = { onJourney("charging") }, modifier = Modifier.weight(1f)) {
-            Text(stringResource(R.string.home_find_charger))
+            IconLabel(AideIcons.Bolt, stringResource(R.string.home_find_charger))
         }
         OutlinedButton(onClick = { onJourney("restaurant") }, modifier = Modifier.weight(1f)) {
-            Text(stringResource(R.string.home_find_dinner))
+            IconLabel(AideIcons.Restaurant, stringResource(R.string.home_find_dinner))
         }
     }
     Card(Modifier.fillMaxWidth()) {
@@ -52,7 +54,7 @@ internal fun VehicleHomeActions(
                     ),
                 )
             OutlinedButton(onClick = onAssistance, modifier = Modifier.fillMaxWidth()) {
-                Text(stringResource(R.string.home_review_response))
+                IconLabel(Icons.Filled.Info, stringResource(R.string.home_review_response))
             }
         }
     }
@@ -64,7 +66,7 @@ internal fun VehicleHomeActions(
                 enabled = !board.busy,
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                Text(stringResource(R.string.vehicle_cancel_journey))
+                IconLabel(AideIcons.Stop, stringResource(R.string.vehicle_cancel_journey))
             }
         }
 }

@@ -335,7 +335,7 @@ internal fun LowBatteryNudge(vehicle: SimulatedVehicle, onFindCharger: () -> Uni
                 )
             }
             Button(onClick = onFindCharger) {
-                Text(stringResource(R.string.home_find_charger))
+                IconLabel(AideIcons.Bolt, stringResource(R.string.home_find_charger))
             }
         }
     }

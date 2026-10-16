@@ -14,6 +14,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Email
@@ -292,7 +293,7 @@ private fun ColumnScope.CallActive(
             enabled = !board.busy,
             modifier = Modifier.fillMaxWidth(),
         ) {
-            Text(stringResource(R.string.call_stop_drive))
+            IconLabel(AideIcons.Stop, stringResource(R.string.call_stop_drive))
         }
     }
     val send: (String) -> Unit = { text ->
@@ -529,9 +530,11 @@ private fun ColumnScope.CallSummarySheet(
             )
         else
             Button(onClick = { onCommand(MobilityCommand.CallSave(call.id)) }, enabled = !busy) {
-                Text(stringResource(R.string.call_save_summary))
+                IconLabel(AideIcons.Bookmark, stringResource(R.string.call_save_summary))
             }
-        OutlinedButton(onClick = onClose) { Text(stringResource(R.string.call_close)) }
+        OutlinedButton(onClick = onClose) {
+            IconLabel(Icons.Filled.Close, stringResource(R.string.call_close))
+        }
     }
 }
 
@@ -591,7 +594,12 @@ internal fun Followups(call: VehicleCall, busy: Boolean, onCommand: (MobilityCom
                                     },
                                     enabled = !busy,
                                 ) {
-                                    Text(
+                                    IconLabel(
+                                        when (item.kind) {
+                                            "message" -> Icons.AutoMirrored.Filled.Send
+                                            "calendar" -> Icons.Filled.DateRange
+                                            else -> Icons.Filled.Notifications
+                                        },
                                         stringResource(
                                             when (item.kind) {
                                                 "message" -> R.string.call_send_message
@@ -607,7 +615,10 @@ internal fun Followups(call: VehicleCall, busy: Boolean, onCommand: (MobilityCom
                                     },
                                     enabled = !busy,
                                 ) {
-                                    Text(stringResource(R.string.call_dismiss))
+                                    IconLabel(
+                                        Icons.Filled.Clear,
+                                        stringResource(R.string.call_dismiss),
+                                    )
                                 }
                             }
                         else
@@ -690,7 +701,9 @@ private fun ColumnScope.CallUnconfirmed(
             Spacer(Modifier.width(6.dp))
             Text(stringResource(R.string.call_read_latest))
         }
-        OutlinedButton(onClick = onDismiss) { Text(stringResource(R.string.call_close)) }
+        OutlinedButton(onClick = onDismiss) {
+            IconLabel(Icons.Filled.Close, stringResource(R.string.call_close))
+        }
     }
 }
 

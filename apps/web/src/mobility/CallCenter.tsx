@@ -65,7 +65,7 @@ export default function CallCenter({ client }: { client: MobilityClient }) {
       <button type="button" className="aide-icon-button" aria-pressed={voice} aria-label={voice ? t('음성 끄기', 'Mute voice') : t('음성 켜기', 'Play voice')} onClick={toggleVoice}><Icon name={voice ? 'volume' : 'volume_off'} size={20} /></button>
       <button type="button" className="aide-call-decline" aria-label={t('통화 종료', 'End call')} disabled={(board.busy || !!board.callBusy)} onClick={() => void client.command({ operation: 'call_end', callId: call.id })}><Icon name="call_end" size={22} /></button>
     </header>
-    {board.state?.journey?.state === 'moving' ? <div className="ops-actions"><Button disabled={board.busy} onClick={() => void client.command({ operation: 'stop', journeyId: board.state!.journey!.id })}>{t('이동 시뮬레이션 중지', 'Stop simulated drive')}</Button></div> : null}
+    {board.state?.journey?.state === 'moving' ? <div className="ops-actions"><Button icon="stop" disabled={board.busy} onClick={() => void client.command({ operation: 'stop', journeyId: board.state!.journey!.id })}>{t('이동 시뮬레이션 중지', 'Stop simulated drive')}</Button></div> : null}
     <ol className="aide-call-log" ref={log} aria-live="polite" tabIndex={0} aria-label={t("통화 내용", "Call transcript")}>{call.turns.map((turn, index) => <li key={index} className={`is-${turn.role}`}><span>{who(turn.role)}</span><p>{turn.text}</p></li>)}
       {(board.busy || !!board.callBusy) ? <li className="is-typing" aria-label={t('응답 중', 'Responding')}><span>{t('응답 중', 'Responding')}</span><p><i /><i /><i /></p></li> : null}</ol>
     <div className="aide-call-quick" role="group" aria-label={t('빠른 답변', 'Quick replies')} tabIndex={0}>{[t('네, 좋아요.', 'Sounds good.'), t('도착하면 다시 연락드릴게요.', "I'll call back when I arrive."), t('지금 운전 중이라 짧게 말할게요.', "I'm driving, so I'll keep it short.")].map(text =>
@@ -88,7 +88,7 @@ export default function CallCenter({ client }: { client: MobilityClient }) {
     <Followups call={call} client={client} busy={(board.busy || !!board.callBusy)} />
     <div className="ops-actions">{call.saved ? <StatusChip type="success">{t('통화 기록에 저장됨', 'Saved to call history')}</StatusChip>
       : <Button variant="filled" icon="history" loading={(board.busy || !!board.callBusy)} onClick={() => void client.command({ operation: 'call_save', callId: call.id })}>{t('요약 저장', 'Save summary')}</Button>}
-      <Button onClick={() => setClosed(call.id)}>{t('닫기', 'Close')}</Button></div>
+      <Button icon="close" onClick={() => setClosed(call.id)}>{t('닫기', 'Close')}</Button></div>
   </section>;
 }
 
@@ -101,9 +101,9 @@ export function Followups({ call, client, busy }: { call: VehicleCall; client: M
     <div><strong>{item.title}</strong>{item.to ? <span>{t(`받는 사람: ${item.to}`, `To: ${item.to}`)}</span> : null}{item.when ? <span>{new Date(item.when).toLocaleString(locale, { weekday: 'short', hour: '2-digit', minute: '2-digit' })}</span> : null}
       {item.body ? <p>{item.body}</p> : null}</div>
     {item.status === 'draft' ? <div className="ops-actions">
-      <Button variant="tonal" disabled={busy} onClick={() => void client.command({ operation: 'followup', callId: call.id, followupId: item.id, action: 'done' })}>
+      <Button icon={item.kind === 'message' ? 'send' : item.kind === 'calendar' ? 'event' : 'bell'} variant="tonal" disabled={busy} onClick={() => void client.command({ operation: 'followup', callId: call.id, followupId: item.id, action: 'done' })}>
         {item.kind === 'message' ? t('메시지 보내기', 'Send message') : item.kind === 'calendar' ? t('일정 추가', 'Add to calendar') : t('알림 설정', 'Set reminder')}</Button>
-      <Button variant="text" disabled={busy} onClick={() => void client.command({ operation: 'followup', callId: call.id, followupId: item.id, action: 'dismiss' })}>{t('무시', 'Dismiss')}</Button></div>
+      <Button icon="close" variant="text" disabled={busy} onClick={() => void client.command({ operation: 'followup', callId: call.id, followupId: item.id, action: 'dismiss' })}>{t('무시', 'Dismiss')}</Button></div>
       : <StatusChip type={item.status === 'done' ? 'success' : 'pending'}>{item.status === 'done' ? t('완료 · 시뮬레이션', 'Done · simulated') : t('무시함', 'Dismissed')}</StatusChip>}
   </li>)}</ul>;
 }

@@ -1,5 +1,13 @@
 package app.mobileops.agent.app.mobility
 
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -59,6 +67,23 @@ internal object AideIcons {
             "M12 2l2.2 6.6L21 11l-6.8 2.4L12 20l-2.2-6.6L3 11l6.8-2.4zM19 15l1 2.6 2.6 1-2.6 1L19 22l-1-2.4-2.6-1 2.6-1z",
         )
     }
+    val Navigation by lazy { icon("Navigation", "M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z") }
+    val Stop by lazy { icon("Stop", "M6 6h12v12H6z") }
+    val Bookmark by lazy {
+        icon("Bookmark", "M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z")
+    }
+    val Restaurant by lazy {
+        icon(
+            "Restaurant",
+            "M11 9H9V2H7v7H5V2H3v7c0 2.12 1.66 3.84 3.75 3.97V22h2.5v-9.03C11.34 12.84 13 11.12 13 9V2h-2v7zm5-3v8h2.5v8H21V2c-2.76 0-5 2.24-5 4z",
+        )
+    }
+    val Car by lazy {
+        icon(
+            "Car",
+            "M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z",
+        )
+    }
     val Minus by lazy { icon("Minus", "M19 13H5v-2h14v2z") }
     val Phone by lazy {
         icon(
@@ -70,6 +95,17 @@ internal object AideIcons {
     /** Raw path data for Canvas-drawn markers; same handset as [Phone]. */
     const val PHONE_PATH =
         "M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"
+}
+
+/**
+ * Button content with a leading icon so actions are recognisable at a glance. The icon is
+ * decorative; the label stays visible and remains the accessible name in both languages.
+ */
+@Composable
+internal fun IconLabel(icon: ImageVector, text: String, maxLines: Int = Int.MAX_VALUE) {
+    Icon(icon, contentDescription = null, modifier = Modifier.size(ButtonDefaults.IconSize))
+    Spacer(Modifier.width(ButtonDefaults.IconSpacing))
+    Text(text, maxLines = maxLines)
 }
 
 private fun icon(name: String, path: String) =

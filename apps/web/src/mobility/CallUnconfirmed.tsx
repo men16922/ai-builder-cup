@@ -12,6 +12,6 @@ export default function CallUnconfirmed({ call, onRefresh, onDismiss }: { call: 
     <p role="status">{t('AI 응답을 확인하지 못했습니다. 같은 통화 단계를 다시 실행하지 않았습니다. 최신 기록을 확인한 뒤 담당자와 검토하세요.', 'The AI response could not be confirmed. The same call step was not repeated. Read the latest record and review it with a responder.')}</p>
     <StatusChip type="warning">{t('후속 작업 실행 안 함', 'No follow-up performed')}</StatusChip>
     {call.turns.length ? <details><summary>{t('확인된 대화 기록', 'Confirmed transcript')}</summary><ol>{call.turns.map((turn, index) => <li key={index}><strong>{turn.role === 'caller' ? call.caller.name : turn.role === 'aide' ? 'My Aide' : t('나', 'You')}</strong><p>{turn.text}</p></li>)}</ol></details> : null}
-    <div className="ops-actions"><Button variant="filled" icon="refresh" onClick={onRefresh}>{t('최신 기록 확인', 'Read latest record')}</Button><Button onClick={onDismiss}>{t('닫기', 'Close')}</Button></div>
+    <div className="ops-actions"><Button variant="filled" icon="refresh" onClick={onRefresh}>{t('최신 기록 확인', 'Read latest record')}</Button><Button icon="close" onClick={onDismiss}>{t('닫기', 'Close')}</Button></div>
   </aside>;
 }

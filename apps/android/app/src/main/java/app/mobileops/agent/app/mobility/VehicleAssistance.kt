@@ -1,6 +1,8 @@
 package app.mobileops.agent.app.mobility
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -96,7 +98,10 @@ internal fun VehicleAssistance(
                         enabled = !board.busy,
                         modifier = Modifier.fillMaxWidth(),
                     ) {
-                        Text(stringResource(R.string.vehicle_approve_reconnect))
+                        IconLabel(
+                            Icons.Filled.Done,
+                            stringResource(R.string.vehicle_approve_reconnect),
+                        )
                     }
             } else Text(stringResource(R.string.vehicle_no_report))
             OutlinedButton(
@@ -104,7 +109,7 @@ internal fun VehicleAssistance(
                 enabled = !board.busy,
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                Text(stringResource(R.string.vehicle_diagnose))
+                IconLabel(AideIcons.Sparkle, stringResource(R.string.vehicle_diagnose))
             }
             HorizontalDivider()
             Text(stringResource(R.string.vehicle_policy_title), fontWeight = FontWeight.Bold)
@@ -125,7 +130,7 @@ internal fun VehicleAssistance(
                     enabled = !board.busy,
                     modifier = Modifier.fillMaxWidth(),
                 ) {
-                    Text(stringResource(R.string.vehicle_policy_allow))
+                    IconLabel(Icons.Filled.Done, stringResource(R.string.vehicle_policy_allow))
                 }
                 TextButton(onClick = { reviewPolicy = false }) {
                     Text(stringResource(R.string.vehicle_cancel))

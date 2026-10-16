@@ -1,6 +1,8 @@
 package app.mobileops.agent.app.mobility
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -22,7 +24,7 @@ internal fun VehicleSimulator(
     var battery by
         remember(vehicle.batteryPercent) { mutableFloatStateOf(vehicle.batteryPercent.toFloat()) }
     OutlinedButton(onClick = { expanded = !expanded }, modifier = Modifier.fillMaxWidth()) {
-        Text(stringResource(R.string.vehicle_simulator))
+        IconLabel(Icons.Filled.Settings, stringResource(R.string.vehicle_simulator))
     }
     if (!expanded) return
     Card(Modifier.fillMaxWidth()) {

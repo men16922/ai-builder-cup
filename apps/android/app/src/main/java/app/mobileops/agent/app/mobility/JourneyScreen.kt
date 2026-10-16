@@ -1,6 +1,10 @@
 package app.mobileops.agent.app.mobility
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -73,7 +77,7 @@ internal fun JourneyScreen(
         enabled = !moving && !board.busy && state?.vehicle != null && state.mapsAvailable,
         modifier = Modifier.fillMaxWidth(),
     ) {
-        Text(stringResource(R.string.vehicle_let_aide))
+        IconLabel(AideIcons.Sparkle, stringResource(R.string.vehicle_let_aide))
     }
     if (state?.mapsAvailable != true)
         Text(
@@ -111,7 +115,7 @@ internal fun JourneyScreen(
             enabled = !board.busy,
             modifier = Modifier.fillMaxWidth(),
         ) {
-            Text(stringResource(R.string.journey_continue))
+            IconLabel(Icons.Filled.PlayArrow, stringResource(R.string.journey_continue))
         }
     }
     JourneySimulation(journey, state.vehicle?.batteryPercent, state.call?.state == "active")
@@ -192,16 +196,17 @@ internal fun JourneyScreen(
                         enabled = !board.busy,
                         modifier = Modifier.fillMaxWidth(),
                     ) {
-                        Text(stringResource(R.string.vehicle_go_here))
+                        IconLabel(AideIcons.Navigation, stringResource(R.string.vehicle_go_here))
                     }
                     TextButton(
                         onClick = { onCommand(MobilityCommand.Favorite(journey.id, place.id)) },
                         enabled = !board.busy && state.favorites.none { it.id == place.id },
                     ) {
-                        Text(
+                        val saved = state.favorites.any { it.id == place.id }
+                        IconLabel(
+                            if (saved) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
                             stringResource(
-                                if (state.favorites.any { it.id == place.id })
-                                    R.string.vehicle_favorite_saved
+                                if (saved) R.string.vehicle_favorite_saved
                                 else R.string.vehicle_save_favorite,
                             ),
                         )
@@ -225,7 +230,7 @@ internal fun JourneyScreen(
             enabled = !board.busy,
             modifier = Modifier.fillMaxWidth(),
         ) {
-            Text(stringResource(R.string.vehicle_cancel_journey))
+            IconLabel(AideIcons.Stop, stringResource(R.string.vehicle_cancel_journey))
         }
 }
 
@@ -295,14 +300,14 @@ private fun ArrivalCharging(board: VehicleBoard, onCommand: (MobilityCommand) ->
                     onClick = { onCommand(MobilityCommand.Control("stop_charging")) },
                     enabled = !board.busy,
                 ) {
-                    Text(stringResource(R.string.arrival_stop_charging))
+                    IconLabel(AideIcons.Stop, stringResource(R.string.arrival_stop_charging))
                 }
             else
                 Button(
                     onClick = { onCommand(MobilityCommand.Control("start_charging")) },
                     enabled = !board.busy && vehicle.batteryPercent < vehicle.targetPercent,
                 ) {
-                    Text(stringResource(R.string.arrival_start_charging))
+                    IconLabel(AideIcons.Bolt, stringResource(R.string.arrival_start_charging))
                 }
         }
     }

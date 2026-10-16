@@ -20,6 +20,6 @@ export default function MobilityPolicies({privacy}:{privacy:boolean}) {
       <p>{t('Aide는 현대자동차나 Tesla의 공식 앱이 아니며 제조사와의 제휴를 주장하지 않습니다.','Aide is not an official Hyundai or Tesla app and does not claim manufacturer affiliation.')}</p>
     </>}
     <p><a href="https://cloud.google.com/maps-platform/terms" target="_blank" rel="noopener noreferrer">Google Maps Platform Terms</a> · <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Google Privacy Policy</a></p>
-    <div><Button href="#/">{t('Aide로 돌아가기','Return to Aide')}</Button></div>
+    <div><Button icon="arrow_back" href="#/">{t('Aide로 돌아가기','Return to Aide')}</Button></div>
   </Stack></main></>;
 }

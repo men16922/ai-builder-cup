@@ -1,10 +1,14 @@
 import { useState, useSyncExternalStore } from 'react';
 import type { AssistTurn } from '@contracts/gcp/mobility';
 import { useLanguage } from '../i18n';
-import { Button, Icon } from '../ui';
+import { Button, Icon, type IconName } from '../ui';
 import type { MobilityClient } from './mobility-client';
 
 type Proposal = AssistTurn['proposals'][number];
+/** Same glyphs as the matching vehicle controls, so a proposal reads as the control it will run. */
+const proposalIcon = (proposal: Proposal): IconName => proposal.kind === 'trip'
+  ? proposal.tripKind === 'charging' ? 'bolt' : proposal.tripKind === 'restaurant' ? 'restaurant' : 'navigation'
+  : ({ lock: 'lock', unlock: 'lock_open', climate_on: 'fan', climate_off: 'fan', set_temperature: 'fan', set_charge_limit: 'bolt', start_charging: 'bolt', stop_charging: 'stop', flash: 'light', honk: 'volume' } as const)[proposal.action];
 /** Ask your own Aide: My Aide answers and proposes catalog actions. Only the driver's tap runs one. */
 export default function AskAide({ client, onTrip }: { client: MobilityClient; onTrip: (kind: 'restaurant'|'charging'|'poi', instruction: string) => void }) {
   const { t, language } = useLanguage(), board = useSyncExternalStore(client.subscribe, client.getSnapshot), assist = board.state?.assist;
@@ -34,7 +38,7 @@ export default function AskAide({ client, onTrip }: { client: MobilityClient; on
       <p><strong>My Aide</strong> {assist.reply}</p>
       {assist.proposals.length ? <div className="aide-ask-proposals">{assist.proposals.map((proposal, index) => { const key = `${assist.id}:${index}`;
         return done.includes(key) ? <span key={key} className="aide-ask-done"><Icon name="success" size={16} />{label(proposal)} · {t('완료 · 시뮬레이션', 'done · simulated')}</span>
-          : <Button key={key} variant="tonal" disabled={board.busy} onClick={() => void run(proposal, key)}>{label(proposal)}</Button>; })}</div> : null}
+          : <Button key={key} variant="tonal" disabled={board.busy} icon={proposalIcon(proposal)} onClick={() => void run(proposal, key)}>{label(proposal)}</Button>; })}</div> : null}
       <span className="ops-caption">{t('제안은 누르기 전에는 실행되지 않습니다.', 'Nothing runs until you tap a proposal.')}</span>
     </div> : null}
   </section>;

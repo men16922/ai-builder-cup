@@ -2,6 +2,8 @@ package app.mobileops.agent.app.mobility
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -45,7 +47,7 @@ internal fun VehicleScreen(
             enabled = state != null && !board.busy,
             modifier = Modifier.fillMaxWidth(),
         ) {
-            Text(stringResource(R.string.vehicle_connect))
+            IconLabel(AideIcons.Car, stringResource(R.string.vehicle_connect))
         }
         if (state == null)
             OutlinedButton(
@@ -53,7 +55,7 @@ internal fun VehicleScreen(
                 enabled = board.available && !board.busy,
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                Text(stringResource(R.string.vehicle_refresh))
+                IconLabel(Icons.Filled.Refresh, stringResource(R.string.vehicle_refresh))
             }
         return
     }

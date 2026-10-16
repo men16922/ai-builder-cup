@@ -3,6 +3,9 @@ package app.mobileops.agent.app.mobility
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -82,7 +85,7 @@ private fun LearnedCase(
             enabled = !busy,
             modifier = Modifier.fillMaxWidth(),
         ) {
-            Text(stringResource(R.string.cases_register))
+            IconLabel(Icons.Filled.Add, stringResource(R.string.cases_register))
         }
     }
     if (learned.status != "revoked" && !expired) {
@@ -90,7 +93,7 @@ private fun LearnedCase(
             onClick = { onCommand(MobilityCommand.RevokeCase(learned.id)) },
             enabled = !busy,
         ) {
-            Text(stringResource(R.string.cases_revoke))
+            IconLabel(Icons.Filled.Delete, stringResource(R.string.cases_revoke))
         }
     }
     if (review && learned.status == "candidate") {
